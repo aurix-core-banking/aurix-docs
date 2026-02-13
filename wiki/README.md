@@ -15,28 +15,28 @@ Documentação em formato de livro: o que cada área precisa saber, guias de exe
 
 # PARTE I – Por audiência (o que cada um precisa saber)
 
-Índice: [04-audiences/README.md](04-audiences/README.md)
+Índice: [04-audiences/por-audiencia/README.md](04-audiences/por-audiencia/README.md)
 
 | # | Audiência | Documento |
 |---|-----------|-----------|
-| 1 | Negócio | [04-audiences/negocio.md](04-audiences/negocio.md) |
-| 2 | SRE e Infraestrutura | [04-audiences/sre-infra.md](04-audiences/sre-infra.md) |
-| 3 | Engenharia | [04-audiences/engenharia.md](04-audiences/engenharia.md) |
-| 4 | Arquitetura | [04-audiences/arquitetura.md](04-audiences/arquitetura.md) |
-| 5 | Áreas do banco | [04-audiences/areas-banco.md](04-audiences/areas-banco.md) |
+| 1 | Negócio | [04-audiences/por-audiencia/negocio.md](04-audiences/por-audiencia/negocio.md) |
+| 2 | SRE e Infraestrutura | [04-audiences/por-audiencia/sre-infra.md](04-audiences/por-audiencia/sre-infra.md) |
+| 3 | Engenharia | [04-audiences/por-audiencia/engenharia.md](04-audiences/por-audiencia/engenharia.md) |
+| 4 | Arquitetura | [04-audiences/por-audiencia/arquitetura.md](04-audiences/por-audiencia/arquitetura.md) |
+| 5 | Áreas do banco | [04-audiences/por-audiencia/areas-banco.md](04-audiences/por-audiencia/areas-banco.md) |
 
 ---
 
 # PARTE II – Setup, Run, Manutenção e Suporte
 
-Índice: [02-lifecycle/README.md](02-lifecycle/README.md)
+Índice: [02-lifecycle/ciclo-de-vida/README.md](02-lifecycle/ciclo-de-vida/README.md)
 
 | Fase | Documento |
 |------|-----------|
-| Setup | [02-lifecycle/setup.md](02-lifecycle/setup.md) – Checklist: [01-guides-checklists/checklists/plataforma-de-pe.md](01-guides-checklists/checklists/plataforma-de-pe.md) |
-| Run | [02-lifecycle/run.md](02-lifecycle/run.md) |
-| Manutenção | [02-lifecycle/manutencao.md](02-lifecycle/manutencao.md) |
-| Suporte | [02-lifecycle/suporte.md](02-lifecycle/suporte.md) |
+| Setup | [02-lifecycle/ciclo-de-vida/setup.md](02-lifecycle/ciclo-de-vida/setup.md) – Checklist: [01-guides-checklists/checklists/plataforma-de-pe.md](01-guides-checklists/checklists/plataforma-de-pe.md) |
+| Run | [02-lifecycle/ciclo-de-vida/run.md](02-lifecycle/ciclo-de-vida/run.md) |
+| Manutenção | [02-lifecycle/ciclo-de-vida/manutencao.md](02-lifecycle/ciclo-de-vida/manutencao.md) |
+| Suporte | [02-lifecycle/ciclo-de-vida/suporte.md](02-lifecycle/ciclo-de-vida/suporte.md) |
 
 ---
 
@@ -64,7 +64,7 @@ Documentação em formato de livro: o que cada área precisa saber, guias de exe
 
 # PARTE IV – Referências
 
-**Índice de referências**: [05-references/README.md](05-references/README.md)
+**Índice de referências**: [05-references/referencias/README.md](05-references/referencias/README.md)
 
 ## Documentação técnica (docs/)
 
@@ -76,10 +76,10 @@ Documentação em formato de livro: o que cada área precisa saber, guias de exe
 | Roadmap e status | [roadmap.md](../01-business/roadmap.md) |
 | Changelog | [CHANGELOG.md](../CHANGELOG.md) |
 | Arquitetura | [arquitetura/](../02-technical/arquitetura/) |
-| Banco de dados | [banco-dados/](../banco-dados/) |
+| Banco de dados | [evolucao-arquitetura-dados.md](../02-technical/arquitetura/evolucao-arquitetura-dados.md) |
 | Infraestrutura (14.1–14.7) | [infrastructure/index.md](../05-infrastructure/infrastructure/index.md) |
 | Operação (runbook, backup, DR) | [infrastructure/](../05-infrastructure/infrastructure/index.md) |
-| Conformidade | [03-compliance/](03-compliance/) |
+| Conformidade | [03-compliance/conformidade/README.md](03-compliance/conformidade/README.md) |
 | Portal desenvolvedor e APIs | [portal-desenvolvedor/](../03-development/portal-desenvolvedor/README.md) |
 | Kit implementação (go live, seeds, templates, suporte) | [01-guides-checklists/kit-implementacao/README.md](01-guides-checklists/kit-implementacao/README.md) |
 | Data pipelines e lakehouse | [data-pipelines/](../04-data-ai/data-pipelines/) |
@@ -89,13 +89,13 @@ Documentação em formato de livro: o que cada área precisa saber, guias de exe
 
 | Preciso... | Onde ir |
 |------------|---------|
-| Subir a plataforma pela primeira vez | [02-lifecycle/setup.md](02-lifecycle/setup.md), [01-guides-checklists/checklists/plataforma-de-pe.md](01-guides-checklists/checklists/plataforma-de-pe.md) |
-| Preparar go live de um cliente | [01-guides-checklists/kit-implementacao/README.md](01-guides-checklists/kit-implementacao/README.md), [01-guides-checklists/checklists/go-live.md](01-guides-checklists/checklists/go-live.md), [04-audiences/negocio.md](04-audiences/negocio.md) |
-| Operar no dia a dia (deploy, alertas, incidente) | [02-lifecycle/run.md](02-lifecycle/run.md), [04-audiences/sre-infra.md](04-audiences/sre-infra.md), [Runbook](../05-infrastructure/infrastructure/aureus-cloud-runbook.md) |
-| Atualizar relatórios regulatórios | [01-guides-checklists/checklists/regulatorio.md](01-guides-checklists/checklists/regulatorio.md), [02-lifecycle/manutencao.md](02-lifecycle/manutencao.md) |
-| Desenvolver ou integrar via API | [04-audiences/engenharia.md](04-audiences/engenharia.md), [Portal desenvolvedor](../03-development/portal-desenvolvedor/README.md) |
-| Entender decisões e evolução | [04-audiences/arquitetura.md](04-audiences/arquitetura.md), [roadmap.md](../01-business/roadmap.md) |
-| Abrir ou tratar suporte | [02-lifecycle/suporte.md](02-lifecycle/suporte.md), [01-guides-checklists/kit-implementacao/suporte-tecnico.md](01-guides-checklists/kit-implementacao/suporte-tecnico.md) |
+| Subir a plataforma pela primeira vez | [02-lifecycle/ciclo-de-vida/setup.md](02-lifecycle/ciclo-de-vida/setup.md), [01-guides-checklists/checklists/plataforma-de-pe.md](01-guides-checklists/checklists/plataforma-de-pe.md) |
+| Preparar go live de um cliente | [01-guides-checklists/kit-implementacao/README.md](01-guides-checklists/kit-implementacao/README.md), [01-guides-checklists/checklists/go-live.md](01-guides-checklists/checklists/go-live.md), [04-audiences/por-audiencia/negocio.md](04-audiences/por-audiencia/negocio.md) |
+| Operar no dia a dia (deploy, alertas, incidente) | [02-lifecycle/ciclo-de-vida/run.md](02-lifecycle/ciclo-de-vida/run.md), [04-audiences/por-audiencia/sre-infra.md](04-audiences/por-audiencia/sre-infra.md), [Runbook](../05-infrastructure/infrastructure/aureus-cloud-runbook.md) |
+| Atualizar relatórios regulatórios | [01-guides-checklists/checklists/regulatorio.md](01-guides-checklists/checklists/regulatorio.md), [02-lifecycle/ciclo-de-vida/manutencao.md](02-lifecycle/ciclo-de-vida/manutencao.md) |
+| Desenvolver ou integrar via API | [04-audiences/por-audiencia/engenharia.md](04-audiences/por-audiencia/engenharia.md), [Portal desenvolvedor](../03-development/portal-desenvolvedor/README.md) |
+| Entender decisões e evolução | [04-audiences/por-audiencia/arquitetura.md](04-audiences/por-audiencia/arquitetura.md), [roadmap.md](../01-business/roadmap.md) |
+| Abrir ou tratar suporte | [02-lifecycle/ciclo-de-vida/suporte.md](02-lifecycle/ciclo-de-vida/suporte.md), [01-guides-checklists/kit-implementacao/suporte-tecnico.md](01-guides-checklists/kit-implementacao/suporte-tecnico.md) |
 
 ---
 

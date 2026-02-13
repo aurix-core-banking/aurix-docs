@@ -7,16 +7,16 @@ O que as áreas do banco (operações, compliance, risco, tesouraria, TI) precis
 ## Operações e run
 
 - **Runbook**: [aureus-cloud-runbook.md](../../05-infrastructure/infrastructure/aureus-cloud-runbook.md).
-- **Ciclo de vida Run**: [02-lifecycle/run.md](../02-lifecycle/run.md).
-- **Suporte**: [02-lifecycle/suporte.md](../02-lifecycle/suporte.md), [01-guides-checklists/kit-implementacao/suporte-tecnico.md](../01-guides-checklists/kit-implementacao/suporte-tecnico.md).
+- **Ciclo de vida Run**: [02-lifecycle/run.md](../../02-lifecycle/ciclo-de-vida/run.md).
+- **Suporte**: [02-lifecycle/suporte.md](../../02-lifecycle/ciclo-de-vida/suporte.md), [01-guides-checklists/kit-implementacao/suporte-tecnico.md](../../01-guides-checklists/kit-implementacao/suporte-tecnico.md).
 
 ---
 
 ## Compliance e regulatório
 
-- **Regulatory pack**: [regulatory-pack.md](../../03-compliance/regulatory-pack.md).
-- **Checklist regulatório**: [01-guides-checklists/checklists/regulatorio.md](../01-guides-checklists/checklists/regulatorio.md).
-- **Manutenção regulatória**: [02-lifecycle/manutencao.md](../02-lifecycle/manutencao.md).
+- **Regulatory pack**: [regulatory-pack.md](../../../01-business/conformidade/regulatory-pack.md).
+- **Checklist regulatório**: [01-guides-checklists/checklists/regulatorio.md](../../01-guides-checklists/checklists/regulatorio.md).
+- **Manutenção regulatória**: [02-lifecycle/manutencao.md](../../02-lifecycle/ciclo-de-vida/manutencao.md).
 
 ---
 
@@ -38,4 +38,4 @@ O que as áreas do banco (operações, compliance, risco, tesouraria, TI) precis
 - **Portal desenvolvedor**: [portal-desenvolvedor/README.md](../../03-development/portal-desenvolvedor/README.md).
 - **APIs e integrações**: [portal-desenvolvedor/apis/](../../03-development/portal-desenvolvedor/apis/).
 
-[Voltar à audiência](README.md) | [Índice da wiki](../README.md)
+[Voltar à audiência](README.md) | [Índice da wiki](../../README.md)

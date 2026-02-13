@@ -36,13 +36,13 @@ O que SRE e Infra precisam saber: stack de dados, deploy, monitoramento, alertas
 ## Run e operação
 
 - **Runbook AUREUS Cloud**: [aureus-cloud-runbook.md](../../05-infrastructure/infrastructure/aureus-cloud-runbook.md).
-- **Ciclo de vida Run**: [02-lifecycle/run.md](../02-lifecycle/run.md).
+- **Ciclo de vida Run**: [02-lifecycle/run.md](../../02-lifecycle/ciclo-de-vida/run.md).
 
 ---
 
 ## Manutenção
 
-- **Ciclo de vida Manutenção**: [02-lifecycle/manutencao.md](../02-lifecycle/manutencao.md).
-- **Checklists**: [01-guides-checklists/checklists/](../01-guides-checklists/checklists/).
+- **Ciclo de vida Manutenção**: [02-lifecycle/manutencao.md](../../02-lifecycle/ciclo-de-vida/manutencao.md).
+- **Checklists**: [01-guides-checklists/checklists/](../../01-guides-checklists/checklists/).
 
-[Voltar à audiência](README.md) | [Índice da wiki](../README.md)
+[Voltar à audiência](README.md) | [Índice da wiki](../../README.md)

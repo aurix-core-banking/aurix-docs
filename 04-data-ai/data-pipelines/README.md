@@ -28,8 +28,8 @@ O AUREUS Data Pipeline e um sistema completo de processamento de dados em tempo 
 
 ## Documentacao adicional
 
-- [Arquitetura](../arquitetura/visao-geral.md)
-- [Banco de dados](../banco-dados/README.md)
+- [Arquitetura](../../02-technical/arquitetura/visao-geral.md)
+- [Banco de dados](../../02-technical/arquitetura/evolucao-arquitetura-dados.md)
 
 ---
 

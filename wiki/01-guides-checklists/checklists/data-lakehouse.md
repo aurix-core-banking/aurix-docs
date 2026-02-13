@@ -63,6 +63,6 @@ ALTER DATABASE airflow OWNER TO airflow;
 - [ ] Backend publicando eventos em Kafka (já implementado em core/pix); bacen consumir para relatórios.
 - [ ] OpenLineage e MLflow lendo do lakehouse.
 
-Referência geral: [roadmap.md](../../roadmap.md) (seção 6).
+Referência geral: [roadmap.md](../../../01-business/roadmap.md) (seção 6).
 
-[Voltar aos checklists](README.md) | [Índice da wiki](../README.md)
+[Voltar aos checklists](README.md) | [Índice da wiki](../../README.md)

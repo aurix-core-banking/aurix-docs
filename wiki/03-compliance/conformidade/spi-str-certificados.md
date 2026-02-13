@@ -87,7 +87,7 @@ Métricas de retry e circuit breaker são expostas pelo Actuator (Micrometer). L
 
 - Documentação BACEN sobre SPI e STR (sites oficiais e manuais de integração).
 - Normas do Banco Central para adesão e certificação.
-- [Regulatory pack](../../03-compliance/regulatory-pack.md)
-- [Checklist regulatório](../01-guides-checklists/checklists/regulatorio.md)
+- [Regulatory pack](../../../01-business/conformidade/regulatory-pack.md)
+- [Checklist regulatório](../../01-guides-checklists/checklists/regulatorio.md)
 
-[Conformidade na wiki](README.md) | [Referências](../05-references/README.md) | [Índice da wiki](../README.md)
+[Conformidade na wiki](README.md) | [Referências](../../05-references/referencias/README.md) | [Índice da wiki](../../README.md)

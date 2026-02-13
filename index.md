@@ -42,7 +42,7 @@ Recursos para desenvolvedores que constroem e integram com a AUREUS.
 ## ⚖️ Conformidade e Regulatório
 A plataforma desenhada para o mercado financeiro brasileiro.
 *   **[Relatórios Regulatórios](./01-business/conformidade/regulatory-pack.md)**: BACEN, Receita e conformidade nativa.
-*   **[Conformidade na Wiki](./wiki/03-compliance/README.md)**: Checklists detalhados para certificações.
+*   **[Conformidade na Wiki](./wiki/03-compliance/conformidade/README.md)**: Checklists detalhados para certificações.
 
 ---
 

@@ -53,4 +53,4 @@ Escopo: deploy centralizado (K8s), pipeline CI/CD, secrets em secret manager, co
 
 **Doc completo**: [aureus-cloud-runbook.md](../../05-infrastructure/infrastructure/aureus-cloud-runbook.md).
 
-[Voltar ao ciclo de vida](README.md) | [Índice da wiki](../README.md)
+[Voltar ao ciclo de vida](README.md) | [Índice da wiki](../../README.md)

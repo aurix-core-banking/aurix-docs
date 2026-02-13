@@ -11,4 +11,4 @@ Acesso rápido por perfil: negócio, SRE/Infra, engenharia, arquitetura, áreas 
 | **Arquitetura** | [arquitetura.md](arquitetura.md) | Visão técnica, decisões, evolução |
 | **Áreas do banco** | [areas-banco.md](areas-banco.md) | Conformidade, BACEN, tesouraria, crédito |
 
-[Voltar ao índice da wiki](../README.md)
+[Voltar ao índice da wiki](../../README.md)

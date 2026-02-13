@@ -7,8 +7,8 @@ O que a engenharia precisa saber: ambiente de desenvolvimento, estrutura do cód
 ## Pré-requisitos e setup
 
 - **Java**, **Maven**, **Node**, **Docker**: conforme [plataforma.md](../../01-business/big-picture.md).
-- **Setup completo**: [02-lifecycle/setup.md](../02-lifecycle/setup.md).
-- **Checklist plataforma de pé**: [01-guides-checklists/checklists/plataforma-de-pe.md](../01-guides-checklists/checklists/plataforma-de-pe.md).
+- **Setup completo**: [02-lifecycle/setup.md](../../02-lifecycle/ciclo-de-vida/setup.md).
+- **Checklist plataforma de pé**: [plataforma-de-pe.md](../../01-guides-checklists/checklists/plataforma-de-pe.md).
 
 ---
 
@@ -24,7 +24,7 @@ O que a engenharia precisa saber: ambiente de desenvolvimento, estrutura do cód
 
 - **Portal desenvolvedor**: [portal-desenvolvedor/README.md](../../03-development/portal-desenvolvedor/README.md).
 - **APIs**: [portal-desenvolvedor/apis/](../../03-development/portal-desenvolvedor/apis/).
-- **Guias**: primeira conta, primeiro PIX em [portal-desenvolvedor/01-guides-01-guides-checklists/checklists/guias/](../../03-development/portal-desenvolvedor/01-guides-01-guides-checklists/checklists/guias/).
+- **Guias**: primeira conta, primeiro PIX em [portal-desenvolvedor/guias/](../../03-development/portal-desenvolvedor/guias/).
 
 ---
 
@@ -38,6 +38,6 @@ O que a engenharia precisa saber: ambiente de desenvolvimento, estrutura do cód
 ## Integrações
 
 - **Webhooks**, **sandbox**: documentados no portal do desenvolvedor.
-- **Kit de implementação** (go live, guia PIX, seeds, templates): [01-guides-checklists/kit-implementacao/README.md](../01-guides-checklists/kit-implementacao/README.md).
+- **Kit de implementação** (go live, guia PIX, seeds, templates): [kit-implementacao/README.md](../../01-guides-checklists/kit-implementacao/README.md).
 
-[Voltar à audiência](README.md) | [Índice da wiki](../README.md)
+[Voltar à audiência](README.md) | [Índice da wiki](../../README.md)

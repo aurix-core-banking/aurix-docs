@@ -22,8 +22,8 @@ Oferta de atualizações de reportes regulatórios e consultoria de conformidade
 
 ## Referências
 
-- [Regulatory pack](../../03-compliance/regulatory-pack.md)
-- [SPI/STR certificados](../03-compliance/spi-str-certificados.md)
+- [Regulatory pack](../../../01-business/conformidade/regulatory-pack.md)
+- [SPI/STR certificados](../../03-compliance/conformidade/spi-str-certificados.md)
 - Módulo aureus-bacen: geradores de relatório e jobs agendados
 
-[Voltar ao kit](README.md) | [Checklist regulatório](../01-guides-checklists/checklists/regulatorio.md) | [Índice da wiki](../README.md)
+[Voltar ao kit](README.md) | [Checklist regulatório](../checklists/regulatorio.md) | [Índice da wiki](../../README.md)

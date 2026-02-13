@@ -73,4 +73,4 @@ A implementação desse passo pode ser um endpoint interno (ex.: `POST /api/prov
 - Módulo aureus-credit: API de produtos de crédito
 - Módulo aureus-pricing: API de tarifas
 
-[Voltar ao kit](README.md) | [Índice da wiki](../README.md)
+[Voltar ao kit](README.md) | [Índice da wiki](../../README.md)

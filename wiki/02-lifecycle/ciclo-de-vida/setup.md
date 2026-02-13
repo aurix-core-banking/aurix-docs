@@ -13,16 +13,16 @@ Guia para colocar a plataforma AUREUS de pé pela primeira vez.
 5. (Opcional) Airflow/Data Lakehouse: buckets MinIO, connections, DAGs.
 6. Validação: health checks, testes.
 
-**Checklist completo**: [01-guides-checklists/checklists/plataforma-de-pe.md](../01-guides-checklists/checklists/plataforma-de-pe.md). Para go live de um novo cliente (PIX, seeds, templates, suporte): [01-guides-checklists/kit-implementacao/README.md](../01-guides-checklists/kit-implementacao/README.md).
+**Checklist completo**: [01-guides-checklists/checklists/plataforma-de-pe.md](../../01-guides-checklists/checklists/plataforma-de-pe.md). Para go live de um novo cliente (PIX, seeds, templates, suporte): [01-guides-checklists/kit-implementacao/README.md](../../01-guides-checklists/kit-implementacao/README.md).
 
 ---
 
 ## Referências
 
-- [Banco de dados](../../banco-dados/README.md)
+- [Banco de dados](../../../02-technical/arquitetura/evolucao-arquitetura-dados.md)
 - [Plataforma](../../01-business/big-picture.md)
-- [Data Lakehouse – checklist](../01-guides-checklists/checklists/data-lakehouse.md)
+- [Data Lakehouse – checklist](../../01-guides-checklists/checklists/data-lakehouse.md)
 - [Connections Airflow e dbt](../../04-data-ai/data-pipelines/AIRFLOW-DBT-CONNECTIONS.md)
-- [Instalação Aureus Admin](../01-guides-01-guides-checklists/checklists/guias/instalacao-admin.md)
+- [Instalação Aureus Admin](../../01-guides-checklists/guias/instalacao-admin.md)
 
-[Voltar ao ciclo de vida](README.md) | [Índice da wiki](../README.md)
+[Voltar ao ciclo de vida](README.md) | [Índice da wiki](../../README.md)

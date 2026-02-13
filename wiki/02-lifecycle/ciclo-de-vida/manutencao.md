@@ -34,7 +34,7 @@ Backup, restore, DR, atualizações de versão, regulatório, Data Lakehouse, fe
 
 - Manter relatórios e layouts (BACEN, Receita) em dia; versão do formato, vencimentos, scheduler.
 
-**Checklist**: [01-guides-checklists/checklists/regulatorio.md](../01-guides-checklists/checklists/regulatorio.md). **Doc**: [regulatory-pack.md](../../03-compliance/regulatory-pack.md).
+**Checklist**: [01-guides-checklists/checklists/regulatorio.md](../../01-guides-checklists/checklists/regulatorio.md). **Doc**: [regulatory-pack.md](../../../01-business/conformidade/regulatory-pack.md).
 
 ---
 
@@ -42,7 +42,7 @@ Backup, restore, DR, atualizações de versão, regulatório, Data Lakehouse, fe
 
 - Buckets MinIO, connections Airflow, DAGs, dbt; evolução (novos DAGs, OpenLineage, MLflow).
 
-**Checklist**: [01-guides-checklists/checklists/data-lakehouse.md](../01-guides-checklists/checklists/data-lakehouse.md).
+**Checklist**: [01-guides-checklists/checklists/data-lakehouse.md](../../01-guides-checklists/checklists/data-lakehouse.md).
 
 ---
 
@@ -52,4 +52,4 @@ Backup, restore, DR, atualizações de versão, regulatório, Data Lakehouse, fe
 
 **Doc**: [feature-flags.md](../../05-infrastructure/infrastructure/feature-flags.md).
 
-[Voltar ao ciclo de vida](README.md) | [Índice da wiki](../README.md)
+[Voltar ao ciclo de vida](README.md) | [Índice da wiki](../../README.md)

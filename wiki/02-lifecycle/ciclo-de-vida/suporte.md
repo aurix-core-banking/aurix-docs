@@ -42,6 +42,6 @@ Os tempos são exemplos; o contrato com o cliente define os SLAs efetivos.
 - **Escalação**: tickets críticos ou altos não resolvidos no SLA devem ser escalados para engenharia ou plantão conforme política interna.
 - **Pós-incidente**: para incidentes críticos, realizar revisão e atualizar runbook e documentação quando aplicável.
 
-**Detalhes**: [01-guides-checklists/kit-implementacao/suporte-tecnico.md](../01-guides-checklists/kit-implementacao/suporte-tecnico.md).
+**Detalhes**: [suporte-tecnico.md](../../01-guides-checklists/kit-implementacao/suporte-tecnico.md).
 
-[Voltar ao ciclo de vida](README.md) | [Índice da wiki](../README.md)
+[Voltar ao ciclo de vida](README.md) | [Índice da wiki](../../README.md)

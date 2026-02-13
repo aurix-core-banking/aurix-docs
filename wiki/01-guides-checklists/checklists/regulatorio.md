@@ -50,6 +50,6 @@ Para fechamento contábil e reportes em tempo quase real: o módulo core (ou acc
 
 Em AUREUS Cloud, o regulatory pack é atualizado pela equipe; clientes recebem novas versões via deploy. Não é necessário que o cliente rode este checklist.
 
-Documento completo: [regulatory-pack.md](../../03-compliance/regulatory-pack.md).
+Documento completo: [regulatory-pack.md](../../../01-business/conformidade/regulatory-pack.md).
 
-[Voltar aos checklists](README.md) | [Índice da wiki](../README.md)
+[Voltar aos checklists](README.md) | [Índice da wiki](../../README.md)

@@ -12,7 +12,7 @@ Checklist para novo cliente (instituição) antes do go live. Corresponde ao ite
 - [ ] **Config no módulo bacen**: `aureus.bacen.ispb`, `certificados.keystore-path`, `certificados.truststore-path`, senhas em variáveis de ambiente ou secret manager; `spi.enabled` / `str.enabled` e URLs conforme ambiente.
 - [ ] **Teste de conectividade**: em homologação, validar chamadas SPI/STR (ou modo simulado se certificado ainda não disponível).
 
-Referência: [03-compliance/spi-str-certificados.md](../03-compliance/spi-str-certificados.md).
+Referência: [SPI/STR certificados](../../03-compliance/conformidade/spi-str-certificados.md).
 
 ---
 
@@ -74,6 +74,6 @@ Referência: [03-compliance/spi-str-certificados.md](../03-compliance/spi-str-ce
 3. Provisioning e config do tenant.
 4. RegTech e segurança.
 
-Quando todos os itens relevantes estiverem marcados, o go live pode ser agendado conforme runbook e guia "Do zero ao primeiro PIX" ([guia-zero-primeiro-pix.md](../01-guides-checklists/kit-implementacao/guia-zero-primeiro-pix.md)).
+Quando todos os itens relevantes estiverem marcados, o go live pode ser agendado conforme runbook e guia "Do zero ao primeiro PIX" ([guia-zero-primeiro-pix.md](../kit-implementacao/guia-zero-primeiro-pix.md)).
 
-[Voltar aos checklists](README.md) | [Índice da wiki](../README.md)
+[Voltar aos checklists](README.md) | [Índice da wiki](../../README.md)

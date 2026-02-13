@@ -44,4 +44,4 @@ O serviço que gera o documento (ex.: contrato de adesão em PDF ou página HTML
 
 A implementação atual suporta a Opção 2 (URL por tenant). A inclusão de templates padrão editáveis (Opção 1) pode ser feita em um módulo de documentos.
 
-[Voltar ao kit](README.md) | [Índice da wiki](../README.md)
+[Voltar ao kit](README.md) | [Índice da wiki](../../README.md)

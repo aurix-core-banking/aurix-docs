@@ -80,6 +80,6 @@ A instituição configura branding (logo, cores) e **termos de uso** no módulo 
 ## Referências
 
 - [Portal do desenvolvedor](../../03-development/portal-desenvolvedor/README.md): APIs gerais do AUREUS.
-- [Templates (termos, privacidade)](../01-guides-checklists/kit-implementacao/templates.md)
+- [Templates (termos, privacidade)](../kit-implementacao/templates.md)
 
-[Voltar a Guias](README.md) | [Índice da wiki](../README.md)
+[Voltar a Guias](README.md) | [Índice da wiki](../../README.md)

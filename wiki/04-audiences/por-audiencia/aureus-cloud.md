@@ -60,7 +60,7 @@ O uso atual e o histórico podem ser consultados no painel do cliente ou via API
 ## Referências
 
 - [Portal do desenvolvedor](../../03-development/portal-desenvolvedor/README.md): documentação de APIs e guias.
-- [Roadmap e status](../../roadmap.md): visão do produto e evolução.
-- [Suporte técnico](../01-guides-checklists/kit-implementacao/suporte-tecnico.md)
+- [Roadmap e status](../../../01-business/roadmap.md): visão do produto e evolução.
+- [Suporte técnico](../../01-guides-checklists/kit-implementacao/suporte-tecnico.md)
 
-[Voltar à audiência](README.md) | [Índice da wiki](../README.md)
+[Voltar à audiência](README.md) | [Índice da wiki](../../README.md)

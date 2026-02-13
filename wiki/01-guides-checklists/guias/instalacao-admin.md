@@ -35,6 +35,6 @@ Guia para instalar e rodar o painel administrativo (frontend) em ambiente local.
 ## Referências
 
 - [aureus-admin-desenvolvimento.md](../../03-development/frontend/aureus-admin-desenvolvimento.md) – fluxo de desenvolvimento do admin
-- [Setup da plataforma](../02-lifecycle/setup.md)
+- [Setup da plataforma](../../02-lifecycle/ciclo-de-vida/setup.md)
 
-[Voltar a Guias](README.md) | [Índice da wiki](../README.md)
+[Voltar a Guias](README.md) | [Índice da wiki](../../README.md)

@@ -23,7 +23,7 @@ Passos para colocar a plataforma AUREUS de pé (primeira vez ou ambiente novo), 
 - [ ] Se o Postgres já existia antes do script de Airflow: criar DB e usuário Airflow (ver [data-lakehouse.md](data-lakehouse.md#banco-airflow))
 - [ ] Criar buckets MinIO: executar `scripts/create-minio-buckets.sh` ou criar manualmente no Console (porta 9001) os buckets `aureus-bronze`, `aureus-silver`, `aureus-gold`
 
-Referência: [banco-dados/README.md](../../banco-dados/README.md).
+Referência: [Arquitetura de dados](../../../02-technical/arquitetura/evolucao-arquitetura-dados.md).
 
 ---
 
@@ -39,7 +39,7 @@ Referência: [banco-dados/README.md](../../banco-dados/README.md).
 
 ## 4. Frontend
 
-- [ ] **aureus-admin**: `cd frontend/aureus-admin && npm install && npm start` (ver [Instalação Aureus Admin](../01-guides-01-guides-checklists/checklists/guias/instalacao-admin.md))
+- [ ] **aureus-admin**: `cd frontend/aureus-admin && npm install && npm start` (ver [Instalação Aureus Admin](../guias/instalacao-admin.md))
 - [ ] **aureus-web**: `cd frontend/aureus-web && npm install && npm start` (se existir)
 - [ ] Configurar URL da API (env ou config) apontando para o gateway
 
@@ -71,4 +71,4 @@ Ver [testes/e2e.md](../../03-development/testes/e2e.md).
 - Para **go live de um novo cliente**: usar [go-live.md](go-live.md).
 - Para **atualização regulatória** (relatórios BACEN/Receita): usar [regulatorio.md](regulatorio.md).
 
-[Voltar aos checklists](README.md) | [Índice da wiki](../README.md)
+[Voltar aos checklists](README.md) | [Índice da wiki](../../README.md)

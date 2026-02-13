@@ -14,9 +14,9 @@ O que a arquitetura precisa saber: decisões técnicas, visão do sistema, dados
 
 ## Camada de dados
 
-- **Banco de dados**: [banco-dados/README.md](../../banco-dados/README.md).
-- **Arquitetura completa**: [banco-dados/arquitetura-completa.md](../../banco-dados/arquitetura-completa.md).
-- **OLTP, lakehouse, streaming**: documentados em banco-dados e [data-pipelines/](../../04-data-ai/data-pipelines/).
+- **Banco de dados**: [evolucao-arquitetura-dados.md](../../02-technical/arquitetura/evolucao-arquitetura-dados.md).
+- **Arquitetura de dados**: [evolucao-arquitetura-dados.md](../../02-technical/arquitetura/evolucao-arquitetura-dados.md).
+- **OLTP, lakehouse, streaming**: documentados em arquitetura e [data-pipelines/](../../04-data-ai/data-pipelines/).
 
 ---
 
@@ -30,13 +30,13 @@ O que a arquitetura precisa saber: decisões técnicas, visão do sistema, dados
 ## Segurança e IAM
 
 - **Segurança**: referências em módulos (gateway, openfinance, provisioning).
-- **Conformidade**: [03-compliance/](../../03-compliance/), BACEN, LGPD.
+- **Conformidade**: [03-compliance/conformidade/README.md](../../03-compliance/conformidade/README.md), BACEN, LGPD.
 
 ---
 
 ## Roadmap e evolução
 
-- **Roadmap e status**: [roadmap.md](../../roadmap.md).
+- **Roadmap e status**: [roadmap.md](../../../01-business/roadmap.md).
 - **Changelog**: [CHANGELOG.md](../../CHANGELOG.md).
 
-[Voltar à audiência](README.md) | [Índice da wiki](../README.md)
+[Voltar à audiência](README.md) | [Índice da wiki](../../README.md)
