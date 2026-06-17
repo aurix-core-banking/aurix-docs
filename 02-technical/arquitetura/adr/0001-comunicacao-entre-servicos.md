@@ -1,0 +1,94 @@
+# ADR-0001: Padrão de comunicação entre serviços/módulos
+
+**Status**: Aceito
+**Data**: 2026-06-17
+
+---
+
+## Contexto
+
+A plataforma tem 27+ módulos Spring Boot (`backend/aureus-*`) e hoje a comunicação entre eles é inconsistente, com dois padrões coexistindo de forma parcial e não documentada:
+
+- **Síncrono ad-hoc**: cada módulo consumidor escreve seu próprio client REST manualmente — `CoreApiClient` (`aureus-onboarding`), `CoreApiClientImpl` (`aureus-openfinance`) — sem contrato gerado, sem versionamento, com risco de drift entre o que o client espera e o que o serviço expõe.
+- **Assíncrono parcialmente adotado**: existe um `EventHub` em `aureus-shared` (`eventhub/EventHub.java`) com roteamento, retry exponencial, prioridade e Dead Letter Queue — bem desenhado — e um padrão de outbox transacional em `aureus-core` (`OutboxEventPublisher`/`OutboxRelay`). Mas só `aureus-core` e `aureus-pix` de fato publicam eventos hoje. Os módulos `aureus-analytics`, `aureus-audit`, `aureus-compliance`, `aureus-credit`, `aureus-security`, `aureus-treasury` declaram a dependência do Kafka no `pom.xml` mas não publicam nem consomem nada.
+- **Consumidores no lugar errado**: `EventListener` (`@KafkaListener` para `conta-criada`, `transacao-realizada`, `imposto-calculado` etc.) vive dentro de `aureus-shared`, uma biblioteca compartilhada — ou seja, lógica de negócio de um domínio específico roda implicitamente em qualquer serviço que dependa de `aureus-shared`, em vez de pertencer ao serviço que de fato é o dono daquele evento.
+- **Sem contrato formal**: `aureus-api-specs` tem apenas 1 OpenAPI (`aureus-core.yaml`) para toda a plataforma; não há AsyncAPI para os tópicos Kafka, nem convenção de nome/versionamento de tópico (`conta-criada` é um nome plano, sem domínio ou versão).
+- **Gateway só cobre tráfego norte-sul**: `aureus-gateway` faz autenticação por API key e rate limit na borda, mas não há nada padronizado para tráfego leste-oeste (serviço a serviço) — nem mTLS, nem service mesh.
+
+Isso aumenta o risco de inconsistência de dados em fluxos financeiros multi-módulo (PIX → liquidação → contabilidade → fiscal) e de regressão silenciosa quando um client REST escrito a mão fica desatualizado.
+
+## Decisão
+
+### 1. Síncrono (consulta / validação que precisa de resposta imediata)
+REST interno via **clients gerados a partir de OpenAPI**, não mais classes de client escritas à mão. Padronizar em `WebClient` (já usado em `aureus-bacen`). Cada módulo publica seu próprio OpenAPI (expandir `aureus-api-specs` para cobrir todos os módulos, não só `aureus-core`); os specs que faltam devem ser gerados a partir dos controllers existentes (springdoc-openapi) e versionados no repositório.
+
+### 2. Assíncrono (mudança de estado / evento de domínio entre módulos)
+Kafka via **outbox transacional**, estendendo o padrão já existente em `aureus-core` para os módulos que hoje mudam estado financeiro crítico sem publicar nada: `aureus-pix` (parcial), `aureus-settlement`, `aureus-billing`, `aureus-bacen`, `aureus-treasury`, `aureus-credit`, `aureus-tax`, `aureus-accounting`. Outbox evita dual-write inconsistente (gravar no banco e falhar ao publicar no Kafka) e dá trilha de auditoria nativa — importante em banking.
+
+**Convenção de tópico**: `<dominio>.<entidade>.<evento>.<versao>` (ex.: `core.conta.criada.v1`, `pix.transferencia.liquidada.v1`) em vez dos nomes planos atuais (`conta-criada`). Evita colisão de nomes entre módulos e permite evolução de schema sem quebrar consumidores antigos.
+
+**Consumidores pertencem ao serviço dono do caso de uso**, nunca a `aureus-shared`. Mover a lógica hoje em `EventListener` (aureus-shared) para os serviços que realmente consomem aquele evento (ex.: lógica de cache de conta deveria estar em quem precisa do cache, não centralizada numa lib compartilhada por todos).
+
+### 3. Fluxos multi-módulo com múltiplas etapas
+**Saga coreografada via eventos Kafka**, não transação distribuída (2PC). Cada serviço reage a um evento, executa sua etapa local e publica o evento seguinte (ou um evento de compensação em caso de falha). Ex.: PIX liquidado → evento → lançamento contábil → evento → cálculo de imposto. Falha em qualquer etapa publica evento de compensação para desfazer etapas anteriores.
+
+### 4. Contrato
+- **OpenAPI** para toda chamada síncrona (`aureus-api-specs/*.yaml`, um arquivo por módulo).
+- **AsyncAPI** para todo tópico Kafka publicado, descrevendo schema do evento, versão e produtor — mesmo diretório `aureus-api-specs`.
+- Geração de client/DTO no build (Maven plugin de codegen), eliminando classes de client escritas à mão.
+
+### 5. Segurança leste-oeste
+Tráfego serviço-a-serviço deve ser protegido por mTLS quando os manifests de Kubernetes forem criados para os módulos que hoje não têm (ver checklist de infraestrutura). Não é bloqueador para adotar os padrões 1-4, mas deve acompanhar a expansão de cobertura de Kubernetes.
+
+## Classificação arquitetural: híbrido, não EDA puro
+
+Vale deixar explícito para não ser reinterpretado depois como "adotamos EDA": esta decisão é uma **arquitetura de microsserviços orientada a eventos no lado de escrita/propagação de estado, com REST request-response no lado de consulta** — não um Event-Driven Architecture (EDA) completo.
+
+- **O que é EDA aqui**: a parte assíncrona (Kafka + outbox + saga coreografada) segue o padrão — serviços publicam eventos de domínio, outros reagem sem chamada direta acoplada.
+- **O que não é EDA puro**: consultas e validações que precisam de resposta imediata (ex.: "esse CPF já tem conta?", "qual o saldo agora?") continuam via REST síncrono. Um EDA puro resolveria isso com **CQRS** — cada serviço mantendo uma *view* materializada local, alimentada pelos eventos dos serviços donos, em vez de perguntar sincronamente. Adotar CQRS agora foi descartado por ser complexidade prematura: exigiria manter réplicas de dados de outros domínios em cada serviço (mais armazenamento, mais consistência eventual para tratar, mais superfície operacional) antes de termos resolvido o básico (PIX/settlement ainda simulados — ver checklist de completude). Revisitar quando escala de leitura for um problema real e mensurável, não antecipado.
+- **Não é Event Sourcing**: os eventos no Kafka são notificação de mudança de estado (o banco relacional via outbox continua sendo a fonte da verdade), não um log de eventos como única fonte de verdade reconstruível. Event Sourcing é um salto de complexidade maior, fora de escopo desta decisão.
+
+## Consequências
+
+**Positivas**
+- Reaproveita 100% da infraestrutura Kafka/outbox/EventHub já construída e paga, em vez de descartar.
+- Reduz drift de contrato entre módulos (clients gerados, não escritos a mão).
+- Dá trilha de auditoria e capacidade de replay de eventos — relevante para investigação de incidentes e para os relatórios regulatórios (BACEN, SCR) que hoje dependem de dados consistentes entre módulos.
+- Desacopla módulos: um módulo lento ou fora do ar não bloqueia sincronamente os demais em fluxos assíncronos.
+
+**Negativas / trade-offs**
+- Mais disciplina de contrato (manter OpenAPI/AsyncAPI atualizados) do que simplesmente chamar um endpoint.
+- Consistência eventual em vez de imediata nos fluxos assíncronos — exige que cada módulo trate estados intermediários (ex.: "PIX recebido, aguardando lançamento contábil") na sua modelagem.
+- Saga coreografada é mais difícil de depurar que uma chamada síncrona direta — requer correlação de eventos por ID de transação/trace.
+- Esforço de migração: mover `EventListener` de `aureus-shared` para os serviços donos é uma refatoração não trivial.
+
+## Alternativas consideradas
+
+- **gRPC para todas as chamadas síncronas**: rejeitado por agora — adiciona ferramental e curva de aprendizado sem que latência seja hoje o problema; REST com client gerado resolve o problema real (drift de contrato).
+- **Transação distribuída (2PC) para fluxos multi-módulo**: rejeitado — não escala bem com Kafka/microsserviços e adiciona acoplamento forte exatamente onde se quer desacoplar.
+- **Manter o status quo (cada módulo decide)**: rejeitado — é a causa raiz da inconsistência atual (alguns módulos com Kafka não usado, clients duplicados, eventos sem padronização de nome).
+- **Service mesh completo (Istio) imediatamente**: postergado — a cobertura de Kubernetes hoje é de 1/29 serviços; adotar mTLS/mesh antes de ter manifests para todos os serviços é prematuro. Decisão registrada para revisão quando a cobertura de k8s avançar.
+
+## Plano de adoção por módulo
+
+| Módulo | Situação atual | Ação |
+|--------|-----------------|------|
+| `aureus-core` | Outbox + Kafka publicando | Referência — manter, alinhar nome de tópico à nova convenção |
+| `aureus-pix` | Publica eventos via EventHub | Migrar para outbox transacional; alinhar nome de tópico |
+| `aureus-settlement` | Não publica nada | Adotar outbox; publicar eventos de liquidação |
+| `aureus-billing` | Não publica nada | Adotar outbox; publicar evento de fatura emitida/paga |
+| `aureus-bacen` | Não publica nada | Adotar outbox; publicar evento de relatório gerado/enviado |
+| `aureus-treasury` | Dependência Kafka não usada | Adotar outbox ou remover dependência morta |
+| `aureus-credit` | Dependência Kafka não usada | Adotar outbox; publicar evento de decisão de crédito |
+| `aureus-tax` | Não publica nada | Adotar outbox; publicar evento de imposto calculado |
+| `aureus-accounting` | Não publica nada | Consumir eventos de billing/settlement; publicar lançamento contábil |
+| `aureus-analytics` | Dependência Kafka não usada | Tornar-se consumidor (não produtor) dos eventos de negócio |
+| `aureus-audit` | Dependência Kafka não usada | Tornar-se consumidor de todos os eventos relevantes para trilha de auditoria |
+| `aureus-compliance` | Dependência Kafka não usada | Consumir eventos de transação/conta para checagens AML/PLD |
+| `aureus-security` | Dependência Kafka não usada | Avaliar se precisa de eventing ou se é só dependência morta |
+| `aureus-gateway` | Dependência Kafka não usada | Remover dependência — gateway de borda não deveria precisar de broker |
+| `aureus-onboarding` | Client REST escrito à mão (`CoreApiClient`) | Migrar para client gerado a partir do OpenAPI do `aureus-core` |
+| `aureus-openfinance` | Client REST escrito à mão (`CoreApiClientImpl`) | Migrar para client gerado a partir do OpenAPI do `aureus-core` |
+| `aureus-shared` | Hospeda `EventListener` com lógica de negócio | Remover listeners de domínio daqui; mover para o serviço dono de cada evento |
+
+[Voltar ao índice de ADRs](README.md)

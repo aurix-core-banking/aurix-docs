@@ -19,6 +19,7 @@
 - **Swagger**: Documentação automática
 - **Versionamento**: Versionamento de APIs
 - **Gateway**: API Gateway para roteamento
+- **Comunicação entre módulos**: padrão formalizado em [ADR-0001](adr/0001-comunicacao-entre-servicos.md) — REST com client gerado de OpenAPI para chamadas síncronas, Kafka com outbox transacional para eventos de domínio, saga coreografada para fluxos multi-módulo
 
 ### **3. Modularidade**
 - **Separação**: Módulos bem definidos e separados
