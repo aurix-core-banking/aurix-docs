@@ -26,9 +26,13 @@ liquidação, PIX). Ao construir e depurar o skill de execução do `aureus-core
 - `aureus-settlement/.../service/SettlementService.java` (`validarSaldoDisponivel` + `atualizarSaldoConta`,
   linhas ~175-238): clássico TOCTOU (time-of-check-to-time-of-use) — valida saldo disponível, e só depois,
   numa chamada separada, debita/credita. Entre as duas chamadas duas liquidações concorrentes podem aprovar
-  com base no mesmo saldo e gerar saldo negativo sem detecção. Pior: `SaldoConta` (a entidade que guarda esse
-  saldo) **não estende `BaseEntity`** — não tem `@Version`, ou seja, nem a proteção mínima de optimistic
-  locking existe aqui.
+  com base no mesmo saldo e gerar saldo negativo sem detecção. `SaldoConta` (a entidade que guarda esse saldo)
+  não estende `BaseEntity`, mas declara seu próprio campo `@Version private Long versao` — então o optimistic
+  locking básico existe (correção a este ADR: a versão original deste documento afirmou que não existia), mas
+  isso não fecha a janela de TOCTOU nem evita o problema mais grave encontrado ao ler o código completo: o
+  método que chama `atualizarSaldos` o fazia **incondicionalmente**, mesmo quando a liquidação era rejeitada
+  por regra de negócio (ex.: TED fora do horário de funcionamento) — ou seja, dinheiro era debitado/creditado
+  mesmo em operações rejeitadas.
 - `SaldoConta` (`aureus-settlement`) e `Conta.saldo` (`aureus-core`, usado por `aureus-pix`) são **fontes de
   saldo completamente separadas e não sincronizadas** — o mesmo tipo de duplicação de entidade já identificado
   na auditoria de completude da plataforma (`ConciliacaoBancaria` e `Cliente` duplicados entre módulos).
@@ -57,8 +61,9 @@ de read-modify-write via JPA:**
    regras além de saldo simples), usar `@Lock(LockModeType.PESSIMISTIC_WRITE)` no `findById` do Spring Data
    (gera `SELECT ... FOR UPDATE`) para serializar o acesso àquela linha durante a transação, em vez de confiar
    em optimistic locking + exceção.
-3. **Toda entidade que representa saldo precisa de `@Version`** (estender `BaseEntity` ou equivalente) como
-   segunda camada de proteção, mesmo quando a atualização já é atômica — `SaldoConta` não tem isso hoje.
+3. **Toda entidade que representa saldo precisa de `@Version`** (estender `BaseEntity` ou declarar o campo
+   diretamente, como `SaldoConta` já faz) como segunda camada de proteção, mesmo quando a atualização já é
+   atômica.
 4. **Uma única fonte de saldo por conta.** Eliminar a duplicação `Conta.saldo` (core) vs `SaldoConta`
    (settlement) — settlement deve consumir/atualizar o saldo do core (via evento ou chamada), não manter sua
    própria cópia divergente. Isso depende da consolidação de domínio já apontada na seção 12 do checklist de
@@ -103,12 +108,12 @@ operação dentro dos mesmos módulos.
 
 ## Plano de adoção por módulo/fluxo
 
-| Módulo / fluxo | Situação atual | Ação |
-|---|---|---|
-| `aureus-core` `ContaService.atualizarSaldo` / `atualizarLimiteUtilizado` | Read-modify-write, só `@Version` como rede de segurança | Trocar por `UPDATE` atômico condicional (`saldo >= :valor` no débito) |
-| `aureus-settlement` `SettlementService.validarSaldoDisponivel` + `atualizarSaldoConta` | TOCTOU explícito, sem `@Version` | Unificar validação+escrita numa operação atômica; adicionar `@Version`/estender `BaseEntity` em `SaldoConta` enquanto a fonte não for unificada |
-| `aureus-settlement` `SaldoConta` vs `aureus-core` `Conta.saldo` | Fontes de saldo duplicadas e dessincronizadas | Consolidar em uma única fonte (acompanhar seção 12 do checklist de completude) |
-| `aureus-pix` `PixTransferenciaService.processarTransferencia` | Não debita/credita saldo nenhum | Implementar a movimentação real usando o padrão de atualização atômica acima como parte da implementação, não depois |
-| `aureus-credit`, `aureus-treasury` | Não auditado neste ADR | Revisar com o mesmo critério (debita/credita saldo ou decide com base em saldo?) antes de assumir que está protegido |
+| Módulo / fluxo | Situação atual | Ação | Status |
+|---|---|---|---|
+| `aureus-core` `ContaService.atualizarSaldo` / `atualizarLimiteUtilizado` | Read-modify-write, só `@Version` como rede de segurança | Trocar por `UPDATE` atômico condicional (`saldo >= :valor` no débito) | ✅ Feito — `ContaRepository.debitarSaldoAtomico`/`creditarSaldoAtomico`/`utilizarLimiteAtomico`/`liberarLimiteAtomico` |
+| `aureus-settlement` `SettlementService.validarSaldoDisponivel` + `atualizarSaldoConta` | TOCTOU explícito; saldo movimentado mesmo em liquidação rejeitada | Unificar validação+escrita numa operação atômica; só movimentar saldo quando status final for LIQUIDADO; constraint única (`conta`, `data_referencia`) | ✅ Feito — `SaldoContaRepository.debitarSaldoAtomico`/`creditarSaldoAtomico`, `SettlementService.movimentarSaldos` |
+| `aureus-settlement` `SaldoConta` vs `aureus-core` `Conta.saldo` | Fontes de saldo duplicadas e dessincronizadas | Consolidar em uma única fonte (acompanhar seção 12 do checklist de completude) | ⏳ Pendente — é migração de dado real, não só código |
+| `aureus-pix` `PixTransferenciaService.processarTransferencia` | Não debita/credita saldo nenhum | Implementar a movimentação real usando o padrão de atualização atômica acima como parte da implementação, não depois | ✅ Feito — debita origem atomicamente, credita destino se a chave PIX resolver para conta local |
+| `aureus-credit`, `aureus-treasury` | Não auditado neste ADR | Revisar com o mesmo critério (debita/credita saldo ou decide com base em saldo?) antes de assumir que está protegido | ⏳ Pendente |
 
 [Voltar ao índice de ADRs](README.md)

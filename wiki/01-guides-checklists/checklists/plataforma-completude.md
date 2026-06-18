@@ -24,8 +24,8 @@ Prioridades: **P0** = bloqueador (segurança/regulatório/financeiro, não pode 
 - [ ] **Implementar MED (Mecanismo Especial de Devolução)** e fluxo de portabilidade de chave/SPI-DICT real.
 - [ ] **Corrigir geradores de relatório BACEN** (`CosifReportGenerator`, `ScrCcsReportGenerator`, `EFinanceiraReportGenerator` etc. em `aureus-bacen`) — hoje produzem dados fake (CNPJ fixo, saldo zero); qualquer envio real ao Bacen como está seria submissão incorreta.
 - [ ] **Implementar SPED/SCR de fato** — hoje apenas estrutura de classe com campos genéricos.
-- [ ] **PIX não movimenta saldo nenhum**: `PixTransferenciaService.processarTransferencia` muda o status para `PROCESSADA` mas nunca debita a conta origem nem credita o destino. Implementar a movimentação real seguindo o padrão de atualização atômica do [ADR-0002](../../../02-technical/arquitetura/adr/0002-jpa-vs-sql-nativo-fluxos-financeiros.md).
-- [ ] **Corrigir race condition em atualização de saldo** (`ContaService.atualizarSaldo` em aureus-core, `SettlementService.validarSaldoDisponivel`/`atualizarSaldoConta` em aureus-settlement — esta última sem nem `@Version`) e **unificar a fonte de saldo** (`Conta.saldo` vs `SaldoConta` duplicados) — ver [ADR-0002](../../../02-technical/arquitetura/adr/0002-jpa-vs-sql-nativo-fluxos-financeiros.md).
+- [x] **PIX não movimenta saldo nenhum** — corrigido: `PixTransferenciaService.processarTransferencia` agora debita a conta origem atomicamente e credita o destino quando a chave PIX resolve para uma conta local, seguindo o padrão do [ADR-0002](../../../02-technical/arquitetura/adr/0002-jpa-vs-sql-nativo-fluxos-financeiros.md).
+- [x] **Corrigir race condition em atualização de saldo** — corrigido em `aureus-core` (`ContaRepository`/`ContaService`, `UPDATE` atômico condicional) e `aureus-settlement` (`SaldoContaRepository`/`SettlementService.movimentarSaldos`, mesmo padrão; também corrigido um bug onde o saldo era movimentado mesmo em liquidação rejeitada). Pendente: **unificar a fonte de saldo** (`Conta.saldo` vs `SaldoConta` duplicados) — é migração de dado real, ver [ADR-0002](../../../02-technical/arquitetura/adr/0002-jpa-vs-sql-nativo-fluxos-financeiros.md).
 
 ## 3. Compliance, AML/PLD e LGPD reais (P0 — exigência legal)
 
@@ -125,10 +125,10 @@ Padrão formalizado em [ADR-0001](../../../02-technical/arquitetura/adr/0001-com
 - [ ] **Migrar clients REST escritos à mão** (`CoreApiClient` em `aureus-onboarding`, `CoreApiClientImpl` em `aureus-openfinance`) para clients gerados a partir do OpenAPI do `aureus-core`.
 - [ ] **Expandir `aureus-api-specs`** para cobrir todos os módulos (hoje só `aureus-core.yaml` existe) e adicionar AsyncAPI para os tópicos Kafka.
 - [ ] **Adotar outbox transacional** nos módulos que mudam estado financeiro crítico sem publicar eventos: `aureus-settlement`, `aureus-billing`, `aureus-bacen`, `aureus-treasury`, `aureus-credit`, `aureus-tax`, `aureus-accounting`.
-- [ ] **Resolver dependências Kafka mortas** (declaradas no `pom.xml` mas nunca usadas): `aureus-analytics`, `aureus-audit`, `aureus-compliance`, `aureus-security`, `aureus-gateway` — adotar uso real (ex.: analytics/audit/compliance como consumidores) ou remover a dependência.
-- [ ] **Mover `EventListener` de `aureus-shared` para os serviços donos** de cada evento — hoje lógica de negócio de domínio roda implicitamente em qualquer serviço que dependa da lib compartilhada.
+- [ ] **Resolver dependências Kafka mortas** (declaradas no `pom.xml` mas nunca usadas): `aureus-analytics`, `aureus-audit`, `aureus-compliance`, `aureus-security` — adotar uso real (ex.: analytics/audit/compliance como consumidores) ou remover a dependência. (`aureus-gateway` já resolvido — dependência removida.)
+- [x] **Mover `EventListener` de `aureus-shared` para os serviços donos** de cada evento — feito: removido de `aureus-shared`; os 3 listeners com lógica real foram para `aureus-core/.../event/ContaTransacaoEventListener.java` (com lookups reais no lugar dos dados fabricados); os outros 5 (sem nenhum publicador) foram removidos.
 - [ ] **Padronizar nome de tópico** para `<dominio>.<entidade>.<evento>.<versao>` (hoje são nomes planos como `conta-criada`, sem domínio nem versão).
-- [ ] **Corrigir `EventHub.publishEventWithDelay`** — usa `Thread.sleep` real (bloqueante) em vez de agendamento assíncrono de fato.
+- [x] **Corrigir `EventHub.publishEventWithDelay`** (e `publishEventWithRetryInternal`, mesmo bug) — agora usam `ScheduledExecutorService` em vez de `Thread.sleep` bloqueante.
 
 Tabela completa de ação por módulo: ver [ADR-0001](../../../02-technical/arquitetura/adr/0001-comunicacao-entre-servicos.md#plano-de-adoção-por-módulo).
 

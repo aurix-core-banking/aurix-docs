@@ -71,24 +71,28 @@ Vale deixar explícito para não ser reinterpretado depois como "adotamos EDA": 
 
 ## Plano de adoção por módulo
 
-| Módulo | Situação atual | Ação |
-|--------|-----------------|------|
-| `aureus-core` | Outbox + Kafka publicando | Referência — manter, alinhar nome de tópico à nova convenção |
-| `aureus-pix` | Publica eventos via EventHub | Migrar para outbox transacional; alinhar nome de tópico |
-| `aureus-settlement` | Não publica nada | Adotar outbox; publicar eventos de liquidação |
-| `aureus-billing` | Não publica nada | Adotar outbox; publicar evento de fatura emitida/paga |
-| `aureus-bacen` | Não publica nada | Adotar outbox; publicar evento de relatório gerado/enviado |
-| `aureus-treasury` | Dependência Kafka não usada | Adotar outbox ou remover dependência morta |
-| `aureus-credit` | Dependência Kafka não usada | Adotar outbox; publicar evento de decisão de crédito |
-| `aureus-tax` | Não publica nada | Adotar outbox; publicar evento de imposto calculado |
-| `aureus-accounting` | Não publica nada | Consumir eventos de billing/settlement; publicar lançamento contábil |
-| `aureus-analytics` | Dependência Kafka não usada | Tornar-se consumidor (não produtor) dos eventos de negócio |
-| `aureus-audit` | Dependência Kafka não usada | Tornar-se consumidor de todos os eventos relevantes para trilha de auditoria |
-| `aureus-compliance` | Dependência Kafka não usada | Consumir eventos de transação/conta para checagens AML/PLD |
-| `aureus-security` | Dependência Kafka não usada | Avaliar se precisa de eventing ou se é só dependência morta |
-| `aureus-gateway` | Dependência Kafka não usada | Remover dependência — gateway de borda não deveria precisar de broker |
-| `aureus-onboarding` | Client REST escrito à mão (`CoreApiClient`) | Migrar para client gerado a partir do OpenAPI do `aureus-core` |
-| `aureus-openfinance` | Client REST escrito à mão (`CoreApiClientImpl`) | Migrar para client gerado a partir do OpenAPI do `aureus-core` |
-| `aureus-shared` | Hospeda `EventListener` com lógica de negócio | Remover listeners de domínio daqui; mover para o serviço dono de cada evento |
+| Módulo | Situação atual | Ação | Status |
+|--------|-----------------|------|--------|
+| `aureus-core` | Outbox + Kafka publicando | Referência — manter, alinhar nome de tópico à nova convenção | ⏳ Nome de tópico ainda não padronizado |
+| `aureus-pix` | Publica eventos via EventHub | Migrar para outbox transacional; alinhar nome de tópico | ⏳ Pendente |
+| `aureus-settlement` | Não publica nada | Adotar outbox; publicar eventos de liquidação | ⏳ Pendente (saldo já corrigido via ADR-0002) |
+| `aureus-billing` | Não publica nada | Adotar outbox; publicar evento de fatura emitida/paga | ⏳ Pendente |
+| `aureus-bacen` | Não publica nada | Adotar outbox; publicar evento de relatório gerado/enviado | ⏳ Pendente |
+| `aureus-treasury` | Dependência Kafka não usada | Adotar outbox ou remover dependência morta | ⏳ Pendente |
+| `aureus-credit` | Dependência Kafka não usada | Adotar outbox; publicar evento de decisão de crédito | ⏳ Pendente |
+| `aureus-tax` | Não publica nada | Adotar outbox; publicar evento de imposto calculado | ⏳ Pendente |
+| `aureus-accounting` | Não publica nada | Consumir eventos de billing/settlement; publicar lançamento contábil | ⏳ Pendente |
+| `aureus-analytics` | Dependência Kafka não usada | Tornar-se consumidor (não produtor) dos eventos de negócio | ⏳ Pendente |
+| `aureus-audit` | Dependência Kafka não usada | Tornar-se consumidor de todos os eventos relevantes para trilha de auditoria | ⏳ Pendente |
+| `aureus-compliance` | Dependência Kafka não usada | Consumir eventos de transação/conta para checagens AML/PLD | ⏳ Pendente |
+| `aureus-security` | Dependência Kafka não usada | Avaliar se precisa de eventing ou se é só dependência morta | ⏳ Pendente |
+| `aureus-gateway` | Dependência Kafka não usada | Remover dependência — gateway de borda não deveria precisar de broker | ✅ Feito — `spring-kafka`/`spring-kafka-test` removidos do pom |
+| `aureus-onboarding` | Client REST escrito à mão (`CoreApiClient`) | Migrar para client gerado a partir do OpenAPI do `aureus-core` | ⏳ Pendente |
+| `aureus-openfinance` | Client REST escrito à mão (`CoreApiClientImpl`) | Migrar para client gerado a partir do OpenAPI do `aureus-core` | ⏳ Pendente |
+| `aureus-shared` | Hospeda `EventListener` com lógica de negócio | Remover listeners de domínio daqui; mover para o serviço dono de cada evento | ✅ Feito — `EventListener.java` removido; os 3 listeners com lógica real (`conta-criada`, `conta-atualizada`, `transacao-realizada`) foram para `aureus-core/.../event/ContaTransacaoEventListener.java` com lookups reais (antes eram dados fabricados); os outros 5 listeners (`conta-bloqueada`, `transacao-liquidada`, `transacao-conciliada`, `imposto-calculado`, `imposto-registrado`) foram removidos — não tinham nenhum publicador e o corpo era um stub vazio, então não havia nada de real para realocar |
+
+Também corrigido: `EventHub.publishEventWithDelay` e `publishEventWithRetryInternal` usavam `Thread.sleep` real
+dentro de `CompletableFuture.runAsync`, bloqueando uma thread do pool compartilhado pela duração inteira do
+delay/backoff. Agora usam um `ScheduledExecutorService` dedicado, sem bloquear nenhuma thread durante a espera.
 
 [Voltar ao índice de ADRs](README.md)
