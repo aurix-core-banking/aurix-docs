@@ -7,7 +7,7 @@ Passos para colocar a plataforma AUREUS de pé (primeira vez ou ambiente novo), 
 ## 1. Pré-requisitos
 
 - [ ] **Docker** 20.10+ e **Docker Compose** 2.0+
-- [ ] **Java 21** e **Maven** (para backend)
+- [ ] **Java 25** e **Maven** (para backend)
 - [ ] **Node 18+** e **npm** (para frontend)
 - [ ] **Python 3.10+** (para data-pipelines, E2E, ml)
 - [ ] **Git** e acesso ao repositório

@@ -51,7 +51,9 @@ Nosso foco principal está na consolidação do **Data Lakehouse AUREUS**, trans
 ### Inteligência e Produto
 - **Expansão de Canais**: Evolução dos canais digitais e novas integrações para ecossistemas de e-commerce.
 - **Analytics Avançado**: Criação de novos dashboards de BI e modelos de ML integrados diretamente ao Lakehouse para análise de crédito e fraude.
+- **Integração de Dados de Mercado Abertos**: Unificação de dados públicos (CVM, Tesouro Direto, ANBIMA, B3) inspirada no modelo do Open Brazil Market (OBM), possibilitando marcação a mercado real e suporte a advisory de investimentos automatizado.
 - **Automação de Infraestrutura**: Evolução contínua dos scripts de Terraform e Kubernetes para suportar operações de qualquer escala com o mínimo esforço manual.
+
 
 ---
 

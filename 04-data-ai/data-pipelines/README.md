@@ -20,6 +20,8 @@ O AUREUS Data Pipeline e um sistema completo de processamento de dados em tempo 
 6. **Analytics** - `data-pipelines/analytics/` - Dashboards tempo real
 7. **Machine Learning** - `ml/models/`
 8. **Compliance** - `data-pipelines/compliance/` - LGPD e auditoria
+9. **Ingestão de Dados de Mercado** - `airflow/dags/market_data_ingestion/` - Pipelines unificados de mercado (CVM, Tesouro Direto, ANBIMA, B3)
+
 
 ## Instalacao
 

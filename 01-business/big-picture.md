@@ -88,7 +88,7 @@ flowchart TB
 
 ## 🛠️ Stack Tecnológica
 
-- **Backend**: Java 21, Spring Boot 3.2, Spring Cloud Gateway, JPA.
+- **Backend**: Java 25, Spring Boot 4.1, Spring Cloud Gateway, JPA.
 - **Frontend**: React 18, Material-UI, React Native.
 - **Dados**: PostgreSQL, Redis, Kafka, ClickHouse, Elasticsearch.
 - **Operações**: Docker, Maven, Git, Apache Spark, Airflow.

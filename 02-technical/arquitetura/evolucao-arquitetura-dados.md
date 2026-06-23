@@ -417,6 +417,21 @@ aureus_credit_domain:
     - feature_store: "ML features"
 ```
 
+#### **3. Aureus Treasury Domain**
+```yaml
+aureus_treasury_domain:
+  data_products:
+    - real_time_asset_custody
+    - open_market_reference_prices
+    - interest_rate_yield_curve
+  
+  technologies:
+    - apache_flink: "Processamento de eventos de cotas e taxas"
+    - apache_doris: "Analytics OLAP de rentabilidade"
+    - timescaledb: "Séries temporais de preços unitários (PU)"
+    - airflow: "Ingestão de dados de mercado (CVM, Tesouro, B3)"
+```
+
 ### **Apache Doris Implementation**
 
 ```sql
