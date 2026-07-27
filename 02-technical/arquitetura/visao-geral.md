@@ -1,233 +1,139 @@
-# 🏗️ AUREUS - Arquitetura Monolítica Modular
+# AUREUS - Arquitetura
 
-## 📋 Visão Geral
+## Visão Geral
 
-**Objetivo**: Definir a arquitetura monolítica modular para AUREUS, garantindo simplicidade, manutenibilidade e evolução gradual.
+**Objetivo**: Plataforma de core banking para o mercado brasileiro, com 13 domínios consolidados e conformidade regulatória nativa.
 
-**Abordagem**: Arquitetura monolítica modular com Java Spring Boot, evoluindo para microserviços conforme necessário.
+**Abordagem**: Maven multi-module monorepo com serviços Spring Boot independentes, communicate via REST síncrono + Kafka event-driven.
 
-## 🎯 Princípios Arquiteturais
+## Princípios Arquiteturais
 
-### **1. Monolito Modular**
-- **Módulos**: Cada módulo é independente dentro do monólito
-- **Escalabilidade**: Escala como um todo, com módulos específicos
-- **Tecnologia**: Java Spring Boot para todos os módulos
-- **Deploy**: Deploy único com módulos integrados
+### 1. Domínios Consolidados
+- **13 serviços** `svc-*` cada um responsável por um domínio de negócio
+- **aureus-shared** — biblioteca compartilhada (DTOs, configs, utils)
+- **aureus-gateway** — roteamento interno (sendo substituído por Traefik)
 
-### **2. API-First**
-- **REST**: APIs RESTful para integração
-- **Swagger**: Documentação automática
-- **Versionamento**: Versionamento de APIs
-- **Gateway**: API Gateway para roteamento
-- **Comunicação entre módulos**: padrão formalizado em [ADR-0001](adr/0001-comunicacao-entre-servicos.md) — REST com client gerado de OpenAPI para chamadas síncronas, Kafka com outbox transacional para eventos de domínio, saga coreografada para fluxos multi-módulo
+### 2. API-First
+- APIs RESTful com OpenAPI 3.0
+- Documentação automática via Swagger UI
+- Gateway roteamento `/api/*` para todos os serviços
 
-### **3. Modularidade**
-- **Separação**: Módulos bem definidos e separados
-- **Reutilização**: Código compartilhado via aureus-shared
-- **Evolução**: Preparado para evolução para microserviços
-- **Manutenção**: Facilita manutenção e desenvolvimento
+### 3. Comunicação
+- **Síncrona**: REST (client gerado de OpenAPI)
+- **Assíncrona**: Kafka com outbox transacional
+- **Saga**: Coreografada para fluxos multi-domínio
+- Detalhes em [ADR-0001](adr/0001-comunicacao-entre-servicos.md)
 
-### **4. Simplicidade**
-- **Deploy**: Deploy simples e direto
-- **Debugging**: Debugging mais fácil
-- **Desenvolvimento**: Desenvolvimento mais ágil
-- **Testes**: Testes de integração mais simples
+## Arquitetura de Alto Nível
 
-## 🏛️ Arquitetura de Alto Nível
+```
+┌─────────────────────────────────────────────────────┐
+│                   Clientes                          │
+│            (Web, Mobile, Admin)                     │
+└──────────────────────┬──────────────────────────────┘
+                       │
+┌──────────────────────▼──────────────────────────────┐
+│              Traefik / Gateway (:8080)              │
+│         Rate Limit · CORS · JWT Auth                │
+└──────────────────────┬──────────────────────────────┘
+                       │
+    ┌──────────────────┼──────────────────┐
+    │                  │                  │
+┌───▼────┐  ┌─────────▼───┐  ┌──────────▼──────┐
+│Payments│  │   Credit    │  │   Customer      │
+│ :8081  │  │   :8082     │  │   :8083         │
+│Core/PIX│  │Cred/Consig  │  │Identity/KYC     │
+└───┬────┘  └──────┬──────┘  └────────┬────────┘
+    │              │                   │
+┌───▼────┐  ┌──────▼──────┐  ┌────────▼────────┐
+│Products│  │Finance Mgmt │  │  Intelligence   │
+│ :8084  │  │   :8089     │  │     :8091       │
+│Poup/Inv│  │Contab/Impost│  │  Analytics/BI   │
+└───┬────┘  └──────┬──────┘  └────────┬────────┘
+    │              │                   │
+┌───▼────┐  ┌──────▼──────┐  ┌────────▼────────┐
+│Cambio  │  │   Cards     │  │   Banking       │
+│ :8093  │  │   :8094     │  │   :8095         │
+│BACEN   │  │Cred/Deb     │  │Org/Empresas     │
+└────────┘  └─────────────┘  └─────────────────┘
 
-```mermaid
-graph TD
-    subgraph Gateway ["API Gateway (Spring Cloud Gateway)"]
-        GW[Routing & Load Balancing]
-        AUTH[Authentication]
-        RL[Rate Limiting & Caching]
-        MON[Monitoring]
-    end
-
-    subgraph Core ["Core Modules (Spring Boot)"]
-        AC[Aureus Core]
-        APIX[Aureus PIX]
-        ACR[Aureus Credit]
-        ATR[Aureus Treasury]
-        ACOM[Aureus Compliance]
-        ASEC[Aureus Security]
-        AAN[Aureus Analytics]
-        AAUD[Aureus Audit]
-        AORG[Aureus Organization]
-        AGW[Aureus Gateway Service]
-    end
-
-    subgraph Data ["Data Layer"]
-        PG[(PostgreSQL OLTP)]
-        RD[(Redis Cache)]
-        KF[Kafka Events]
-        ES[Elasticsearch Search]
-    end
-
-    Gateway --> Core
-    Core --> Data
+┌──────────────┐  ┌──────────────┐  ┌──────────────┐
+│   Fraud      │  │  Compliance  │  │     AI       │
+│   :8204      │  │   :8205      │  │    :8206     │
+│  Detection   │  │  AML/KYC     │  │  LLM/RAG     │
+└──────────────┘  └──────────────┘  └──────────────┘
 ```
 
-## 🔧 Componentes Principais
+## Serviços
 
-### **1. API Gateway**
-- **Tecnologia**: Spring Cloud Gateway
-- **Funções**: Routing, load balancing, auth, rate limiting
-- **Porta**: 8080
-- **Health Check**: `/actuator/health`
+| Serviço | Porta | Domínio | Responsabilidades |
+|---------|-------|---------|-------------------|
+| `svc-payments` | 8081 | Pagamentos | Core bancário, contas, transações, PIX, boletos, SPI/STR |
+| `svc-credit` | 8082 | Crédito | Análise de crédito, consignado, financiamento, garantias |
+| `svc-customer` | 8083 | Clientes | Identidade, KYC, onboarding, auth |
+| `svc-products` | 8084 | Produtos | Poupança, salário, investimento, seguros, tesouraria |
+| `svc-finance-mgmt` | 8089 | Financeiro | Contabilidade, orçamento, custos, IFRS9, impostos |
+| `svc-intelligence` | 8091 | Inteligência | Analytics, BI, chatbot, ML fraud |
+| `svc-platform` | 8092 | Plataforma | Open Finance, BaaS, webhooks, notificações, audit |
+| `svc-cambio` | 8093 | Câmbio | Câmbio, BACEN, SPI/STR, remessas |
+| `svc-cards` | 8094 | Cartões | Cartões crédito/débito, faturas, adquirentes |
+| `svc-banking` | 8095 | Banking | Organização, empresas, relacionamento |
+| `svc-fraud` | 8204 | Fraude | Detecção de fraude, scoring, bloqueio preventivo |
+| `svc-compliance` | 8205 | Compliance | Regulação, AML/KYC, auditoria |
+| `svc-ai` | 8206 | IA | LLM, RAG, agentes LangChain4j |
 
-### **2. Módulos Core (Spring Boot)**
+## Fluxos Principais
 
-#### **Aureus Core** ✅
-- **Porta**: 8081
-- **Funções**: Gestão de contas, clientes, transações básicas
-- **Banco**: PostgreSQL
-- **Cache**: Redis
+### Fluxo PIX
+```
+Cliente → Gateway → svc-payments → Validação → PostgreSQL
+         svc-payments → Kafka (outbox) → Evento PIX
+         svc-fraud → Scoring → Bloqueio se suspeito
+         svc-platform → Notificação → Cliente
+```
 
-#### **Aureus PIX** ✅
-- **Porta**: 8082
-- **Funções**: Pagamentos PIX, transferências
-- **Banco**: PostgreSQL
-- **Integração**: SPB (planejado)
+### Fluxo Crédito
+```
+Cliente → Gateway → svc-credit → Simulação → PostgreSQL
+         svc-credit → svc-customer → Dados do cliente
+         svc-credit → svc-intelligence → Análise ML
+         svc-credit → Decisão → Kafka → svc-platform (notificação)
+```
 
-#### **Aureus Credit** ✅
-- **Porta**: 8083
-- **Funções**: Crédito, análise de risco
-- **Banco**: PostgreSQL
+## Segurança
 
-#### **Aureus Treasury** ✅
-- **Porta**: 8084
-- **Funções**: Tesouraria, investimentos
-- **Banco**: PostgreSQL
-
-#### **Aureus Security** ✅
-- **Porta**: 8085
-- **Funções**: Autenticação, autorização
-- **Banco**: PostgreSQL
-
-#### **Aureus Compliance** ✅
-- **Porta**: 8086
-- **Funções**: Conformidade, relatórios BACEN
-- **Banco**: PostgreSQL
-
-#### **Aureus Organization** ✅
-- **Porta**: 8087
-- **Funções**: Estrutura organizacional, controle de alçada
-- **Banco**: PostgreSQL
-
-#### **Aureus Analytics** ✅
-- **Porta**: 8088
-- **Funções**: Analytics, métricas, relatórios
-- **Banco**: PostgreSQL
-
-#### **Aureus Audit** ✅
-- **Porta**: 8089
-- **Funções**: Auditoria, logs, compliance
-- **Banco**: PostgreSQL
-
-## 🔄 Fluxo de Dados
-
-### **Fluxo de Transação PIX:**
-
-1. **Cliente** → API Gateway → Aureus PIX
-2. **Aureus PIX** → Validação → Aureus Core
-3. **Aureus Core** → Verificação de saldo → PostgreSQL
-4. **Aureus PIX** → Processamento → SPB
-5. **Evento** → Kafka → Todos os serviços
-6. **Aureus Audit** → Log da transação → Elasticsearch
-7. **Aureus Analytics** → Métricas → ClickHouse
-8. **Resposta** → Cliente via API Gateway
-
-### **Fluxo de Análise de Crédito:**
-
-1. **Cliente** → API Gateway → Aureus Credit
-2. **Aureus Credit** → Dados do cliente → Aureus Core
-3. **Aureus Analytics** → Análise ML → ClickHouse
-4. **Aureus Credit** → Decisão de crédito
-5. **Evento** → Kafka → Aureus Audit
-6. **Resposta** → Cliente
-
-## 🛡️ Segurança
-
-### **Autenticação e Autorização**
-- **JWT**: Tokens para autenticação
-- **OAuth2**: Autorização
+- **JWT**: Tokens para autenticação (Keycloak IAM)
 - **RBAC**: Role-based access control
 - **MFA**: Multi-factor authentication
-
-### **Criptografia**
 - **TLS**: Transport layer security
-- **AES-256**: Criptografia de dados
-- **RSA**: Chaves assimétricas
-- **HSM**: Hardware security modules
+- **AES-256**: Criptografia de dados sensíveis
+- **Rate Limiting**: 100 req/min por IP (Traefik)
 
-### **Auditoria**
-- **Logs**: Todos os acessos logados
-- **Traces**: Distributed tracing
-- **Métricas**: Performance e segurança
-- **Alertas**: Detecção de anomalias
+## Observabilidade
 
-## 📊 Monitoramento
-
-### **Observabilidade**
 - **Logs**: ELK Stack (Elasticsearch, Logstash, Kibana)
 - **Métricas**: Prometheus + Grafana
-- **Traces**: Jaeger
-- **APM**: DataDog
+- **Traces**: Jaeger (distributed tracing)
+- **Health**: Spring Actuator (`/actuator/health`)
 
-### **Health Checks**
-- **Liveness**: Serviço está vivo
-- **Readiness**: Serviço está pronto
-- **Startup**: Serviço iniciou corretamente
+## Stack Tecnológica
 
-### **Alertas**
-- **Performance**: Latência alta
-- **Erros**: Taxa de erro alta
-- **Recursos**: CPU/Memória alta
-- **Segurança**: Tentativas de invasão
-
-## 🚀 Deploy e Escalabilidade
-
-### **Containers**
-- **Docker**: Empacotamento de aplicações
-- **Multi-stage**: Builds otimizados
-- **Security**: Imagens seguras
-
-### **Orquestração**
-- **Kubernetes**: Gerenciamento de containers
-- **Helm**: Gerenciamento de releases
-- **Istio**: Service mesh
-
-### **Auto-scaling**
-- **HPA**: Horizontal Pod Autoscaler
-- **VPA**: Vertical Pod Autoscaler
-- **Custom Metrics**: Métricas personalizadas
-
-## 🔧 Configuração
-
-### **Ambientes**
-- **Development**: Desenvolvimento local
-- **Staging**: Testes de integração
-- **Production**: Ambiente de produção
-
-### **Configuração**
-- **ConfigMaps**: Configurações não sensíveis
-- **Secrets**: Configurações sensíveis
-- **Environment**: Variáveis de ambiente
-
-### **Service Discovery**
-- **Consul**: Service discovery
-- **Eureka**: Service registry
-- **Kubernetes**: DNS nativo
-
-## 🎯 Conclusão
-
-A arquitetura modular da AUREUS foi projetada para oferecer o equilíbrio ideal entre simplicidade operacional e flexibilidade para o futuro. Ao manter os domínios de negócio bem isolados, garantimos que a plataforma possa evoluir e escalar conforme a demanda, mantendo sempre a integridade e a segurança exigidas pelo mercado financeiro.
-
-Para conferir o estágio atual de cada módulo e os próximos passos da plataforma, acesse o documento de **[Roadmap e Visão](../../01-business/roadmap.md)**.
+| Camada | Tecnologia |
+|--------|-----------|
+| Language | Java 25 |
+| Framework | Spring Boot 4.1 |
+| Build | Maven 3.9+ |
+| Database | PostgreSQL 15 |
+| Cache | Redis 7 |
+| Events | Kafka (Confluent 7.4) |
+| Gateway | Traefik v3 |
+| IAM | Keycloak 23 |
+| Search | Elasticsearch 8.11 |
+| Analytics | ClickHouse |
+| Time Series | TimescaleDB |
 
 ---
 
-**Última atualização**: Fevereiro 2026  
-**Versão**: 1.2.0  
-**Status**: Produção (Módulos Core Implementados)
+**Última atualização**: Julho 2026  
+**Versão**: 2.0.0  
+**Status**: 13 domínios consolidados

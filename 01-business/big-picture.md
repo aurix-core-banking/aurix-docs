@@ -29,7 +29,7 @@ A AUREUS foi desenhada para superar as limitações das soluções tradicionais:
 
 ---
 
-## 🏗️ Visão da Arquitetura
+## Visão da Arquitetura
 
 ```mermaid
 flowchart TB
@@ -40,21 +40,23 @@ flowchart TB
   end
 
   subgraph Gateway["API Gateway"]
-    GW[aureus-gateway]
+    GW[Traefik :8080]
   end
 
-  subgraph Backend["Backend - Monolito Modular"]
-    Core[core]
-    Pix[pix]
-    Credit[credit]
-    Treasury[treasury]
-    Security[security]
-    Compliance[compliance]
-    Accounting[accounting]
-    Financial[financial]
-    Settlement[settlement]
-    Tax[tax]
-    Bacen[bacen]
+  subgraph Backend["Backend - 13 Domínios"]
+    PAY[payments :8081]
+    CRD[credit :8082]
+    CUS[customer :8083]
+    PRD[products :8084]
+    FIN[finance-mgmt :8089]
+    INT[intelligence :8091]
+    PLT[platform :8092]
+    CAM[cambio :8093]
+    CRD2[cards :8094]
+    BNK[banking :8095]
+    FRD[fraud :8204]
+    CMP[compliance :8205]
+    AI[ai :8206]
   end
 
   subgraph DataLayer["Camada de Dados"]
@@ -79,10 +81,10 @@ flowchart TB
 
 ### Componentes Chave:
 - **Canais**: Interfaces modernas em React (Web/Admin) e React Native (Mobile).
-- **Gateway**: Ponto único de entrada, gerenciando autenticação, roteamento e segurança.
-- **Backend Modular**: Lógica de negócio distribuída em módulos coerentes, permitindo evolução para microserviços.
-- **Dados**: Mix ideal de bancos transacionais (PostgreSQL), cache (Redis) e analíticos (ClickHouse/Elasticsearch).
-- **Inteligência**: Pipelines automatizados e modelos de IA para detecção de fraude e análise de risco.
+- **Gateway**: Traefik v3 — roteamento, rate limiting (100 req/min), CORS, JWT auth.
+- **Backend**: 13 domínios consolidados, cada um com Application.java, controllers, services e repositórios próprios.
+- **Dados**: PostgreSQL (transacional), Redis (cache/sessões), Kafka (eventos), ClickHouse (analytics), TimescaleDB (séries temporais).
+- **Inteligência**: Pipelines Spark/Flink + modelos ML para fraude e análise de risco.
 
 ---
 
