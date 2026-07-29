@@ -105,7 +105,7 @@ flowchart TB
 | Guia Geral | [../README.md](../README.md) |
 | Roadmap e Visão | [./roadmap.md](./roadmap.md) |
 | Detalhes da Arquitetura | [../02-technical/arquitetura/visao-geral.md](../02-technical/arquitetura/visao-geral.md) |
-| Operação e Infra | [../05-infrastructure/infrastructure/index.md](../05-infrastructure/infrastructure/index.md) |
+| Operação e Infra | [../05-infra/infra/index.md](../05-infra/infra/index.md) |
 | APIs e Integração | [../03-development/portal-desenvolvedor/README.md](../03-development/portal-desenvolvedor/README.md) |
 
 ---

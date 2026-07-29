@@ -182,13 +182,13 @@ describe('Onboarding API', () => {
 
 - [ ] **Step 3: Run tests to verify they pass**
 
-Run: `cd frontend/aurix-web && npx react-scripts test --watchAll=false --testPathPattern=apiService`
+Run: `cd apps/frontend/aurix-web && npx react-scripts test --watchAll=false --testPathPattern=apiService`
 Expected: all 8 new tests pass
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add frontend/aurix-web/src/services/apiService.js frontend/aurix-web/src/services/apiService.test.js
+git add apps/frontend/aurix-web/src/services/apiService.js apps/frontend/aurix-web/src/services/apiService.test.js
 git commit -m "feat(aurix-web): add onboarding API methods to apiService"
 ```
 
@@ -389,13 +389,13 @@ test('shows error on missing required fields', () => {
 
 - [ ] **Step 5: Run tests to verify they pass**
 
-Run: `cd frontend/aurix-web && npx react-scripts test --watchAll=false --testPathPattern="TipoSelector|FormPF"`
+Run: `cd apps/frontend/aurix-web && npx react-scripts test --watchAll=false --testPathPattern="TipoSelector|FormPF"`
 Expected: all 6 tests pass
 
 - [ ] **Step 6: Commit**
 
 ```bash
-git add frontend/aurix-web/src/components/Onboarding/
+git add apps/frontend/aurix-web/src/components/Onboarding/
 git commit -m "feat(aurix-web): add TipoSelector and FormPF components"
 ```
 
@@ -837,13 +837,13 @@ test('full wizard flow to completion', async () => {
 
 - [ ] **Step 7: Run tests to verify they pass**
 
-Run: `cd frontend/aurix-web && npx react-scripts test --watchAll=false --testPathPattern="WizardPJ"`
+Run: `cd apps/frontend/aurix-web && npx react-scripts test --watchAll=false --testPathPattern="WizardPJ"`
 Expected: all 3 tests pass
 
 - [ ] **Step 8: Commit**
 
 ```bash
-git add frontend/aurix-web/src/components/Onboarding/FormPJ/
+git add apps/frontend/aurix-web/src/components/Onboarding/FormPJ/
 git commit -m "feat(aurix-web): add PJ onboarding wizard with 4 steps"
 ```
 
@@ -1050,13 +1050,13 @@ test('shows error on API failure', async () => {
 
 - [ ] **Step 3: Run tests to verify they pass**
 
-Run: `cd frontend/aurix-web && npx react-scripts test --watchAll=false --testPathPattern="TrackingPJ"`
+Run: `cd apps/frontend/aurix-web && npx react-scripts test --watchAll=false --testPathPattern="TrackingPJ"`
 Expected: all 3 tests pass
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add frontend/aurix-web/src/components/Onboarding/TrackingPJ.js frontend/aurix-web/src/components/Onboarding/TrackingPJ.test.js
+git add apps/frontend/aurix-web/src/components/Onboarding/TrackingPJ.js apps/frontend/aurix-web/src/components/Onboarding/TrackingPJ.test.js
 git commit -m "feat(aurix-web): add TrackingPJ post-creation component"
 ```
 
@@ -1211,17 +1211,17 @@ test('back button returns to selector from form', () => {
 
 - [ ] **Step 3: Run all tests to verify they pass**
 
-Run: `cd frontend/aurix-web && npx react-scripts test --watchAll=false --testPathPattern="Onboarding"`
+Run: `cd apps/frontend/aurix-web && npx react-scripts test --watchAll=false --testPathPattern="Onboarding"`
 Expected: all tests pass (TipoSelector: 3, FormPF: 3, WizardPJ: 3, TrackingPJ: 3, Onboarding: 5 = 17 total)
 
 - [ ] **Step 4: Run lint check**
 
-Run: `cd frontend/aurix-web && npx eslint src/pages/Onboarding.js src/components/Onboarding/ --ext .js`
+Run: `cd apps/frontend/aurix-web && npx eslint src/pages/Onboarding.js src/components/Onboarding/ --ext .js`
 Expected: 0 errors, pre-existing warnings only (no new ones)
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add frontend/aurix-web/src/pages/Onboarding.js frontend/aurix-web/src/pages/Onboarding.test.js
+git add apps/frontend/aurix-web/src/pages/Onboarding.js apps/frontend/aurix-web/src/pages/Onboarding.test.js
 git commit -m "feat(aurix-web): rewrite onboarding page with PF/PJ flow"
 ```

@@ -184,9 +184,9 @@ Por módulo:
 - SecurityConfig (`permitAll`)
 - application.yml (porta, context-path, datasource, kafka, redis)
 - Entrada no `docker-compose.yml` (imagem, porta, env vars, healthcheck, depends_on)
-- Entrada no `infrastructure/traefik/dynamic.yml` (router + service)
-- Entrada no `aurix-tests/e2e/config.py` (health endpoint)
-- Módulo adicionado ao `backend/pom.xml` (`<modules>`)
+- Entrada no `infra/traefik/dynamic.yml` (router + service)
+- Entrada no `tests/e2e/config.py` (health endpoint)
+- Módulo adicionado ao `apps/backend/pom.xml` (`<modules>`)
 
 ## Dependências entre fases
 

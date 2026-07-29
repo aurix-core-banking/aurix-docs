@@ -22,9 +22,9 @@
 ### Task 0: Dependencies + application-prod.yml
 
 **Files:**
-- Modify: `backend/aurix-onboarding/pom.xml`
-- Create: `backend/aurix-onboarding/src/main/resources/application-prod.yml`
-- Modify: `backend/aurix-onboarding/src/main/resources/application.yml`
+- Modify: `apps/backend/aurix-onboarding/pom.xml`
+- Create: `apps/backend/aurix-onboarding/src/main/resources/application-prod.yml`
+- Modify: `apps/backend/aurix-onboarding/src/main/resources/application.yml`
 
 **Interfaces:**
 - Produces: `resilience4j-spring-boot3` on classpath; application-prod.yml with provider configs; default (stub) config in application.yml
@@ -115,7 +115,7 @@ Place these keys under the existing `aurix.onboarding` block (after `tenant-head
 - [ ] **Step 4: Commit**
 
 ```bash
-git add backend/aurix-onboarding/pom.xml backend/aurix-onboarding/src/main/resources/application.yml backend/aurix-onboarding/src/main/resources/application-prod.yml
+git add apps/backend/aurix-onboarding/pom.xml apps/backend/aurix-onboarding/src/main/resources/application.yml apps/backend/aurix-onboarding/src/main/resources/application-prod.yml
 git commit -m "chore(onboarding): add resilience4j deps, prod config, default provider endpoints"
 ```
 
@@ -123,10 +123,10 @@ git commit -m "chore(onboarding): add resilience4j deps, prod config, default pr
 ### Task 1: BureauProvider interface + BureauGateway + BureauStub @Profile fix
 
 **Files:**
-- Create: `backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/BureauProvider.java`
-- Create: `backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/BureauGateway.java`
-- Create: `backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/service/BureauGatewayTest.java`
-- Modify: `backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/BureauStub.java`
+- Create: `apps/backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/BureauProvider.java`
+- Create: `apps/backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/BureauGateway.java`
+- Create: `apps/backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/service/BureauGatewayTest.java`
+- Modify: `apps/backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/BureauStub.java`
 
 **Interfaces:**
 - Produces: `BureauProvider` interface with method `ResultadoBureau consultar(String cpf)`
@@ -275,7 +275,7 @@ Expected: BUILD SUCCESS, 3 tests pass
 - [ ] **Step 6: Commit**
 
 ```bash
-git add backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/BureauProvider.java backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/BureauGateway.java backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/service/BureauGatewayTest.java backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/BureauStub.java
+git add apps/backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/BureauProvider.java apps/backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/BureauGateway.java apps/backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/service/BureauGatewayTest.java apps/backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/BureauStub.java
 git commit -m "feat(onboarding): add BureauProvider + BureauGateway with fallback chain"
 ```
 
@@ -283,8 +283,8 @@ git commit -m "feat(onboarding): add BureauProvider + BureauGateway with fallbac
 ### Task 2: SerasaProvider + WireMock test
 
 **Files:**
-- Create: `backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/SerasaProvider.java`
-- Create: `backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/service/SerasaProviderTest.java`
+- Create: `apps/backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/SerasaProvider.java`
+- Create: `apps/backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/service/SerasaProviderTest.java`
 
 **Interfaces:**
 - Consumes: `BureauProvider` (from Task 1), RestTemplate
@@ -421,7 +421,7 @@ Expected: BUILD SUCCESS, 5 tests pass
 - [ ] **Step 5: Commit**
 
 ```bash
-git add backend/aurix-onboarding/pom.xml backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/SerasaProvider.java backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/service/SerasaProviderTest.java
+git add apps/backend/aurix-onboarding/pom.xml apps/backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/SerasaProvider.java apps/backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/service/SerasaProviderTest.java
 git commit -m "feat(onboarding): add SerasaProvider with WireMock test"
 ```
 
@@ -429,8 +429,8 @@ git commit -m "feat(onboarding): add SerasaProvider with WireMock test"
 ### Task 3: QuodProvider + WireMock test
 
 **Files:**
-- Create: `backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/QuodProvider.java`
-- Create: `backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/service/QuodProviderTest.java`
+- Create: `apps/backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/QuodProvider.java`
+- Create: `apps/backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/service/QuodProviderTest.java`
 
 - [ ] **Step 1: Write QuodProvider**
 
@@ -550,7 +550,7 @@ Expected: BUILD SUCCESS, 7 tests pass
 - [ ] **Step 4: Commit**
 
 ```bash
-git add backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/QuodProvider.java backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/service/QuodProviderTest.java
+git add apps/backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/QuodProvider.java apps/backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/service/QuodProviderTest.java
 git commit -m "feat(onboarding): add QuodProvider with WireMock test"
 ```
 
@@ -558,13 +558,13 @@ git commit -m "feat(onboarding): add QuodProvider with WireMock test"
 ### Task 4: FraudService + FraudStub + SolicitacaoOnboarding field + OnboardingPFService integration
 
 **Files:**
-- Create: `backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/FraudService.java`
-- Create: `backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/FraudStub.java`
-- Create: `backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/service/FraudStubTest.java`
-- Modify: `backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/entity/SolicitacaoOnboarding.java`
-- Modify: `backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/OnboardingPFService.java`
-- Modify: `backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/integration/OnboardingPFFlowIntegrationTest.java`
-- Modify: `backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/dto/SolicitacaoContaResponse.java`
+- Create: `apps/backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/FraudService.java`
+- Create: `apps/backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/FraudStub.java`
+- Create: `apps/backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/service/FraudStubTest.java`
+- Modify: `apps/backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/entity/SolicitacaoOnboarding.java`
+- Modify: `apps/backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/OnboardingPFService.java`
+- Modify: `apps/backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/integration/OnboardingPFFlowIntegrationTest.java`
+- Modify: `apps/backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/dto/SolicitacaoContaResponse.java`
 
 **Interfaces:**
 - Produces: `FraudService` with method `ResultadoFraude analisar(String cpf, String nome, String email, String telefone)`
@@ -697,7 +697,7 @@ Expected: BUILD SUCCESS, all tests pass
 - [ ] **Step 8: Commit**
 
 ```bash
-git add backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/FraudService.java backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/FraudStub.java backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/service/FraudStubTest.java backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/entity/SolicitacaoOnboarding.java backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/OnboardingPFService.java backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/integration/OnboardingPFFlowIntegrationTest.java backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/dto/SolicitacaoContaResponse.java
+git add apps/backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/FraudService.java apps/backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/FraudStub.java apps/backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/service/FraudStubTest.java apps/backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/entity/SolicitacaoOnboarding.java apps/backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/OnboardingPFService.java apps/backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/integration/OnboardingPFFlowIntegrationTest.java apps/backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/dto/SolicitacaoContaResponse.java
 git commit -m "feat(onboarding): add FraudService + FraudStub + riscoFraude field, wire into OnboardingPFService"
 ```
 
@@ -705,8 +705,8 @@ git commit -m "feat(onboarding): add FraudService + FraudStub + riscoFraude fiel
 ### Task 5: ClearSaleProvider + WireMock test
 
 **Files:**
-- Create: `backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/ClearSaleProvider.java`
-- Create: `backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/service/ClearSaleProviderTest.java`
+- Create: `apps/backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/ClearSaleProvider.java`
+- Create: `apps/backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/service/ClearSaleProviderTest.java`
 
 - [ ] **Step 1: Write ClearSaleProvider**
 
@@ -851,7 +851,7 @@ Expected: BUILD SUCCESS, 4 tests pass
 - [ ] **Step 4: Commit**
 
 ```bash
-git add backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/ClearSaleProvider.java backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/service/ClearSaleProviderTest.java
+git add apps/backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/ClearSaleProvider.java apps/backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/service/ClearSaleProviderTest.java
 git commit -m "feat(onboarding): add ClearSaleProvider with WireMock test"
 ```
 
@@ -859,8 +859,8 @@ git commit -m "feat(onboarding): add ClearSaleProvider with WireMock test"
 ### Task 6: UnicoProvider + WireMock test
 
 **Files:**
-- Create: `backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/UnicoProvider.java`
-- Create: `backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/service/UnicoProviderTest.java`
+- Create: `apps/backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/UnicoProvider.java`
+- Create: `apps/backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/service/UnicoProviderTest.java`
 
 - [ ] **Step 1: Write UnicoProvider**
 
@@ -992,7 +992,7 @@ Expected: BUILD SUCCESS, all tests pass (including full suite)
 - [ ] **Step 4: Commit**
 
 ```bash
-git add backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/UnicoProvider.java backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/service/UnicoProviderTest.java
+git add apps/backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/UnicoProvider.java apps/backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/service/UnicoProviderTest.java
 git commit -m "feat(onboarding): add UnicoProvider with WireMock test"
 ```
 

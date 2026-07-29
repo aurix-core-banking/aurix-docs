@@ -13,7 +13,7 @@ Painel administrativo do AURIX Core Banking com React Admin.
 ## Instalacao
 
 ```bash
-cd frontend/aurix-admin
+cd apps/frontend/aurix-admin
 npm install
 ```
 

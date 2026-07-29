@@ -10,7 +10,7 @@
 
 ## Global Constraints
 
-- All paths are relative to `/mnt/c/Users/wende/Projects/aurix-platform/frontend/aurix-admin/src/`
+- All paths are relative to `/mnt/c/Users/wende/Projects/aurix-platform/apps/frontend/aurix-admin/src/`
 - Follow existing patterns: functional components, `export const`, no default exports for page components, `label` prop on resource fields
 - Resource name must be `solicitacoes_pj` to match URL mapping in `resources.js`
 - BASE entry: `onboarding_pj: '/api/onboarding/contas'`
@@ -88,7 +88,7 @@ Expected: No errors (or only pre-existing ones unrelated to our changes)
 - [ ] **Step 7: Commit**
 
 ```bash
-git add frontend/aurix-admin/src/config/resources.js frontend/aurix-admin/src/App.js
+git add apps/frontend/aurix-admin/src/config/resources.js apps/frontend/aurix-admin/src/App.js
 git commit -m "feat(admin): add solicitacoes_pj resource mapping and registration"
 ```
 
@@ -215,7 +215,7 @@ Expected: No errors.
 - [ ] **Step 3: Commit**
 
 ```bash
-git add frontend/aurix-admin/src/components/StatusTimeline.js
+git add apps/frontend/aurix-admin/src/components/StatusTimeline.js
 git commit -m "feat(admin): add StatusTimeline component for onboarding workflow"
 ```
 
@@ -357,7 +357,7 @@ Expected: No errors.
 - [ ] **Step 3: Commit**
 
 ```bash
-git add frontend/aurix-admin/src/components/DocumentList.js
+git add apps/frontend/aurix-admin/src/components/DocumentList.js
 git commit -m "feat(admin): add DocumentList component with upload"
 ```
 
@@ -530,7 +530,7 @@ Expected: No errors.
 - [ ] **Step 3: Commit**
 
 ```bash
-git add frontend/aurix-admin/src/components/SocioList.js
+git add apps/frontend/aurix-admin/src/components/SocioList.js
 git commit -m "feat(admin): add SocioList component with add/remove"
 ```
 
@@ -739,7 +739,7 @@ Expected: No errors.
 - [ ] **Step 3: Commit**
 
 ```bash
-git add frontend/aurix-admin/src/components/WorkflowActions.js
+git add apps/frontend/aurix-admin/src/components/WorkflowActions.js
 git commit -m "feat(admin): add WorkflowActions component for onboarding actions"
 ```
 
@@ -820,7 +820,7 @@ Expected: No errors (warning about `SolicitacaoPJShow` not yet existing is expec
 - [ ] **Step 4: Commit**
 
 ```bash
-git add frontend/aurix-admin/src/pages/SolicitacoesPJ/
+git add apps/frontend/aurix-admin/src/pages/SolicitacoesPJ/
 git commit -m "feat(admin): add SolicitacaoPJList page"
 ```
 
@@ -941,6 +941,6 @@ Expected: Build succeeds.
 - [ ] **Step 4: Commit**
 
 ```bash
-git add frontend/aurix-admin/src/pages/SolicitacoesPJ/SolicitacaoPJShow.js
+git add apps/frontend/aurix-admin/src/pages/SolicitacoesPJ/SolicitacaoPJShow.js
 git commit -m "feat(admin): add SolicitacaoPJShow page with tabs and workflow actions"
 ```

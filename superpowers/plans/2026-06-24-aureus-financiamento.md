@@ -7,7 +7,7 @@
 
 ## 1. Scaffold
 
-### 1.1 `backend/aurix-financiamento/pom.xml`
+### 1.1 `apps/backend/aurix-financiamento/pom.xml`
 
 Archetype: copiar `aurix-poupanca/pom.xml`, alterar `artifactId` e `description`.
 
@@ -666,7 +666,7 @@ static class TestConfig {
 
 ## 12. Integração com a Plataforma
 
-### 12.1 Gateway (`infrastructure/gateway/application.yml`)
+### 12.1 Gateway (`infra/gateway/application.yml`)
 
 ```yaml
 - id: aurix-financiamento
@@ -677,13 +677,13 @@ static class TestConfig {
     - StripPrefix=0
 ```
 
-### 12.2 Parent POM (`backend/pom.xml`)
+### 12.2 Parent POM (`apps/backend/pom.xml`)
 
 Adicionar `<module>aurix-financiamento</module>` na lista de módulos.
 
 ### 12.3 OpenAPI Spec
 
-Após implementação, adicionar em `aurix-api-specs/aurix-core.yaml`:
+Após implementação, adicionar em `specs/aurix-core.yaml`:
 - Tag `Financiamento`
 - Paths `/api/financiamento/simulacoes`, `/api/financiamento/contratos`, `/api/financiamento/contratos/{contratoId}/parcelas`, `/api/financiamento/bens`, `/api/financiamento/garantias`, `/api/financiamento/taxas`
 - Schemas: `SimulacaoRequest`, `SimulacaoResponse`, `CriarContratoRequest`, `ContratoResponse`, `ParcelaResponse`, `BemResponse`, `GarantiaResponse`, `LinhaTabela`, `TaxasResponse`

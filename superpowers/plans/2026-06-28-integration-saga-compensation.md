@@ -39,10 +39,10 @@
 ### Task 1: Create sync entities + repositories in aurix-financial
 
 **Files:**
-- Create: `backend/aurix-financial/src/main/java/com/aurix/platform/financial/entity/ContaSincronizada.java`
-- Create: `backend/aurix-financial/src/main/java/com/aurix/platform/financial/entity/TransacaoSincronizada.java`
-- Create: `backend/aurix-financial/src/main/java/com/aurix/platform/financial/repository/ContaSincronizadaRepository.java`
-- Create: `backend/aurix-financial/src/main/java/com/aurix/platform/financial/repository/TransacaoSincronizadaRepository.java`
+- Create: `apps/backend/aurix-financial/src/main/java/com/aurix/platform/financial/entity/ContaSincronizada.java`
+- Create: `apps/backend/aurix-financial/src/main/java/com/aurix/platform/financial/entity/TransacaoSincronizada.java`
+- Create: `apps/backend/aurix-financial/src/main/java/com/aurix/platform/financial/repository/ContaSincronizadaRepository.java`
+- Create: `apps/backend/aurix-financial/src/main/java/com/aurix/platform/financial/repository/TransacaoSincronizadaRepository.java`
 
 - [ ] **Step 1: Create ContaSincronizada.java**
 
@@ -204,10 +204,10 @@ mvn compile -pl aurix-financial -am -q
 - [ ] **Step 6: Commit**
 
 ```bash
-git add backend/aurix-financial/src/main/java/com/aurix/platform/financial/entity/ContaSincronizada.java \
-       backend/aurix-financial/src/main/java/com/aurix/platform/financial/entity/TransacaoSincronizada.java \
-       backend/aurix-financial/src/main/java/com/aurix/platform/financial/repository/ContaSincronizadaRepository.java \
-       backend/aurix-financial/src/main/java/com/aurix/platform/financial/repository/TransacaoSincronizadaRepository.java
+git add apps/backend/aurix-financial/src/main/java/com/aurix/platform/financial/entity/ContaSincronizada.java \
+       apps/backend/aurix-financial/src/main/java/com/aurix/platform/financial/entity/TransacaoSincronizada.java \
+       apps/backend/aurix-financial/src/main/java/com/aurix/platform/financial/repository/ContaSincronizadaRepository.java \
+       apps/backend/aurix-financial/src/main/java/com/aurix/platform/financial/repository/TransacaoSincronizadaRepository.java
 git commit -m "feat(financial): add sync entities for saga compensation"
 ```
 
@@ -422,8 +422,8 @@ mvn compile -pl aurix-financial -am -q
 - [ ] **Step 4: Commit**
 
 ```bash
-git add backend/aurix-financial/src/main/java/com/aurix/platform/financial/service/SyncService.java \
-       backend/aurix-financial/src/main/java/com/aurix/platform/financial/controller/SyncController.java
+git add apps/backend/aurix-financial/src/main/java/com/aurix/platform/financial/service/SyncService.java \
+       apps/backend/aurix-financial/src/main/java/com/aurix/platform/financial/controller/SyncController.java
 git commit -m "feat(financial): sync service + controller with compensation endpoints"
 ```
 
@@ -432,7 +432,7 @@ git commit -m "feat(financial): sync service + controller with compensation endp
 ### Task 3: Integration tests for SyncController in aurix-financial
 
 **Files:**
-- Create: `backend/aurix-financial/src/test/java/com/aurix/platform/financial/integration/SyncIntegrationTest.java`
+- Create: `apps/backend/aurix-financial/src/test/java/com/aurix/platform/financial/integration/SyncIntegrationTest.java`
 
 - [ ] **Step 1: Write SyncIntegrationTest.java**
 
@@ -558,7 +558,7 @@ Expected: FinancialFlowIntegrationTest (6) + SyncIntegrationTest (5) = 11 PASS
 - [ ] **Step 4: Commit**
 
 ```bash
-git add backend/aurix-financial/src/test/java/com/aurix/platform/financial/integration/SyncIntegrationTest.java
+git add apps/backend/aurix-financial/src/test/java/com/aurix/platform/financial/integration/SyncIntegrationTest.java
 git commit -m "test(financial): sync + compensation integration tests"
 ```
 
@@ -567,7 +567,7 @@ git commit -m "test(financial): sync + compensation integration tests"
 ### Task 4: Refactor IntegrationService in aurix-shared
 
 **Files:**
-- Modify: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/integration/IntegrationService.java`
+- Modify: `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/integration/IntegrationService.java`
 
 Changes to `sincronizarContaComFinanceiro`:
 1. Change URL from `/api/financial/contas/sincronizar` to `/api/financial/sincronizar/contas`
@@ -684,7 +684,7 @@ mvn compile -pl aurix-shared -am -q
 - [ ] **Step 5: Commit**
 
 ```bash
-git add backend/aurix-shared/src/main/java/com/aurix/platform/shared/integration/IntegrationService.java
+git add apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/integration/IntegrationService.java
 git commit -m "feat(shared): saga compensation + idempotency in IntegrationService"
 ```
 
@@ -693,7 +693,7 @@ git commit -m "feat(shared): saga compensation + idempotency in IntegrationServi
 ### Task 5: Saga orchestration tests in aurix-shared
 
 **Files:**
-- Create: `backend/aurix-shared/src/test/java/com/aurix/platform/shared/integration/IntegrationServiceSagaTest.java`
+- Create: `apps/backend/aurix-shared/src/test/java/com/aurix/platform/shared/integration/IntegrationServiceSagaTest.java`
 
 - [ ] **Step 1: Write IntegrationServiceSagaTest.java**
 
@@ -803,7 +803,7 @@ mvn test -pl aurix-shared -am
 - [ ] **Step 4: Commit**
 
 ```bash
-git add backend/aurix-shared/src/test/java/com/aurix/platform/shared/integration/IntegrationServiceSagaTest.java
+git add apps/backend/aurix-shared/src/test/java/com/aurix/platform/shared/integration/IntegrationServiceSagaTest.java
 git commit -m "test(shared): saga orchestration tests for compensation + idempotency"
 ```
 

@@ -47,7 +47,7 @@ dbt test --target prod
 Antes do primeiro DAG de ingestao, crie os buckets no MinIO (Console http://localhost:9001 ou script):
 
 ```bash
-cd infrastructure/data-stack/scripts
+cd infra/data-stack/scripts
 ./create-minio-buckets.sh
 ```
 

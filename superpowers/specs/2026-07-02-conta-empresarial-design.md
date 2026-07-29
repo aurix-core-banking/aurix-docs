@@ -23,13 +23,13 @@ Add `EMPRESARIAL` as a new `TipoConta` value to the existing `Conta` entity, ena
 
 ### 1. Conta.TipoConta enum
 
-File: `backend/aurix-core/src/main/java/com/aurix/platform/core/entity/Conta.java`
+File: `apps/backend/aurix-core/src/main/java/com/aurix/platform/core/entity/Conta.java`
 
 Add `EMPRESARIAL("Conta Empresarial")` to the existing enum. The enum is embedded inside the Conta entity class.
 
 ### 2. ContaService.criarConta()
 
-File: `backend/aurix-core/src/main/java/com/aurix/platform/core/service/ContaService.java`
+File: `apps/backend/aurix-core/src/main/java/com/aurix/platform/core/service/ContaService.java`
 
 - After loading the Cliente, validate: if `contaDTO.getTipoConta() == EMPRESARIAL`, cliente must be `TipoPessoa.JURIDICA`
 - Populate `clienteTipoPessoa` on the response DTO: `dto.setClienteTipoPessoa(cliente.getTipoPessoa().name())`
@@ -37,13 +37,13 @@ File: `backend/aurix-core/src/main/java/com/aurix/platform/core/service/ContaSer
 
 ### 3. API Spec
 
-File: `aurix-api-specs/aurix-core.yaml`
+File: `specs/aurix-core.yaml`
 
 - Add `EMPRESARIAL` to the `tipoConta` enum definition
 
 ### 4. Tests
 
-File: `backend/aurix-core/src/test/java/.../integration/ClientePJIntegrationTest.java`
+File: `apps/backend/aurix-core/src/test/java/.../integration/ClientePJIntegrationTest.java`
 
 - Add test: create PJ client → create EMPRESARIAL account → verify success + tipoConta
 - Add test: create PF client → attempt EMPRESARIAL account → verify rejection (400)

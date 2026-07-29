@@ -16,7 +16,7 @@
 - Checkstyle max line length 120
 - `@SuppressWarnings("all")` on all getters/setters/equals/hashCode (existing pattern)
 - Test: `@SpringBootTest(webEnvironment = RANDOM_PORT)` + `RestTemplate` + `@LocalServerPort`
-- Build: `mvn compile -pl aurix-{module} -am` from `backend/` directory
+- Build: `mvn compile -pl aurix-{module} -am` from `apps/backend/` directory
 - All new code must compile before moving to next task
 
 ---
@@ -54,8 +54,8 @@
 ### Task 1: CNPJUtil
 
 **Files:**
-- Create: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/util/CNPJUtil.java`
-- Test: `backend/aurix-shared/src/test/java/com/aurix/platform/shared/util/CNPJUtilTest.java`
+- Create: `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/util/CNPJUtil.java`
+- Test: `apps/backend/aurix-shared/src/test/java/com/aurix/platform/shared/util/CNPJUtilTest.java`
 
 **Interfaces:**
 - Produces: `CNPJUtil.isValid(String cnpj) → boolean`, `CNPJUtil.format(String cnpj) → String`, `CNPJUtil.unformat(String cnpj) → String`, `CNPJUtil.mask(String cnpj) → String`
@@ -218,7 +218,7 @@ Expected: All 9 tests pass
 - [ ] **Step 5: Commit**
 
 ```bash
-git add backend/aurix-shared/src/main/java/com/aurix/platform/shared/util/CNPJUtil.java backend/aurix-shared/src/test/java/com/aurix/platform/shared/util/CNPJUtilTest.java
+git add apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/util/CNPJUtil.java apps/backend/aurix-shared/src/test/java/com/aurix/platform/shared/util/CNPJUtilTest.java
 git commit -m "feat: add CNPJUtil validation utility"
 ```
 
@@ -227,9 +227,9 @@ git commit -m "feat: add CNPJUtil validation utility"
 ### Task 2: Consolidated Shared Cliente Entity + DTO
 
 **Files:**
-- Modify: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/entity/Cliente.java`
-- Modify: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/dto/ClienteDTO.java`
-- Modify: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/exception/ClienteNaoEncontradoException.java`
+- Modify: `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/entity/Cliente.java`
+- Modify: `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/dto/ClienteDTO.java`
+- Modify: `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/exception/ClienteNaoEncontradoException.java`
 
 **Interfaces:**
 - Consumes: `CNPJUtil` (Task 1)
@@ -278,7 +278,7 @@ Expected: Compilation error (TipoPessoa not in Cliente)
 
 - [ ] **Step 2: Update Cliente entity**
 
-Replace `backend/aurix-shared/src/main/java/com/aurix/platform/shared/entity/Cliente.java` with consolidated version. Key changes:
+Replace `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/entity/Cliente.java` with consolidated version. Key changes:
 - Add `TipoPessoa` enum: `FISICA, JURIDICA`
 - `cpf`: keep `@Pattern("\\d{11}")` but remove `@NotBlank` (only required for FISICA)
 - `nome`: keep but only required for FISICA
@@ -433,7 +433,7 @@ Expected: Compilation succeeds
 - [ ] **Step 6: Commit**
 
 ```bash
-git add backend/aurix-shared/src/main/java/com/aurix/platform/shared/entity/Cliente.java backend/aurix-shared/src/main/java/com/aurix/platform/shared/dto/ClienteDTO.java backend/aurix-shared/src/main/java/com/aurix/platform/shared/exception/ClienteNaoEncontradoException.java
+git add apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/entity/Cliente.java apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/dto/ClienteDTO.java apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/exception/ClienteNaoEncontradoException.java
 git commit -m "feat: consolidate Cliente with PF/PJ support"
 ```
 
@@ -442,9 +442,9 @@ git commit -m "feat: consolidate Cliente with PF/PJ support"
 ### Task 3: Update Core Module (Repository + Service + Controller)
 
 **Files:**
-- Modify: `backend/aurix-core/src/main/java/com/aurix/platform/core/repository/ClienteRepository.java`
-- Modify: `backend/aurix-core/src/main/java/com/aurix/platform/core/service/ClienteService.java`
-- Modify: `backend/aurix-core/src/main/java/com/aurix/platform/core/controller/ClienteController.java`
+- Modify: `apps/backend/aurix-core/src/main/java/com/aurix/platform/core/repository/ClienteRepository.java`
+- Modify: `apps/backend/aurix-core/src/main/java/com/aurix/platform/core/service/ClienteService.java`
+- Modify: `apps/backend/aurix-core/src/main/java/com/aurix/platform/core/controller/ClienteController.java`
 
 **Interfaces:**
 - Consumes: `Cliente` with `TipoPessoa` (Task 2), `CNPJUtil` (Task 1)
@@ -550,7 +550,7 @@ Expected: Compilation succeeds
 - [ ] **Step 5: Commit**
 
 ```bash
-git add backend/aurix-core/src/main/java/com/aurix/platform/core/repository/ClienteRepository.java backend/aurix-core/src/main/java/com/aurix/platform/core/service/ClienteService.java backend/aurix-core/src/main/java/com/aurix/platform/core/controller/ClienteController.java
+git add apps/backend/aurix-core/src/main/java/com/aurix/platform/core/repository/ClienteRepository.java apps/backend/aurix-core/src/main/java/com/aurix/platform/core/service/ClienteService.java apps/backend/aurix-core/src/main/java/com/aurix/platform/core/controller/ClienteController.java
 git commit -m "feat: update core module with PF/PJ Cliente CRUD"
 ```
 
@@ -561,7 +561,7 @@ git commit -m "feat: update core module with PF/PJ Cliente CRUD"
 **Files:**
 - No changes needed to `aurix-pix/.../repository/ClienteRepository.java` (already uses shared entity)
 - No changes needed to `aurix-credit/.../repository/ClienteRepository.java` (already uses shared entity)
-- Modify: `backend/aurix-credit/src/main/java/com/aurix/platform/credit/service/SolicitacaoCreditoService.java`
+- Modify: `apps/backend/aurix-credit/src/main/java/com/aurix/platform/credit/service/SolicitacaoCreditoService.java`
 
 - [ ] **Step 1: Update SolicitacaoCreditoService**
 
@@ -583,7 +583,7 @@ Expected: Compilation succeeds
 - [ ] **Step 3: Commit**
 
 ```bash
-git add backend/aurix-credit/src/main/java/com/aurix/platform/credit/service/SolicitacaoCreditoService.java
+git add apps/backend/aurix-credit/src/main/java/com/aurix/platform/credit/service/SolicitacaoCreditoService.java
 git commit -m "feat: adapt credit module for PJ client display"
 ```
 
@@ -592,8 +592,8 @@ git commit -m "feat: adapt credit module for PJ client display"
 ### Task 5: Update Security Module (UsuarioDTO + AuthService)
 
 **Files:**
-- Modify: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/dto/UsuarioDTO.java`
-- Modify: `backend/aurix-security/src/main/java/com/aurix/platform/security/service/AuthService.java`
+- Modify: `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/dto/UsuarioDTO.java`
+- Modify: `apps/backend/aurix-security/src/main/java/com/aurix/platform/security/service/AuthService.java`
 
 - [ ] **Step 1: Add clienteDocumento + clienteTipoPessoa to UsuarioDTO**
 
@@ -631,7 +631,7 @@ Expected: Compilation succeeds
 - [ ] **Step 4: Commit**
 
 ```bash
-git add backend/aurix-shared/src/main/java/com/aurix/platform/shared/dto/UsuarioDTO.java backend/aurix-security/src/main/java/com/aurix/platform/security/service/AuthService.java
+git add apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/dto/UsuarioDTO.java apps/backend/aurix-security/src/main/java/com/aurix/platform/security/service/AuthService.java
 git commit -m "feat: update UsuarioDTO and AuthService for PF/PJ client"
 ```
 
@@ -640,8 +640,8 @@ git commit -m "feat: update UsuarioDTO and AuthService for PF/PJ client"
 ### Task 6: Update ContaDTO and SolicitacaoCreditoDTO
 
 **Files:**
-- Modify: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/dto/ContaDTO.java`
-- Modify: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/dto/SolicitacaoCreditoDTO.java`
+- Modify: `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/dto/ContaDTO.java`
+- Modify: `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/dto/SolicitacaoCreditoDTO.java`
 
 - [ ] **Step 1: Add clienteTipoPessoa to ContaDTO**
 
@@ -667,7 +667,7 @@ Expected: Compilation succeeds
 - [ ] **Step 4: Commit**
 
 ```bash
-git add backend/aurix-shared/src/main/java/com/aurix/platform/shared/dto/ContaDTO.java backend/aurix-shared/src/main/java/com/aurix/platform/shared/dto/SolicitacaoCreditoDTO.java
+git add apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/dto/ContaDTO.java apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/dto/SolicitacaoCreditoDTO.java
 git commit -m "feat: add clienteTipoPessoa to ContaDTO and SolicitacaoCreditoDTO"
 ```
 
@@ -676,9 +676,9 @@ git commit -m "feat: add clienteTipoPessoa to ContaDTO and SolicitacaoCreditoDTO
 ### Task 7: Update Integration Layer
 
 **Files:**
-- Modify: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/integration/IntegrationService.java`
-- Modify: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/integration/IntegrationController.java`
-- Modify: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/cache/SharedCacheService.java`
+- Modify: `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/integration/IntegrationService.java`
+- Modify: `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/integration/IntegrationController.java`
+- Modify: `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/cache/SharedCacheService.java`
 
 - [ ] **Step 1: Update IntegrationService.buscarClienteUnificado**
 
@@ -708,10 +708,10 @@ git commit -m "chore: integration layer compatible with consolidated Cliente"
 ### Task 8: PerfilFinanceiroCliente (Financial Module)
 
 **Files:**
-- Create: `backend/aurix-financial/src/main/java/com/aurix/platform/financial/entity/PerfilFinanceiroCliente.java`
-- Create: `backend/aurix-financial/src/main/java/com/aurix/platform/financial/repository/PerfilFinanceiroClienteRepository.java`
-- Create: `backend/aurix-financial/src/main/java/com/aurix/platform/financial/service/PerfilFinanceiroClienteService.java`
-- Create: `backend/aurix-financial/src/main/java/com/aurix/platform/financial/controller/PerfilFinanceiroClienteController.java`
+- Create: `apps/backend/aurix-financial/src/main/java/com/aurix/platform/financial/entity/PerfilFinanceiroCliente.java`
+- Create: `apps/backend/aurix-financial/src/main/java/com/aurix/platform/financial/repository/PerfilFinanceiroClienteRepository.java`
+- Create: `apps/backend/aurix-financial/src/main/java/com/aurix/platform/financial/service/PerfilFinanceiroClienteService.java`
+- Create: `apps/backend/aurix-financial/src/main/java/com/aurix/platform/financial/controller/PerfilFinanceiroClienteController.java`
 
 **Interfaces:**
 - Consumes: Shared `Cliente` entity (Task 2)
@@ -910,7 +910,7 @@ public class PerfilFinanceiroClienteController {
 
 - [ ] **Step 5: Remove financial module's old Cliente entity**
 
-Delete: `backend/aurix-financial/src/main/java/com/aurix/platform/financial/entity/Cliente.java`
+Delete: `apps/backend/aurix-financial/src/main/java/com/aurix/platform/financial/entity/Cliente.java`
 
 - [ ] **Step 6: Check financial module for any references to its own Cliente**
 
@@ -924,8 +924,8 @@ Expected: Compilation succeeds
 - [ ] **Step 8: Commit**
 
 ```bash
-git add backend/aurix-financial/src/main/java/com/aurix/platform/financial/entity/PerfilFinanceiroCliente.java backend/aurix-financial/src/main/java/com/aurix/platform/financial/repository/PerfilFinanceiroClienteRepository.java backend/aurix-financial/src/main/java/com/aurix/platform/financial/service/PerfilFinanceiroClienteService.java backend/aurix-financial/src/main/java/com/aurix/platform/financial/controller/PerfilFinanceiroClienteController.java
-git rm backend/aurix-financial/src/main/java/com/aurix/platform/financial/entity/Cliente.java
+git add apps/backend/aurix-financial/src/main/java/com/aurix/platform/financial/entity/PerfilFinanceiroCliente.java apps/backend/aurix-financial/src/main/java/com/aurix/platform/financial/repository/PerfilFinanceiroClienteRepository.java apps/backend/aurix-financial/src/main/java/com/aurix/platform/financial/service/PerfilFinanceiroClienteService.java apps/backend/aurix-financial/src/main/java/com/aurix/platform/financial/controller/PerfilFinanceiroClienteController.java
+git rm apps/backend/aurix-financial/src/main/java/com/aurix/platform/financial/entity/Cliente.java
 git commit -m "feat: add PerfilFinanceiroCliente, remove old financial Cliente"
 ```
 
@@ -934,8 +934,8 @@ git commit -m "feat: add PerfilFinanceiroCliente, remove old financial Cliente"
 ### Task 9: Tests — Core Module
 
 **Files:**
-- Create: `backend/aurix-core/src/test/java/com/aurix/platform/core/integration/ClientePFIntegrationTest.java`
-- Create: `backend/aurix-core/src/test/java/com/aurix/platform/core/integration/ClientePJIntegrationTest.java`
+- Create: `apps/backend/aurix-core/src/test/java/com/aurix/platform/core/integration/ClientePFIntegrationTest.java`
+- Create: `apps/backend/aurix-core/src/test/java/com/aurix/platform/core/integration/ClientePJIntegrationTest.java`
 
 - [ ] **Step 1: Write PF integration test**
 
@@ -1018,7 +1018,7 @@ Expected: All tests pass
 - [ ] **Step 4: Commit**
 
 ```bash
-git add backend/aurix-core/src/test/java/com/aurix/platform/core/integration/ClientePFIntegrationTest.java backend/aurix-core/src/test/java/com/aurix/platform/core/integration/ClientePJIntegrationTest.java
+git add apps/backend/aurix-core/src/test/java/com/aurix/platform/core/integration/ClientePFIntegrationTest.java apps/backend/aurix-core/src/test/java/com/aurix/platform/core/integration/ClientePJIntegrationTest.java
 git commit -m "test: add PF/PJ Cliente integration tests"
 ```
 
@@ -1027,7 +1027,7 @@ git commit -m "test: add PF/PJ Cliente integration tests"
 ### Task 10: Tests — Financial Module + Regression
 
 **Files:**
-- Create: `backend/aurix-financial/src/test/java/com/aurix/platform/financial/integration/PerfilFinanceiroClienteIntegrationTest.java`
+- Create: `apps/backend/aurix-financial/src/test/java/com/aurix/platform/financial/integration/PerfilFinanceiroClienteIntegrationTest.java`
 - Modify: Existing integration tests to use new Cliente type for PF clients
 
 - [ ] **Step 1: Write PerfilFinanceiroCliente test**
@@ -1046,7 +1046,7 @@ Expected: All tests pass
 - [ ] **Step 3: Commit**
 
 ```bash
-git add backend/aurix-financial/src/test/java/com/aurix/platform/financial/integration/PerfilFinanceiroClienteIntegrationTest.java
+git add apps/backend/aurix-financial/src/test/java/com/aurix/platform/financial/integration/PerfilFinanceiroClienteIntegrationTest.java
 git commit -m "test: add PerfilFinanceiroCliente integration test"
 ```
 

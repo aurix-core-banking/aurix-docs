@@ -6,7 +6,7 @@ O que as áreas do banco (operações, compliance, risco, tesouraria, TI) precis
 
 ## Operações e run
 
-- **Runbook**: [aurix-cloud-runbook.md](../../05-infrastructure/infrastructure/aurix-cloud-runbook.md).
+- **Runbook**: [aurix-cloud-runbook.md](../../05-infra/infra/aurix-cloud-runbook.md).
 - **Ciclo de vida Run**: [02-lifecycle/run.md](../../02-lifecycle/ciclo-de-vida/run.md).
 - **Suporte**: [02-lifecycle/suporte.md](../../02-lifecycle/ciclo-de-vida/suporte.md), [01-guides-checklists/kit-implementacao/suporte-tecnico.md](../../01-guides-checklists/kit-implementacao/suporte-tecnico.md).
 

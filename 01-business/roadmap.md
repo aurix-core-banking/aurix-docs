@@ -64,7 +64,7 @@ Para detalhes técnicos e operacionais, consulte os guias na pasta `docs/`:
 | Tema | Documento |
 |------|------------|
 | Visão Arquitetural | [big-picture.md](big-picture.md) |
-| Runbook de Infraestrutura | [../05-infrastructure/infrastructure/index.md](../05-infrastructure/infrastructure/index.md) |
+| Runbook de Infraestrutura | [../05-infra/infra/index.md](../05-infra/infra/index.md) |
 | Estratégia de Dados | [../04-data-ai/data-pipelines/README.md](../04-data-ai/data-pipelines/README.md) |
 | Guia de Implementação | [../wiki/README.md](../wiki/README.md) |
 

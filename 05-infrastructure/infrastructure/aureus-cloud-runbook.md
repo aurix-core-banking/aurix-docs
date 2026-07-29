@@ -99,7 +99,7 @@ Cada alerta deve referenciar um item do runbook (link ou nome do procedimento).
 
 ### R6 – Backup e restore
 
-1. **Backup**: seguir politica de backup do cloud (RDS automated backups, snapshots, etc.) ou usar scripts do item 14.2: `infrastructure/scripts/backup-postgres.sh` com retencao configurável. Para multi-tenant, cada banco de tenant deve estar incluido. Testar restore periodicamente (ex.: trimestral). Detalhes: [backup-restore.md](backup-restore.md).
+1. **Backup**: seguir politica de backup do cloud (RDS automated backups, snapshots, etc.) ou usar scripts do item 14.2: `infra/scripts/backup-postgres.sh` com retencao configurável. Para multi-tenant, cada banco de tenant deve estar incluido. Testar restore periodicamente (ex.: trimestral). Detalhes: [backup-restore.md](backup-restore.md).
 2. **Restore**: escolher ponto no tempo conforme RTO; restaurar instancia ou banco; atualizar config de conexao se necessario; validar integridade dos dados e comunicar cliente se impacto. Script: `restore-postgres.sh <arquivo.sql> [database]`.
 
 ---

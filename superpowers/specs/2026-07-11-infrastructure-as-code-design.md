@@ -30,7 +30,7 @@ Complete the infrastructure-as-code layer for the Aurix Platform: Terraform mult
 ## 1. Repository Structure (Monorepo)
 
 ```
-infrastructure/
+infra/
 ├── terraform/
 │   ├── main.tf                     # Root module (providers + module calls)
 │   ├── variables.tf                # All variables
@@ -139,7 +139,7 @@ spec:
       repoURL: https://github.com/anomalyco/aurix-platform
       revision: HEAD
       directories:
-      - path: infrastructure/kubernetes/charts/*
+      - path: infra/kubernetes/charts/*
   template:
     metadata:
       name: '{{path.basename}}'
@@ -212,7 +212,7 @@ name: Build aurix-core
 on:
   push:
     branches: [main, develop]
-    paths: ["backend/aurix-core/**"]
+    paths: ["apps/backend/aurix-core/**"]
 
 jobs:
   build:
@@ -228,7 +228,7 @@ jobs:
             -t ${{ env.REGISTRY }}/aurix-core:${{ github.sha }} \
             --platform linux/amd64,linux/arm64 \
             --push \
-            -f backend/aurix-core/Dockerfile backend/
+            -f apps/backend/aurix-core/Dockerfile apps/backend/
 ```
 
 ### Image Registry Strategy

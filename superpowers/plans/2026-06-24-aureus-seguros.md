@@ -11,7 +11,7 @@
 
 - [ ] **Criar diretórios**
   ```
-  backend/aurix-seguros/
+  apps/backend/aurix-seguros/
   ├── pom.xml
   ├── docker/
   ├── src/main/java/com/aurix/platform/seguros/
@@ -390,7 +390,7 @@
 
 ### 1.11 Gateway Route + Parent POM
 
-- [ ] **`backend/aurix-gateway/src/main/resources/application.yml`** — adicionar rota:
+- [ ] **`apps/backend/aurix-gateway/src/main/resources/application.yml`** — adicionar rota:
   ```yaml
   - id: aurix-seguros
     uri: http://localhost:8117
@@ -400,7 +400,7 @@
       - StripPrefix=0
   ```
 
-- [ ] **`backend/pom.xml`** — adicionar `<module>aurix-seguros</module>` em `<modules>`
+- [ ] **`apps/backend/pom.xml`** — adicionar `<module>aurix-seguros</module>` em `<modules>`
 
 ### 1.12 Testes
 

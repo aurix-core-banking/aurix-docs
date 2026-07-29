@@ -2,7 +2,7 @@
 
 **Date:** 2026-07-24  
 **Status:** Approved  
-**Target:** `frontend/aurix-web` (with integrated modular shell supporting all Banking and Admin capabilities)
+**Target:** `apps/frontend/aurix-web` (with integrated modular shell supporting all Banking and Admin capabilities)
 
 ---
 

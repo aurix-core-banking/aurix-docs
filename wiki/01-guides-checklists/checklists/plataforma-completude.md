@@ -8,10 +8,10 @@ Prioridades: **P0** = bloqueador (segurança/regulatório/financeiro, não pode 
 
 ## 1. Segurança – bloqueadores imediatos (P0)
 
-- [ ] **Remover todos os segredos hardcoded do repositório**: JWT secret e chave AES em `backend/aurix-security/.../application.yml` e `backend/aurix-compliance/.../application.yml`; senha de banco em claro; client secrets OAuth em `infrastructure/iam/keycloak/import/aurix-clients.json`. Migrar para secret manager (Vault/AWS Secrets Manager/Azure Key Vault) ou no mínimo variáveis de ambiente injetadas em runtime.
-- [ ] **Trocar todas as senhas padrão** (`aurix123`, `admin123`) em `infrastructure/docker-compose.yml`, `docker-compose.dev.yml`, `infrastructure/juju/bundle.yaml`, `aurix-data-pipelines/dbt/profiles.yml` — hoje idênticas entre "dev" e "prod".
+- [ ] **Remover todos os segredos hardcoded do repositório**: JWT secret e chave AES em `apps/backend/aurix-security/.../application.yml` e `apps/backend/aurix-compliance/.../application.yml`; senha de banco em claro; client secrets OAuth em `infra/iam/keycloak/import/aurix-clients.json`. Migrar para secret manager (Vault/AWS Secrets Manager/Azure Key Vault) ou no mínimo variáveis de ambiente injetadas em runtime.
+- [ ] **Trocar todas as senhas padrão** (`aurix123`, `admin123`) em `infra/docker-compose.yml`, `docker-compose.dev.yml`, `infra/juju/bundle.yaml`, `data/pipelines/dbt/profiles.yml` — hoje idênticas entre "dev" e "prod".
 - [ ] **Corrigir geração de TOTP/MFA**: `MfaService.java` usa `random.nextInt` em vez de RFC 6238; comparação de token/biometria via `String.equals` (vulnerável a timing attack) — usar comparação em tempo constante.
-- [ ] **Habilitar TLS no Nginx** (`infrastructure/nginx/nginx.conf` só escuta porta 80) e configurar rate limiting (`limit_req`/`limit_conn`). Avaliar necessidade de WAF.
+- [ ] **Habilitar TLS no Nginx** (`infra/nginx/nginx.conf` só escuta porta 80) e configurar rate limiting (`limit_req`/`limit_conn`). Avaliar necessidade de WAF.
 - [ ] **Gitleaks/scan de histórico**: rodar scan retroativo no git history para confirmar se algum segredo já exposto precisa ser rotacionado (não só removido do HEAD).
 
 ## 2. Liquidação, PIX e BACEN reais (P0)
@@ -74,7 +74,7 @@ Prioridades: **P0** = bloqueador (segurança/regulatório/financeiro, não pode 
 
 ## 9. Observabilidade (P1)
 
-- [ ] **Configurar Alertmanager** (`infrastructure/monitoring`) — hoje regras de alerta existem no Prometheus mas não há `alertmanager.yml`; nenhum alerta chega a notificar ninguém.
+- [ ] **Configurar Alertmanager** (`infra/monitoring`) — hoje regras de alerta existem no Prometheus mas não há `alertmanager.yml`; nenhum alerta chega a notificar ninguém.
 - [ ] **Conectar Alertmanager a canal real** (Slack/PagerDuty/e-mail).
 
 ## 10. Frontend (P1/P2)

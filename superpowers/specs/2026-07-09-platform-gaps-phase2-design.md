@@ -203,14 +203,14 @@ No change needed — broker IDs 1/2/3 are already correct for 3-broker staging.
 
 | File | Path |
 |------|------|
-| `Extrato.js` | `frontend/aurix-web/src/pages/Extrato.js` |
-| `Extrato.test.js` | `frontend/aurix-web/src/pages/Extrato.test.js` |
-| `Transferencia.js` | `frontend/aurix-web/src/pages/Transferencia.js` |
-| `Transferencia.test.js` | `frontend/aurix-web/src/pages/Transferencia.test.js` |
-| `Pagamento.js` | `frontend/aurix-web/src/pages/Pagamento.js` |
-| `Pagamento.test.js` | `frontend/aurix-web/src/pages/Pagamento.test.js` |
-| `Recarga.js` | `frontend/aurix-web/src/pages/Recarga.js` |
-| `Recarga.test.js` | `frontend/aurix-web/src/pages/Recarga.test.js` |
+| `Extrato.js` | `apps/frontend/aurix-web/src/pages/Extrato.js` |
+| `Extrato.test.js` | `apps/frontend/aurix-web/src/pages/Extrato.test.js` |
+| `Transferencia.js` | `apps/frontend/aurix-web/src/pages/Transferencia.js` |
+| `Transferencia.test.js` | `apps/frontend/aurix-web/src/pages/Transferencia.test.js` |
+| `Pagamento.js` | `apps/frontend/aurix-web/src/pages/Pagamento.js` |
+| `Pagamento.test.js` | `apps/frontend/aurix-web/src/pages/Pagamento.test.js` |
+| `Recarga.js` | `apps/frontend/aurix-web/src/pages/Recarga.js` |
+| `Recarga.test.js` | `apps/frontend/aurix-web/src/pages/Recarga.test.js` |
 
 ### Extrato.js
 
@@ -289,7 +289,7 @@ Each test file co-located (`Extrato.test.js`, etc.):
 
 ### Service interfaces (new)
 
-Create in `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/`:
+Create in `apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/`:
 
 | Interface | Methods | Endpoints served |
 |-----------|---------|-------------------|

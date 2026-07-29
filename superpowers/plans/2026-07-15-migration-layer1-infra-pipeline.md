@@ -15,7 +15,7 @@
 - Portas 8200–8209 usadas exclusivamente pelos novos serviços
 - Docker Compose v2 usa rede `aurix-network` existente
 - Nenhum módulo legado é modificado nesta fase
-- CI pipelines usam working-directory dentro de `backend/svc-*`
+- CI pipelines usam working-directory dentro de `apps/backend/svc-*`
 - Docker image tag: `aurix/svc-{domain}:latest`
 
 ---
@@ -23,7 +23,7 @@
 ## File Structure
 
 ```
-backend/
+apps/backend/
   svc-banking/                  → placeholder Spring Boot (porta 8200)
     pom.xml
     Dockerfile
@@ -42,7 +42,7 @@ backend/
   svc-platform/                 → placeholder (8208)
   svc-intelligence/             → placeholder (8209)
 
-infrastructure/
+infra/
   docker-compose.v2.yml         → 10 serviços placeholder
   traefik/dynamic.v2.yml        → 10 routers + 10 services Traefik
 
@@ -66,38 +66,38 @@ Makefile                        → targets adicionados (infra-up, domain-up, v2
 ### Task 1: Scaffold — criar 10 serviços Spring Boot placeholder
 
 **Files:**
-- Create: `backend/svc-banking/pom.xml`
-- Create: `backend/svc-banking/src/main/java/com/aurix/platform/banking/AurixBankingApplication.java`
-- Create: `backend/svc-banking/Dockerfile`
+- Create: `apps/backend/svc-banking/pom.xml`
+- Create: `apps/backend/svc-banking/src/main/java/com/aurix/platform/banking/AurixBankingApplication.java`
+- Create: `apps/backend/svc-banking/Dockerfile`
 - Create (identical pattern para svc-payments, svc-credit, svc-products, svc-customer, svc-fraud, svc-compliance, svc-finance-mgmt, svc-platform, svc-intelligence)
 
 **Interfaces:**
-- Consumes: estrutura Maven existente (`backend/pom.xml` parent)
+- Consumes: estrutura Maven existente (`apps/backend/pom.xml` parent)
 - Produces: 10 módulos Maven compiláveis com `mvn clean compile -pl svc-banking`
 
 - [ ] **Step 1: Criar diretórios dos 10 serviços**
 
 ```bash
-mkdir -p backend/svc-banking/src/main/java/com/aurix/platform/banking
-mkdir -p backend/svc-banking/src/main/resources
-mkdir -p backend/svc-payments/src/main/java/com/aurix/platform/payments
-mkdir -p backend/svc-payments/src/main/resources
-mkdir -p backend/svc-credit/src/main/java/com/aurix/platform/credit
-mkdir -p backend/svc-credit/src/main/resources
-mkdir -p backend/svc-products/src/main/java/com/aurix/platform/products
-mkdir -p backend/svc-products/src/main/resources
-mkdir -p backend/svc-customer/src/main/java/com/aurix/platform/customer
-mkdir -p backend/svc-customer/src/main/resources
-mkdir -p backend/svc-fraud/src/main/java/com/aurix/platform/fraud
-mkdir -p backend/svc-fraud/src/main/resources
-mkdir -p backend/svc-compliance/src/main/java/com/aurix/platform/compliance
-mkdir -p backend/svc-compliance/src/main/resources
-mkdir -p backend/svc-finance-mgmt/src/main/java/com/aurix/platform/financemgmt
-mkdir -p backend/svc-finance-mgmt/src/main/resources
-mkdir -p backend/svc-platform/src/main/java/com/aurix/platform/platform
-mkdir -p backend/svc-platform/src/main/resources
-mkdir -p backend/svc-intelligence/src/main/java/com/aurix/platform/intelligence
-mkdir -p backend/svc-intelligence/src/main/resources
+mkdir -p apps/backend/svc-banking/src/main/java/com/aurix/platform/banking
+mkdir -p apps/backend/svc-banking/src/main/resources
+mkdir -p apps/backend/svc-payments/src/main/java/com/aurix/platform/payments
+mkdir -p apps/backend/svc-payments/src/main/resources
+mkdir -p apps/backend/svc-credit/src/main/java/com/aurix/platform/credit
+mkdir -p apps/backend/svc-credit/src/main/resources
+mkdir -p apps/backend/svc-products/src/main/java/com/aurix/platform/products
+mkdir -p apps/backend/svc-products/src/main/resources
+mkdir -p apps/backend/svc-customer/src/main/java/com/aurix/platform/customer
+mkdir -p apps/backend/svc-customer/src/main/resources
+mkdir -p apps/backend/svc-fraud/src/main/java/com/aurix/platform/fraud
+mkdir -p apps/backend/svc-fraud/src/main/resources
+mkdir -p apps/backend/svc-compliance/src/main/java/com/aurix/platform/compliance
+mkdir -p apps/backend/svc-compliance/src/main/resources
+mkdir -p apps/backend/svc-finance-mgmt/src/main/java/com/aurix/platform/financemgmt
+mkdir -p apps/backend/svc-finance-mgmt/src/main/resources
+mkdir -p apps/backend/svc-platform/src/main/java/com/aurix/platform/platform
+mkdir -p apps/backend/svc-platform/src/main/resources
+mkdir -p apps/backend/svc-intelligence/src/main/java/com/aurix/platform/intelligence
+mkdir -p apps/backend/svc-intelligence/src/main/resources
 ```
 
 - [ ] **Step 2: Criar pom.xml do svc-banking**
@@ -225,15 +225,15 @@ Criar os mesmos 4 arquivos (pom.xml, Application.java, application.yml, Dockerfi
 
 | Domínio | Diretório | Pacote | Application class | server.port | management.port |
 |---------|-----------|--------|-------------------|:-----------:|:---------------:|
-| svc-payments | `backend/svc-payments` | `com.aurix.platform.payments` | `AurixPaymentsApplication` | 8201 | 9201 |
-| svc-credit | `backend/svc-credit` | `com.aurix.platform.credit` | `AurixCreditApplication` | 8202 | 9202 |
-| svc-products | `backend/svc-products` | `com.aurix.platform.products` | `AurixProductsApplication` | 8203 | 9203 |
-| svc-customer | `backend/svc-customer` | `com.aurix.platform.customer` | `AurixCustomerApplication` | 8204 | 9204 |
-| svc-fraud | `backend/svc-fraud` | `com.aurix.platform.fraud` | `AurixFraudApplication` | 8205 | 9205 |
-| svc-compliance | `backend/svc-compliance` | `com.aurix.platform.compliance` | `AurixComplianceApplication` | 8206 | 9206 |
-| svc-finance-mgmt | `backend/svc-finance-mgmt` | `com.aurix.platform.financemgmt` | `AurixFinanceMgmtApplication` | 8207 | 9207 |
-| svc-platform | `backend/svc-platform` | `com.aurix.platform.platform` | `AurixPlatformApplication` | 8208 | 9208 |
-| svc-intelligence | `backend/svc-intelligence` | `com.aurix.platform.intelligence` | `AurixIntelligenceApplication` | 8209 | 9209 |
+| svc-payments | `apps/backend/svc-payments` | `com.aurix.platform.payments` | `AurixPaymentsApplication` | 8201 | 9201 |
+| svc-credit | `apps/backend/svc-credit` | `com.aurix.platform.credit` | `AurixCreditApplication` | 8202 | 9202 |
+| svc-products | `apps/backend/svc-products` | `com.aurix.platform.products` | `AurixProductsApplication` | 8203 | 9203 |
+| svc-customer | `apps/backend/svc-customer` | `com.aurix.platform.customer` | `AurixCustomerApplication` | 8204 | 9204 |
+| svc-fraud | `apps/backend/svc-fraud` | `com.aurix.platform.fraud` | `AurixFraudApplication` | 8205 | 9205 |
+| svc-compliance | `apps/backend/svc-compliance` | `com.aurix.platform.compliance` | `AurixComplianceApplication` | 8206 | 9206 |
+| svc-finance-mgmt | `apps/backend/svc-finance-mgmt` | `com.aurix.platform.financemgmt` | `AurixFinanceMgmtApplication` | 8207 | 9207 |
+| svc-platform | `apps/backend/svc-platform` | `com.aurix.platform.platform` | `AurixPlatformApplication` | 8208 | 9208 |
+| svc-intelligence | `apps/backend/svc-intelligence` | `com.aurix.platform.intelligence` | `AurixIntelligenceApplication` | 8209 | 9209 |
 
 O conteúdo de cada arquivo é idêntico ao svc-banking, apenas alterando:
 - `artifactId` no pom.xml
@@ -254,7 +254,7 @@ Expected output: `BUILD SUCCESS` (sem erros). O mesmo comando funciona para `svc
 - [ ] **Step 7: Commit**
 
 ```bash
-git add backend/svc-banking/ backend/svc-payments/ backend/svc-credit/ backend/svc-products/ backend/svc-customer/ backend/svc-fraud/ backend/svc-compliance/ backend/svc-finance-mgmt/ backend/svc-platform/ backend/svc-intelligence/
+git add apps/backend/svc-banking/ apps/backend/svc-payments/ apps/backend/svc-credit/ apps/backend/svc-products/ apps/backend/svc-customer/ apps/backend/svc-fraud/ apps/backend/svc-compliance/ apps/backend/svc-finance-mgmt/ apps/backend/svc-platform/ apps/backend/svc-intelligence/
 git commit -m "feat: scaffold 10 placeholder Spring Boot services (F0)"
 ```
 
@@ -263,16 +263,16 @@ git commit -m "feat: scaffold 10 placeholder Spring Boot services (F0)"
 ### Task 2: Docker Compose v2 — 10 serviços placeholder
 
 **Files:**
-- Create: `infrastructure/docker-compose.v2.yml`
+- Create: `infra/docker-compose.v2.yml`
 
 **Interfaces:**
-- Consumes: 10 diretórios `backend/svc-*` com Dockerfile (Task 1)
+- Consumes: 10 diretórios `apps/backend/svc-*` com Dockerfile (Task 1)
 - Produces: arquivo Compose validável com `docker compose config`
 
 - [ ] **Step 1: Escrever docker-compose.v2.yml**
 
 ```yaml
-# infrastructure/docker-compose.v2.yml
+# infra/docker-compose.v2.yml
 # Docker Compose alvo: 10 domínios consolidados
 # Usado EM PARALELO com docker-compose.yml (legado) durante migração
 # Para subir APENAS os domínios migrados:
@@ -282,7 +282,7 @@ services:
 
   svc-banking:
     build:
-      context: ../backend/svc-banking
+      context: ../apps/backend/svc-banking
       dockerfile: Dockerfile
     container_name: svc-banking
     ports:
@@ -312,7 +312,7 @@ services:
 
   svc-payments:
     build:
-      context: ../backend/svc-payments
+      context: ../apps/backend/svc-payments
       dockerfile: Dockerfile
     container_name: svc-payments
     ports:
@@ -339,7 +339,7 @@ services:
 
   svc-credit:
     build:
-      context: ../backend/svc-credit
+      context: ../apps/backend/svc-credit
       dockerfile: Dockerfile
     container_name: svc-credit
     ports:
@@ -366,7 +366,7 @@ services:
 
   svc-products:
     build:
-      context: ../backend/svc-products
+      context: ../apps/backend/svc-products
       dockerfile: Dockerfile
     container_name: svc-products
     ports:
@@ -393,7 +393,7 @@ services:
 
   svc-customer:
     build:
-      context: ../backend/svc-customer
+      context: ../apps/backend/svc-customer
       dockerfile: Dockerfile
     container_name: svc-customer
     ports:
@@ -423,7 +423,7 @@ services:
 
   svc-fraud:
     build:
-      context: ../backend/svc-fraud
+      context: ../apps/backend/svc-fraud
       dockerfile: Dockerfile
     container_name: svc-fraud
     ports:
@@ -451,7 +451,7 @@ services:
 
   svc-compliance:
     build:
-      context: ../backend/svc-compliance
+      context: ../apps/backend/svc-compliance
       dockerfile: Dockerfile
     container_name: svc-compliance
     ports:
@@ -477,7 +477,7 @@ services:
 
   svc-finance-mgmt:
     build:
-      context: ../backend/svc-finance-mgmt
+      context: ../apps/backend/svc-finance-mgmt
       dockerfile: Dockerfile
     container_name: svc-finance-mgmt
     ports:
@@ -503,7 +503,7 @@ services:
 
   svc-platform:
     build:
-      context: ../backend/svc-platform
+      context: ../apps/backend/svc-platform
       dockerfile: Dockerfile
     container_name: svc-platform
     ports:
@@ -530,7 +530,7 @@ services:
 
   svc-intelligence:
     build:
-      context: ../backend/svc-intelligence
+      context: ../apps/backend/svc-intelligence
       dockerfile: Dockerfile
     container_name: svc-intelligence
     ports:
@@ -563,7 +563,7 @@ networks:
 - [ ] **Step 2: Validar arquivo Compose**
 
 ```bash
-docker compose -f infrastructure/docker-compose.v2.yml config
+docker compose -f infra/docker-compose.v2.yml config
 ```
 
 Expected output: saída YAML completa, sem erros.
@@ -571,7 +571,7 @@ Expected output: saída YAML completa, sem erros.
 - [ ] **Step 3: Commit**
 
 ```bash
-git add infrastructure/docker-compose.v2.yml
+git add infra/docker-compose.v2.yml
 git commit -m "feat(docker-compose): add v2 with 10 placeholder services (F0)"
 ```
 
@@ -580,7 +580,7 @@ git commit -m "feat(docker-compose): add v2 with 10 placeholder services (F0)"
 ### Task 3: Traefik v2 — 10 routers + services
 
 **Files:**
-- Create: `infrastructure/traefik/dynamic.v2.yml`
+- Create: `infra/traefik/dynamic.v2.yml`
 
 **Interfaces:**
 - Consumes: docker-compose.v2.yml com svc-*:8200-8209 (Task 2)
@@ -589,7 +589,7 @@ git commit -m "feat(docker-compose): add v2 with 10 placeholder services (F0)"
 - [ ] **Step 1: Escrever dynamic.v2.yml**
 
 ```yaml
-# infrastructure/traefik/dynamic.v2.yml
+# infra/traefik/dynamic.v2.yml
 # Configuração ALVO: 10 domínios consolidados
 # Ativado em paralelo com dynamic.yml durante migração via feature flags
 # Traefik suporta múltiplos arquivos em providers.file.directory
@@ -825,7 +825,7 @@ http:
 - [ ] **Step 2: Validar sintaxe YAML**
 
 ```bash
-python3 -c "import yaml; yaml.safe_load(open('infrastructure/traefik/dynamic.v2.yml')); print('✓ YAML válido')"
+python3 -c "import yaml; yaml.safe_load(open('infra/traefik/dynamic.v2.yml')); print('✓ YAML válido')"
 ```
 
 Expected output: `✓ YAML válido`
@@ -833,7 +833,7 @@ Expected output: `✓ YAML válido`
 - [ ] **Step 3: Commit**
 
 ```bash
-git add infrastructure/traefik/dynamic.v2.yml
+git add infra/traefik/dynamic.v2.yml
 git commit -m "feat(traefik): add v2 config with 10 routers and services (F0)"
 ```
 
@@ -866,29 +866,29 @@ Adicionar ao Makefile existente:
 
 # Subir apenas infraestrutura (sem nenhum serviço de aplicação)
 infra-up:
-	docker compose -f infrastructure/docker-compose.yml up -d \
+	docker compose -f infra/docker-compose.yml up -d \
 	  traefik postgres redis kafka kafka-ui keycloak
 
 # Subir legado completo (43 módulos atuais)
 legacy-up:
-	docker compose -f infrastructure/docker-compose.yml up -d
+	docker compose -f infra/docker-compose.yml up -d
 
 # Subir um domínio específico em paralelo ao legado
 # Uso: make domain-up DOMAIN=svc-customer
 domain-up:
 	docker compose \
-	  -f infrastructure/docker-compose.yml \
-	  -f infrastructure/docker-compose.v2.yml \
+	  -f infra/docker-compose.yml \
+	  -f infra/docker-compose.v2.yml \
 	  up -d $(DOMAIN)
 
 # Subir todos os 10 novos domínios (sem legado)
 v2-up:
-	docker compose -f infrastructure/docker-compose.v2.yml up -d
+	docker compose -f infra/docker-compose.v2.yml up -d
 
 # Derrubar serviços legados por domínio conforme migração avança
 # Uso: make legacy-down SERVICES="aurix-customer aurix-kyc"
 legacy-down:
-	docker compose -f infrastructure/docker-compose.yml stop $(SERVICES)
+	docker compose -f infra/docker-compose.yml stop $(SERVICES)
 
 # Build completo dos 10 domínios
 build-all:
@@ -954,18 +954,18 @@ name: CI — Banking Core
 on:
   push:
     paths:
-      - 'backend/svc-banking/**'
+      - 'apps/backend/svc-banking/**'
       - '.github/workflows/ci-banking.yml'
   pull_request:
     paths:
-      - 'backend/svc-banking/**'
+      - 'apps/backend/svc-banking/**'
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: backend/svc-banking
+        working-directory: apps/backend/svc-banking
 
     services:
       postgres:
@@ -1022,7 +1022,7 @@ jobs:
       - name: Build Docker image
         run: |
           docker build -t aurix/svc-banking:${{ github.sha }} \
-            backend/svc-banking/
+            apps/backend/svc-banking/
 
       - name: Push to registry
         run: |
@@ -1036,8 +1036,8 @@ jobs:
 
 Para cada um, copiar ci-banking.yml alterando:
 - `name:` → `CI — Payments`, `CI — Credit`, etc.
-- `paths:` → `backend/svc-payments/**`, `backend/svc-credit/**`, etc.
-- `defaults.run.working-directory:` → `backend/svc-payments`, etc.
+- `paths:` → `apps/backend/svc-payments/**`, `apps/backend/svc-credit/**`, etc.
+- `defaults.run.working-directory:` → `apps/backend/svc-payments`, etc.
 - `docker build -t aurix/svc-payments:${{ github.sha }}` etc.
 - `docker push aurix/svc-payments:${{ github.sha }}` etc.
 - `docker tag` e `docker push` para o nome correto
@@ -1070,12 +1070,12 @@ git commit -m "feat(ci): add 10 domain-specific pipeline workflows (F0)"
 ### Task 6: Maven parent POM — adicionar novos módulos
 
 **Files:**
-- Modify: `backend/pom.xml`
+- Modify: `apps/backend/pom.xml`
 
 - [ ] **Step 1: Ler o pom.xml raiz existente**
 
 ```bash
-head -60 backend/pom.xml
+head -60 apps/backend/pom.xml
 ```
 
 Localizar a seção `<modules>` para saber a posição exata de inserção.
@@ -1116,7 +1116,7 @@ Expected output: `BUILD SUCCESS`. Se houver erro, reverter e ajustar.
 - [ ] **Step 4: Commit**
 
 ```bash
-git add backend/pom.xml
+git add apps/backend/pom.xml
 git commit -m "chore(pom): add commented module slots for 10 new domains (F0)"
 ```
 
@@ -1133,14 +1133,14 @@ echo "=== F0 Completion Checklist ==="
 echo ""
 
 echo "1. docker-compose.v2.yml criado?"
-ls -la infrastructure/docker-compose.v2.yml && echo "  ✓" || echo "  ✗"
+ls -la infra/docker-compose.v2.yml && echo "  ✓" || echo "  ✗"
 
 echo "2. dynamic.v2.yml criado?"
-ls -la infrastructure/traefik/dynamic.v2.yml && echo "  ✓" || echo "  ✗"
+ls -la infra/traefik/dynamic.v2.yml && echo "  ✓" || echo "  ✗"
 
 echo "3. Dockerfiles existem?"
 for d in svc-banking svc-payments svc-credit svc-products svc-customer svc-fraud svc-compliance svc-finance-mgmt svc-platform svc-intelligence; do
-  ls backend/$d/Dockerfile > /dev/null 2>&1 && echo "  ✓ $d" || echo "  ✗ $d"
+  ls apps/backend/$d/Dockerfile > /dev/null 2>&1 && echo "  ✓ $d" || echo "  ✗ $d"
 done
 
 echo "4. Pipelines CI existem?"
@@ -1155,7 +1155,7 @@ grep -q "v2-up:" Makefile && echo "  ✓ v2-up" || echo "  ✗ v2-up"
 grep -q "check-ports:" Makefile && echo "  ✓ check-ports" || echo "  ✗ check-ports"
 
 echo "6. pom.xml com slots comentados?"
-grep -q "svc-banking" backend/pom.xml && echo "  ✓" || echo "  ✗"
+grep -q "svc-banking" apps/backend/pom.xml && echo "  ✓" || echo "  ✗"
 
 echo "7. Portas 8200-8209 livres?"
 for port in 8200 8201 8202 8203 8204 8205 8206 8207 8208 8209; do

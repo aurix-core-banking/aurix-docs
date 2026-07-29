@@ -7,7 +7,7 @@ Guia para colocar a plataforma AURIX de pé pela primeira vez.
 ## Resumo
 
 1. Pré-requisitos (Docker, Java, Maven, Node, Python, Git).
-2. Stack de dados: `cd infrastructure/data-stack && docker-compose up -d`.
+2. Stack de dados: `cd infra/data-stack && docker-compose up -d`.
 3. Backend: build e config (Postgres, Kafka); subir serviços.
 4. Frontend: install e start (aurix-admin, aurix-web).
 5. (Opcional) Airflow/Data Lakehouse: buckets MinIO, connections, DAGs.

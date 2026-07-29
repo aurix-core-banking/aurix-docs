@@ -23,27 +23,27 @@
 ### Task 1: Eventos Tipados + Tópicos no Shared
 
 **Files:**
-- Create: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/ClienteCriadoEvent.java`
-- Create: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/ClienteAtualizadoEvent.java`
-- Create: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/ClienteStatusAlteradoEvent.java`
-- Create: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/KycAprovadoEvent.java`
-- Create: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/KycRejeitadoEvent.java`
-- Create: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/TransacaoBloqueadaEvent.java`
-- Create: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/OcorrenciaFraudEvent.java`
-- Create: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/ScoreAlteradoEvent.java`
-- Create: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/NotificacaoEnviadaEvent.java`
-- Create: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/NotificacaoFalhouEvent.java`
-- Create: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/SolicitacaoCreditoCriadaEvent.java`
-- Create: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/CartaoTransacaoAutorizadaEvent.java`
-- Create: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/CartaoEmitidoEvent.java`
-- Create: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/CartaoTransacaoEstornadaEvent.java`
-- Create: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/CartaoFaturaFechadaEvent.java`
-- Create: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/CartaoFaturaPagaEvent.java`
-- Create: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/ConsignadoContratoAssinadoEvent.java`
-- Create: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/FinanciamentoContratoAssinadoEvent.java`
-- Create: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/InvestimentoOrdemExecutadaEvent.java`
-- Create: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/SegurosApoliceEmitidaEvent.java`
-- Modify: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/Topics.java`
+- Create: `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/ClienteCriadoEvent.java`
+- Create: `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/ClienteAtualizadoEvent.java`
+- Create: `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/ClienteStatusAlteradoEvent.java`
+- Create: `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/KycAprovadoEvent.java`
+- Create: `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/KycRejeitadoEvent.java`
+- Create: `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/TransacaoBloqueadaEvent.java`
+- Create: `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/OcorrenciaFraudEvent.java`
+- Create: `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/ScoreAlteradoEvent.java`
+- Create: `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/NotificacaoEnviadaEvent.java`
+- Create: `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/NotificacaoFalhouEvent.java`
+- Create: `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/SolicitacaoCreditoCriadaEvent.java`
+- Create: `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/CartaoTransacaoAutorizadaEvent.java`
+- Create: `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/CartaoEmitidoEvent.java`
+- Create: `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/CartaoTransacaoEstornadaEvent.java`
+- Create: `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/CartaoFaturaFechadaEvent.java`
+- Create: `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/CartaoFaturaPagaEvent.java`
+- Create: `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/ConsignadoContratoAssinadoEvent.java`
+- Create: `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/FinanciamentoContratoAssinadoEvent.java`
+- Create: `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/InvestimentoOrdemExecutadaEvent.java`
+- Create: `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/SegurosApoliceEmitidaEvent.java`
+- Modify: `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/Topics.java`
 
 **Interfaces:**
 - Cada evento estende `BaseEvent`, segue o padrão `ContaEvent` (subclasses com campos + factory methods)
@@ -51,7 +51,7 @@
 
 - [ ] **Step 1: Create ClienteCriadoEvent**
 
-File `backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/ClienteCriadoEvent.java`:
+File `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/ClienteCriadoEvent.java`:
 
 ```java
 package com.aurix.platform.shared.event;
@@ -240,14 +240,14 @@ public static final String SEGUROS_SINISTRO_LIQUIDADO = "seguros.sinistro.liquid
 - [ ] **Step 7: Compile and test**
 
 ```bash
-mvn -pl backend/aurix-shared -am compile -DskipTests
+mvn -pl apps/backend/aurix-shared -am compile -DskipTests
 ```
 Expected: BUILD SUCCESS
 
 - [ ] **Step 8: Commit**
 
 ```bash
-git add backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/
+git add apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/
 git commit -m "feat(shared): add typed event classes and ADR-0001 topic constants"
 ```
 
@@ -256,8 +256,8 @@ git commit -m "feat(shared): add typed event classes and ADR-0001 topic constant
 ### Task 2: Aurix-Customer — JSON → Typed Events + ADR Topics
 
 **Files:**
-- Modify: `backend/aurix-customer/src/main/java/com/aurix/platform/customer/service/ClienteProducer.java`
-- Modify: `backend/aurix-customer/src/main/java/com/aurix/platform/customer/config/KafkaConfig.java`
+- Modify: `apps/backend/aurix-customer/src/main/java/com/aurix/platform/customer/service/ClienteProducer.java`
+- Modify: `apps/backend/aurix-customer/src/main/java/com/aurix/platform/customer/config/KafkaConfig.java`
 
 **Depends on:** Task 1 (event classes + Topics constants)
 
@@ -344,14 +344,14 @@ public class KafkaConfig {
 - [ ] **Step 3: Compile and test**
 
 ```bash
-mvn -pl backend/aurix-customer -am test -Dtest="*Test"
+mvn -pl apps/backend/aurix-customer -am test -Dtest="*Test"
 ```
 Expected: BUILD SUCCESS
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add backend/aurix-customer/
+git add apps/backend/aurix-customer/
 git commit -m "feat(customer): migrate to typed events + ADR-0001 topics"
 ```
 
@@ -360,9 +360,9 @@ git commit -m "feat(customer): migrate to typed events + ADR-0001 topics"
 ### Task 3: Aurix-KYC — JSON → Typed Events + ADR Topics
 
 **Files:**
-- Modify: `backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/service/KycProducer.java`
-- Modify: `backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/service/KycConsumer.java`
-- Modify: `backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/config/KafkaConfig.java`
+- Modify: `apps/backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/service/KycProducer.java`
+- Modify: `apps/backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/service/KycConsumer.java`
+- Modify: `apps/backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/config/KafkaConfig.java`
 
 **Depends on:** Task 1
 
@@ -395,14 +395,14 @@ Replace `"kyc.aprovado"` → `Topics.KYC_SOLICITACAO_APROVADA`, `"kyc.rejeitado"
 - [ ] **Step 4: Compile and test**
 
 ```bash
-mvn -pl backend/aurix-kyc -am test -Dtest="*Test"
+mvn -pl apps/backend/aurix-kyc -am test -Dtest="*Test"
 ```
 Expected: BUILD SUCCESS
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add backend/aurix-kyc/
+git add apps/backend/aurix-kyc/
 git commit -m "feat(kyc): migrate to typed events + ADR-0001 topics"
 ```
 
@@ -411,9 +411,9 @@ git commit -m "feat(kyc): migrate to typed events + ADR-0001 topics"
 ### Task 4: Aurix-Fraud — JSON → Typed Events + Fix Consumer Topics
 
 **Files:**
-- Modify: `backend/aurix-fraud/src/main/java/com/aurix/platform/fraud/service/FraudProducer.java`
-- Modify: `backend/aurix-fraud/src/main/java/com/aurix/platform/fraud/service/FraudConsumer.java`
-- Modify: `backend/aurix-fraud/src/main/java/com/aurix/platform/fraud/config/KafkaConfig.java`
+- Modify: `apps/backend/aurix-fraud/src/main/java/com/aurix/platform/fraud/service/FraudProducer.java`
+- Modify: `apps/backend/aurix-fraud/src/main/java/com/aurix/platform/fraud/service/FraudConsumer.java`
+- Modify: `apps/backend/aurix-fraud/src/main/java/com/aurix/platform/fraud/config/KafkaConfig.java`
 
 **Depends on:** Task 1
 
@@ -461,14 +461,14 @@ Replace old topic names with `Topics.FRAUD_TRANSACAO_BLOQUEADA`, `Topics.FRAUD_O
 - [ ] **Step 4: Compile and test**
 
 ```bash
-mvn -pl backend/aurix-fraud -am test -Dtest="*Test"
+mvn -pl apps/backend/aurix-fraud -am test -Dtest="*Test"
 ```
 Expected: BUILD SUCCESS
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add backend/aurix-fraud/
+git add apps/backend/aurix-fraud/
 git commit -m "feat(fraud): migrate to typed events, fix consumer topic names"
 ```
 
@@ -477,9 +477,9 @@ git commit -m "feat(fraud): migrate to typed events, fix consumer topic names"
 ### Task 5: Aurix-Notification — JSON → Typed Events + ADR Topics
 
 **Files:**
-- Modify: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/service/NotificacaoProducer.java`
-- Modify: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/service/NotificacaoConsumer.java`
-- Modify: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/config/KafkaConfig.java`
+- Modify: `apps/backend/aurix-notification/src/main/java/com/aurix/platform/notification/service/NotificacaoProducer.java`
+- Modify: `apps/backend/aurix-notification/src/main/java/com/aurix/platform/notification/service/NotificacaoConsumer.java`
+- Modify: `apps/backend/aurix-notification/src/main/java/com/aurix/platform/notification/config/KafkaConfig.java`
 
 **Depends on:** Task 1
 
@@ -498,14 +498,14 @@ Replace old topic names with `Topics.NOTIFICATION_NOTIFICACAO_ENVIADA`, `Topics.
 - [ ] **Step 4: Compile and test**
 
 ```bash
-mvn -pl backend/aurix-notification -am test -Dtest="*Test"
+mvn -pl apps/backend/aurix-notification -am test -Dtest="*Test"
 ```
 Expected: BUILD SUCCESS
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add backend/aurix-notification/
+git add apps/backend/aurix-notification/
 git commit -m "feat(notification): migrate to typed events + ADR-0001 topics"
 ```
 
@@ -514,15 +514,15 @@ git commit -m "feat(notification): migrate to typed events + ADR-0001 topics"
 ### Task 6: Aurix-Cartões — Migrar Tópicos para ADR-0001
 
 **Files:**
-- Modify: `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/config/CartoesKafkaConfig.java`
-- Modify: `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/service/EmissaoService.java`
-- Modify: `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/service/TransacaoService.java`
-- Modify: `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/service/FaturaService.java`
-- Remove (local events): `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/event/CartaoEmitidoEvent.java`
-- Remove (local events): `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/event/TransacaoAutorizadaEvent.java`
-- Remove (local events): `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/event/TransacaoEstornadaEvent.java`
-- Remove (local events): `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/event/FaturaFechadaEvent.java`
-- Remove (local events): `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/event/FaturaPagaEvent.java`
+- Modify: `apps/backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/config/CartoesKafkaConfig.java`
+- Modify: `apps/backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/service/EmissaoService.java`
+- Modify: `apps/backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/service/TransacaoService.java`
+- Modify: `apps/backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/service/FaturaService.java`
+- Remove (local events): `apps/backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/event/CartaoEmitidoEvent.java`
+- Remove (local events): `apps/backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/event/TransacaoAutorizadaEvent.java`
+- Remove (local events): `apps/backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/event/TransacaoEstornadaEvent.java`
+- Remove (local events): `apps/backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/event/FaturaFechadaEvent.java`
+- Remove (local events): `apps/backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/event/FaturaPagaEvent.java`
 
 **Depends on:** Task 1 (shared events for cartões exist)
 
@@ -584,21 +584,21 @@ Same pattern: replace `TOPICO_FATURA_FECHADA` → `Topics.CARTOES_FATURA_FECHADA
 
 - [ ] **Step 5: Remove local event files**
 
-Delete the 5 local event records from `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/event/`.
+Delete the 5 local event records from `apps/backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/event/`.
 
 Also remove `package-info.java` from event dir if it only references local events.
 
 - [ ] **Step 6: Compile and test**
 
 ```bash
-mvn -pl backend/aurix-cartoes -am test -Dtest="*Test"
+mvn -pl apps/backend/aurix-cartoes -am test -Dtest="*Test"
 ```
 Expected: BUILD SUCCESS
 
 - [ ] **Step 7: Commit**
 
 ```bash
-git add backend/aurix-cartoes/
+git add apps/backend/aurix-cartoes/
 git commit -m "feat(cartoes): migrate topics to ADR-0001, use shared event classes"
 ```
 
@@ -607,8 +607,8 @@ git commit -m "feat(cartoes): migrate topics to ADR-0001, use shared event class
 ### Task 7: Aurix-Credit — Novo Producer Kafka
 
 **Files:**
-- Create: `backend/aurix-credit/src/main/java/com/aurix/platform/credit/config/CreditKafkaConfig.java`
-- Modify: `backend/aurix-credit/pom.xml` (add spring-kafka dependency if missing)
+- Create: `apps/backend/aurix-credit/src/main/java/com/aurix/platform/credit/config/CreditKafkaConfig.java`
+- Modify: `apps/backend/aurix-credit/pom.xml` (add spring-kafka dependency if missing)
 - Find/create producer service in credit module
 
 **Depends on:** Task 1 (SolicitacaoCreditoCriadaEvent + Topics constant)
@@ -618,13 +618,13 @@ git commit -m "feat(cartoes): migrate topics to ADR-0001, use shared event class
 Grep for the credit solicitation creation service:
 
 ```bash
-rg -l "SolicitacaoCredito" backend/aurix-credit/src/main/java/ --type java
+rg -l "SolicitacaoCredito" apps/backend/aurix-credit/src/main/java/ --type java
 ```
 Expected: find service class that creates credit solicitations
 
 - [ ] **Step 2: Add spring-kafka to pom.xml** (if missing)
 
-Check: `rg "spring-kafka" backend/aurix-credit/pom.xml`. If not present, add:
+Check: `rg "spring-kafka" apps/backend/aurix-credit/pom.xml`. If not present, add:
 
 ```xml
 <dependency>
@@ -671,14 +671,14 @@ kafkaTemplate.send(Topics.CREDIT_SOLICITACAO_CRIADA, String.valueOf(solicitacao.
 - [ ] **Step 5: Compile and test**
 
 ```bash
-mvn -pl backend/aurix-credit -am compile -DskipTests
+mvn -pl apps/backend/aurix-credit -am compile -DskipTests
 ```
 Expected: BUILD SUCCESS
 
 - [ ] **Step 6: Commit**
 
 ```bash
-git add backend/aurix-credit/
+git add apps/backend/aurix-credit/
 git commit -m "feat(credit): add Kafka producer for credit.solicitacao.criada.v1"
 ```
 
@@ -687,9 +687,9 @@ git commit -m "feat(credit): add Kafka producer for credit.solicitacao.criada.v1
 ### Task 8: Tax, Billing, Bacen — Producers Faltantes
 
 **Files:**
-- Modify: `backend/aurix-tax/` — adicionar producer no serviço de cálculo de imposto
-- Modify: `backend/aurix-billing/` — adicionar producers para fatura emitida/paga
-- Modify: `backend/aurix-bacen/` — adicionar producers para relatório gerado/enviado
+- Modify: `apps/backend/aurix-tax/` — adicionar producer no serviço de cálculo de imposto
+- Modify: `apps/backend/aurix-billing/` — adicionar producers para fatura emitida/paga
+- Modify: `apps/backend/aurix-bacen/` — adicionar producers para relatório gerado/enviado
 
 - [ ] **Step 1: Add spring-kafka dependency** to `aurix-tax/pom.xml`, `aurix-billing/pom.xml`, `aurix-bacen/pom.xml` (check each first with `rg "spring-kafka"`)
 
@@ -708,14 +708,14 @@ git commit -m "feat(credit): add Kafka producer for credit.solicitacao.criada.v1
 - [ ] **Step 8: Compile and test all**
 
 ```bash
-mvn -pl backend/aurix-tax,backend/aurix-billing,backend/aurix-bacen -am compile -DskipTests
+mvn -pl apps/backend/aurix-tax,apps/backend/aurix-billing,apps/backend/aurix-bacen -am compile -DskipTests
 ```
 Expected: BUILD SUCCESS
 
 - [ ] **Step 9: Commit**
 
 ```bash
-git add backend/aurix-tax/ backend/aurix-billing/ backend/aurix-bacen/
+git add apps/backend/aurix-tax/ apps/backend/aurix-billing/ apps/backend/aurix-bacen/
 git commit -m "feat(tax,billing,bacen): add missing Kafka producers"
 ```
 
@@ -724,13 +724,13 @@ git commit -m "feat(tax,billing,bacen): add missing Kafka producers"
 ### Task 9: Product Modules — Migrar Tópicos para ADR-0001
 
 **Files:**
-- Modify: `backend/aurix-cambio/src/main/java/com/aurix/platform/cambio/config/CambioKafkaConfig.java`
-- Modify: `backend/aurix-consignado/src/main/java/com/aurix/platform/consignado/config/ConsignadoKafkaConfig.java`
-- Modify: `backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/config/FinanciamentoKafkaConfig.java`
-- Modify: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/config/InvestimentoKafkaConfig.java`
-- Modify: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/config/PoupancaKafkaConfig.java`
-- Modify: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/config/SalarioKafkaConfig.java`
-- Modify: `backend/aurix-seguros/src/main/java/com/aurix/platform/seguros/config/SegurosKafkaConfig.java`
+- Modify: `apps/backend/aurix-cambio/src/main/java/com/aurix/platform/cambio/config/CambioKafkaConfig.java`
+- Modify: `apps/backend/aurix-consignado/src/main/java/com/aurix/platform/consignado/config/ConsignadoKafkaConfig.java`
+- Modify: `apps/backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/config/FinanciamentoKafkaConfig.java`
+- Modify: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/config/InvestimentoKafkaConfig.java`
+- Modify: `apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/config/PoupancaKafkaConfig.java`
+- Modify: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/config/SalarioKafkaConfig.java`
+- Modify: `apps/backend/aurix-seguros/src/main/java/com/aurix/platform/seguros/config/SegurosKafkaConfig.java`
 
 **Depends on:** Task 1 (Topics constants exist)
 
@@ -741,7 +741,7 @@ Replace local `TOPICO_*` string constants with `Topics.CAMBIO_COTACAO_ATUALIZADA
 Update all services that reference `CambioKafkaConfig.TOPICO_*` to use `Topics.*` instead. Grep:
 
 ```bash
-rg "TOPICO_" backend/aurix-cambio/src/main/java/ --type java
+rg "TOPICO_" apps/backend/aurix-cambio/src/main/java/ --type java
 ```
 
 If any service uses the local constants, update them.
@@ -773,14 +773,14 @@ Replace with `Topics.SEGUROS_APOLICE_EMITIDA`, `Topics.SEGUROS_PREMIO_PAGO`, `To
 - [ ] **Step 8: Compile all product modules**
 
 ```bash
-mvn -pl backend/aurix-cambio,backend/aurix-consignado,backend/aurix-financiamento,backend/aurix-investimento,backend/aurix-poupanca,backend/aurix-salario,backend/aurix-seguros -am compile -DskipTests
+mvn -pl apps/backend/aurix-cambio,apps/backend/aurix-consignado,apps/backend/aurix-financiamento,apps/backend/aurix-investimento,apps/backend/aurix-poupanca,apps/backend/aurix-salario,apps/backend/aurix-seguros -am compile -DskipTests
 ```
 Expected: BUILD SUCCESS
 
 - [ ] **Step 9: Commit**
 
 ```bash
-git add backend/aurix-cambio/ backend/aurix-consignado/ backend/aurix-financiamento/ backend/aurix-investimento/ backend/aurix-poupanca/ backend/aurix-salario/ backend/aurix-seguros/
+git add apps/backend/aurix-cambio/ apps/backend/aurix-consignado/ apps/backend/aurix-financiamento/ apps/backend/aurix-investimento/ apps/backend/aurix-poupanca/ apps/backend/aurix-salario/ apps/backend/aurix-seguros/
 git commit -m "feat: migrate all product module topics to ADR-0001 constants"
 ```
 
@@ -789,8 +789,8 @@ git commit -m "feat: migrate all product module topics to ADR-0001 constants"
 ### Task 10: Notification — Expandir Consumers
 
 **Files:**
-- Modify: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/service/NotificacaoConsumer.java`
-- Modify: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/config/KafkaConfig.java`
+- Modify: `apps/backend/aurix-notification/src/main/java/com/aurix/platform/notification/service/NotificacaoConsumer.java`
+- Modify: `apps/backend/aurix-notification/src/main/java/com/aurix/platform/notification/config/KafkaConfig.java`
 
 **Depends on:** Task 1, Task 5, Task 6, Task 9
 
@@ -839,14 +839,14 @@ public void onCartaoTransacaoAutorizada(CartaoTransacaoAutorizadaEvent event) {
 - [ ] **Step 3: Compile and test**
 
 ```bash
-mvn -pl backend/aurix-notification -am test -Dtest="*Test"
+mvn -pl apps/backend/aurix-notification -am test -Dtest="*Test"
 ```
 Expected: BUILD SUCCESS
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add backend/aurix-notification/
+git add apps/backend/aurix-notification/
 git commit -m "feat(notification): expand consumers to 14 topics across core, cartoes, settlement, consignado, financiamento, investimento, seguros"
 ```
 
@@ -855,10 +855,10 @@ git commit -m "feat(notification): expand consumers to 14 topics across core, ca
 ### Task 11: Aurix-Audit — Consumer Universal
 
 **Files:**
-- Create: `backend/aurix-audit/src/main/java/com/aurix/platform/audit/config/AuditKafkaConfig.java`
-- Create: `backend/aurix-audit/src/main/java/com/aurix/platform/audit/service/AuditEventConsumer.java`
-- Modify: `backend/aurix-audit/pom.xml` (add spring-kafka if missing)
-- Modify: `backend/aurix-audit/src/main/java/com/aurix/platform/audit/service/LogAuditoriaService.java` (add method to save from event)
+- Create: `apps/backend/aurix-audit/src/main/java/com/aurix/platform/audit/config/AuditKafkaConfig.java`
+- Create: `apps/backend/aurix-audit/src/main/java/com/aurix/platform/audit/service/AuditEventConsumer.java`
+- Modify: `apps/backend/aurix-audit/pom.xml` (add spring-kafka if missing)
+- Modify: `apps/backend/aurix-audit/src/main/java/com/aurix/platform/audit/service/LogAuditoriaService.java` (add method to save from event)
 
 **Depends on:** Task 1
 
@@ -955,21 +955,21 @@ public class AuditEventConsumer {
 
 - [ ] **Step 4: Check LogAuditoria entity** — ensure it has fields: tipoEvento, origem, idCorrelacao, idEvento, timestamp, payload
 
-Read: `backend/aurix-audit/src/main/java/com/aurix/platform/audit/entity/LogAuditoria.java`
+Read: `apps/backend/aurix-audit/src/main/java/com/aurix/platform/audit/entity/LogAuditoria.java`
 
 If missing fields, add them.
 
 - [ ] **Step 5: Compile and test**
 
 ```bash
-mvn -pl backend/aurix-audit -am compile -DskipTests
+mvn -pl apps/backend/aurix-audit -am compile -DskipTests
 ```
 Expected: BUILD SUCCESS
 
 - [ ] **Step 6: Commit**
 
 ```bash
-git add backend/aurix-audit/
+git add apps/backend/aurix-audit/
 git commit -m "feat(audit): add universal Kafka consumer for all platform events"
 ```
 
@@ -987,7 +987,7 @@ Expected: BUILD SUCCESS (no output with -q)
 - [ ] **Step 2: Run tests for all changed modules**
 
 ```bash
-mvn test -pl backend/aurix-shared,backend/aurix-customer,backend/aurix-kyc,backend/aurix-fraud,backend/aurix-notification,backend/aurix-cartoes,backend/aurix-credit,backend/aurix-audit -am
+mvn test -pl apps/backend/aurix-shared,apps/backend/aurix-customer,apps/backend/aurix-kyc,apps/backend/aurix-fraud,apps/backend/aurix-notification,apps/backend/aurix-cartoes,apps/backend/aurix-credit,apps/backend/aurix-audit -am
 ```
 Expected: BUILD SUCCESS
 

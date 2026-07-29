@@ -7,7 +7,7 @@
 
 ## Contexto
 
-O módulo de tesouraria e investimentos (`aurix-treasury`) gerencia a custódia de ativos financeiros por meio da entidade [Investimento.java](file:///c:/Users/wende/Projects/aurix-platform/backend/aurix-shared/src/main/java/com/aurix/platform/shared/entity/Investimento.java). O modelo atual oferece suporte a diversos tipos de ativos comuns no mercado brasileiro (CDB, LCA, LCI, Tesouro Direto, Fundos de Investimento).
+O módulo de tesouraria e investimentos (`aurix-treasury`) gerencia a custódia de ativos financeiros por meio da entidade [Investimento.java](file:///c:/Users/wende/Projects/aurix-platform/apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/entity/Investimento.java). O modelo atual oferece suporte a diversos tipos de ativos comuns no mercado brasileiro (CDB, LCA, LCI, Tesouro Direto, Fundos de Investimento).
 
 Contudo, a plataforma apresenta limitações operacionais no tratamento desses ativos:
 1. **Marcação a Mercado (Mark-to-Market) Estática**: O cálculo de rendimento atual (`rendimentoAtual`) e valor total das carteiras é baseado em taxas fixas acordadas no momento da aplicação. Ativos de renda fixa pós-fixados ou atrelados a índices inflacionários (como `TESOURO_IPCA` ou `TESOURO_PREFIXADO`) demandam a atualização diária de seus Preços Unitários (PUs) e taxas indicativas para refletir o real valor de resgate.
@@ -29,7 +29,7 @@ Fica decidida a inclusão de uma camada unificada de **Ingestão de Dados de Mer
    * **ClickHouse (OLAP)**: Armazenar o histórico de cotas de fundos CVM e cotações de fechamento da B3 para permitir análises comparativas de alta performance na camada de analytics.
 
 3. **Precificação Dinâmica na Tesouraria**:
-   * Atualizar o [TesourariaAvancadaService.java](file:///c:/Users/wende/Projects/aurix-platform/backend/aurix-treasury/src/main/java/com/aurix/platform/treasury/service/TesourariaAvancadaService.java) para buscar o PU mais recente da tabela de séries temporais do TimescaleDB ao calcular o valor total de custódia dos clientes.
+   * Atualizar o [TesourariaAvancadaService.java](file:///c:/Users/wende/Projects/aurix-platform/apps/backend/aurix-treasury/src/main/java/com/aurix/platform/treasury/service/TesourariaAvancadaService.java) para buscar o PU mais recente da tabela de séries temporais do TimescaleDB ao calcular o valor total de custódia dos clientes.
    * Implementar um mecanismo de contingência (*fallback*): caso a API externa falhe, utilizar a última taxa/PU conhecida armazenada localmente com um aviso de "dados defasados".
 
 4. **Exposição no Portal de Cliente**:

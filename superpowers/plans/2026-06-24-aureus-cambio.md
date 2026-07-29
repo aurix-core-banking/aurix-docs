@@ -11,7 +11,7 @@
 
 - [ ] **Criar diretórios**
   ```
-  backend/aurix-cambio/
+  apps/backend/aurix-cambio/
   ├── pom.xml
   ├── src/main/java/com/aurix/platform/cambio/
   │   ├── AurixCambioApplication.java
@@ -248,11 +248,11 @@
 
 ### 1.12 Parent POM
 
-- [ ] **`backend/pom.xml`** — adicionar `<module>aurix-cambio</module>` na lista de modules (entre `aurix-bacen` e `aurix-cartoes`, ordem alfabética).
+- [ ] **`apps/backend/pom.xml`** — adicionar `<module>aurix-cambio</module>` na lista de modules (entre `aurix-bacen` e `aurix-cartoes`, ordem alfabética).
 
 ### 1.13 OpenAPI Spec
 
-- [ ] **`aurix-api-specs/aurix-core.yaml`** — adicionar tag `cambio`, paths do câmbio (`/api/cambio/cotacoes`, `/api/cambio/contratos`, `/api/cambio/remessas`, `/api/cambio/operacoes`, `/api/cambio/clientes`) e schemas correspondentes (`Cotacao`, `ContratoCambio`, `Remessa`, `OperacaoCambio`, `ClienteCambio`).
+- [ ] **`specs/aurix-core.yaml`** — adicionar tag `cambio`, paths do câmbio (`/api/cambio/cotacoes`, `/api/cambio/contratos`, `/api/cambio/remessas`, `/api/cambio/operacoes`, `/api/cambio/clientes`) e schemas correspondentes (`Cotacao`, `ContratoCambio`, `Remessa`, `OperacaoCambio`, `ClienteCambio`).
 
 ### 1.14 Testes
 

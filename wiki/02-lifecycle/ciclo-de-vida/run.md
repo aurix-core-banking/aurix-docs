@@ -6,27 +6,27 @@ O que fazer no dia a dia: subir/parar serviços, health checks, monitoramento, l
 
 ## Stack de dados
 
-- **Subir**: `cd infrastructure/data-stack && docker-compose up -d`
+- **Subir**: `cd infra/data-stack && docker-compose up -d`
 - **Parar**: `docker-compose down`
 - **Logs**: `docker-compose logs -f [servico]`
 - **Portas**: Postgres 5432, Redis 6379, Kafka 9092, ClickHouse 8123, MinIO 9000/9001, Airflow 8082, Trino 8090, Kafka UI 8080
 
 ---
 
-## Aplicação (backend/frontend)
+## Aplicação (apps/backend/frontend)
 
-- Scripts: `infrastructure/scripts/start-aurix.sh` ou `start-aurix.bat` (e `stop-aurix.*`).
+- Scripts: `infra/scripts/start-aurix.sh` ou `start-aurix.bat` (e `stop-aurix.*`).
 - Health: `GET /actuator/health` ou `/health` em cada serviço; gateway como ponto único.
 
 ---
 
 ## Monitoramento e alertas
 
-- **Prometheus**: métricas; config em `infrastructure/monitoring/prometheus.yml`.
+- **Prometheus**: métricas; config em `infra/monitoring/prometheus.yml`.
 - **Grafana**: dashboards (overview AURIX, Keycloak).
-- **Alertas**: regras em `infrastructure/monitoring/prometheus/rules/sla-uptime.yml`; cada alerta referencia um procedimento do runbook.
+- **Alertas**: regras em `infra/monitoring/prometheus/rules/sla-uptime.yml`; cada alerta referencia um procedimento do runbook.
 
-**Doc**: [monitoramento-sla.md](../../05-infrastructure/infrastructure/monitoramento-sla.md).
+**Doc**: [monitoramento-sla.md](../../05-infra/infra/monitoramento-sla.md).
 
 ---
 
@@ -51,6 +51,6 @@ Escopo: deploy centralizado (K8s), pipeline CI/CD, secrets em secret manager, co
 | R5 | Novo tenant a provisionar | Cadastrar no provisioning, executar provisionar, validar acesso, registrar no billing e enviar doc ao cliente |
 | R6 | Backup e restore | Seguir política/scripts 14.2; testar restore periodicamente; script `restore-postgres.sh` |
 
-**Doc completo**: [aurix-cloud-runbook.md](../../05-infrastructure/infrastructure/aurix-cloud-runbook.md).
+**Doc completo**: [aurix-cloud-runbook.md](../../05-infra/infra/aurix-cloud-runbook.md).
 
 [Voltar ao ciclo de vida](README.md) | [Índice da wiki](../../README.md)

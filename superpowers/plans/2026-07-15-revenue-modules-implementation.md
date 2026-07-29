@@ -14,7 +14,7 @@
 - All Java exceptions: `IllegalArgumentException` for business errors, `IllegalStateException` for state errors
 - Kafka events extend `BaseEvent` in `com.aurix.platform.shared.event`
 - Topic constants in `Topics.java` following ADR-0001: `<dominio>.<entidade>.<evento>.v1`
-- New modules added to `backend/pom.xml` `<modules>` list
+- New modules added to `apps/backend/pom.xml` `<modules>` list
 - Each module gets: Dockerfile, SecurityConfig, application.yml, docker-compose entry, traefik route, e2e config
 - `@Configuration("<nome>KafkaConfig")` for Kafka configs to avoid bean name conflicts
 - Ports: 8127 (acquirer), 8128 (collections), 8129 (guarantee)
@@ -26,20 +26,20 @@
 ## File Map
 
 ### Guarantee (extracted)
-- Create: `backend/aurix-guarantee/pom.xml`
-- Create: `backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/AurixGuaranteeApplication.java`
-- Create: `backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/config/SecurityConfig.java`
-- Create: `backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/config/GuaranteeKafkaConfig.java`
+- Create: `apps/backend/aurix-guarantee/pom.xml`
+- Create: `apps/backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/AurixGuaranteeApplication.java`
+- Create: `apps/backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/config/SecurityConfig.java`
+- Create: `apps/backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/config/GuaranteeKafkaConfig.java`
 - Move (from finanziamento): `Garantia.java`, `GarantiaRepository.java`, `GarantiaService.java`, `GarantiaRequest.java`, `GarantiaResponse.java`, `GarantiaController.java`, `AtualizacaoGarantiasJob.java`, `GarantiaControllerTest.java`
-- Create: `backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/client/GarantiaClient.java` (Feign)
-- Create: `backend/aurix-guarantee/src/main/resources/application.yml`
-- Create: `backend/aurix-guarantee/Dockerfile`
-- Modify: `backend/aurix-financiamento/pom.xml` (add guarantee dependency)
-- Modify: `backend/aurix-financiamento/src/main/java/.../service/ContratoFinanciamentoService.java` (use GarantiaClient)
+- Create: `apps/backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/client/GarantiaClient.java` (Feign)
+- Create: `apps/backend/aurix-guarantee/src/main/resources/application.yml`
+- Create: `apps/backend/aurix-guarantee/Dockerfile`
+- Modify: `apps/backend/aurix-financiamento/pom.xml` (add guarantee dependency)
+- Modify: `apps/backend/aurix-financiamento/src/main/java/.../service/ContratoFinanciamentoService.java` (use GarantiaClient)
 
 ### Acquirer (new)
-- Create: `backend/aurix-acquirer/pom.xml`
-- Create: `backend/aurix-acquirer/src/main/java/com/aurix/platform/acquirer/AurixAcquirerApplication.java`
+- Create: `apps/backend/aurix-acquirer/pom.xml`
+- Create: `apps/backend/aurix-acquirer/src/main/java/com/aurix/platform/acquirer/AurixAcquirerApplication.java`
 - Create: entity classes (Estabelecimento, Terminal, TransacaoCaptura, Liquidacao, TaxaAcquirer)
 - Create: repository interfaces
 - Create: services (TransacaoService, LiquidacaoService, EstabelecimentoService)
@@ -48,8 +48,8 @@
 - Create: `application.yml`, `Dockerfile`
 
 ### Collections (new)
-- Create: `backend/aurix-collections/pom.xml`
-- Create: `backend/aurix-collections/src/main/java/com/aurix/platform/collections/AurixCollectionsApplication.java`
+- Create: `apps/backend/aurix-collections/pom.xml`
+- Create: `apps/backend/aurix-collections/src/main/java/com/aurix/platform/collections/AurixCollectionsApplication.java`
 - Create: entity classes (Cobranca, CarnetParcela, Acordo, Negativacao, RegistroCobranca)
 - Create: repository interfaces
 - Create: services (BoletoService, CarnetService, AcordoService, NegativacaoService)
@@ -58,21 +58,21 @@
 - Create: `application.yml`, `Dockerfile`
 
 ### Shared events (for all 3)
-- Modify: `backend/aurix-shared/src/main/java/.../event/Topics.java`
+- Modify: `apps/backend/aurix-shared/src/main/java/.../event/Topics.java`
 - Create: 10 event classes in `...shared.event`
 
 ### Infra
-- Modify: `infrastructure/docker-compose.yml` (add 3 services)
-- Modify: `infrastructure/traefik/dynamic.yml` (add 3 routers/services)
-- Modify: `aurix-tests/e2e/config.py` (add 3 health endpoints)
-- Modify: `backend/pom.xml` (add 3 modules)
+- Modify: `infra/docker-compose.yml` (add 3 services)
+- Modify: `infra/traefik/dynamic.yml` (add 3 routers/services)
+- Modify: `tests/e2e/config.py` (add 3 health endpoints)
+- Modify: `apps/backend/pom.xml` (add 3 modules)
 
 ---
 
 ### Task 1: Shared — Add events and topic constants for all 3 modules
 
 **Files:**
-- Modify: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/Topics.java`
+- Modify: `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/Topics.java`
 - Create: `TransacaoAutorizadaEvent.java`
 - Create: `TransacaoCapturadaEvent.java`
 - Create: `TransacaoLiquidadaEvent.java`
@@ -271,7 +271,7 @@ Create `GarantiaLiberadaEvent.java`: garantiaId, contratoId, dataBaixa (LocalDat
 - [ ] **Step 5: Compile shared module**
 
 ```bash
-mvn -pl backend/aurix-shared -am compile -DskipTests
+mvn -pl apps/backend/aurix-shared -am compile -DskipTests
 ```
 
 Expected: BUILD SUCCESS
@@ -279,7 +279,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 6: Commit**
 
 ```bash
-git add backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/TransacaoAutorizadaEvent.java backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/TransacaoCapturadaEvent.java backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/TransacaoLiquidadaEvent.java backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/TransacaoEstornadaEvent.java backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/BoletoEmitidoEvent.java backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/CobrancaPagaEvent.java backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/CobrancaNegativadaEvent.java backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/CobrancaCanceladaEvent.java backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/GarantiaRegistradaEvent.java backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/GarantiaLiberadaEvent.java
+git add apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/TransacaoAutorizadaEvent.java apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/TransacaoCapturadaEvent.java apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/TransacaoLiquidadaEvent.java apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/TransacaoEstornadaEvent.java apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/BoletoEmitidoEvent.java apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/CobrancaPagaEvent.java apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/CobrancaNegativadaEvent.java apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/CobrancaCanceladaEvent.java apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/GarantiaRegistradaEvent.java apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/GarantiaLiberadaEvent.java
 git commit -m "feat(shared): add revenue module event classes and ADR-0001 topic constants"
 ```
 
@@ -288,13 +288,13 @@ git commit -m "feat(shared): add revenue module event classes and ADR-0001 topic
 ### Task 2: Guarantee — Create module skeleton
 
 **Files:**
-- Create: `backend/aurix-guarantee/pom.xml`
-- Create: `backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/AurixGuaranteeApplication.java`
-- Create: `backend/aurix-guarantee/src/main/resources/application.yml`
-- Create: `backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/config/SecurityConfig.java`
-- Create: `backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/config/GuaranteeKafkaConfig.java`
-- Create: `backend/aurix-guarantee/Dockerfile`
-- Modify: `backend/pom.xml`
+- Create: `apps/backend/aurix-guarantee/pom.xml`
+- Create: `apps/backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/AurixGuaranteeApplication.java`
+- Create: `apps/backend/aurix-guarantee/src/main/resources/application.yml`
+- Create: `apps/backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/config/SecurityConfig.java`
+- Create: `apps/backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/config/GuaranteeKafkaConfig.java`
+- Create: `apps/backend/aurix-guarantee/Dockerfile`
+- Modify: `apps/backend/pom.xml`
 
 **Interfaces:**
 - Consumes: shared module, Spring Boot starters
@@ -481,14 +481,14 @@ RUN ./mvnw -pl aurix-guarantee -am package -DskipTests -q
 
 FROM eclipse-temurin:25-jre-jammy
 WORKDIR /app
-COPY --from=build /app/backend/aurix-guarantee/target/*.jar app.jar
+COPY --from=build /app/apps/backend/aurix-guarantee/target/*.jar app.jar
 EXPOSE 8129
 ENTRYPOINT ["java", "-jar", "app.jar"]
 ```
 
-- [ ] **Step 7: Add module to backend/pom.xml**
+- [ ] **Step 7: Add module to apps/backend/pom.xml**
 
-Read `backend/pom.xml`, find the `<modules>` section, and add:
+Read `apps/backend/pom.xml`, find the `<modules>` section, and add:
 ```xml
 <module>aurix-guarantee</module>
 ```
@@ -496,7 +496,7 @@ Read `backend/pom.xml`, find the `<modules>` section, and add:
 - [ ] **Step 8: Compile to verify**
 
 ```bash
-mvn -pl backend/aurix-guarantee -am compile -DskipTests
+mvn -pl apps/backend/aurix-guarantee -am compile -DskipTests
 ```
 
 Expected: BUILD SUCCESS
@@ -504,7 +504,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 9: Commit**
 
 ```bash
-git add backend/aurix-guarantee/ backend/pom.xml
+git add apps/backend/aurix-guarantee/ apps/backend/pom.xml
 git commit -m "feat(guarantee): create module skeleton with pom.xml, application, security, kafka config"
 ```
 
@@ -526,11 +526,11 @@ git commit -m "feat(guarantee): create module skeleton with pom.xml, application
 
 - [ ] **Step 1: Read existing Garantia.java from finanziamento**
 
-Read `backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/entity/Garantia.java` to understand its structure.
+Read `apps/backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/entity/Garantia.java` to understand its structure.
 
 - [ ] **Step 2: Copy and adapt Garantia.java to guarantee module**
 
-Create `backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/entity/Garantia.java`:
+Create `apps/backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/entity/Garantia.java`:
 
 Use the same fields as the finanziamento version but update the package and add any missing fields from the spec (clienteId, contratoId as generic Long, tenantId).
 
@@ -551,7 +551,7 @@ Use `@Entity @Table(name = "garantias", schema = "aurix")` and appropriate JPA a
 
 - [ ] **Step 3: Copy GarantiaRepository**
 
-Create `backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/repository/GarantiaRepository.java`:
+Create `apps/backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/repository/GarantiaRepository.java`:
 
 ```java
 package com.aurix.platform.guarantee.repository;
@@ -569,7 +569,7 @@ public interface GarantiaRepository extends JpaRepository<Garantia, Long> {
 
 - [ ] **Step 4: Copy GarantiaRequest and GarantiaResponse DTOs**
 
-Create `backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/dto/GarantiaRequest.java` and `GarantiaResponse.java`:
+Create `apps/backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/dto/GarantiaRequest.java` and `GarantiaResponse.java`:
 
 GarantiaRequest: contratoId, clienteId, bemId, tipo, valor, dataVencimento
 GarantiaResponse: id, tipo, valor, dataRegistro, dataBaixa, status, orgaoRegistro (same as existing from finanziamento)
@@ -732,7 +732,7 @@ public interface RegistroGarantiaRepository extends JpaRepository<RegistroGarant
 - [ ] **Step 8: Compile to verify**
 
 ```bash
-mvn -pl backend/aurix-guarantee -am compile -DskipTests
+mvn -pl apps/backend/aurix-guarantee -am compile -DskipTests
 ```
 
 Expected: BUILD SUCCESS
@@ -740,7 +740,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 9: Commit**
 
 ```bash
-git add backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/entity/ backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/repository/ backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/dto/
+git add apps/backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/entity/ apps/backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/repository/ apps/backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/dto/
 git commit -m "feat(guarantee): add entities, repositories, DTOs (extracted from finanziamento + new)"
 ```
 
@@ -749,9 +749,9 @@ git commit -m "feat(guarantee): add entities, repositories, DTOs (extracted from
 ### Task 4: Guarantee — Create services + Feign client
 
 **Files:**
-- Create: `backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/service/GarantiaService.java`
-- Create: `backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/service/BemService.java`
-- Create: `backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/client/GarantiaClient.java`
+- Create: `apps/backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/service/GarantiaService.java`
+- Create: `apps/backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/service/BemService.java`
+- Create: `apps/backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/client/GarantiaClient.java`
 - Create: test files
 
 **Interfaces:**
@@ -760,7 +760,7 @@ git commit -m "feat(guarantee): add entities, repositories, DTOs (extracted from
 
 - [ ] **Step 1: Read existing GarantiaService from finanziamento**
 
-Read `backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/service/GarantiaService.java` to understand its methods.
+Read `apps/backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/service/GarantiaService.java` to understand its methods.
 
 - [ ] **Step 2: Create GarantiaService in guarantee module**
 
@@ -903,7 +903,7 @@ public class LiberarGarantiaRequest {
 - [ ] **Step 4: Compile to verify**
 
 ```bash
-mvn -pl backend/aurix-guarantee -am compile -DskipTests
+mvn -pl apps/backend/aurix-guarantee -am compile -DskipTests
 ```
 
 Expected: BUILD SUCCESS
@@ -911,7 +911,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 5: Commit**
 
 ```bash
-git add backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/service/ backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/client/
+git add apps/backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/service/ apps/backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/client/
 git commit -m "feat(guarantee): add GarantiaService, BemService, and GarantiaClient Feign"
 ```
 
@@ -920,9 +920,9 @@ git commit -m "feat(guarantee): add GarantiaService, BemService, and GarantiaCli
 ### Task 5: Guarantee — Update finanziamento to use GarantiaClient
 
 **Files:**
-- Modify: `backend/aurix-financiamento/pom.xml` (add aurix-guarantee dependency)
-- Modify: `backend/aurix-financiamento/src/main/java/.../service/ContratoFinanciamentoService.java` (replace GarantiaRepository injections with GarantiaClient)
-- Modify: `backend/aurix-financiamento/src/main/java/.../service/GarantiaService.java` (remove — now in guarantee module)
+- Modify: `apps/backend/aurix-financiamento/pom.xml` (add aurix-guarantee dependency)
+- Modify: `apps/backend/aurix-financiamento/src/main/java/.../service/ContratoFinanciamentoService.java` (replace GarantiaRepository injections with GarantiaClient)
+- Modify: `apps/backend/aurix-financiamento/src/main/java/.../service/GarantiaService.java` (remove — now in guarantee module)
 - Remove: Garantia entity, repository, DTOs from finanziamento (now in guarantee module)
 
 **Interfaces:**
@@ -931,7 +931,7 @@ git commit -m "feat(guarantee): add GarantiaService, BemService, and GarantiaCli
 
 - [ ] **Step 1: Add aurix-guarantee dependency to finanziamento pom.xml**
 
-Read `backend/aurix-financiamento/pom.xml` and add:
+Read `apps/backend/aurix-financiamento/pom.xml` and add:
 ```xml
 <dependency>
     <groupId>com.aurix.platform</groupId>
@@ -957,19 +957,19 @@ Replace `garantiaRepository.findByContratoId(id)` with `garantiaClient.listar(nu
 - [ ] **Step 3: Remove old Garantia classes from finanziamento**
 
 ```bash
-rm backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/entity/Garantia.java
-rm backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/repository/GarantiaRepository.java
-rm backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/service/GarantiaService.java
-rm backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/dto/request/GarantiaRequest.java
-rm backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/dto/response/GarantiaResponse.java
-rm backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/controller/GarantiaController.java
-rm backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/job/AtualizacaoGarantiasJob.java
+rm apps/backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/entity/Garantia.java
+rm apps/backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/repository/GarantiaRepository.java
+rm apps/backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/service/GarantiaService.java
+rm apps/backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/dto/request/GarantiaRequest.java
+rm apps/backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/dto/response/GarantiaResponse.java
+rm apps/backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/controller/GarantiaController.java
+rm apps/backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/job/AtualizacaoGarantiasJob.java
 ```
 
 - [ ] **Step 4: Compile both modules**
 
 ```bash
-mvn -pl backend/aurix-financiamento,backend/aurix-guarantee -am compile -DskipTests
+mvn -pl apps/backend/aurix-financiamento,apps/backend/aurix-guarantee -am compile -DskipTests
 ```
 
 Expected: BUILD SUCCESS
@@ -977,7 +977,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 5: Commit**
 
 ```bash
-git add backend/aurix-financiamento/pom.xml backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/service/ContratoFinanciamentoService.java && git rm backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/entity/Garantia.java backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/repository/GarantiaRepository.java backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/service/GarantiaService.java backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/dto/request/GarantiaRequest.java backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/dto/response/GarantiaResponse.java backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/controller/GarantiaController.java backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/job/AtualizacaoGarantiasJob.java
+git add apps/backend/aurix-financiamento/pom.xml apps/backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/service/ContratoFinanciamentoService.java && git rm apps/backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/entity/Garantia.java apps/backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/repository/GarantiaRepository.java apps/backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/service/GarantiaService.java apps/backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/dto/request/GarantiaRequest.java apps/backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/dto/response/GarantiaResponse.java apps/backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/controller/GarantiaController.java apps/backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/job/AtualizacaoGarantiasJob.java
 git commit -m "refactor(financiamento): replace local Garantia with aurix-guarantee Feign client"
 ```
 
@@ -986,10 +986,10 @@ git commit -m "refactor(financiamento): replace local Garantia with aurix-guaran
 ### Task 6: Guarantee — Create controller and tests
 
 **Files:**
-- Create: `backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/controller/GarantiaController.java`
-- Create: `backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/controller/BemController.java`
-- Create: `backend/aurix-guarantee/src/test/java/com/aurix/platform/guarantee/controller/GarantiaControllerTest.java`
-- Create: `backend/aurix-guarantee/src/test/java/com/aurix/platform/guarantee/service/GarantiaServiceTest.java`
+- Create: `apps/backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/controller/GarantiaController.java`
+- Create: `apps/backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/controller/BemController.java`
+- Create: `apps/backend/aurix-guarantee/src/test/java/com/aurix/platform/guarantee/controller/GarantiaControllerTest.java`
+- Create: `apps/backend/aurix-guarantee/src/test/java/com/aurix/platform/guarantee/service/GarantiaServiceTest.java`
 
 **Interfaces:**
 - Consumes: GarantiaService, BemService
@@ -1229,7 +1229,7 @@ class GarantiaServiceTest {
 - [ ] **Step 5: Compile and run tests**
 
 ```bash
-mvn test -pl backend/aurix-guarantee -am -Dtest='!*IntegrationTest' -Dsurefire.failIfNoSpecifiedTests=false
+mvn test -pl apps/backend/aurix-guarantee -am -Dtest='!*IntegrationTest' -Dsurefire.failIfNoSpecifiedTests=false
 ```
 
 Expected: BUILD SUCCESS
@@ -1237,7 +1237,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 6: Commit**
 
 ```bash
-git add backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/controller/ backend/aurix-guarantee/src/test/
+git add apps/backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/controller/ apps/backend/aurix-guarantee/src/test/
 git commit -m "feat(guarantee): add controllers and unit tests"
 ```
 
@@ -1246,16 +1246,16 @@ git commit -m "feat(guarantee): add controllers and unit tests"
 ### Task 7: Acquirer — Create module skeleton + entities + repositories
 
 **Files:**
-- Create: `backend/aurix-acquirer/pom.xml`
-- Create: `backend/aurix-acquirer/src/main/java/com/aurix/platform/acquirer/AurixAcquirerApplication.java`
-- Create: `backend/aurix-acquirer/src/main/resources/application.yml`
-- Create: `backend/aurix-acquirer/Dockerfile`
-- Create: `backend/aurix-acquirer/src/main/java/com/aurix/platform/acquirer/config/SecurityConfig.java`
-- Create: `backend/aurix-acquirer/src/main/java/com/aurix/platform/acquirer/config/AcquirerKafkaConfig.java`
+- Create: `apps/backend/aurix-acquirer/pom.xml`
+- Create: `apps/backend/aurix-acquirer/src/main/java/com/aurix/platform/acquirer/AurixAcquirerApplication.java`
+- Create: `apps/backend/aurix-acquirer/src/main/resources/application.yml`
+- Create: `apps/backend/aurix-acquirer/Dockerfile`
+- Create: `apps/backend/aurix-acquirer/src/main/java/com/aurix/platform/acquirer/config/SecurityConfig.java`
+- Create: `apps/backend/aurix-acquirer/src/main/java/com/aurix/platform/acquirer/config/AcquirerKafkaConfig.java`
 - Create: entity classes (Estabelecimento, Terminal, TransacaoCaptura, Liquidacao, TaxaAcquirer)
 - Create: repository interfaces
 - Create: DTOs (TransacaoRequest, TransacaoResponse, EstabelecimentoRequest, etc.)
-- Modify: `backend/pom.xml` (add aureuis-acquirer module)
+- Modify: `apps/backend/pom.xml` (add aureuis-acquirer module)
 
 **Interfaces:**
 - Consumes: shared module
@@ -1349,7 +1349,7 @@ EstabelecimentoRepository:
 - findByClienteId(Long)
 - findByCnpj(String)
 
-- [ ] **Step 6: Add module to backend/pom.xml**
+- [ ] **Step 6: Add module to apps/backend/pom.xml**
 
 ```xml
 <module>aurix-acquirer</module>
@@ -1358,7 +1358,7 @@ EstabelecimentoRepository:
 - [ ] **Step 7: Compile to verify**
 
 ```bash
-mvn -pl backend/aurix-acquirer -am compile -DskipTests
+mvn -pl apps/backend/aurix-acquirer -am compile -DskipTests
 ```
 
 Expected: BUILD SUCCESS
@@ -1366,7 +1366,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 8: Commit**
 
 ```bash
-git add backend/aurix-acquirer/ backend/pom.xml
+git add apps/backend/aurix-acquirer/ apps/backend/pom.xml
 git commit -m "feat(acquirer): create module skeleton with entities, repositories, kafka config"
 ```
 
@@ -1608,7 +1608,7 @@ public class LiquidacaoService {
 - [ ] **Step 4: Compile to verify**
 
 ```bash
-mvn -pl backend/aurix-acquirer -am compile -DskipTests
+mvn -pl apps/backend/aurix-acquirer -am compile -DskipTests
 ```
 
 Expected: BUILD SUCCESS
@@ -1616,7 +1616,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 5: Commit**
 
 ```bash
-git add backend/aurix-acquirer/src/main/java/com/aurix/platform/acquirer/service/
+git add apps/backend/aurix-acquirer/src/main/java/com/aurix/platform/acquirer/service/
 git commit -m "feat(acquirer): add TransacaoService, EstabelecimentoService, LiquidacaoService"
 ```
 
@@ -1878,7 +1878,7 @@ class TransacaoServiceTest {
 - [ ] **Step 5: Compile and run tests**
 
 ```bash
-mvn test -pl backend/aurix-acquirer -am -Dtest='!*IntegrationTest' -Dsurefire.failIfNoSpecifiedTests=false
+mvn test -pl apps/backend/aurix-acquirer -am -Dtest='!*IntegrationTest' -Dsurefire.failIfNoSpecifiedTests=false
 ```
 
 Expected: BUILD SUCCESS
@@ -1886,7 +1886,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 6: Commit**
 
 ```bash
-git add backend/aurix-acquirer/src/main/java/com/aurix/platform/acquirer/controller/ backend/aurix-acquirer/src/test/
+git add apps/backend/aurix-acquirer/src/main/java/com/aurix/platform/acquirer/controller/ apps/backend/aurix-acquirer/src/test/
 git commit -m "feat(acquirer): add controllers and unit tests"
 ```
 
@@ -1895,15 +1895,15 @@ git commit -m "feat(acquirer): add controllers and unit tests"
 ### Task 10: Collections — Create module skeleton + entities + repositories
 
 **Files:**
-- Create: `backend/aurix-collections/pom.xml`
-- Create: `backend/aurix-collections/src/main/java/com/aurix/platform/collections/AurixCollectionsApplication.java`
-- Create: `backend/aurix-collections/src/main/resources/application.yml`
-- Create: `backend/aurix-collections/Dockerfile`
-- Create: `backend/aurix-collections/src/main/java/.../config/SecurityConfig.java`
-- Create: `backend/aurix-collections/src/main/java/.../config/CollectionsKafkaConfig.java`
+- Create: `apps/backend/aurix-collections/pom.xml`
+- Create: `apps/backend/aurix-collections/src/main/java/com/aurix/platform/collections/AurixCollectionsApplication.java`
+- Create: `apps/backend/aurix-collections/src/main/resources/application.yml`
+- Create: `apps/backend/aurix-collections/Dockerfile`
+- Create: `apps/backend/aurix-collections/src/main/java/.../config/SecurityConfig.java`
+- Create: `apps/backend/aurix-collections/src/main/java/.../config/CollectionsKafkaConfig.java`
 - Create: entity classes (Cobranca, CarnetParcela, Acordo, Negativacao, RegistroCobranca)
 - Create: repository interfaces
-- Modify: `backend/pom.xml`
+- Modify: `apps/backend/pom.xml`
 
 - [ ] **Step 1: Create pom.xml** (same pattern as acquirer, with artifactId aureuis-collections, name "AURIX Collections", description "Módulo de Cobrança")
 
@@ -1977,12 +1977,12 @@ RegistroCobrancaRepository:
 - findByCobrancaId(Long)
 - findByStatus(String)
 
-- [ ] **Step 6: Add module to backend/pom.xml**
+- [ ] **Step 6: Add module to apps/backend/pom.xml**
 
 - [ ] **Step 7: Compile**
 
 ```bash
-mvn -pl backend/aurix-collections -am compile -DskipTests
+mvn -pl apps/backend/aurix-collections -am compile -DskipTests
 ```
 
 Expected: BUILD SUCCESS
@@ -1990,7 +1990,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 8: Commit**
 
 ```bash
-git add backend/aurix-collections/ backend/pom.xml
+git add apps/backend/aurix-collections/ apps/backend/pom.xml
 git commit -m "feat(collections): create module skeleton with entities, repositories, kafka config"
 ```
 
@@ -2119,7 +2119,7 @@ NegativacaoService:
 - [ ] **Step 3: Compile to verify**
 
 ```bash
-mvn -pl backend/aurix-collections -am compile -DskipTests
+mvn -pl apps/backend/aurix-collections -am compile -DskipTests
 ```
 
 Expected: BUILD SUCCESS
@@ -2127,7 +2127,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 4: Commit**
 
 ```bash
-git add backend/aurix-collections/src/main/java/com/aurix/platform/collections/service/
+git add apps/backend/aurix-collections/src/main/java/com/aurix/platform/collections/service/
 git commit -m "feat(collections): add BoletoService, CarnetService, AcordoService, NegativacaoService"
 ```
 
@@ -2282,7 +2282,7 @@ class BoletoServiceTest {
 - [ ] **Step 4: Compile and run tests**
 
 ```bash
-mvn test -pl backend/aurix-collections -am -Dtest='!*IntegrationTest' -Dsurefire.failIfNoSpecifiedTests=false
+mvn test -pl apps/backend/aurix-collections -am -Dtest='!*IntegrationTest' -Dsurefire.failIfNoSpecifiedTests=false
 ```
 
 Expected: BUILD SUCCESS
@@ -2290,7 +2290,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 5: Commit**
 
 ```bash
-git add backend/aurix-collections/src/main/java/com/aurix/platform/collections/controller/ backend/aurix-collections/src/test/
+git add apps/backend/aurix-collections/src/main/java/com/aurix/platform/collections/controller/ apps/backend/aurix-collections/src/test/
 git commit -m "feat(collections): add controllers and unit tests"
 ```
 
@@ -2299,12 +2299,12 @@ git commit -m "feat(collections): add controllers and unit tests"
 ### Task 13: Infra — Docker, Docker Compose, Traefik, E2E
 
 **Files:**
-- Create: `backend/aurix-acquirer/Dockerfile` (if not yet created)
-- Create: `backend/aurix-collections/Dockerfile` (if not yet created)
-- Create: `backend/aurix-guarantee/Dockerfile` (if not yet created)
-- Modify: `infrastructure/docker-compose.yml`
-- Modify: `infrastructure/traefik/dynamic.yml`
-- Modify: `aurix-tests/e2e/config.py`
+- Create: `apps/backend/aurix-acquirer/Dockerfile` (if not yet created)
+- Create: `apps/backend/aurix-collections/Dockerfile` (if not yet created)
+- Create: `apps/backend/aurix-guarantee/Dockerfile` (if not yet created)
+- Modify: `infra/docker-compose.yml`
+- Modify: `infra/traefik/dynamic.yml`
+- Modify: `tests/e2e/config.py`
 
 - [ ] **Step 1: Read existing docker-compose.yml** to understand service patterns
 
@@ -2362,7 +2362,7 @@ aurix-guarantee:
 - [ ] **Step 5: Commit**
 
 ```bash
-git add infrastructure/docker-compose.yml infrastructure/traefik/dynamic.yml aurix-tests/e2e/config.py
+git add infra/docker-compose.yml infra/traefik/dynamic.yml tests/e2e/config.py
 git commit -m "infra: add acquirer, collections, guarantee services to docker-compose, traefik, and e2e config"
 ```
 
@@ -2383,7 +2383,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 2: Run unit tests for all 3 new modules**
 
 ```bash
-mvn test -pl backend/aurix-guarantee,backend/aurix-acquirer,backend/aurix-collections -am -Dtest='!*IntegrationTest,!*ContractTest' -Dsurefire.failIfNoSpecifiedTests=false
+mvn test -pl apps/backend/aurix-guarantee,apps/backend/aurix-acquirer,apps/backend/aurix-collections -am -Dtest='!*IntegrationTest,!*ContractTest' -Dsurefire.failIfNoSpecifiedTests=false
 ```
 
 Expected: BUILD SUCCESS

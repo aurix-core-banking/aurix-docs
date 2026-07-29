@@ -22,11 +22,11 @@
 ### Task 1: BACEN Mock — WireMock container + Docker Compose
 
 **Files:**
-- Create: `infrastructure/bacen-mock/Dockerfile`
-- Create: `infrastructure/bacen-mock/mappings/spi-pix.json`
-- Create: `infrastructure/bacen-mock/mappings/spi-status.json`
-- Modify: `infrastructure/docker-compose.yml` (add `bacen-mock` service)
-- Modify: `infrastructure/.env.example` (add BACEN/PIX env vars)
+- Create: `infra/bacen-mock/Dockerfile`
+- Create: `infra/bacen-mock/mappings/spi-pix.json`
+- Create: `infra/bacen-mock/mappings/spi-status.json`
+- Modify: `infra/docker-compose.yml` (add `bacen-mock` service)
+- Modify: `infra/.env.example` (add BACEN/PIX env vars)
 
 **Interfaces:**
 - Consumes: nothing
@@ -100,7 +100,7 @@ Find the existing docker-compose.yml and add the service after the last service 
 
 - [ ] **Step 5: Add BACEN/PIX env vars to .env.example**
 
-Append to `infrastructure/.env.example`:
+Append to `infra/.env.example`:
 
 ```env
 # BACEN / PIX Sandbox
@@ -123,7 +123,7 @@ Expected: `bacen-mock` service visible in parsed config.
 - [ ] **Step 7: Commit**
 
 ```bash
-git add infrastructure/bacen-mock/ infrastructure/docker-compose.yml infrastructure/.env.example
+git add infra/bacen-mock/ infra/docker-compose.yml infra/.env.example
 git commit -m "feat(pix): add BACEN mock WireMock container"
 ```
 
@@ -132,10 +132,10 @@ git commit -m "feat(pix): add BACEN mock WireMock container"
 ### Task 2: SpiStrApiClientImpl — mock URL guard + dev profile
 
 **Files:**
-- Modify: `backend/aurix-bacen/src/main/java/com/aurix/platform/bacen/client/SpiStrApiClientImpl.java`
-- Create: `backend/aurix-bacen/src/main/resources/application-dev.yml`
-- Modify: `backend/aurix-bacen/src/main/resources/application.yml` (verify current SPI config)
-- Test: `backend/aurix-bacen/src/test/java/com/aurix/platform/bacen/client/SpiStrApiClientImplTest.java`
+- Modify: `apps/backend/aurix-bacen/src/main/java/com/aurix/platform/bacen/client/SpiStrApiClientImpl.java`
+- Create: `apps/backend/aurix-bacen/src/main/resources/application-dev.yml`
+- Modify: `apps/backend/aurix-bacen/src/main/resources/application.yml` (verify current SPI config)
+- Test: `apps/backend/aurix-bacen/src/test/java/com/aurix/platform/bacen/client/SpiStrApiClientImplTest.java`
 
 **Interfaces:**
 - Consumes: existing `SpiProperties`, `SpiStrProperties`
@@ -144,7 +144,7 @@ git commit -m "feat(pix): add BACEN mock WireMock container"
 - [ ] **Step 1: Read current SpiStrApiClientImpl.java to find mTLS setup and enviarPixSpi method**
 
 ```bash
-cat backend/aurix-bacen/src/main/java/com/aurix/platform/bacen/client/SpiStrApiClientImpl.java
+cat apps/backend/aurix-bacen/src/main/java/com/aurix/platform/bacen/client/SpiStrApiClientImpl.java
 ```
 Identify the method `enviarPixSpi` and where mTLS `SslContext` is configured.
 
@@ -258,16 +258,16 @@ aurix:
 - [ ] **Step 7: Read current application.yml SPI config to confirm no conflicts**
 
 ```bash
-cat backend/aurix-bacen/src/main/resources/application.yml
+cat apps/backend/aurix-bacen/src/main/resources/application.yml
 ```
 Verify SPI/STR are listed as `enabled: false` in default profile — dev profile overrides via application-dev.yml are correct.
 
 - [ ] **Step 8: Commit**
 
 ```bash
-git add backend/aurix-bacen/src/main/java/com/aurix/platform/bacen/client/SpiStrApiClientImpl.java \
-       backend/aurix-bacen/src/main/resources/application-dev.yml \
-       backend/aurix-bacen/src/test/java/com/aurix/platform/bacen/client/SpiStrApiClientImplTest.java
+git add apps/backend/aurix-bacen/src/main/java/com/aurix/platform/bacen/client/SpiStrApiClientImpl.java \
+       apps/backend/aurix-bacen/src/main/resources/application-dev.yml \
+       apps/backend/aurix-bacen/src/test/java/com/aurix/platform/bacen/client/SpiStrApiClientImplTest.java
 git commit -m "feat(bacen): mock URL guard in SpiStrApiClientImpl + dev profile"
 ```
 
@@ -276,11 +276,11 @@ git commit -m "feat(bacen): mock URL guard in SpiStrApiClientImpl + dev profile"
 ### Task 3: PixBacenClient — REST client in aurix-pix
 
 **Files:**
-- Create: `backend/aurix-pix/src/main/java/com/aurix/platform/pix/client/PixBacenClient.java`
-- Create: `backend/aurix-pix/src/main/java/com/aurix/platform/pix/client/dto/TransacaoSPI.java`
-- Create: `backend/aurix-pix/src/main/java/com/aurix/platform/pix/client/dto/SpiResult.java`
-- Create: `backend/aurix-pix/src/test/java/com/aurix/platform/pix/client/PixBacenClientTest.java`
-- Modify: `backend/aurix-pix/src/main/resources/application.yml` (add `aurix.pix.bacen.spi-url`)
+- Create: `apps/backend/aurix-pix/src/main/java/com/aurix/platform/pix/client/PixBacenClient.java`
+- Create: `apps/backend/aurix-pix/src/main/java/com/aurix/platform/pix/client/dto/TransacaoSPI.java`
+- Create: `apps/backend/aurix-pix/src/main/java/com/aurix/platform/pix/client/dto/SpiResult.java`
+- Create: `apps/backend/aurix-pix/src/test/java/com/aurix/platform/pix/client/PixBacenClientTest.java`
+- Modify: `apps/backend/aurix-pix/src/main/resources/application.yml` (add `aurix.pix.bacen.spi-url`)
 
 **Interfaces:**
 - Consumes: nothing (standalone client)
@@ -414,10 +414,10 @@ Expected: pass (NPE-safe test, just checks compilation and instantiation).
 - [ ] **Step 5: Commit**
 
 ```bash
-git add backend/aurix-pix/src/main/java/com/aurix/platform/pix/client/ \
-       backend/aurix-pix/src/main/java/com/aurix/platform/pix/client/dto/ \
-       backend/aurix-pix/src/main/resources/application.yml \
-       backend/aurix-pix/src/test/java/com/aurix/platform/pix/client/PixBacenClientTest.java
+git add apps/backend/aurix-pix/src/main/java/com/aurix/platform/pix/client/ \
+       apps/backend/aurix-pix/src/main/java/com/aurix/platform/pix/client/dto/ \
+       apps/backend/aurix-pix/src/main/resources/application.yml \
+       apps/backend/aurix-pix/src/test/java/com/aurix/platform/pix/client/PixBacenClientTest.java
 git commit -m "feat(pix): PixBacenClient SPI client"
 ```
 
@@ -426,9 +426,9 @@ git commit -m "feat(pix): PixBacenClient SPI client"
 ### Task 4: PixTransferenciaService — wire SPI call + compensation
 
 **Files:**
-- Read: `backend/aurix-pix/src/main/java/com/aurix/platform/pix/service/PixTransferenciaService.java` (read current logic)
-- Modify: `backend/aurix-pix/src/main/java/com/aurix/platform/pix/service/PixTransferenciaService.java`
-- Test: `backend/aurix-pix/src/test/java/com/aurix/platform/pix/service/PixTransferenciaServiceTest.java`
+- Read: `apps/backend/aurix-pix/src/main/java/com/aurix/platform/pix/service/PixTransferenciaService.java` (read current logic)
+- Modify: `apps/backend/aurix-pix/src/main/java/com/aurix/platform/pix/service/PixTransferenciaService.java`
+- Test: `apps/backend/aurix-pix/src/test/java/com/aurix/platform/pix/service/PixTransferenciaServiceTest.java`
 
 **Interfaces:**
 - Consumes: `PixBacenClient.enviarPix(TransacaoSPI) → SpiResult`
@@ -437,13 +437,13 @@ git commit -m "feat(pix): PixBacenClient SPI client"
 - [ ] **Step 1: Read current PixTransferenciaService**
 
 ```bash
-cat backend/aurix-pix/src/main/java/com/aurix/platform/pix/service/PixTransferenciaService.java
+cat apps/backend/aurix-pix/src/main/java/com/aurix/platform/pix/service/PixTransferenciaService.java
 ```
 
 - [ ] **Step 2: Read existing test to understand mocking pattern**
 
 ```bash
-cat backend/aurix-pix/src/test/java/com/aurix/platform/pix/service/PixTransferenciaServiceTest.java
+cat apps/backend/aurix-pix/src/test/java/com/aurix/platform/pix/service/PixTransferenciaServiceTest.java
 ```
 
 - [ ] **Step 3: Update test — mock PixBacenClient, test SPI success/failure/compensation**
@@ -617,8 +617,8 @@ Expected: 3 new tests passing.
 - [ ] **Step 7: Commit**
 
 ```bash
-git add backend/aurix-pix/src/main/java/com/aurix/platform/pix/service/PixTransferenciaService.java \
-       backend/aurix-pix/src/test/java/com/aurix/platform/pix/service/PixTransferenciaServiceTest.java
+git add apps/backend/aurix-pix/src/main/java/com/aurix/platform/pix/service/PixTransferenciaService.java \
+       apps/backend/aurix-pix/src/test/java/com/aurix/platform/pix/service/PixTransferenciaServiceTest.java
 git commit -m "feat(pix): wire SPI call + compensation in PixTransferenciaService"
 ```
 
@@ -627,7 +627,7 @@ git commit -m "feat(pix): wire SPI call + compensation in PixTransferenciaServic
 ### Task 5: Integration test — PIX full flow with BACEN mock
 
 **Files:**
-- Modify: `backend/aurix-pix/src/test/java/com/aurix/platform/pix/integration/PixFlowIntegrationTest.java` (update existing test)
+- Modify: `apps/backend/aurix-pix/src/test/java/com/aurix/platform/pix/integration/PixFlowIntegrationTest.java` (update existing test)
 - Ensure: `bacen-mock` is available in testcontainers config or test relies on mocked client
 
 **Interfaces:**
@@ -637,7 +637,7 @@ git commit -m "feat(pix): wire SPI call + compensation in PixTransferenciaServic
 - [ ] **Step 1: Read existing PixFlowIntegrationTest**
 
 ```bash
-cat backend/aurix-pix/src/test/java/com/aurix/platform/pix/integration/PixFlowIntegrationTest.java
+cat apps/backend/aurix-pix/src/test/java/com/aurix/platform/pix/integration/PixFlowIntegrationTest.java
 ```
 Determine if it uses Testcontainers or mocked services.
 
@@ -666,7 +666,7 @@ Expected: pass.
 - [ ] **Step 4: Commit**
 
 ```bash
-git add backend/aurix-pix/src/test/java/com/aurix/platform/pix/integration/PixFlowIntegrationTest.java
+git add apps/backend/aurix-pix/src/test/java/com/aurix/platform/pix/integration/PixFlowIntegrationTest.java
 git commit -m "test(pix): update integration test for SPI flow"
 ```
 

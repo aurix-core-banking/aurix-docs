@@ -60,7 +60,7 @@ Cliente → Traefik       Cliente → Traefik           Cliente → Traefik
 O Traefik suporta roteamento condicional por header. Exemplo para `svc-customer`:
 
 ```yaml
-# infrastructure/traefik/dynamic.yml
+# infra/traefik/dynamic.yml
 routers:
   # Rota NEW — ativada por header X-Migration-Domain: customer
   customer-new:
@@ -102,7 +102,7 @@ Ativação incremental por domínio, sem downtime. Rollback = remover o header o
 Arquivo paralelo ao atual — convive com `docker-compose.yml` (legado) durante a migração.
 
 ```yaml
-# infrastructure/docker-compose.v2.yml
+# infra/docker-compose.v2.yml
 # Docker Compose alvo: 10 domínios + infraestrutura compartilhada
 # Usado JUNTO com docker-compose.yml (legado) durante migração
 # Para subir APENAS os domínios migrados:
@@ -115,7 +115,7 @@ services:
   # ─────────────────────────────────────────────
   svc-banking:
     build:
-      context: ../backend/svc-banking
+      context: ../apps/backend/svc-banking
       dockerfile: Dockerfile
     container_name: svc-banking
     ports:
@@ -148,7 +148,7 @@ services:
   # ─────────────────────────────────────────────
   svc-payments:
     build:
-      context: ../backend/svc-payments
+      context: ../apps/backend/svc-payments
       dockerfile: Dockerfile
     container_name: svc-payments
     ports:
@@ -179,7 +179,7 @@ services:
   # ─────────────────────────────────────────────
   svc-credit:
     build:
-      context: ../backend/svc-credit
+      context: ../apps/backend/svc-credit
       dockerfile: Dockerfile
     container_name: svc-credit
     ports:
@@ -210,7 +210,7 @@ services:
   # ─────────────────────────────────────────────
   svc-products:
     build:
-      context: ../backend/svc-products
+      context: ../apps/backend/svc-products
       dockerfile: Dockerfile
     container_name: svc-products
     ports:
@@ -241,7 +241,7 @@ services:
   # ─────────────────────────────────────────────
   svc-customer:
     build:
-      context: ../backend/svc-customer
+      context: ../apps/backend/svc-customer
       dockerfile: Dockerfile
     container_name: svc-customer
     ports:
@@ -274,7 +274,7 @@ services:
   # ─────────────────────────────────────────────
   svc-fraud:
     build:
-      context: ../backend/svc-fraud
+      context: ../apps/backend/svc-fraud
       dockerfile: Dockerfile
     container_name: svc-fraud
     ports:
@@ -305,7 +305,7 @@ services:
   # ─────────────────────────────────────────────
   svc-compliance:
     build:
-      context: ../backend/svc-compliance
+      context: ../apps/backend/svc-compliance
       dockerfile: Dockerfile
     container_name: svc-compliance
     ports:
@@ -334,7 +334,7 @@ services:
   # ─────────────────────────────────────────────
   svc-finance-mgmt:
     build:
-      context: ../backend/svc-finance-mgmt
+      context: ../apps/backend/svc-finance-mgmt
       dockerfile: Dockerfile
     container_name: svc-finance-mgmt
     ports:
@@ -363,7 +363,7 @@ services:
   # ─────────────────────────────────────────────
   svc-platform:
     build:
-      context: ../backend/svc-platform
+      context: ../apps/backend/svc-platform
       dockerfile: Dockerfile
     container_name: svc-platform
     ports:
@@ -393,7 +393,7 @@ services:
   # ─────────────────────────────────────────────
   svc-intelligence:
     build:
-      context: ../backend/svc-intelligence
+      context: ../apps/backend/svc-intelligence
       dockerfile: Dockerfile
     container_name: svc-intelligence
     ports:
@@ -426,7 +426,7 @@ services:
 Arquivo separado, ativado em paralelo. O Traefik suporta múltiplos arquivos de configuração via `providers.file.directory`.
 
 ```yaml
-# infrastructure/traefik/dynamic.v2.yml
+# infra/traefik/dynamic.v2.yml
 # Configuração ALVO: 10 domínios consolidados
 # Ativado em paralelo com dynamic.yml durante migração via feature flags
 
@@ -686,7 +686,7 @@ http:
 ## Dockerfile Padrão (todos os 10 domínios)
 
 ```dockerfile
-# backend/svc-{domain}/Dockerfile
+# apps/backend/svc-{domain}/Dockerfile
 # Mesmo padrão para todos os 10 — build otimizado com cache de dependências
 
 FROM eclipse-temurin:25-jdk-jammy AS builder
@@ -730,18 +730,18 @@ ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
 
 ```
 .github/workflows/
-  ci-banking.yml           # trigger: backend/svc-banking/**
-  ci-payments.yml          # trigger: backend/svc-payments/**
-  ci-credit.yml            # trigger: backend/svc-credit/**
-  ci-products.yml          # trigger: backend/svc-products/**
-  ci-customer.yml          # trigger: backend/svc-customer/**
-  ci-fraud.yml             # trigger: backend/svc-fraud/**
-  ci-compliance.yml        # trigger: backend/svc-compliance/**
-  ci-finance-mgmt.yml      # trigger: backend/svc-finance-mgmt/**
-  ci-platform.yml          # trigger: backend/svc-platform/**
-  ci-intelligence.yml      # trigger: backend/svc-intelligence/**
-  ci-infra.yml             # trigger: infrastructure/**
-  ci-frontend.yml          # trigger: frontend/** (mantido)
+  ci-banking.yml           # trigger: apps/backend/svc-banking/**
+  ci-payments.yml          # trigger: apps/backend/svc-payments/**
+  ci-credit.yml            # trigger: apps/backend/svc-credit/**
+  ci-products.yml          # trigger: apps/backend/svc-products/**
+  ci-customer.yml          # trigger: apps/backend/svc-customer/**
+  ci-fraud.yml             # trigger: apps/backend/svc-fraud/**
+  ci-compliance.yml        # trigger: apps/backend/svc-compliance/**
+  ci-finance-mgmt.yml      # trigger: apps/backend/svc-finance-mgmt/**
+  ci-platform.yml          # trigger: apps/backend/svc-platform/**
+  ci-intelligence.yml      # trigger: apps/backend/svc-intelligence/**
+  ci-infra.yml             # trigger: infra/**
+  ci-frontend.yml          # trigger: apps/frontend/** (mantido)
 ```
 
 ### Template de pipeline (`ci-{domain}.yml`)
@@ -753,18 +753,18 @@ name: CI — Banking Core
 on:
   push:
     paths:
-      - 'backend/svc-banking/**'
+      - 'apps/backend/svc-banking/**'
       - '.github/workflows/ci-banking.yml'
   pull_request:
     paths:
-      - 'backend/svc-banking/**'
+      - 'apps/backend/svc-banking/**'
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: backend/svc-banking
+        working-directory: apps/backend/svc-banking
 
     services:
       postgres:
@@ -821,7 +821,7 @@ jobs:
       - name: Build Docker image
         run: |
           docker build -t aurix/svc-banking:${{ github.sha }} \
-            backend/svc-banking/
+            apps/backend/svc-banking/
 
       - name: Push to registry
         run: |
@@ -833,7 +833,7 @@ jobs:
 
 ### Durante a migração: pipeline híbrido
 
-Enquanto os módulos legados ainda existem, o CI atual (`backend/**`) continua rodando. Novos pipelines por domínio sobem em paralelo, sem afetar o CI existente.
+Enquanto os módulos legados ainda existem, o CI atual (`apps/backend/**`) continua rodando. Novos pipelines por domínio sobem em paralelo, sem afetar o CI existente.
 
 ---
 
@@ -842,7 +842,7 @@ Enquanto os módulos legados ainda existem, o CI atual (`backend/**`) continua r
 O parent raiz muda de 43 módulos para 10:
 
 ```xml
-<!-- backend/pom.xml (ALVO — após migração completa) -->
+<!-- apps/backend/pom.xml (ALVO — após migração completa) -->
 <modules>
     <!-- Biblioteca compartilhada -->
     <module>aurix-shared</module>
@@ -909,18 +909,18 @@ Benefício: healthcheck do Docker Compose passa a verificar `/actuator/health/re
 
 # Subir apenas infra (sem nenhum serviço de aplicação)
 infra-up:
-	docker compose -f infrastructure/docker-compose.yml up -d \
+	docker compose -f infra/docker-compose.yml up -d \
 	  traefik postgres redis kafka kafka-ui keycloak
 
 # Subir legado (43 módulos atuais)
 legacy-up:
-	docker compose -f infrastructure/docker-compose.yml up -d
+	docker compose -f infra/docker-compose.yml up -d
 
 # Subir novo domínio específico em paralelo ao legado
 domain-up:
 	docker compose \
-	  -f infrastructure/docker-compose.yml \
-	  -f infrastructure/docker-compose.v2.yml \
+	  -f infra/docker-compose.yml \
+	  -f infra/docker-compose.v2.yml \
 	  up -d $(DOMAIN)
 # Uso: make domain-up DOMAIN=svc-customer
 
@@ -932,11 +932,11 @@ flag-on:
 
 # Subir todos os 10 novos domínios (sem legado)
 v2-up:
-	docker compose -f infrastructure/docker-compose.v2.yml up -d
+	docker compose -f infra/docker-compose.v2.yml up -d
 
 # Derrubar legado por domínio conforme migração avança
 legacy-down:
-	docker compose -f infrastructure/docker-compose.yml stop $(SERVICES)
+	docker compose -f infra/docker-compose.yml stop $(SERVICES)
 # Uso: make legacy-down SERVICES="aurix-customer aurix-kyc aurix-onboarding aurix-security"
 
 # Build completo dos 10 domínios
@@ -961,7 +961,7 @@ check-ports:
 Antes de começar Fase F1 (migração de `svc-customer`):
 
 - [ ] `docker-compose.v2.yml` criado e validado (`docker compose config` sem erros)
-- [ ] `infrastructure/traefik/dynamic.v2.yml` criado e testado localmente
+- [ ] `infra/traefik/dynamic.v2.yml` criado e testado localmente
 - [ ] Dockerfile padrão definido e buildando sem erro para ao menos 1 domínio
 - [ ] Pipelines CI criados para todos os 10 domínios (podem estar vazios, mas existem)
 - [ ] `Makefile` com targets `infra-up`, `domain-up`, `v2-up`, `legacy-down`

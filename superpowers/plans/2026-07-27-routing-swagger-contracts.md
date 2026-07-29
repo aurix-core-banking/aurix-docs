@@ -25,11 +25,11 @@
 - `svc-cambio` controllers have NO `/api/cambio` prefix (use `/clientes`, `/contratos`, etc.)
 
 **Files:**
-- Modify: `backend/svc-products/src/main/resources/application.yml` — change port to 8084
-- Modify: `backend/svc-customer/src/main/resources/application.yml` — keep port 8083
-- Modify: `backend/svc-fraud/src/main/resources/application.yml` — change port to 8204→8206
-- Modify: `infrastructure/traefik/dynamic.v2.yml` — fix all routes and ports
-- Modify: `backend/svc-cambio/src/main/java/com/aurix/platform/cambio/controller/*.java` — add `/api/cambio` prefix
+- Modify: `apps/backend/svc-products/src/main/resources/application.yml` — change port to 8084
+- Modify: `apps/backend/svc-customer/src/main/resources/application.yml` — keep port 8083
+- Modify: `apps/backend/svc-fraud/src/main/resources/application.yml` — change port to 8204→8206
+- Modify: `infra/traefik/dynamic.v2.yml` — fix all routes and ports
+- Modify: `apps/backend/svc-cambio/src/main/java/com/aurix/platform/cambio/controller/*.java` — add `/api/cambio` prefix
 
 - [ ] **Step 1: Fix port conflicts**
 
@@ -41,25 +41,25 @@
 # svc-credit: 8203 → 8082
 ```
 
-Edit `backend/svc-products/src/main/resources/application.yml`:
+Edit `apps/backend/svc-products/src/main/resources/application.yml`:
 ```yaml
 server:
   port: 8084
 ```
 
-Edit `backend/svc-credit/src/main/resources/application.yml`:
+Edit `apps/backend/svc-credit/src/main/resources/application.yml`:
 ```yaml
 server:
   port: 8082
 ```
 
-Edit `backend/svc-customer/src/main/resources/application.yml`:
+Edit `apps/backend/svc-customer/src/main/resources/application.yml`:
 ```yaml
 server:
   port: 8083
 ```
 
-Edit `backend/svc-fraud/src/main/resources/application.yml`:
+Edit `apps/backend/svc-fraud/src/main/resources/application.yml`:
 ```yaml
 server:
   port: 8206
@@ -101,7 +101,7 @@ Edit `svc-cambio/src/main/java/com/aurix/platform/cambio/controller/SpiStrContro
 
 - [ ] **Step 3: Rewrite Traefik dynamic config**
 
-Replace `infrastructure/traefik/dynamic.v2.yml` with corrected routes:
+Replace `infra/traefik/dynamic.v2.yml` with corrected routes:
 
 ```yaml
 http:
@@ -344,4 +344,4 @@ http:
 
 - [ ] **Step 4: Verify no port conflicts remain**
 
-Run: `grep -r 'port:' backend/svc-*/src/main/resources/application.yml | grep -v '#'
+Run: `grep -r 'port:' apps/backend/svc-*/src/main/resources/application.yml | grep -v '#'

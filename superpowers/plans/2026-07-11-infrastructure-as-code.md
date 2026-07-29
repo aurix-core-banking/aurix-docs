@@ -23,63 +23,63 @@
 ## File Map
 
 ### Terraform
-- Create: `infrastructure/terraform/backend.tf`
-- Modify: `infrastructure/terraform/modules/aws/vpc/main.tf` (add outputs)
-- Modify: `infrastructure/terraform/modules/aws/eks/main.tf` (add outputs)
-- Modify: `infrastructure/terraform/modules/aws/rds/main.tf` (add outputs)
-- Modify: `infrastructure/terraform/modules/aws/redis/main.tf` (add outputs)
-- Modify: `infrastructure/terraform/modules/aws/alb/main.tf` (add outputs)
-- Modify: `infrastructure/terraform/modules/aws/cloudfront/main.tf` (add outputs)
-- Modify: `infrastructure/terraform/modules/aws/s3/main.tf` (add outputs)
-- Modify: `infrastructure/terraform/modules/aws/cloudwatch/main.tf` (add outputs)
-- Modify: `infrastructure/terraform/modules/aws/iam/main.tf` (add outputs)
-- Modify: `infrastructure/terraform/modules/aws/security/main.tf` (add outputs)
-- Modify: `infrastructure/terraform/modules/azure/resource-group/main.tf` (add outputs)
-- Modify: `infrastructure/terraform/modules/azure/aks/main.tf` (add outputs)
-- Modify: `infrastructure/terraform/modules/azure/postgresql/main.tf` (add outputs)
-- Modify: `infrastructure/terraform/modules/azure/redis/main.tf` (add outputs)
-- Modify: `infrastructure/terraform/modules/gcp/vpc/main.tf` (add outputs)
-- Modify: `infrastructure/terraform/modules/gcp/gke/main.tf` (add outputs)
-- Modify: `infrastructure/terraform/modules/gcp/cloud-sql/main.tf` (add outputs)
-- Modify: `infrastructure/terraform/modules/gcp/memorystore/main.tf` (add outputs)
+- Create: `infra/terraform/backend.tf`
+- Modify: `infra/terraform/modules/aws/vpc/main.tf` (add outputs)
+- Modify: `infra/terraform/modules/aws/eks/main.tf` (add outputs)
+- Modify: `infra/terraform/modules/aws/rds/main.tf` (add outputs)
+- Modify: `infra/terraform/modules/aws/redis/main.tf` (add outputs)
+- Modify: `infra/terraform/modules/aws/alb/main.tf` (add outputs)
+- Modify: `infra/terraform/modules/aws/cloudfront/main.tf` (add outputs)
+- Modify: `infra/terraform/modules/aws/s3/main.tf` (add outputs)
+- Modify: `infra/terraform/modules/aws/cloudwatch/main.tf` (add outputs)
+- Modify: `infra/terraform/modules/aws/iam/main.tf` (add outputs)
+- Modify: `infra/terraform/modules/aws/security/main.tf` (add outputs)
+- Modify: `infra/terraform/modules/azure/resource-group/main.tf` (add outputs)
+- Modify: `infra/terraform/modules/azure/aks/main.tf` (add outputs)
+- Modify: `infra/terraform/modules/azure/postgresql/main.tf` (add outputs)
+- Modify: `infra/terraform/modules/azure/redis/main.tf` (add outputs)
+- Modify: `infra/terraform/modules/gcp/vpc/main.tf` (add outputs)
+- Modify: `infra/terraform/modules/gcp/gke/main.tf` (add outputs)
+- Modify: `infra/terraform/modules/gcp/cloud-sql/main.tf` (add outputs)
+- Modify: `infra/terraform/modules/gcp/memorystore/main.tf` (add outputs)
 
 ### ArgoCD
-- Create: `infrastructure/kubernetes/argocd/projects/infra.yaml`
-- Create: `infrastructure/kubernetes/argocd/projects/platform.yaml`
-- Create: `infrastructure/kubernetes/argocd/bootstrap/infra-components.yaml`
-- Create: `infrastructure/kubernetes/argocd/applicationsets/microservices.yaml`
+- Create: `infra/kubernetes/argocd/projects/infra.yaml`
+- Create: `infra/kubernetes/argocd/projects/platform.yaml`
+- Create: `infra/kubernetes/argocd/bootstrap/infra-components.yaml`
+- Create: `infra/kubernetes/argocd/applicationsets/microservices.yaml`
 
 ### Helm Charts (186 files — 37 services × ~5 templates each)
-- Create: `infrastructure/kubernetes/charts/<service>/Chart.yaml`
-- Create: `infrastructure/kubernetes/charts/<service>/values.yaml`
-- Create: `infrastructure/kubernetes/charts/<service>/templates/deployment.yaml`
-- Create: `infrastructure/kubernetes/charts/<service>/templates/service.yaml`
-- Create: `infrastructure/kubernetes/charts/<service>/templates/hpa.yaml`
-- Create: `infrastructure/kubernetes/charts/<service>/templates/_helpers.tpl`
-- Create: `infrastructure/kubernetes/charts/<service>/templates/serviceaccount.yaml`
-- Create: `infrastructure/kubernetes/charts/umbrella/Chart.yaml`
-- Create: `infrastructure/kubernetes/charts/umbrella/values.yaml`
-- Create: `infrastructure/kubernetes/charts/umbrella/values-dev.yaml`
-- Create: `infrastructure/kubernetes/charts/umbrella/values-staging.yaml`
-- Create: `infrastructure/kubernetes/charts/umbrella/values-prod.yaml`
-- Create: `infrastructure/kubernetes/charts/umbrella/values-aws.yaml`
-- Create: `infrastructure/kubernetes/charts/umbrella/values-azure.yaml`
-- Create: `infrastructure/kubernetes/charts/umbrella/values-gcp.yaml`
+- Create: `infra/kubernetes/charts/<service>/Chart.yaml`
+- Create: `infra/kubernetes/charts/<service>/values.yaml`
+- Create: `infra/kubernetes/charts/<service>/templates/deployment.yaml`
+- Create: `infra/kubernetes/charts/<service>/templates/service.yaml`
+- Create: `infra/kubernetes/charts/<service>/templates/hpa.yaml`
+- Create: `infra/kubernetes/charts/<service>/templates/_helpers.tpl`
+- Create: `infra/kubernetes/charts/<service>/templates/serviceaccount.yaml`
+- Create: `infra/kubernetes/charts/umbrella/Chart.yaml`
+- Create: `infra/kubernetes/charts/umbrella/values.yaml`
+- Create: `infra/kubernetes/charts/umbrella/values-dev.yaml`
+- Create: `infra/kubernetes/charts/umbrella/values-staging.yaml`
+- Create: `infra/kubernetes/charts/umbrella/values-prod.yaml`
+- Create: `infra/kubernetes/charts/umbrella/values-aws.yaml`
+- Create: `infra/kubernetes/charts/umbrella/values-azure.yaml`
+- Create: `infra/kubernetes/charts/umbrella/values-gcp.yaml`
 
 ### Infra Charts
-- Create: `infrastructure/kubernetes/charts/infra/istio-operator/Chart.yaml`
-- Create: `infrastructure/kubernetes/charts/infra/istio-operator/values.yaml`
-- Create: `infrastructure/kubernetes/charts/infra/istio-operator/templates/`
-- Create: `infrastructure/kubernetes/charts/infra/cert-manager/Chart.yaml`
-- Create: `infrastructure/kubernetes/charts/infra/cert-manager/values.yaml`
-- Create: `infrastructure/kubernetes/charts/infra/external-secrets/Chart.yaml`
-- Create: `infrastructure/kubernetes/charts/infra/external-secrets/values.yaml`
-- Create: `infrastructure/kubernetes/charts/infra/velero/Chart.yaml`
-- Create: `infrastructure/kubernetes/charts/infra/velero/values.yaml`
-- Create: `infrastructure/kubernetes/charts/infra/prometheus/Chart.yaml`
-- Create: `infrastructure/kubernetes/charts/infra/prometheus/values.yaml`
-- Create: `infrastructure/kubernetes/charts/infra/elk/Chart.yaml`
-- Create: `infrastructure/kubernetes/charts/infra/elk/values.yaml`
+- Create: `infra/kubernetes/charts/infra/istio-operator/Chart.yaml`
+- Create: `infra/kubernetes/charts/infra/istio-operator/values.yaml`
+- Create: `infra/kubernetes/charts/infra/istio-operator/templates/`
+- Create: `infra/kubernetes/charts/infra/cert-manager/Chart.yaml`
+- Create: `infra/kubernetes/charts/infra/cert-manager/values.yaml`
+- Create: `infra/kubernetes/charts/infra/external-secrets/Chart.yaml`
+- Create: `infra/kubernetes/charts/infra/external-secrets/values.yaml`
+- Create: `infra/kubernetes/charts/infra/velero/Chart.yaml`
+- Create: `infra/kubernetes/charts/infra/velero/values.yaml`
+- Create: `infra/kubernetes/charts/infra/prometheus/Chart.yaml`
+- Create: `infra/kubernetes/charts/infra/prometheus/values.yaml`
+- Create: `infra/kubernetes/charts/infra/elk/Chart.yaml`
+- Create: `infra/kubernetes/charts/infra/elk/values.yaml`
 
 ### CI/CD
 - Create: `.github/workflows/ci-aurix-core.yml`
@@ -94,25 +94,25 @@
 - Create: `.github/workflows/terraform-apply.yml`
 
 ### Security
-- Create: `infrastructure/kubernetes/base/network-policies/default-deny.yaml`
-- Create: `infrastructure/kubernetes/base/network-policies/allow-monitoring.yaml`
-- Create: `infrastructure/kubernetes/base/network-policies/allow-mesh.yaml`
-- Create: `infrastructure/kubernetes/base/istio/peer-authentication.yaml`
-- Create: `infrastructure/kubernetes/base/istio/ingress-gateway.yaml`
+- Create: `infra/kubernetes/base/network-policies/default-deny.yaml`
+- Create: `infra/kubernetes/base/network-policies/allow-monitoring.yaml`
+- Create: `infra/kubernetes/base/network-policies/allow-mesh.yaml`
+- Create: `infra/kubernetes/base/istio/peer-authentication.yaml`
+- Create: `infra/kubernetes/base/istio/ingress-gateway.yaml`
 
 ### Backup
-- Create: `infrastructure/kubernetes/base/velero/schedule.yaml`
+- Create: `infra/kubernetes/base/velero/schedule.yaml`
 
 ### Observability
-- Create: `infrastructure/kubernetes/base/monitoring/prometheus-servicemonitors.yaml`
-- Create: `infrastructure/kubernetes/base/monitoring/grafana-dashboards.yaml`
+- Create: `infra/kubernetes/base/monitoring/prometheus-servicemonitors.yaml`
+- Create: `infra/kubernetes/base/monitoring/grafana-dashboards.yaml`
 
 ---
 
 ### Task 1: Terraform backend state + locking
 
 **Files:**
-- Create: `infrastructure/terraform/backend.tf`
+- Create: `infra/terraform/backend.tf`
 
 - [ ] **Step 1: Create backend.tf**
 
@@ -151,13 +151,13 @@ terraform {
 
 - [ ] **Step 2: Run terraform init to verify**
 
-Run: `terraform -chdir=infrastructure/terraform init`
+Run: `terraform -chdir=infra/terraform init`
 Expected: Backend initialized, modules downloaded.
 
 - [ ] **Step 3: Commit**
 
 ```bash
-git add infrastructure/terraform/backend.tf
+git add infra/terraform/backend.tf
 git commit -m "feat(infra): add Terraform backend state + DynamoDB locking"
 ```
 
@@ -166,11 +166,11 @@ git commit -m "feat(infra): add Terraform backend state + DynamoDB locking"
 ### Task 2: Audit and complete Terraform module outputs
 
 **Files:**
-- Modify: all `infrastructure/terraform/modules/*/main.tf`
+- Modify: all `infra/terraform/modules/*/main.tf`
 
 - [ ] **Step 1: Audit VPC module**
 
-Read `infrastructure/terraform/modules/aws/vpc/main.tf` and check for outputs: `vpc_id`, `private_subnet_ids`, `public_subnet_ids`, `database_subnet_ids`. Add any missing outputs.
+Read `infra/terraform/modules/aws/vpc/main.tf` and check for outputs: `vpc_id`, `private_subnet_ids`, `public_subnet_ids`, `database_subnet_ids`. Add any missing outputs.
 
 ```hcl
 output "vpc_id" {
@@ -224,20 +224,20 @@ output "cluster_arn" {
 
 - [ ] **Step 4: Audit Redis, ALB, CloudFront, S3, CloudWatch, IAM, Security modules**
 
-Read each module's `main.tf`. For each, add any `output` blocks that are referenced in `infrastructure/terraform/main.tf`. Ensure variable `main.tf` references match module outputs.
+Read each module's `main.tf`. For each, add any `output` blocks that are referenced in `infra/terraform/main.tf`. Ensure variable `main.tf` references match module outputs.
 
 - [ ] **Step 5: Audit Azure modules**
 
-Same pattern for `infrastructure/terraform/modules/azure/*/main.tf`: ensure outputs for `name`, `fqdn`, `endpoint` match root module references.
+Same pattern for `infra/terraform/modules/azure/*/main.tf`: ensure outputs for `name`, `fqdn`, `endpoint` match root module references.
 
 - [ ] **Step 6: Audit GCP modules**
 
-Same pattern for `infrastructure/terraform/modules/gcp/*/main.tf`.
+Same pattern for `infra/terraform/modules/gcp/*/main.tf`.
 
 - [ ] **Step 7: Run terraform validate**
 
 ```bash
-terraform -chdir=infrastructure/terraform validate
+terraform -chdir=infra/terraform validate
 ```
 
 Expected: No errors, configuration is valid.
@@ -245,7 +245,7 @@ Expected: No errors, configuration is valid.
 - [ ] **Step 8: Commit**
 
 ```bash
-git add infrastructure/terraform/
+git add infra/terraform/
 git commit -m "feat(infra): complete Terraform module outputs for all cloud providers"
 ```
 
@@ -254,15 +254,15 @@ git commit -m "feat(infra): complete Terraform module outputs for all cloud prov
 ### Task 3: ArgoCD bootstrap manifests
 
 **Files:**
-- Create: `infrastructure/kubernetes/argocd/projects/infra.yaml`
-- Create: `infrastructure/kubernetes/argocd/projects/platform.yaml`
-- Create: `infrastructure/kubernetes/argocd/bootstrap/infra-components.yaml`
-- Create: `infrastructure/kubernetes/argocd/applicationsets/microservices.yaml`
+- Create: `infra/kubernetes/argocd/projects/infra.yaml`
+- Create: `infra/kubernetes/argocd/projects/platform.yaml`
+- Create: `infra/kubernetes/argocd/bootstrap/infra-components.yaml`
+- Create: `infra/kubernetes/argocd/applicationsets/microservices.yaml`
 
 - [ ] **Step 1: Create infra ArgoCD Project**
 
 ```yaml
-# infrastructure/kubernetes/argocd/projects/infra.yaml
+# infra/kubernetes/argocd/projects/infra.yaml
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
@@ -304,7 +304,7 @@ spec:
 - [ ] **Step 2: Create platform ArgoCD Project**
 
 ```yaml
-# infrastructure/kubernetes/argocd/projects/platform.yaml
+# infra/kubernetes/argocd/projects/platform.yaml
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
@@ -330,7 +330,7 @@ spec:
 - [ ] **Step 3: Create infra-components bootstrap Application**
 
 ```yaml
-# infrastructure/kubernetes/argocd/bootstrap/infra-components.yaml
+# infra/kubernetes/argocd/bootstrap/infra-components.yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -340,7 +340,7 @@ spec:
   project: infra
   source:
     repoURL: https://github.com/anomalyco/aurix-platform
-    path: infrastructure/kubernetes/charts/infra
+    path: infra/kubernetes/charts/infra
     targetRevision: HEAD
     helm:
       valueFiles:
@@ -365,7 +365,7 @@ spec:
 - [ ] **Step 4: Create microservices ApplicationSet**
 
 ```yaml
-# infrastructure/kubernetes/argocd/applicationsets/microservices.yaml
+# infra/kubernetes/argocd/applicationsets/microservices.yaml
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
@@ -377,7 +377,7 @@ spec:
       repoURL: https://github.com/anomalyco/aurix-platform
       revision: HEAD
       directories:
-      - path: infrastructure/kubernetes/charts/aurix-*
+      - path: infra/kubernetes/charts/aurix-*
   template:
     metadata:
       name: '{{path.basename}}'
@@ -408,7 +408,7 @@ spec:
 - [ ] **Step 5: Commit**
 
 ```bash
-git add infrastructure/kubernetes/argocd/
+git add infra/kubernetes/argocd/
 git commit -m "feat(infra): add ArgoCD bootstrap manifests + ApplicationSet"
 ```
 
@@ -417,14 +417,14 @@ git commit -m "feat(infra): add ArgoCD bootstrap manifests + ApplicationSet"
 ### Task 4: Infra Helm charts (Istio, cert-manager, ESO, Velero, Prometheus, ELK)
 
 **Files:**
-- Create: `infrastructure/kubernetes/charts/infra/Chart.yaml`
-- Create: `infrastructure/kubernetes/charts/infra/values.yaml`
-- Create: `infrastructure/kubernetes/charts/infra/templates/`
+- Create: `infra/kubernetes/charts/infra/Chart.yaml`
+- Create: `infra/kubernetes/charts/infra/values.yaml`
+- Create: `infra/kubernetes/charts/infra/templates/`
 
 - [ ] **Step 1: Create infra umbrella Chart.yaml**
 
 ```yaml
-# infrastructure/kubernetes/charts/infra/Chart.yaml
+# infra/kubernetes/charts/infra/Chart.yaml
 apiVersion: v2
 name: infra
 description: Aurix Platform infrastructure components
@@ -461,7 +461,7 @@ dependencies:
 - [ ] **Step 2: Create infra values.yaml**
 
 ```yaml
-# infrastructure/kubernetes/charts/infra/values.yaml
+# infra/kubernetes/charts/infra/values.yaml
 istio:
   global:
     meshID: aurix-mesh
@@ -530,7 +530,7 @@ vault:
 - [ ] **Step 3: Create infra templates (Istio operator + ClusterIssuer)**
 
 ```yaml
-# infrastructure/kubernetes/charts/infra/templates/istio-operator.yaml
+# infra/kubernetes/charts/infra/templates/istio-operator.yaml
 apiVersion: install.istio.io/v1alpha1
 kind: IstioOperator
 metadata:
@@ -559,7 +559,7 @@ spec:
 ```
 
 ```yaml
-# infrastructure/kubernetes/charts/infra/templates/cert-manager-cluster-issuer.yaml
+# infra/kubernetes/charts/infra/templates/cert-manager-cluster-issuer.yaml
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
@@ -577,7 +577,7 @@ spec:
 ```
 
 ```yaml
-# infrastructure/kubernetes/charts/infra/templates/elasticsearch-cluster.yaml
+# infra/kubernetes/charts/infra/templates/elasticsearch-cluster.yaml
 apiVersion: elasticsearch.k8s.elastic.co/v1
 kind: Elasticsearch
 metadata:
@@ -606,7 +606,7 @@ spec:
 ```
 
 ```yaml
-# infrastructure/kubernetes/charts/infra/templates/kibana.yaml
+# infra/kubernetes/charts/infra/templates/kibana.yaml
 apiVersion: kibana.k8s.elastic.co/v1
 kind: Kibana
 metadata:
@@ -630,7 +630,7 @@ spec:
 ```
 
 ```yaml
-# infrastructure/kubernetes/charts/infra/templates/filebeat.yaml
+# infra/kubernetes/charts/infra/templates/filebeat.yaml
 apiVersion: beat.k8s.elastic.co/v1beta1
 kind: Beat
 metadata:
@@ -681,7 +681,7 @@ spec:
 - [ ] **Step 4: Commit**
 
 ```bash
-git add infrastructure/kubernetes/charts/infra/
+git add infra/kubernetes/charts/infra/
 git commit -m "feat(infra): add infra Helm chart with Istio, cert-manager, ESO, Velero, Prometheus, ELK, Vault"
 ```
 
@@ -692,20 +692,20 @@ git commit -m "feat(infra): add infra Helm chart with Istio, cert-manager, ESO, 
 **Pattern** — each chart has the same structure. Use `aurix-core` as the reference template.
 
 **Files:**
-- Create: `infrastructure/kubernetes/charts/aurix-core/Chart.yaml`
-- Create: `infrastructure/kubernetes/charts/aurix-core/values.yaml`
-- Create: `infrastructure/kubernetes/charts/aurix-core/templates/_helpers.tpl`
-- Create: `infrastructure/kubernetes/charts/aurix-core/templates/deployment.yaml`
-- Create: `infrastructure/kubernetes/charts/aurix-core/templates/service.yaml`
-- Create: `infrastructure/kubernetes/charts/aurix-core/templates/hpa.yaml`
-- Create: `infrastructure/kubernetes/charts/aurix-core/templates/serviceaccount.yaml`
-- Create: `infrastructure/kubernetes/charts/aurix-core/templates/pdb.yaml`
+- Create: `infra/kubernetes/charts/aurix-core/Chart.yaml`
+- Create: `infra/kubernetes/charts/aurix-core/values.yaml`
+- Create: `infra/kubernetes/charts/aurix-core/templates/_helpers.tpl`
+- Create: `infra/kubernetes/charts/aurix-core/templates/deployment.yaml`
+- Create: `infra/kubernetes/charts/aurix-core/templates/service.yaml`
+- Create: `infra/kubernetes/charts/aurix-core/templates/hpa.yaml`
+- Create: `infra/kubernetes/charts/aurix-core/templates/serviceaccount.yaml`
+- Create: `infra/kubernetes/charts/aurix-core/templates/pdb.yaml`
 - Repeat for: aurix-gateway, aurix-pix, aurix-bacen, aurix-onboarding, aurix-security, aurix-openfinance, aurix-analytics, aurix-catalog, aurix-credit
 
 - [ ] **Step 1: Create aurix-core Chart.yaml**
 
 ```yaml
-# infrastructure/kubernetes/charts/aurix-core/Chart.yaml
+# infra/kubernetes/charts/aurix-core/Chart.yaml
 apiVersion: v2
 name: aurix-core
 description: Aurix Core Banking service
@@ -717,7 +717,7 @@ appVersion: "1.0.0"
 - [ ] **Step 2: Create _helpers.tpl**
 
 ```yaml
-# infrastructure/kubernetes/charts/aurix-core/templates/_helpers.tpl
+# infra/kubernetes/charts/aurix-core/templates/_helpers.tpl
 {{- define "aurix-core.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
@@ -761,7 +761,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 - [ ] **Step 3: Create values.yaml**
 
 ```yaml
-# infrastructure/kubernetes/charts/aurix-core/values.yaml
+# infra/kubernetes/charts/aurix-core/values.yaml
 replicaCount: 3
 
 image:
@@ -871,7 +871,7 @@ extraVolumeMounts: []
 - [ ] **Step 4: Create deployment.yaml**
 
 ```yaml
-# infrastructure/kubernetes/charts/aurix-core/templates/deployment.yaml
+# infra/kubernetes/charts/aurix-core/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -976,7 +976,7 @@ spec:
 - [ ] **Step 5: Create service.yaml**
 
 ```yaml
-# infrastructure/kubernetes/charts/aurix-core/templates/service.yaml
+# infra/kubernetes/charts/aurix-core/templates/service.yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -1001,7 +1001,7 @@ spec:
 - [ ] **Step 6: Create hpa.yaml**
 
 ```yaml
-# infrastructure/kubernetes/charts/aurix-core/templates/hpa.yaml
+# infra/kubernetes/charts/aurix-core/templates/hpa.yaml
 {{- if .Values.autoscaling.enabled }}
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
@@ -1035,7 +1035,7 @@ spec:
 - [ ] **Step 7: Create serviceaccount.yaml**
 
 ```yaml
-# infrastructure/kubernetes/charts/aurix-core/templates/serviceaccount.yaml
+# infra/kubernetes/charts/aurix-core/templates/serviceaccount.yaml
 {{- if .Values.serviceAccount.create }}
 apiVersion: v1
 kind: ServiceAccount
@@ -1053,7 +1053,7 @@ metadata:
 - [ ] **Step 8: Create pdb.yaml**
 
 ```yaml
-# infrastructure/kubernetes/charts/aurix-core/templates/pdb.yaml
+# infra/kubernetes/charts/aurix-core/templates/pdb.yaml
 {{- if .Values.pdb.enabled }}
 apiVersion: policy/v1
 kind: PodDisruptionBudget
@@ -1074,7 +1074,7 @@ spec:
 - [ ] **Step 9: Run Helm lint**
 
 ```bash
-helm lint infrastructure/kubernetes/charts/aurix-core/
+helm lint infra/kubernetes/charts/aurix-core/
 ```
 
 Expected: No errors. Chart with valid template.
@@ -1085,16 +1085,16 @@ Copy the entire `aurix-core` chart structure for the first 9 additional services
 
 ```bash
 for service in gateway pix bacen onboarding security openfinance analytics catalog credit; do
-  cp -r infrastructure/kubernetes/charts/aurix-core "infrastructure/kubernetes/charts/aurix-${service}"
-  sed -i "s/name: aurix-core/name: aurix-${service}/" "infrastructure/kubernetes/charts/aurix-${service}/Chart.yaml"
-  sed -i "s/repository: aurix-core/repository: aurix-${service}/" "infrastructure/kubernetes/charts/aurix-${service}/values.yaml"
+  cp -r infra/kubernetes/charts/aurix-core "infra/kubernetes/charts/aurix-${service}"
+  sed -i "s/name: aurix-core/name: aurix-${service}/" "infra/kubernetes/charts/aurix-${service}/Chart.yaml"
+  sed -i "s/repository: aurix-core/repository: aurix-${service}/" "infra/kubernetes/charts/aurix-${service}/values.yaml"
 done
 ```
 
 - [ ] **Step 11: Lint all copied charts**
 
 ```bash
-for chart in infrastructure/kubernetes/charts/aurix-*; do
+for chart in infra/kubernetes/charts/aurix-*; do
   helm lint "$chart"
 done
 ```
@@ -1104,7 +1104,7 @@ Expected: All charts pass lint successfully.
 - [ ] **Step 12: Commit**
 
 ```bash
-git add infrastructure/kubernetes/charts/aurix-core/ infrastructure/kubernetes/charts/aurix-gateway/ infrastructure/kubernetes/charts/aurix-pix/ infrastructure/kubernetes/charts/aurix-bacen/ infrastructure/kubernetes/charts/aurix-onboarding/ infrastructure/kubernetes/charts/aurix-security/ infrastructure/kubernetes/charts/aurix-openfinance/ infrastructure/kubernetes/charts/aurix-analytics/ infrastructure/kubernetes/charts/aurix-catalog/ infrastructure/kubernetes/charts/aurix-credit/
+git add infra/kubernetes/charts/aurix-core/ infra/kubernetes/charts/aurix-gateway/ infra/kubernetes/charts/aurix-pix/ infra/kubernetes/charts/aurix-bacen/ infra/kubernetes/charts/aurix-onboarding/ infra/kubernetes/charts/aurix-security/ infra/kubernetes/charts/aurix-openfinance/ infra/kubernetes/charts/aurix-analytics/ infra/kubernetes/charts/aurix-catalog/ infra/kubernetes/charts/aurix-credit/
 git commit -m "feat(infra): add Helm charts for core 10 microservices"
 ```
 
@@ -1120,17 +1120,17 @@ Service list: accounting, ai, audit, baas, billing, budget, cambio, cartoes, com
 
 ```bash
 for service in accounting ai audit baas billing budget cambio cartoes compliance consignado controller cost financial financiamento internet-banking investimento mobile-banking organization poupanca pricing provisioning salario seguros settlement shared tax treasury webhooks; do
-  cp -r infrastructure/kubernetes/charts/aurix-core "infrastructure/kubernetes/charts/aurix-${service}"
-  sed -i "s/name: aurix-core/name: aurix-${service}/" "infrastructure/kubernetes/charts/aurix-${service}/Chart.yaml"
-  sed -i "s/repository: aurix-core/repository: aurix-${service}/" "infrastructure/kubernetes/charts/aurix-${service}/values.yaml"
-  helm lint "infrastructure/kubernetes/charts/aurix-${service}"
+  cp -r infra/kubernetes/charts/aurix-core "infra/kubernetes/charts/aurix-${service}"
+  sed -i "s/name: aurix-core/name: aurix-${service}/" "infra/kubernetes/charts/aurix-${service}/Chart.yaml"
+  sed -i "s/repository: aurix-core/repository: aurix-${service}/" "infra/kubernetes/charts/aurix-${service}/values.yaml"
+  helm lint "infra/kubernetes/charts/aurix-${service}"
 done
 ```
 
 - [ ] **Step 2: Commit**
 
 ```bash
-git add infrastructure/kubernetes/charts/aurix-*/
+git add infra/kubernetes/charts/aurix-*/
 git commit -m "feat(infra): add Helm charts for remaining 27 microservices"
 ```
 
@@ -1139,19 +1139,19 @@ git commit -m "feat(infra): add Helm charts for remaining 27 microservices"
 ### Task 7: Umbrella chart + environment overlays
 
 **Files:**
-- Create: `infrastructure/kubernetes/charts/umbrella/Chart.yaml`
-- Create: `infrastructure/kubernetes/charts/umbrella/values.yaml`
-- Create: `infrastructure/kubernetes/charts/umbrella/values-dev.yaml`
-- Create: `infrastructure/kubernetes/charts/umbrella/values-staging.yaml`
-- Create: `infrastructure/kubernetes/charts/umbrella/values-prod.yaml`
-- Create: `infrastructure/kubernetes/charts/umbrella/values-aws.yaml`
-- Create: `infrastructure/kubernetes/charts/umbrella/values-azure.yaml`
-- Create: `infrastructure/kubernetes/charts/umbrella/values-gcp.yaml`
+- Create: `infra/kubernetes/charts/umbrella/Chart.yaml`
+- Create: `infra/kubernetes/charts/umbrella/values.yaml`
+- Create: `infra/kubernetes/charts/umbrella/values-dev.yaml`
+- Create: `infra/kubernetes/charts/umbrella/values-staging.yaml`
+- Create: `infra/kubernetes/charts/umbrella/values-prod.yaml`
+- Create: `infra/kubernetes/charts/umbrella/values-aws.yaml`
+- Create: `infra/kubernetes/charts/umbrella/values-azure.yaml`
+- Create: `infra/kubernetes/charts/umbrella/values-gcp.yaml`
 
 - [ ] **Step 1: Create umbrella Chart.yaml**
 
 ```yaml
-# infrastructure/kubernetes/charts/umbrella/Chart.yaml
+# infra/kubernetes/charts/umbrella/Chart.yaml
 apiVersion: v2
 name: umbrella
 description: Aurix Platform umbrella chart — deploys all microservices
@@ -1272,7 +1272,7 @@ dependencies:
 - [ ] **Step 2: Create umbrella values.yaml (dev defaults)**
 
 ```yaml
-# infrastructure/kubernetes/charts/umbrella/values.yaml
+# infra/kubernetes/charts/umbrella/values.yaml
 global:
   environment: dev
   replicas: 1
@@ -1310,7 +1310,7 @@ aurix-gateway:
 - [ ] **Step 3: Commit**
 
 ```bash
-git add infrastructure/kubernetes/charts/umbrella/
+git add infra/kubernetes/charts/umbrella/
 git commit -m "feat(infra): add umbrella Helm chart with all sub-chart dependencies"
 ```
 
@@ -1339,10 +1339,10 @@ name: Build aurix-core
 on:
   push:
     branches: [main, develop]
-    paths: ["backend/aurix-core/**"]
+    paths: ["apps/backend/aurix-core/**"]
   pull_request:
     branches: [main]
-    paths: ["backend/aurix-core/**"]
+    paths: ["apps/backend/aurix-core/**"]
 
 env:
   REGISTRY: ${{ secrets.REGISTRY_URL }}
@@ -1367,7 +1367,7 @@ jobs:
       uses: aquasecurity/trivy-action@master
       with:
         scan-type: fs
-        scan-ref: backend/aurix-core/
+        scan-ref: apps/backend/aurix-core/
         severity: CRITICAL,HIGH
         exit-code: 1
     - name: Docker buildx
@@ -1381,8 +1381,8 @@ jobs:
     - name: Build and push
       uses: docker/build-push-action@v5
       with:
-        context: backend/
-        file: backend/aurix-core/Dockerfile
+        context: apps/backend/
+        file: apps/backend/aurix-core/Dockerfile
         push: true
         tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
         platforms: linux/amd64,linux/arm64
@@ -1409,10 +1409,10 @@ name: Build Frontend Web
 on:
   push:
     branches: [main, develop]
-    paths: ["frontend/aurix-web/**"]
+    paths: ["apps/frontend/aurix-web/**"]
   pull_request:
     branches: [main]
-    paths: ["frontend/aurix-web/**"]
+    paths: ["apps/frontend/aurix-web/**"]
 
 env:
   REGISTRY: ${{ secrets.REGISTRY_URL }}
@@ -1429,7 +1429,7 @@ jobs:
       with:
         node-version: '20'
         cache: 'npm'
-        cache-dependency-path: frontend/package-lock.json
+        cache-dependency-path: apps/frontend/package-lock.json
     - name: Install dependencies
       run: npm ci --legacy-peer-deps
     - name: Lint
@@ -1441,8 +1441,8 @@ jobs:
     - name: Docker build and push
       uses: docker/build-push-action@v5
       with:
-        context: frontend/
-        file: frontend/aurix-web/Dockerfile
+        context: apps/frontend/
+        file: apps/frontend/aurix-web/Dockerfile
         push: true
         tags: ${{ env.REGISTRY }}/aurix-web:${{ github.sha }}
 ```
@@ -1455,14 +1455,14 @@ name: Terraform Plan
 
 on:
   pull_request:
-    paths: ["infrastructure/terraform/**"]
+    paths: ["infra/terraform/**"]
 
 jobs:
   plan:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: infrastructure/terraform
+        working-directory: infra/terraform
     steps:
     - uses: actions/checkout@v4
     - uses: hashicorp/setup-terraform@v3
@@ -1479,7 +1479,7 @@ jobs:
     - uses: actions/upload-artifact@v4
       with:
         name: tfplan
-        path: infrastructure/terraform/tfplan
+        path: infra/terraform/tfplan
 ```
 
 ```yaml
@@ -1489,14 +1489,14 @@ name: Terraform Apply
 on:
   push:
     branches: [main]
-    paths: ["infrastructure/terraform/**"]
+    paths: ["infra/terraform/**"]
 
 jobs:
   apply:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: infrastructure/terraform
+        working-directory: infra/terraform
     steps:
     - uses: actions/checkout@v4
     - uses: hashicorp/setup-terraform@v3
@@ -1520,18 +1520,18 @@ git commit -m "feat(infra): add GitHub Actions CI/CD pipelines for backend, fron
 ### Task 9: Security base (NetworkPolicies, Istio mTLS, Vault+ESO)
 
 **Files:**
-- Create: `infrastructure/kubernetes/base/network-policies/default-deny.yaml`
-- Create: `infrastructure/kubernetes/base/network-policies/allow-monitoring.yaml`
-- Create: `infrastructure/kubernetes/base/network-policies/allow-mesh.yaml`
-- Create: `infrastructure/kubernetes/base/istio/peer-authentication.yaml`
-- Create: `infrastructure/kubernetes/base/istio/ingress-gateway.yaml`
-- Create: `infrastructure/kubernetes/base/external-secrets/secretstore.yaml`
-- Create: `infrastructure/kubernetes/base/external-secrets/cluster-secret-store.yaml`
+- Create: `infra/kubernetes/base/network-policies/default-deny.yaml`
+- Create: `infra/kubernetes/base/network-policies/allow-monitoring.yaml`
+- Create: `infra/kubernetes/base/network-policies/allow-mesh.yaml`
+- Create: `infra/kubernetes/base/istio/peer-authentication.yaml`
+- Create: `infra/kubernetes/base/istio/ingress-gateway.yaml`
+- Create: `infra/kubernetes/base/external-secrets/secretstore.yaml`
+- Create: `infra/kubernetes/base/external-secrets/cluster-secret-store.yaml`
 
 - [ ] **Step 1: Create default-deny NetworkPolicy**
 
 ```yaml
-# infrastructure/kubernetes/base/network-policies/default-deny.yaml
+# infra/kubernetes/base/network-policies/default-deny.yaml
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -1568,7 +1568,7 @@ spec:
 - [ ] **Step 2: Create istio PeerAuthentication**
 
 ```yaml
-# infrastructure/kubernetes/base/istio/peer-authentication.yaml
+# infra/kubernetes/base/istio/peer-authentication.yaml
 apiVersion: security.istio.io/v1beta1
 kind: PeerAuthentication
 metadata:
@@ -1582,7 +1582,7 @@ spec:
 - [ ] **Step 3: Create Istio Ingress Gateway**
 
 ```yaml
-# infrastructure/kubernetes/base/istio/ingress-gateway.yaml
+# infra/kubernetes/base/istio/ingress-gateway.yaml
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
@@ -1634,7 +1634,7 @@ spec:
 - [ ] **Step 4: Create ClusterSecretStore for ESO + Vault**
 
 ```yaml
-# infrastructure/kubernetes/base/external-secrets/cluster-secret-store.yaml
+# infra/kubernetes/base/external-secrets/cluster-secret-store.yaml
 apiVersion: external-secrets.io/v1beta1
 kind: ClusterSecretStore
 metadata:
@@ -1656,7 +1656,7 @@ spec:
 - [ ] **Step 5: Commit**
 
 ```bash
-git add infrastructure/kubernetes/base/network-policies/ infrastructure/kubernetes/base/istio/ infrastructure/kubernetes/base/external-secrets/
+git add infra/kubernetes/base/network-policies/ infra/kubernetes/base/istio/ infra/kubernetes/base/external-secrets/
 git commit -m "feat(infra): add security base - NetworkPolicies, Istio mTLS, Vault ESO store"
 ```
 
@@ -1665,14 +1665,14 @@ git commit -m "feat(infra): add security base - NetworkPolicies, Istio mTLS, Vau
 ### Task 10: Monitoring (Prometheus ServiceMonitors + Grafana dashboards + Velero schedule)
 
 **Files:**
-- Create: `infrastructure/kubernetes/base/monitoring/prometheus-servicemonitors.yaml`
-- Create: `infrastructure/kubernetes/base/monitoring/grafana-dashboards.yaml`
-- Create: `infrastructure/kubernetes/base/velero/schedule.yaml`
+- Create: `infra/kubernetes/base/monitoring/prometheus-servicemonitors.yaml`
+- Create: `infra/kubernetes/base/monitoring/grafana-dashboards.yaml`
+- Create: `infra/kubernetes/base/velero/schedule.yaml`
 
 - [ ] **Step 1: Create ServiceMonitors for all microservices**
 
 ```yaml
-# infrastructure/kubernetes/base/monitoring/prometheus-servicemonitors.yaml
+# infra/kubernetes/base/monitoring/prometheus-servicemonitors.yaml
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
@@ -1721,7 +1721,7 @@ spec:
 - [ ] **Step 2: Create Velero schedule**
 
 ```yaml
-# infrastructure/kubernetes/base/velero/schedule.yaml
+# infra/kubernetes/base/velero/schedule.yaml
 apiVersion: velero.io/v1
 kind: Schedule
 metadata:
@@ -1759,6 +1759,6 @@ spec:
 - [ ] **Step 3: Commit**
 
 ```bash
-git add infrastructure/kubernetes/base/monitoring/ infrastructure/kubernetes/base/velero/
+git add infra/kubernetes/base/monitoring/ infra/kubernetes/base/velero/
 git commit -m "feat(infra): add Prometheus ServiceMonitors, Grafana dashboards, Velero schedule"
 ```

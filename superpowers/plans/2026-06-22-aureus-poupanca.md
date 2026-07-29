@@ -26,13 +26,13 @@
 ### Task 1: Module Scaffold
 
 **Files:**
-- Create: `backend/aurix-poupanca/pom.xml`
-- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/AurixPoupancaApplication.java`
-- Create: `backend/aurix-poupanca/src/main/resources/application.yml`
-- Modify: `backend/pom.xml` (add module)
+- Create: `apps/backend/aurix-poupanca/pom.xml`
+- Create: `apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/AurixPoupancaApplication.java`
+- Create: `apps/backend/aurix-poupanca/src/main/resources/application.yml`
+- Modify: `apps/backend/pom.xml` (add module)
 
 **Interfaces:**
-- Consumes: parent POM at `backend/pom.xml`
+- Consumes: parent POM at `apps/backend/pom.xml`
 - Produces: compilable Maven module with empty Spring Boot app
 
 - [ ] **Step 1: Create pom.xml**
@@ -140,7 +140,7 @@
 
 - [ ] **Step 2: Create AurixPoupancaApplication.java**
 
-`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/AurixPoupancaApplication.java`
+`apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/AurixPoupancaApplication.java`
 
 ```java
 package com.aurix.platform.poupanca;
@@ -159,7 +159,7 @@ public class AurixPoupancaApplication {
 
 - [ ] **Step 3: Create application.yml**
 
-`backend/aurix-poupanca/src/main/resources/application.yml`
+`apps/backend/aurix-poupanca/src/main/resources/application.yml`
 
 ```yaml
 server:
@@ -284,7 +284,7 @@ logging:
 
 - [ ] **Step 4: Add module to parent pom.xml**
 
-In `backend/pom.xml`, add `<module>aurix-poupanca</module>` to the `<modules>` list (after `aurix-pix`).
+In `apps/backend/pom.xml`, add `<module>aurix-poupanca</module>` to the `<modules>` list (after `aurix-pix`).
 
 - [ ] **Step 5: Verify scaffold compiles**
 
@@ -294,7 +294,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 6: Commit**
 
 ```
-git add backend/aurix-poupanca/pom.xml backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/AurixPoupancaApplication.java backend/aurix-poupanca/src/main/resources/application.yml backend/pom.xml
+git add apps/backend/aurix-poupanca/pom.xml apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/AurixPoupancaApplication.java apps/backend/aurix-poupanca/src/main/resources/application.yml apps/backend/pom.xml
 git commit -m "feat(poupanca): scaffold module with pom, app, config"
 ```
 
@@ -303,26 +303,26 @@ git commit -m "feat(poupanca): scaffold module with pom, app, config"
 ### Task 2: Domain Layer — Entities, Repositories, DTOs, Events
 
 **Files:**
-- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/entity/ContaPoupanca.java`
-- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/entity/MovimentacaoPoupanca.java`
-- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/repository/ContaPoupancaRepository.java`
-- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/repository/MovimentacaoPoupancaRepository.java`
-- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/dto/CriarContaRequest.java`
-- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/dto/DepositoRequest.java`
-- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/dto/SaqueRequest.java`
-- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/dto/ContaPoupancaResponse.java`
-- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/dto/ExtratoResponse.java`
-- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/event/ContaPoupancaEvent.java`
-- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/event/MovimentacaoEvent.java`
-- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/event/RendimentoEvent.java`
-- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/package-info.java` (x4 dirs)
+- Create: `apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/entity/ContaPoupanca.java`
+- Create: `apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/entity/MovimentacaoPoupanca.java`
+- Create: `apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/repository/ContaPoupancaRepository.java`
+- Create: `apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/repository/MovimentacaoPoupancaRepository.java`
+- Create: `apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/dto/CriarContaRequest.java`
+- Create: `apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/dto/DepositoRequest.java`
+- Create: `apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/dto/SaqueRequest.java`
+- Create: `apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/dto/ContaPoupancaResponse.java`
+- Create: `apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/dto/ExtratoResponse.java`
+- Create: `apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/event/ContaPoupancaEvent.java`
+- Create: `apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/event/MovimentacaoEvent.java`
+- Create: `apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/event/RendimentoEvent.java`
+- Create: `apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/package-info.java` (x4 dirs)
 
 **Interfaces:**
 - Produces: `ContaPoupanca` entity, `MovimentacaoPoupanca` entity, repositories with finder methods, DTOs, event records
 
 - [ ] **Step 1: Create ContaPoupanca entity**
 
-`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/entity/ContaPoupanca.java`
+`apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/entity/ContaPoupanca.java`
 
 ```java
 package com.aurix.platform.poupanca.entity;
@@ -434,7 +434,7 @@ public class ContaPoupanca {
 
 - [ ] **Step 2: Create MovimentacaoPoupanca entity**
 
-`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/entity/MovimentacaoPoupanca.java`
+`apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/entity/MovimentacaoPoupanca.java`
 
 ```java
 package com.aurix.platform.poupanca.entity;
@@ -528,7 +528,7 @@ public class MovimentacaoPoupanca {
 
 - [ ] **Step 3: Create repositories**
 
-`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/repository/ContaPoupancaRepository.java`
+`apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/repository/ContaPoupancaRepository.java`
 
 ```java
 package com.aurix.platform.poupanca.repository;
@@ -551,7 +551,7 @@ public interface ContaPoupancaRepository extends JpaRepository<ContaPoupanca, Lo
 }
 ```
 
-`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/repository/MovimentacaoPoupancaRepository.java`
+`apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/repository/MovimentacaoPoupancaRepository.java`
 
 ```java
 package com.aurix.platform.poupanca.repository;
@@ -574,7 +574,7 @@ public interface MovimentacaoPoupancaRepository extends JpaRepository<Movimentac
 
 - [ ] **Step 4: Create DTOs**
 
-`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/dto/CriarContaRequest.java`
+`apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/dto/CriarContaRequest.java`
 
 ```java
 package com.aurix.platform.poupanca.dto;
@@ -600,7 +600,7 @@ public class CriarContaRequest {
 }
 ```
 
-`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/dto/DepositoRequest.java`
+`apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/dto/DepositoRequest.java`
 
 ```java
 package com.aurix.platform.poupanca.dto;
@@ -625,7 +625,7 @@ public class DepositoRequest {
 }
 ```
 
-`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/dto/SaqueRequest.java`
+`apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/dto/SaqueRequest.java`
 
 ```java
 package com.aurix.platform.poupanca.dto;
@@ -650,7 +650,7 @@ public class SaqueRequest {
 }
 ```
 
-`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/dto/ContaPoupancaResponse.java`
+`apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/dto/ContaPoupancaResponse.java`
 
 ```java
 package com.aurix.platform.poupanca.dto;
@@ -695,7 +695,7 @@ public class ContaPoupancaResponse {
 }
 ```
 
-`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/dto/ExtratoResponse.java`
+`apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/dto/ExtratoResponse.java`
 
 ```java
 package com.aurix.platform.poupanca.dto;
@@ -749,7 +749,7 @@ public class ExtratoResponse {
 
 - [ ] **Step 5: Create event records**
 
-`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/event/ContaPoupancaEvent.java`
+`apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/event/ContaPoupancaEvent.java`
 
 ```java
 package com.aurix.platform.poupanca.event;
@@ -765,7 +765,7 @@ public record ContaPoupancaEvent(
 ) {}
 ```
 
-`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/event/MovimentacaoEvent.java`
+`apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/event/MovimentacaoEvent.java`
 
 ```java
 package com.aurix.platform.poupanca.event;
@@ -784,7 +784,7 @@ public record MovimentacaoEvent(
 ) {}
 ```
 
-`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/event/RendimentoEvent.java`
+`apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/event/RendimentoEvent.java`
 
 ```java
 package com.aurix.platform.poupanca.event;
@@ -804,7 +804,7 @@ public record RendimentoEvent(
 
 - [ ] **Step 6: Create package-info.java files for @NullMarked**
 
-`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/package-info.java`
+`apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/package-info.java`
 
 ```java
 @NullMarked
@@ -813,7 +813,7 @@ package com.aurix.platform.poupanca;
 import org.jspecify.annotations.NullMarked;
 ```
 
-`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/entity/package-info.java`
+`apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/entity/package-info.java`
 
 ```java
 @NullMarked
@@ -822,7 +822,7 @@ package com.aurix.platform.poupanca.entity;
 import org.jspecify.annotations.NullMarked;
 ```
 
-`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/repository/package-info.java`
+`apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/repository/package-info.java`
 
 ```java
 @NullMarked
@@ -831,7 +831,7 @@ package com.aurix.platform.poupanca.repository;
 import org.jspecify.annotations.NullMarked;
 ```
 
-`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/dto/package-info.java`
+`apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/dto/package-info.java`
 
 ```java
 @NullMarked
@@ -840,7 +840,7 @@ package com.aurix.platform.poupanca.dto;
 import org.jspecify.annotations.NullMarked;
 ```
 
-`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/event/package-info.java`
+`apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/event/package-info.java`
 
 ```java
 @NullMarked
@@ -857,11 +857,11 @@ Expected: BUILD SUCCESS
 - [ ] **Step 8: Commit**
 
 ```
-git add backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/entity/
-git add backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/repository/
-git add backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/dto/
-git add backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/event/
-git add backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/package-info.java
+git add apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/entity/
+git add apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/repository/
+git add apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/dto/
+git add apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/event/
+git add apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/package-info.java
 git commit -m "feat(poupanca): add domain layer - entities, repos, DTOs, events"
 ```
 
@@ -870,12 +870,12 @@ git commit -m "feat(poupanca): add domain layer - entities, repos, DTOs, events"
 ### Task 3: HTTP Clients with @HttpExchange + Config
 
 **Files:**
-- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/client/ContaCorrenteClient.java`
-- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/client/TaxClient.java`
-- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/client/BacenClient.java`
-- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/client/package-info.java`
-- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/config/PoupancaHttpConfig.java`
-- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/config/package-info.java`
+- Create: `apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/client/ContaCorrenteClient.java`
+- Create: `apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/client/TaxClient.java`
+- Create: `apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/client/BacenClient.java`
+- Create: `apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/client/package-info.java`
+- Create: `apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/config/PoupancaHttpConfig.java`
+- Create: `apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/config/package-info.java`
 
 **Interfaces:**
 - Produces: `@HttpExchange` interfaces for ContaCorrenteClient (debitar/creditar), TaxClient (calcularIOF), BacenClient (buscarTR)
@@ -884,7 +884,7 @@ git commit -m "feat(poupanca): add domain layer - entities, repos, DTOs, events"
 
 - [ ] **Step 1: Create ContaCorrenteClient**
 
-`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/client/ContaCorrenteClient.java`
+`apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/client/ContaCorrenteClient.java`
 
 ```java
 package com.aurix.platform.poupanca.client;
@@ -911,7 +911,7 @@ public interface ContaCorrenteClient {
 
 - [ ] **Step 2: Create TaxClient**
 
-`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/client/TaxClient.java`
+`apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/client/TaxClient.java`
 
 ```java
 package com.aurix.platform.poupanca.client;
@@ -935,7 +935,7 @@ public interface TaxClient {
 
 - [ ] **Step 3: Create BacenClient**
 
-`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/client/BacenClient.java`
+`apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/client/BacenClient.java`
 
 ```java
 package com.aurix.platform.poupanca.client;
@@ -955,7 +955,7 @@ public interface BacenClient {
 
 - [ ] **Step 4: Create client package-info**
 
-`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/client/package-info.java`
+`apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/client/package-info.java`
 
 ```java
 @NullMarked
@@ -966,7 +966,7 @@ import org.jspecify.annotations.NullMarked;
 
 - [ ] **Step 5: Create PoupancaHttpConfig**
 
-`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/config/PoupancaHttpConfig.java`
+`apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/config/PoupancaHttpConfig.java`
 
 ```java
 package com.aurix.platform.poupanca.config;
@@ -989,7 +989,7 @@ public class PoupancaHttpConfig {
 
 - [ ] **Step 6: Create config package-info**
 
-`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/config/package-info.java`
+`apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/config/package-info.java`
 
 ```java
 @NullMarked
@@ -1006,8 +1006,8 @@ Expected: BUILD SUCCESS
 - [ ] **Step 8: Commit**
 
 ```
-git add backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/client/
-git add backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/config/
+git add apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/client/
+git add apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/config/
 git commit -m "feat(poupanca): add @HttpExchange clients and resilient config"
 ```
 
@@ -1016,8 +1016,8 @@ git commit -m "feat(poupanca): add @HttpExchange clients and resilient config"
 ### Task 4: Kafka + Security Config
 
 **Files:**
-- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/config/PoupancaKafkaConfig.java`
-- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/config/PoupancaSecurityConfig.java`
+- Create: `apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/config/PoupancaKafkaConfig.java`
+- Create: `apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/config/PoupancaSecurityConfig.java`
 
 **Interfaces:**
 - Consumes: Event records from Task 2
@@ -1025,7 +1025,7 @@ git commit -m "feat(poupanca): add @HttpExchange clients and resilient config"
 
 - [ ] **Step 1: Create PoupancaKafkaConfig**
 
-`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/config/PoupancaKafkaConfig.java`
+`apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/config/PoupancaKafkaConfig.java`
 
 ```java
 package com.aurix.platform.poupanca.config;
@@ -1071,7 +1071,7 @@ public class PoupancaKafkaConfig {
 
 - [ ] **Step 2: Create PoupancaSecurityConfig**
 
-`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/config/PoupancaSecurityConfig.java`
+`apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/config/PoupancaSecurityConfig.java`
 
 ```java
 package com.aurix.platform.poupanca.config;
@@ -1117,7 +1117,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 4: Commit**
 
 ```
-git add backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/config/
+git add apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/config/
 git commit -m "feat(poupanca): add Kafka and security config"
 ```
 
@@ -1126,12 +1126,12 @@ git commit -m "feat(poupanca): add Kafka and security config"
 ### Task 5: ContaPoupancaService + Controller + Tests
 
 **Files:**
-- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/ContaPoupancaService.java`
-- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/package-info.java`
-- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/ContaPoupancaController.java`
-- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/package-info.java`
-- Create: `backend/aurix-poupanca/src/test/java/com/aurix/platform/poupanca/controller/ContaPoupancaControllerTest.java`
-- Create: `backend/aurix-poupanca/src/test/resources/application-test.yml`
+- Create: `apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/ContaPoupancaService.java`
+- Create: `apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/package-info.java`
+- Create: `apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/ContaPoupancaController.java`
+- Create: `apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/package-info.java`
+- Create: `apps/backend/aurix-poupanca/src/test/java/com/aurix/platform/poupanca/controller/ContaPoupancaControllerTest.java`
+- Create: `apps/backend/aurix-poupanca/src/test/resources/application-test.yml`
 
 **Interfaces:**
 - Consumes: `ContaPoupancaRepository`, `KafkaTemplate`
@@ -1140,7 +1140,7 @@ git commit -m "feat(poupanca): add Kafka and security config"
 
 - [ ] **Step 1: Create service package-info**
 
-`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/package-info.java`
+`apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/package-info.java`
 
 ```java
 @NullMarked
@@ -1151,7 +1151,7 @@ import org.jspecify.annotations.NullMarked;
 
 - [ ] **Step 2: Create controller package-info**
 
-`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/package-info.java`
+`apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/package-info.java`
 
 ```java
 @NullMarked
@@ -1162,7 +1162,7 @@ import org.jspecify.annotations.NullMarked;
 
 - [ ] **Step 3: Create ContaPoupancaService**
 
-`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/ContaPoupancaService.java`
+`apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/ContaPoupancaService.java`
 
 ```java
 package com.aurix.platform.poupanca.service;
@@ -1264,7 +1264,7 @@ public class ContaPoupancaService {
 
 - [ ] **Step 4: Create ContaPoupancaController**
 
-`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/ContaPoupancaController.java`
+`apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/ContaPoupancaController.java`
 
 ```java
 package com.aurix.platform.poupanca.controller;
@@ -1334,7 +1334,7 @@ public class ContaPoupancaController {
 
 - [ ] **Step 5: Create application-test.yml**
 
-`backend/aurix-poupanca/src/test/resources/application-test.yml`
+`apps/backend/aurix-poupanca/src/test/resources/application-test.yml`
 
 ```yaml
 spring:
@@ -1367,7 +1367,7 @@ spring:
 
 - [ ] **Step 6: Create ContaPoupancaControllerTest**
 
-`backend/aurix-poupanca/src/test/java/com/aurix/platform/poupanca/controller/ContaPoupancaControllerTest.java`
+`apps/backend/aurix-poupanca/src/test/java/com/aurix/platform/poupanca/controller/ContaPoupancaControllerTest.java`
 
 ```java
 package com.aurix.platform.poupanca.controller;
@@ -1449,9 +1449,9 @@ Expected: BUILD SUCCESS (tests pass)
 - [ ] **Step 8: Commit**
 
 ```
-git add backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/
-git add backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/
-git add backend/aurix-poupanca/src/test/
+git add apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/
+git add apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/
+git add apps/backend/aurix-poupanca/src/test/
 git commit -m "feat(poupanca): add ContaPoupancaService, controller, and tests"
 ```
 
@@ -1460,8 +1460,8 @@ git commit -m "feat(poupanca): add ContaPoupancaService, controller, and tests"
 ### Task 6: MovimentacaoService + Controller + Tests
 
 **Files:**
-- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/MovimentacaoService.java`
-- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/MovimentacaoController.java`
+- Create: `apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/MovimentacaoService.java`
+- Create: `apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/MovimentacaoController.java`
 
 **Interfaces:**
 - Consumes: `ContaPoupancaRepository`, `MovimentacaoPoupancaRepository`, `ContaCorrenteClient`, `TaxClient`, `KafkaTemplate`
@@ -1470,7 +1470,7 @@ git commit -m "feat(poupanca): add ContaPoupancaService, controller, and tests"
 
 - [ ] **Step 1: Create MovimentacaoService**
 
-`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/MovimentacaoService.java`
+`apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/MovimentacaoService.java`
 
 ```java
 package com.aurix.platform.poupanca.service;
@@ -1643,7 +1643,7 @@ public class MovimentacaoService {
 
 - [ ] **Step 2: Create MovimentacaoController**
 
-`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/MovimentacaoController.java`
+`apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/MovimentacaoController.java`
 
 ```java
 package com.aurix.platform.poupanca.controller;
@@ -1718,8 +1718,8 @@ Expected: BUILD SUCCESS
 - [ ] **Step 4: Commit**
 
 ```
-git add backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/MovimentacaoService.java
-git add backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/MovimentacaoController.java
+git add apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/MovimentacaoService.java
+git add apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/MovimentacaoController.java
 git commit -m "feat(poupanca): add MovimentacaoService and controller"
 ```
 
@@ -1728,8 +1728,8 @@ git commit -m "feat(poupanca): add MovimentacaoService and controller"
 ### Task 7: AniversarioService + Controller + Tests
 
 **Files:**
-- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/AniversarioService.java`
-- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/AniversarioController.java`
+- Create: `apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/AniversarioService.java`
+- Create: `apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/AniversarioController.java`
 
 **Interfaces:**
 - Consumes: `ContaPoupancaRepository`, `MovimentacaoPoupancaRepository`, `BacenClient`, `KafkaTemplate`
@@ -1738,7 +1738,7 @@ git commit -m "feat(poupanca): add MovimentacaoService and controller"
 
 - [ ] **Step 1: Create AniversarioService**
 
-`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/AniversarioService.java`
+`apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/AniversarioService.java`
 
 ```java
 package com.aurix.platform.poupanca.service;
@@ -1837,7 +1837,7 @@ public class AniversarioService {
 
 - [ ] **Step 2: Create AniversarioController**
 
-`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/AniversarioController.java`
+`apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/AniversarioController.java`
 
 ```java
 package com.aurix.platform.poupanca.controller;
@@ -1888,8 +1888,8 @@ Expected: BUILD SUCCESS
 - [ ] **Step 4: Commit**
 
 ```
-git add backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/AniversarioService.java
-git add backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/AniversarioController.java
+git add apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/AniversarioService.java
+git add apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/AniversarioController.java
 git commit -m "feat(poupanca): add AniversarioService and controller"
 ```
 
@@ -1898,9 +1898,9 @@ git commit -m "feat(poupanca): add AniversarioService and controller"
 ### Task 8: ExtratoPdfService + Controller + Gateway Route
 
 **Files:**
-- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/ExtratoPdfService.java`
-- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/ExtratoController.java`
-- Modify: `backend/aurix-gateway/src/main/resources/application.yml` (route)
+- Create: `apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/ExtratoPdfService.java`
+- Create: `apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/ExtratoController.java`
+- Modify: `apps/backend/aurix-gateway/src/main/resources/application.yml` (route)
 
 **Interfaces:**
 - Consumes: `MovimentacaoService`, Redis cache
@@ -1908,7 +1908,7 @@ git commit -m "feat(poupanca): add AniversarioService and controller"
 
 - [ ] **Step 1: Create ExtratoPdfService**
 
-`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/ExtratoPdfService.java`
+`apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/ExtratoPdfService.java`
 
 ```java
 package com.aurix.platform.poupanca.service;
@@ -1966,7 +1966,7 @@ public class ExtratoPdfService {
 
 - [ ] **Step 2: Create ExtratoController**
 
-`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/ExtratoController.java`
+`apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/ExtratoController.java`
 
 ```java
 package com.aurix.platform.poupanca.controller;
@@ -2011,7 +2011,7 @@ public class ExtratoController {
 
 - [ ] **Step 3: Add gateway route**
 
-In `backend/aurix-gateway/src/main/resources/application.yml`, add a route for poupanca:
+In `apps/backend/aurix-gateway/src/main/resources/application.yml`, add a route for poupanca:
 
 ```yaml
       - id: aurix-poupanca
@@ -2030,9 +2030,9 @@ Expected: BUILD SUCCESS
 - [ ] **Step 5: Commit**
 
 ```
-git add backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/ExtratoPdfService.java
-git add backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/ExtratoController.java
-git add backend/aurix-gateway/src/main/resources/application.yml
+git add apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/ExtratoPdfService.java
+git add apps/backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/ExtratoController.java
+git add apps/backend/aurix-gateway/src/main/resources/application.yml
 git commit -m "feat(poupanca): add ExtratoPdfService, controller, and gateway route"
 ```
 

@@ -5,9 +5,9 @@ Este projeto contem os testes end-to-end para validar a plataforma AURIX rodando
 ## Estrutura
 
 - `tests/e2e/config.py` - Configuracao de URLs e timeout dos testes.
-- `tests/e2e/test_health_endpoints.py` - Testes que validam os endpoints de health de todos os servicos expostos no `infrastructure/docker-compose.yml`.
+- `tests/e2e/test_health_endpoints.py` - Testes que validam os endpoints de health de todos os servicos expostos no `infra/docker-compose.yml`.
 - `tests/e2e/requirements.txt` - Dependencias Python para execucao dos testes.
-- `infrastructure/scripts/run-e2e-tests.bat` e `run-e2e-tests.sh` - Scripts para subir a infra com Docker Compose, executar os testes E2E e derrubar os containers.
+- `infra/scripts/run-e2e-tests.bat` e `run-e2e-tests.sh` - Scripts para subir a infra com Docker Compose, executar os testes E2E e derrubar os containers.
 
 ## Pre-requisitos
 
@@ -25,7 +25,7 @@ run-e2e-tests.bat
 
 Linux/macOS:
 ```bash
-cd infrastructure/scripts
+cd infra/scripts
 ./run-e2e-tests.sh
 ```
 

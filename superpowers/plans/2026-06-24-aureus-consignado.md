@@ -11,7 +11,7 @@
 
 - [ ] **Criar diretórios**
   ```
-  backend/aurix-consignado/
+  apps/backend/aurix-consignado/
   ├── pom.xml
   ├── src/main/java/com/aurix/platform/consignado/
   │   ├── AurixConsignadoApplication.java
@@ -182,11 +182,11 @@
 
 ### 1.12 Parent POM
 
-- [ ] **`backend/pom.xml`** — adicionar `<module>aurix-consignado</module>` na lista de modules (ordenado alfabeticamente, após `aurix-compliance`).
+- [ ] **`apps/backend/pom.xml`** — adicionar `<module>aurix-consignado</module>` na lista de modules (ordenado alfabeticamente, após `aurix-compliance`).
 
 ### 1.13 OpenAPI Spec
 
-- [ ] **`aurix-api-specs/aurix-core.yaml`** — adicionar tag `consignado`, paths do consignado ($ref para `aurix-consignado.yaml` futuro) e schemas correspondentes.
+- [ ] **`specs/aurix-core.yaml`** — adicionar tag `consignado`, paths do consignado ($ref para `aurix-consignado.yaml` futuro) e schemas correspondentes.
 
 ### 1.14 Testes
 

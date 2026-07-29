@@ -10,7 +10,7 @@
 
 ## Global Constraints
 
-- All code in `backend/` directory
+- All code in `apps/backend/` directory
 - Follow delombok pattern: manual getters/setters with `@java.lang.SuppressWarnings("all")`, `canEqual()`, PRIME=59
 - No Lombok annotations anywhere
 - Tests use `@SpringBootTest(webEnvironment = RANDOM_PORT)` + RestTemplate + `@MockitoBean`
@@ -22,10 +22,10 @@
 ### Task 1: ProdutoCredito + Cliente — add LIMITE_ROTATIVO and PJ financial fields
 
 **Files:**
-- Modify: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/entity/Cliente.java` (add PJ financial fields)
-- Modify: `backend/aurix-credit/src/main/java/com/aurix/platform/credit/entity/ProdutoCredito.java` (add LIMITE_ROTATIVO to TipoCredito)
-- Create/test: `backend/aurix-credit/src/test/java/com/aurix/platform/credit/entity/ProdutoCreditoTest.java`
-- Create/test: `backend/aurix-shared/src/test/java/com/aurix/platform/shared/entity/ClientePJFieldsTest.java`
+- Modify: `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/entity/Cliente.java` (add PJ financial fields)
+- Modify: `apps/backend/aurix-credit/src/main/java/com/aurix/platform/credit/entity/ProdutoCredito.java` (add LIMITE_ROTATIVO to TipoCredito)
+- Create/test: `apps/backend/aurix-credit/src/test/java/com/aurix/platform/credit/entity/ProdutoCreditoTest.java`
+- Create/test: `apps/backend/aurix-shared/src/test/java/com/aurix/platform/shared/entity/ClientePJFieldsTest.java`
 
 - [ ] **Step 1: Add LIMITE_ROTATIVO to ProdutoCredito.TipoCredito**
 
@@ -97,10 +97,10 @@ git add -A && git commit -m "feat(credit): add LIMITE_ROTATIVO + PJ financial fi
 ### Task 2: CNPJ bureau scoring + PJ decision rules
 
 **Files:**
-- Modify: `backend/aurix-credit/src/main/java/com/aurix/platform/credit/service/CreditBureauService.java` (add `consultarScoreCNPJ`)
-- Modify: `backend/aurix-credit/src/main/java/com/aurix/platform/credit/service/CreditBureauStub.java` (implement stub)
-- Modify: `backend/aurix-credit/src/main/java/com/aurix/platform/credit/service/DecisaoCreditoService.java` (PJ decision rules)
-- Create/test: `backend/aurix-credit/src/test/java/com/aurix/platform/credit/service/DecisaoCreditoPJTest.java`
+- Modify: `apps/backend/aurix-credit/src/main/java/com/aurix/platform/credit/service/CreditBureauService.java` (add `consultarScoreCNPJ`)
+- Modify: `apps/backend/aurix-credit/src/main/java/com/aurix/platform/credit/service/CreditBureauStub.java` (implement stub)
+- Modify: `apps/backend/aurix-credit/src/main/java/com/aurix/platform/credit/service/DecisaoCreditoService.java` (PJ decision rules)
+- Create/test: `apps/backend/aurix-credit/src/test/java/com/aurix/platform/credit/service/DecisaoCreditoPJTest.java`
 
 - [ ] **Step 1: Add consultarScoreCNPJ to CreditBureauService**
 
@@ -185,10 +185,10 @@ git add -A && git commit -m "feat(credit): add CNPJ bureau scoring + PJ decision
 ### Task 3: PJ eligibility rules in catalog module
 
 **Files:**
-- Modify: `backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/service/ElegibilidadeService.java` (add PJ field extractors)
-- Modify: `backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/entity/config/ConfigCredito.java` (add PJ fields)
-- Modify: `backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/service/ConfigService.java` (handle new fields)
-- Create/test: `backend/aurix-catalog/src/test/java/com/aurix/platform/catalog/service/ElegibilidadePJTest.java`
+- Modify: `apps/backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/service/ElegibilidadeService.java` (add PJ field extractors)
+- Modify: `apps/backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/entity/config/ConfigCredito.java` (add PJ fields)
+- Modify: `apps/backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/service/ConfigService.java` (handle new fields)
+- Create/test: `apps/backend/aurix-catalog/src/test/java/com/aurix/platform/catalog/service/ElegibilidadePJTest.java`
 
 - [ ] **Step 1: Add PJ field extractors to ElegibilidadeService**
 
@@ -235,11 +235,11 @@ git add -A && git commit -m "feat(catalog): add PJ eligibility rules + ConfigCre
 ### Task 4: Core API — accept PJ financial data on cliente creation
 
 **Files:**
-- Modify: `backend/aurix-core/src/main/java/com/aurix/platform/core/service/ClienteService.java` (accept new fields)
-- Modify: `backend/aurix-core/src/main/java/com/aurix/platform/core/controller/ClienteController.java` (accept new fields in request body)
-- Modify: `backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/client/CoreApiClient.java` (send new fields)
-- Modify: `backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/OnboardingPJService.java` (populate from onboarding data)
-- Create/test: `backend/aurix-core/src/test/java/com/aurix/platform/core/integration/ClientePJFinancialFieldsTest.java`
+- Modify: `apps/backend/aurix-core/src/main/java/com/aurix/platform/core/service/ClienteService.java` (accept new fields)
+- Modify: `apps/backend/aurix-core/src/main/java/com/aurix/platform/core/controller/ClienteController.java` (accept new fields in request body)
+- Modify: `apps/backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/client/CoreApiClient.java` (send new fields)
+- Modify: `apps/backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/OnboardingPJService.java` (populate from onboarding data)
+- Create/test: `apps/backend/aurix-core/src/test/java/com/aurix/platform/core/integration/ClientePJFinancialFieldsTest.java`
 
 - [ ] **Step 1: Update ClienteController to accept new fields**
 
@@ -301,13 +301,13 @@ git add -A && git commit -m "feat(core): accept PJ financial fields on cliente c
 ### Task 5: Limite Rotativo endpoint
 
 **Files:**
-- Modify: `backend/aurix-credit/src/main/java/com/aurix/platform/credit/controller/SolicitacaoCreditoController.java`
-- Modify: `backend/aurix-credit/src/main/java/com/aurix/platform/credit/service/SolicitacaoCreditoService.java`
-- Create/test: `backend/aurix-credit/src/test/java/com/aurix/platform/credit/service/LimiteRotativoServiceTest.java`
+- Modify: `apps/backend/aurix-credit/src/main/java/com/aurix/platform/credit/controller/SolicitacaoCreditoController.java`
+- Modify: `apps/backend/aurix-credit/src/main/java/com/aurix/platform/credit/service/SolicitacaoCreditoService.java`
+- Create/test: `apps/backend/aurix-credit/src/test/java/com/aurix/platform/credit/service/LimiteRotativoServiceTest.java`
 
 - [ ] **Step 1: Create ContaServiceClient in aurix-credit**
 
-Create `backend/aurix-credit/src/main/java/com/aurix/platform/credit/client/ContaServiceClient.java`:
+Create `apps/backend/aurix-credit/src/main/java/com/aurix/platform/credit/client/ContaServiceClient.java`:
 
 ```java
 package com.aurix.platform.credit.client;
@@ -404,7 +404,7 @@ git add -A && git commit -m "feat(credit): add liberar-limite-rotativo endpoint"
 ### Task 6: Integration tests
 
 **Files:**
-- Create: `backend/aurix-credit/src/test/java/com/aurix/platform/credit/integration/CreditoPJFlowIntegrationTest.java`
+- Create: `apps/backend/aurix-credit/src/test/java/com/aurix/platform/credit/integration/CreditoPJFlowIntegrationTest.java`
 
 - [ ] **Step 1: Create CreditoPJFlowIntegrationTest**
 

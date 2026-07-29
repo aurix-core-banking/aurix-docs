@@ -46,7 +46,7 @@ Resumo: **self-hosted = um banco/SGBD; multi-tenant SaaS = banco totalmente sepa
 
 ## Banco de dados
 
-- **Self-hosted**: coluna `tenant_id` (VARCHAR(64), nullable) nas tabelas que usam BaseEntity. Um unico banco/SGBD; filtro por tenant_id nas queries. Script de migracao: `infrastructure/data-stack/init-scripts/02-add-tenant-id.sql`. Com `spring.jpa.hibernate.ddl-auto: update`, o Hibernate adiciona a coluna ao subir a aplicacao.
+- **Self-hosted**: coluna `tenant_id` (VARCHAR(64), nullable) nas tabelas que usam BaseEntity. Um unico banco/SGBD; filtro por tenant_id nas queries. Script de migracao: `infra/data-stack/init-scripts/02-add-tenant-id.sql`. Com `spring.jpa.hibernate.ddl-auto: update`, o Hibernate adiciona a coluna ao subir a aplicacao.
 - **Multi-tenant (SaaS)**: conforme politica acima, cada tenant possui banco proprio. A aplicacao (ou gateway de dados) roteia a conexao JDBC/contexto por tenant; nao ha compartilhamento de tabelas entre instituicoes. Implementacao no provisioning (roadmap 8.3).
 
 ## Uso

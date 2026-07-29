@@ -25,18 +25,18 @@
 ### Task 1: Module Scaffolding
 
 **Files:**
-- Create: `backend/aurix-catalog/pom.xml`
-- Create: `backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/AurixCatalogApplication.java`
-- Create: `backend/aurix-catalog/src/main/resources/application.yml`
-- Create: `backend/aurix-catalog/src/main/resources/application-test.yml`
-- Create: `backend/aurix-catalog/src/test/java/com/aurix/platform/catalog/config/TestSecurityConfig.java`
-- Modify: `backend/pom.xml` (add module + dependency management entry)
+- Create: `apps/backend/aurix-catalog/pom.xml`
+- Create: `apps/backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/AurixCatalogApplication.java`
+- Create: `apps/backend/aurix-catalog/src/main/resources/application.yml`
+- Create: `apps/backend/aurix-catalog/src/main/resources/application-test.yml`
+- Create: `apps/backend/aurix-catalog/src/test/java/com/aurix/platform/catalog/config/TestSecurityConfig.java`
+- Modify: `apps/backend/pom.xml` (add module + dependency management entry)
 
 **Interfaces:**
 - Consumes: `aurix-shared` (BaseEntity, shared utilities)
 - Produces: compilable module skeleton
 
-- [ ] **Step 1: Create `backend/aurix-catalog/pom.xml`**
+- [ ] **Step 1: Create `apps/backend/aurix-catalog/pom.xml`**
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -240,7 +240,7 @@ public class TestSecurityConfig {
 }
 ```
 
-- [ ] **Step 6: Modify `backend/pom.xml`**
+- [ ] **Step 6: Modify `apps/backend/pom.xml`**
 
 Add `<module>aurix-catalog</module>` to the `<modules>` list (insert alphabetically between `aurix-baas` and `aurix-billing`) and add dependency management entry:
 
@@ -255,13 +255,13 @@ Add `<module>aurix-catalog</module>` to the `<modules>` list (insert alphabetica
 
 - [ ] **Step 7: Verify compilation**
 
-Run: `mvn compile -pl aurix-catalog -am` from `backend/`
+Run: `mvn compile -pl aurix-catalog -am` from `apps/backend/`
 Expected: BUILD SUCCESS
 
 - [ ] **Step 8: Commit**
 
 ```bash
-git add backend/pom.xml backend/aurix-catalog/
+git add apps/backend/pom.xml apps/backend/aurix-catalog/
 git commit -m "feat(catalog): add aurix-catalog module scaffolding"
 ```
 
@@ -270,15 +270,15 @@ git commit -m "feat(catalog): add aurix-catalog module scaffolding"
 ### Task 2: Enums + DTO Base + Catalog Layer Entities (Segmento → CategoriaProduto)
 
 **Files:**
-- Create: `backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/enums/StatusCatalogo.java`
-- Create: `backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/enums/StatusProduto.java`
-- Create: `backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/enums/StatusOferta.java`
-- Create: `backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/enums/StatusPolitica.java`
-- Create: `backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/enums/StatusCampanha.java`
-- Create: `backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/enums/TipoProduto.java`
-- Create: `backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/enums/SistemaExterno.java`
-- Create: `backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/enums/TipoVinculoElegibilidade.java`
-- Create: `backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/enums/TipoRenda.java`
+- Create: `apps/backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/enums/StatusCatalogo.java`
+- Create: `apps/backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/enums/StatusProduto.java`
+- Create: `apps/backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/enums/StatusOferta.java`
+- Create: `apps/backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/enums/StatusPolitica.java`
+- Create: `apps/backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/enums/StatusCampanha.java`
+- Create: `apps/backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/enums/TipoProduto.java`
+- Create: `apps/backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/enums/SistemaExterno.java`
+- Create: `apps/backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/enums/TipoVinculoElegibilidade.java`
+- Create: `apps/backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/enums/TipoRenda.java`
 - Create: 5 entity files for catalog layer (Segmento, LinhaNegocio, FamiliaProduto, Categoria, CategoriaProduto)
 - Create: 5 DTO files mirroring entities
 - Create: 5 repository files
@@ -970,19 +970,19 @@ public class CatalogoController {
 
 - [ ] **Step 9: Compile verification**
 
-Run: `mvn compile -pl aurix-catalog -am` from `backend/`
+Run: `mvn compile -pl aurix-catalog -am` from `apps/backend/`
 Expected: BUILD SUCCESS
 
 - [ ] **Step 10: Commit**
 
 ```bash
-git add backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/enums/
-git add backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/entity/
-git add backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/dto/
-git add backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/repository/
-git add backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/exception/
-git add backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/service/CatalogoService.java
-git add backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/controller/CatalogoController.java
+git add apps/backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/enums/
+git add apps/backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/entity/
+git add apps/backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/dto/
+git add apps/backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/repository/
+git add apps/backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/exception/
+git add apps/backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/service/CatalogoService.java
+git add apps/backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/controller/CatalogoController.java
 git commit -m "feat(catalog): add enums + taxonomy layer (Segmento→CategoriaProduto)"
 ```
 
@@ -1255,14 +1255,14 @@ Endpoints:
 - [ ] **Step 8: Compile and commit**
 
 ```bash
-git add backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/entity/Produto.java
-git add backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/entity/ProdutoIntegracao.java
-git add backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/entity/Modalidade.java
-git add backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/entity/VersaoModalidade.java
-git add backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/dto/
-git add backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/repository/
-git add backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/service/ProdutoService.java
-git add backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/controller/ProdutoController.java
+git add apps/backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/entity/Produto.java
+git add apps/backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/entity/ProdutoIntegracao.java
+git add apps/backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/entity/Modalidade.java
+git add apps/backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/entity/VersaoModalidade.java
+git add apps/backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/dto/
+git add apps/backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/repository/
+git add apps/backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/service/ProdutoService.java
+git add apps/backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/controller/ProdutoController.java
 git commit -m "feat(catalog): add Produto + Modalidade layer"
 ```
 
@@ -1405,10 +1405,10 @@ public ResponseEntity<Object> buscarConfigModalidade(@PathVariable Long id) {
 - [ ] **Step 9: Compile and commit**
 
 ```bash
-git add backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/entity/config/
-git add backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/dto/
-git add backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/repository/config/
-git add backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/service/ConfigService.java
+git add apps/backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/entity/config/
+git add apps/backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/dto/
+git add apps/backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/repository/config/
+git add apps/backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/service/ConfigService.java
 git commit -m "feat(catalog): add typed config entities (Credito, Cartao, Conta, Investimento, Seguro)"
 ```
 

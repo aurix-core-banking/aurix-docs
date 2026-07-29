@@ -41,7 +41,7 @@ O `aurix-controller` é o correto na porta 8090 (já declarado no `docker-compos
 | `aurix-catalog` | **8120** (após 8119/câmbio) |
 | `aurix-controller` | **8090** (mantido) |
 
-#### `infrastructure/traefik/dynamic.yml`
+#### `infra/traefik/dynamic.yml`
 
 ```yaml
 # Corrigir serviços ai e catalog
@@ -56,7 +56,7 @@ catalog:
       - url: "http://aurix-catalog:8120"  # era 8090
 ```
 
-#### `infrastructure/docker-compose.yml` — atualizar portas
+#### `infra/docker-compose.yml` — atualizar portas
 
 **aurix-ai:**
 ```yaml
@@ -80,21 +80,21 @@ aurix-catalog:
     test: ["CMD", "curl", "-f", "http://localhost:8120/api/catalog/health"]
 ```
 
-#### `backend/aurix-ai/src/main/resources/application.yml`
+#### `apps/backend/aurix-ai/src/main/resources/application.yml`
 
 ```yaml
 server:
   port: 8116
 ```
 
-#### `backend/aurix-catalog/src/main/resources/application.yml`
+#### `apps/backend/aurix-catalog/src/main/resources/application.yml`
 
 ```yaml
 server:
   port: 8120
 ```
 
-#### `aurix-tests/e2e/config.py`
+#### `tests/e2e/config.py`
 
 ```python
 SERVICES = {
@@ -110,7 +110,7 @@ SERVICES = {
 
 ### Problema
 
-Os seguintes módulos existem no filesystem e no Docker Compose mas **não constam no `backend/pom.xml`** como módulos Maven:
+Os seguintes módulos existem no filesystem e no Docker Compose mas **não constam no `apps/backend/pom.xml`** como módulos Maven:
 
 - `aurix-customer`
 - `aurix-kyc`
@@ -119,7 +119,7 @@ Os seguintes módulos existem no filesystem e no Docker Compose mas **não const
 
 Consequência: `mvn clean install` ignora esses módulos. CI não os compila nem testa.
 
-### Correção — `backend/pom.xml`
+### Correção — `apps/backend/pom.xml`
 
 Localizar a seção `<modules>` e adicionar os 4 módulos em ordem alfabética:
 
@@ -517,7 +517,7 @@ Seguir exatamente o padrão de `Cartoes.js` e `Investimentos.js`:
 
 ### Nova página: `Cambio.js`
 
-**Path:** `frontend/aurix-web/src/pages/Cambio.js`
+**Path:** `apps/frontend/aurix-web/src/pages/Cambio.js`
 
 **Seções da página:**
 1. **Cotação ao vivo** — Card com USD, EUR, GBP em tempo real (polling a cada 30s)
@@ -546,7 +546,7 @@ const mockCotacoes = [
 
 ### Nova página: `Seguros.js`
 
-**Path:** `frontend/aurix-web/src/pages/Seguros.js`
+**Path:** `apps/frontend/aurix-web/src/pages/Seguros.js`
 
 **Seções da página:**
 1. **Meus Seguros** — Cards com apólices ativas (nome, tipo, prêmio mensal, vencimento, status)
@@ -568,7 +568,7 @@ apiService.getSinistros(clienteId)             // GET /api/seguros/sinistros
 
 ### Nova página: `Consignado.js`
 
-**Path:** `frontend/aurix-web/src/pages/Consignado.js`
+**Path:** `apps/frontend/aurix-web/src/pages/Consignado.js`
 
 **Seções da página:**
 1. **Margem Consignável** — Card com margem disponível, margem utilizada, limite por lei (35% da renda)
@@ -620,7 +620,7 @@ import Consignado from './pages/Consignado';
 
 ### Problema
 
-`frontend/aurix-admin/src/constants/index.js` define:
+`apps/frontend/aurix-admin/src/constants/index.js` define:
 ```javascript
 export const TIPOS_CONTA = [
   { id: 'CORRENTE', name: 'Corrente' },
@@ -815,9 +815,9 @@ public class AiService {
 
 | Arquivo | Alterações |
 |---------|-----------|
-| `backend/pom.xml` | Adicionar 4 módulos: customer, kyc, fraud, notification |
-| `infrastructure/docker-compose.yml` | Corrigir porta aurix-ai para 8116, aurix-catalog para 8120 |
-| `infrastructure/traefik/dynamic.yml` | Corrigir URLs aurix-ai e aurix-catalog |
+| `apps/backend/pom.xml` | Adicionar 4 módulos: customer, kyc, fraud, notification |
+| `infra/docker-compose.yml` | Corrigir porta aurix-ai para 8116, aurix-catalog para 8120 |
+| `infra/traefik/dynamic.yml` | Corrigir URLs aurix-ai e aurix-catalog |
 | `aurix-shared/Topics.java` | Adicionar 8 novos tópicos de fraude + financial |
 | `aurix-shared/event/` | Adicionar 3 novos eventos tipados |
 | `aurix-pix` | Criar `PagamentoPixProducer.java` |
@@ -825,8 +825,8 @@ public class AiService {
 | `aurix-fraud` | Atualizar `FraudConsumer.java` com tópicos reais |
 | `aurix-financiamento` | Implementar entities, services e controllers |
 | `aurix-ai` | Criar `AiController.java` + `AiService.java` |
-| `frontend/aurix-web/src/pages/` | Criar `Cambio.js`, `Seguros.js`, `Consignado.js` + testes |
-| `frontend/aurix-admin/src/constants/index.js` | Alinhar `TIPOS_CONTA`, `TIPOS_TRANSACAO`, `STATUS_COMPLIANCE` |
+| `apps/frontend/aurix-web/src/pages/` | Criar `Cambio.js`, `Seguros.js`, `Consignado.js` + testes |
+| `apps/frontend/aurix-admin/src/constants/index.js` | Alinhar `TIPOS_CONTA`, `TIPOS_TRANSACAO`, `STATUS_COMPLIANCE` |
 
 ---
 

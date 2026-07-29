@@ -77,8 +77,8 @@ Documentação em formato de livro: o que cada área precisa saber, guias de exe
 | Changelog | [CHANGELOG.md](../CHANGELOG.md) |
 | Arquitetura | [arquitetura/](../02-technical/arquitetura/) |
 | Banco de dados | [evolucao-arquitetura-dados.md](../02-technical/arquitetura/evolucao-arquitetura-dados.md) |
-| Infraestrutura (14.1–14.7) | [infrastructure/index.md](../05-infrastructure/infrastructure/index.md) |
-| Operação (runbook, backup, DR) | [infrastructure/](../05-infrastructure/infrastructure/index.md) |
+| Infraestrutura (14.1–14.7) | [infra/index.md](../05-infra/infra/index.md) |
+| Operação (runbook, backup, DR) | [infra/](../05-infra/infra/index.md) |
 | Conformidade | [03-compliance/conformidade/README.md](03-compliance/conformidade/README.md) |
 | Portal desenvolvedor e APIs | [portal-desenvolvedor/](../03-development/portal-desenvolvedor/README.md) |
 | Kit implementação (go live, seeds, templates, suporte) | [01-guides-checklists/kit-implementacao/README.md](01-guides-checklists/kit-implementacao/README.md) |
@@ -91,7 +91,7 @@ Documentação em formato de livro: o que cada área precisa saber, guias de exe
 |------------|---------|
 | Subir a plataforma pela primeira vez | [02-lifecycle/ciclo-de-vida/setup.md](02-lifecycle/ciclo-de-vida/setup.md), [01-guides-checklists/checklists/plataforma-de-pe.md](01-guides-checklists/checklists/plataforma-de-pe.md) |
 | Preparar go live de um cliente | [01-guides-checklists/kit-implementacao/README.md](01-guides-checklists/kit-implementacao/README.md), [01-guides-checklists/checklists/go-live.md](01-guides-checklists/checklists/go-live.md), [04-audiences/por-audiencia/negocio.md](04-audiences/por-audiencia/negocio.md) |
-| Operar no dia a dia (deploy, alertas, incidente) | [02-lifecycle/ciclo-de-vida/run.md](02-lifecycle/ciclo-de-vida/run.md), [04-audiences/por-audiencia/sre-infra.md](04-audiences/por-audiencia/sre-infra.md), [Runbook](../05-infrastructure/infrastructure/aurix-cloud-runbook.md) |
+| Operar no dia a dia (deploy, alertas, incidente) | [02-lifecycle/ciclo-de-vida/run.md](02-lifecycle/ciclo-de-vida/run.md), [04-audiences/por-audiencia/sre-infra.md](04-audiences/por-audiencia/sre-infra.md), [Runbook](../05-infra/infra/aurix-cloud-runbook.md) |
 | Atualizar relatórios regulatórios | [01-guides-checklists/checklists/regulatorio.md](01-guides-checklists/checklists/regulatorio.md), [02-lifecycle/ciclo-de-vida/manutencao.md](02-lifecycle/ciclo-de-vida/manutencao.md) |
 | Desenvolver ou integrar via API | [04-audiences/por-audiencia/engenharia.md](04-audiences/por-audiencia/engenharia.md), [Portal desenvolvedor](../03-development/portal-desenvolvedor/README.md) |
 | Entender decisões e evolução | [04-audiences/por-audiencia/arquitetura.md](04-audiences/por-audiencia/arquitetura.md), [roadmap.md](../01-business/roadmap.md) |

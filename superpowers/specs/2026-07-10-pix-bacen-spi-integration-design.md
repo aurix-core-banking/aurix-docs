@@ -39,14 +39,14 @@ POST /api/pix/transferencias → PixTransferenciaController
 | `PixTransferenciaService` | `aurix-pix` | Inject `PixBacenClient`, call SPI for ALL transfers |
 | `SpiStrIntegrationService` | `aurix-bacen` | No code change — just enable via config |
 | `SpiStrApiClientImpl` | `aurix-bacen` | Skip mTLS guard when URL is localhost/mock |
-| `bacen-mock` | `infrastructure/bacen-mock/` (new) | WireMock container |
-| `docker-compose.yml` | `infrastructure/` | Add bacen-mock service |
+| `bacen-mock` | `infra/bacen-mock/` (new) | WireMock container |
+| `docker-compose.yml` | `infra/` | Add bacen-mock service |
 
 ---
 
 ## PixBacenClient
 
-**File:** `backend/aurix-pix/src/main/java/com/aurix/platform/pix/client/PixBacenClient.java`
+**File:** `apps/backend/aurix-pix/src/main/java/com/aurix/platform/pix/client/PixBacenClient.java`
 
 ```java
 @Component
@@ -141,7 +141,7 @@ private void estornarDebito(PixTransferencia pix, Long contaOrigemId) {
 
 ## SPI/STR — habilitar em dev
 
-**File:** `backend/aurix-bacen/src/main/resources/application-dev.yml` (new)
+**File:** `apps/backend/aurix-bacen/src/main/resources/application-dev.yml` (new)
 
 ```yaml
 aurix:
@@ -180,7 +180,7 @@ if (isMockUrl()) {
 
 ## BACEN Mock — WireMock container
 
-**Directory:** `infrastructure/bacen-mock/`
+**Directory:** `infra/bacen-mock/`
 
 ### Dockerfile
 ```dockerfile
@@ -246,7 +246,7 @@ bacen-mock:
 
 ## Environment Variables
 
-**infrastructure/.env.example** additions:
+**infra/.env.example** additions:
 ```env
 # BACEN / PIX Sandbox
 BACEN_SANDBOX=true                                    # true = mock local, false = sandbox real

@@ -34,7 +34,7 @@
 
 Each module follows this structure:
 ```
-backend/aurix-<name>/
+apps/backend/aurix-<name>/
   pom.xml
   Dockerfile
   src/main/java/com/aurix/platform/<name>/
@@ -55,20 +55,20 @@ backend/aurix-<name>/
 
 ### Modified files
 
-- `backend/pom.xml` — add 4 `<module>` entries
-- `infrastructure/docker-compose.yml` — add 4 services
-- `infrastructure/traefik/dynamic.yml` — add 4 routers + services
-- `aurix-tests/e2e/config.py` — add 4 health endpoints
+- `apps/backend/pom.xml` — add 4 `<module>` entries
+- `infra/docker-compose.yml` — add 4 services
+- `infra/traefik/dynamic.yml` — add 4 routers + services
+- `tests/e2e/config.py` — add 4 health endpoints
 
 ---
 
 ### Task 0: Scaffold — Project registration + infra config
 
 **Files:**
-- Modify: `backend/pom.xml` (add 4 module entries)
-- Modify: `infrastructure/docker-compose.yml` (add 4 services with ports, env, healthcheck, depends_on)
-- Modify: `infrastructure/traefik/dynamic.yml` (add 4 routers + services)
-- Modify: `aurix-tests/e2e/config.py` (add 4 health endpoints)
+- Modify: `apps/backend/pom.xml` (add 4 module entries)
+- Modify: `infra/docker-compose.yml` (add 4 services with ports, env, healthcheck, depends_on)
+- Modify: `infra/traefik/dynamic.yml` (add 4 routers + services)
+- Modify: `tests/e2e/config.py` (add 4 health endpoints)
 
 **Interfaces:**
 - Consumes: nothing
@@ -76,7 +76,7 @@ backend/aurix-<name>/
 
 - [ ] **Step 1: Add modules to parent POM**
 
-Open `backend/pom.xml`. Add these `<module>` entries in alphabetical order (before `</modules>`):
+Open `apps/backend/pom.xml`. Add these `<module>` entries in alphabetical order (before `</modules>`):
 ```xml
         <module>aurix-customer</module>
         <module>aurix-fraud</module>
@@ -86,7 +86,7 @@ Open `backend/pom.xml`. Add these `<module>` entries in alphabetical order (befo
 
 - [ ] **Step 2: Add Traefik routes**
 
-Open `infrastructure/traefik/dynamic.yml`. Under `http.routers:` add:
+Open `infra/traefik/dynamic.yml`. Under `http.routers:` add:
 ```yaml
     customer:
       rule: "PathPrefix(`/api/customer`)"
@@ -132,12 +132,12 @@ Under `http.services:` add:
 
 - [ ] **Step 3: Add docker-compose services**
 
-Open `infrastructure/docker-compose.yml`. Find the last `aurix-*` service (e.g., `aurix-cambio`). After its closing `networks:` line (or last key), insert 4 new service definitions:
+Open `infra/docker-compose.yml`. Find the last `aurix-*` service (e.g., `aurix-cambio`). After its closing `networks:` line (or last key), insert 4 new service definitions:
 
 ```yaml
   aurix-customer:
     build:
-      context: ../backend/aurix-customer
+      context: ../apps/backend/aurix-customer
       dockerfile: Dockerfile
     container_name: aurix-customer
     ports:
@@ -168,7 +168,7 @@ Open `infrastructure/docker-compose.yml`. Find the last `aurix-*` service (e.g.,
 
   aurix-kyc:
     build:
-      context: ../backend/aurix-kyc
+      context: ../apps/backend/aurix-kyc
       dockerfile: Dockerfile
     container_name: aurix-kyc
     ports:
@@ -199,7 +199,7 @@ Open `infrastructure/docker-compose.yml`. Find the last `aurix-*` service (e.g.,
 
   aurix-fraud:
     build:
-      context: ../backend/aurix-fraud
+      context: ../apps/backend/aurix-fraud
       dockerfile: Dockerfile
     container_name: aurix-fraud
     ports:
@@ -230,7 +230,7 @@ Open `infrastructure/docker-compose.yml`. Find the last `aurix-*` service (e.g.,
 
   aurix-notification:
     build:
-      context: ../backend/aurix-notification
+      context: ../apps/backend/aurix-notification
       dockerfile: Dockerfile
     container_name: aurix-notification
     ports:
@@ -262,7 +262,7 @@ Open `infrastructure/docker-compose.yml`. Find the last `aurix-*` service (e.g.,
 
 - [ ] **Step 4: Add E2E health endpoints**
 
-Open `aurix-tests/e2e/config.py`. Add inside `SERVICE_HEALTH_ENDPOINTS` dict (before closing `}`):
+Open `tests/e2e/config.py`. Add inside `SERVICE_HEALTH_ENDPOINTS` dict (before closing `}`):
 ```python
     "aurix-customer": "http://localhost:8123/api/customer/health",
     "aurix-kyc": "http://localhost:8124/api/kyc/health",
@@ -273,7 +273,7 @@ Open `aurix-tests/e2e/config.py`. Add inside `SERVICE_HEALTH_ENDPOINTS` dict (be
 - [ ] **Step 5: Commit**
 
 ```bash
-git add backend/pom.xml infrastructure/docker-compose.yml infrastructure/traefik/dynamic.yml aurix-tests/e2e/config.py
+git add apps/backend/pom.xml infra/docker-compose.yml infra/traefik/dynamic.yml tests/e2e/config.py
 git commit -m "feat: register Foundation modules (customer, kyc, fraud, notification) in infra"
 ```
 
@@ -282,20 +282,20 @@ git commit -m "feat: register Foundation modules (customer, kyc, fraud, notifica
 ### Task 1: aurix-customer — Scaffold + Entities + Repository
 
 **Files:**
-- Create: `backend/aurix-customer/pom.xml`
-- Create: `backend/aurix-customer/Dockerfile`
-- Create: `backend/aurix-customer/src/main/java/com/aurix/platform/customer/AurixCustomerApplication.java`
-- Create: `backend/aurix-customer/src/main/java/com/aurix/platform/customer/config/SecurityConfig.java`
-- Create: `backend/aurix-customer/src/main/java/com/aurix/platform/customer/controller/HealthController.java`
-- Create: `backend/aurix-customer/src/main/resources/application.yml`
-- Create: `backend/aurix-customer/src/main/java/com/aurix/platform/customer/entity/Cliente.java`
-- Create: `backend/aurix-customer/src/main/java/com/aurix/platform/customer/entity/ClientePF.java`
-- Create: `backend/aurix-customer/src/main/java/com/aurix/platform/customer/entity/ClientePJ.java`
-- Create: `backend/aurix-customer/src/main/java/com/aurix/platform/customer/entity/Endereco.java`
-- Create: `backend/aurix-customer/src/main/java/com/aurix/platform/customer/entity/Contato.java`
-- Create: `backend/aurix-customer/src/main/java/com/aurix/platform/customer/repository/ClienteRepository.java`
-- Create: `backend/aurix-customer/src/main/java/com/aurix/platform/customer/repository/EnderecoRepository.java`
-- Create: `backend/aurix-customer/src/main/java/com/aurix/platform/customer/repository/ContatoRepository.java`
+- Create: `apps/backend/aurix-customer/pom.xml`
+- Create: `apps/backend/aurix-customer/Dockerfile`
+- Create: `apps/backend/aurix-customer/src/main/java/com/aurix/platform/customer/AurixCustomerApplication.java`
+- Create: `apps/backend/aurix-customer/src/main/java/com/aurix/platform/customer/config/SecurityConfig.java`
+- Create: `apps/backend/aurix-customer/src/main/java/com/aurix/platform/customer/controller/HealthController.java`
+- Create: `apps/backend/aurix-customer/src/main/resources/application.yml`
+- Create: `apps/backend/aurix-customer/src/main/java/com/aurix/platform/customer/entity/Cliente.java`
+- Create: `apps/backend/aurix-customer/src/main/java/com/aurix/platform/customer/entity/ClientePF.java`
+- Create: `apps/backend/aurix-customer/src/main/java/com/aurix/platform/customer/entity/ClientePJ.java`
+- Create: `apps/backend/aurix-customer/src/main/java/com/aurix/platform/customer/entity/Endereco.java`
+- Create: `apps/backend/aurix-customer/src/main/java/com/aurix/platform/customer/entity/Contato.java`
+- Create: `apps/backend/aurix-customer/src/main/java/com/aurix/platform/customer/repository/ClienteRepository.java`
+- Create: `apps/backend/aurix-customer/src/main/java/com/aurix/platform/customer/repository/EnderecoRepository.java`
+- Create: `apps/backend/aurix-customer/src/main/java/com/aurix/platform/customer/repository/ContatoRepository.java`
 
 **Interfaces:**
 - Consumes: nothing
@@ -304,9 +304,9 @@ git commit -m "feat: register Foundation modules (customer, kyc, fraud, notifica
 - [ ] **Step 1: Create module directory**
 
 ```bash
-mkdir -p backend/aurix-customer/src/main/java/com/aurix/platform/customer/{config,controller,entity,repository,service}
-mkdir -p backend/aurix-customer/src/main/resources
-mkdir -p backend/aurix-customer/src/test/java/com/aurix/platform/customer
+mkdir -p apps/backend/aurix-customer/src/main/java/com/aurix/platform/customer/{config,controller,entity,repository,service}
+mkdir -p apps/backend/aurix-customer/src/main/resources
+mkdir -p apps/backend/aurix-customer/src/test/java/com/aurix/platform/customer
 ```
 
 - [ ] **Step 2: Create pom.xml**
@@ -838,7 +838,7 @@ Expected: BUILD SUCCESS (no errors)
 - [ ] **Step 11: Commit**
 
 ```bash
-git add backend/aurix-customer/
+git add apps/backend/aurix-customer/
 git commit -m "feat(customer): scaffold, entities, and repositories"
 ```
 
@@ -847,12 +847,12 @@ git commit -m "feat(customer): scaffold, entities, and repositories"
 ### Task 2: aurix-customer — Service + Controllers + Tests
 
 **Files:**
-- Create: `backend/aurix-customer/src/main/java/com/aurix/platform/customer/service/ClienteService.java`
-- Create: `backend/aurix-customer/src/main/java/com/aurix/platform/customer/service/ClienteProducer.java`
-- Create: `backend/aurix-customer/src/main/java/com/aurix/platform/customer/controller/ClienteController.java`
-- Create: `backend/aurix-customer/src/test/java/com/aurix/platform/customer/service/ClienteServiceTest.java`
-- Create: `backend/aurix-customer/src/test/java/com/aurix/platform/customer/AurixCustomerApplicationTest.java`
-- Create: `backend/aurix-customer/src/main/java/com/aurix/platform/customer/config/KafkaConfig.java`
+- Create: `apps/backend/aurix-customer/src/main/java/com/aurix/platform/customer/service/ClienteService.java`
+- Create: `apps/backend/aurix-customer/src/main/java/com/aurix/platform/customer/service/ClienteProducer.java`
+- Create: `apps/backend/aurix-customer/src/main/java/com/aurix/platform/customer/controller/ClienteController.java`
+- Create: `apps/backend/aurix-customer/src/test/java/com/aurix/platform/customer/service/ClienteServiceTest.java`
+- Create: `apps/backend/aurix-customer/src/test/java/com/aurix/platform/customer/AurixCustomerApplicationTest.java`
+- Create: `apps/backend/aurix-customer/src/main/java/com/aurix/platform/customer/config/KafkaConfig.java`
 
 **Interfaces:**
 - Consumes: `ClienteRepository`, `EnderecoRepository`, `ContatoRepository`
@@ -1196,7 +1196,7 @@ Expected: BUILD SUCCESS, tests pass
 - [ ] **Step 8: Commit**
 
 ```bash
-git add backend/aurix-customer/
+git add apps/backend/aurix-customer/
 git commit -m "feat(customer): service, controller, Kafka producer, and tests"
 ```
 
@@ -1205,25 +1205,25 @@ git commit -m "feat(customer): service, controller, Kafka producer, and tests"
 ### Task 3: aurix-kyc — Full module
 
 **Files:** (same structure as Task 1+2, but for KYC)
-- Create: `backend/aurix-kyc/pom.xml`
-- Create: `backend/aurix-kyc/Dockerfile`
-- Create: `backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/AurixKycApplication.java`
-- Create: `backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/config/SecurityConfig.java`
-- Create: `backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/config/KafkaConfig.java`
-- Create: `backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/controller/HealthController.java`
-- Create: `backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/controller/SolicitacaoKycController.java`
-- Create: `backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/service/SolicitacaoKycService.java`
-- Create: `backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/service/KycConsumer.java`
-- Create: `backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/service/KycProducer.java`
-- Create: `backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/entity/SolicitacaoKYC.java`
-- Create: `backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/entity/DocumentoKYC.java`
-- Create: `backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/entity/ScoreKYC.java`
-- Create: `backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/repository/SolicitacaoKycRepository.java`
-- Create: `backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/repository/DocumentoKycRepository.java`
-- Create: `backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/repository/ScoreKycRepository.java`
-- Create: `backend/aurix-kyc/src/main/resources/application.yml`
-- Create: `backend/aurix-kyc/src/test/java/com/aurix/platform/kyc/AurixKycApplicationTest.java`
-- Create: `backend/aurix-kyc/src/test/java/com/aurix/platform/kyc/service/SolicitacaoKycServiceTest.java`
+- Create: `apps/backend/aurix-kyc/pom.xml`
+- Create: `apps/backend/aurix-kyc/Dockerfile`
+- Create: `apps/backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/AurixKycApplication.java`
+- Create: `apps/backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/config/SecurityConfig.java`
+- Create: `apps/backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/config/KafkaConfig.java`
+- Create: `apps/backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/controller/HealthController.java`
+- Create: `apps/backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/controller/SolicitacaoKycController.java`
+- Create: `apps/backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/service/SolicitacaoKycService.java`
+- Create: `apps/backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/service/KycConsumer.java`
+- Create: `apps/backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/service/KycProducer.java`
+- Create: `apps/backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/entity/SolicitacaoKYC.java`
+- Create: `apps/backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/entity/DocumentoKYC.java`
+- Create: `apps/backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/entity/ScoreKYC.java`
+- Create: `apps/backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/repository/SolicitacaoKycRepository.java`
+- Create: `apps/backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/repository/DocumentoKycRepository.java`
+- Create: `apps/backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/repository/ScoreKycRepository.java`
+- Create: `apps/backend/aurix-kyc/src/main/resources/application.yml`
+- Create: `apps/backend/aurix-kyc/src/test/java/com/aurix/platform/kyc/AurixKycApplicationTest.java`
+- Create: `apps/backend/aurix-kyc/src/test/java/com/aurix/platform/kyc/service/SolicitacaoKycServiceTest.java`
 
 **Interfaces:**
 - Consumes: Kafka `cliente.criado` event
@@ -1233,9 +1233,9 @@ git commit -m "feat(customer): service, controller, Kafka producer, and tests"
 - [ ] **Step 1: Create directory structure**
 
 ```bash
-mkdir -p backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/{config,controller,entity,repository,service}
-mkdir -p backend/aurix-kyc/src/main/resources
-mkdir -p backend/aurix-kyc/src/test/java/com/aurix/platform/kyc
+mkdir -p apps/backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/{config,controller,entity,repository,service}
+mkdir -p apps/backend/aurix-kyc/src/main/resources
+mkdir -p apps/backend/aurix-kyc/src/test/java/com/aurix/platform/kyc
 ```
 
 - [ ] **Step 2: Create scaffold files (pom.xml, Dockerfile, Application, SecurityConfig, HealthController, application.yml)**
@@ -1738,7 +1738,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 9: Commit**
 
 ```bash
-git add backend/aurix-kyc/
+git add apps/backend/aurix-kyc/
 git commit -m "feat(kyc): full module with Kafka consumer/producer, entities, service, controller"
 ```
 
@@ -1747,7 +1747,7 @@ git commit -m "feat(kyc): full module with Kafka consumer/producer, entities, se
 ### Task 4: aurix-fraud — Full module
 
 **Files:** (follow same pattern as Task 3)
-- Create `backend/aurix-fraud/` with full scaffold (pom.xml, Dockerfile, Application, SecurityConfig, HealthController, application.yml)
+- Create `apps/backend/aurix-fraud/` with full scaffold (pom.xml, Dockerfile, Application, SecurityConfig, HealthController, application.yml)
 - Create entities: `RegraFraude`, `ScoreTransacao`, `OcorrenciaFraude`, `BloqueioPreventivo`
 - Create repositories for each entity
 - Create Kafka topics: `fraude.transacao.bloqueada`, `fraude.ocorrencia.criada`, `fraude.score.alterado`
@@ -1763,9 +1763,9 @@ git commit -m "feat(kyc): full module with Kafka consumer/producer, entities, se
 - [ ] **Step 1: Create directory structure**
 
 ```bash
-mkdir -p backend/aurix-fraud/src/main/java/com/aurix/platform/fraud/{config,controller,entity,repository,service}
-mkdir -p backend/aurix-fraud/src/main/resources
-mkdir -p backend/aurix-fraud/src/test/java/com/aurix/platform/fraud
+mkdir -p apps/backend/aurix-fraud/src/main/java/com/aurix/platform/fraud/{config,controller,entity,repository,service}
+mkdir -p apps/backend/aurix-fraud/src/main/resources
+mkdir -p apps/backend/aurix-fraud/src/test/java/com/aurix/platform/fraud
 ```
 
 - [ ] **Step 2: Create scaffold files** (same pattern as Task 1/3, substitute: `fraud`, `8125`, `/api/fraud`, `aurix-fraud-group`)
@@ -1783,7 +1783,7 @@ mvn clean test -pl aurix-fraud -am
 - [ ] **Step 6: Commit**
 
 ```bash
-git add backend/aurix-fraud/
+git add apps/backend/aurix-fraud/
 git commit -m "feat(fraud): full module with rule engine, scoring, Kafka integration"
 ```
 
@@ -1792,7 +1792,7 @@ git commit -m "feat(fraud): full module with rule engine, scoring, Kafka integra
 ### Task 5: aurix-notification — Full module
 
 **Files:** (follow same pattern)
-- Create `backend/aurix-notification/` with full scaffold
+- Create `apps/backend/aurix-notification/` with full scaffold
 - Create entities: `TemplateNotificacao`, `FilaNotificacao`, `ConfirmacaoRecebimento`, `PreferenciaCliente`
 - Create repositories
 - Create Kafka topics: `notificacao.enviada`, `notificacao.falhou`
@@ -1808,9 +1808,9 @@ git commit -m "feat(fraud): full module with rule engine, scoring, Kafka integra
 - [ ] **Step 1: Create directory structure**
 
 ```bash
-mkdir -p backend/aurix-notification/src/main/java/com/aurix/platform/notification/{config,controller,entity,repository,service}
-mkdir -p backend/aurix-notification/src/main/resources
-mkdir -p backend/aurix-notification/src/test/java/com/aurix/platform/notification
+mkdir -p apps/backend/aurix-notification/src/main/java/com/aurix/platform/notification/{config,controller,entity,repository,service}
+mkdir -p apps/backend/aurix-notification/src/main/resources
+mkdir -p apps/backend/aurix-notification/src/test/java/com/aurix/platform/notification
 ```
 
 - [ ] **Step 2: Create scaffold files** (substitute: `notification`, `8126`, `/api/notification`, `aurix-notification-group`)
@@ -1828,7 +1828,7 @@ mvn clean test -pl aurix-notification -am
 - [ ] **Step 6: Commit**
 
 ```bash
-git add backend/aurix-notification/
+git add apps/backend/aurix-notification/
 git commit -m "feat(notification): full module with multi-channel notification and Kafka integration"
 ```
 
@@ -1855,13 +1855,13 @@ Expected: 4 images created: `infrastructure-aurix-customer`, `infrastructure-aur
 - [ ] **Step 3: Verify Traefik config**
 
 ```bash
-python3 -c "import yaml; yaml.safe_load(open('infrastructure/traefik/dynamic.yml')); print('✅ Traefik config valid')"
+python3 -c "import yaml; yaml.safe_load(open('infra/traefik/dynamic.yml')); print('✅ Traefik config valid')"
 ```
 
 - [ ] **Step 4: Commit final infra**
 
 ```bash
-git add infrastructure/docker-compose.yml infrastructure/traefik/dynamic.yml aurix-tests/e2e/config.py
+git add infra/docker-compose.yml infra/traefik/dynamic.yml tests/e2e/config.py
 git commit -m "feat: add customer, kyc, fraud, notification to docker-compose, traefik, and e2e"
 ```
 

@@ -554,7 +554,7 @@ spring.cloud.gateway.routes:
 
 ### 8.2 Parent POM
 
-Adicionar no `backend/pom.xml`:
+Adicionar no `apps/backend/pom.xml`:
 
 ```xml
 <module>aurix-investimento</module>
@@ -567,7 +567,7 @@ Adicionar no `backend/pom.xml`:
 
 ### 8.3 API Spec
 
-Após implementação, adicionar tags, paths e schemas no `aurix-api-specs/aurix-core.yaml` para cada módulo.
+Após implementação, adicionar tags, paths e schemas no `specs/aurix-core.yaml` para cada módulo.
 
 ### 8.4 Frontend
 

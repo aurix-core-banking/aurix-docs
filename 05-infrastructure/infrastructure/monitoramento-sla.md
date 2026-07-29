@@ -4,9 +4,9 @@ Implementacao do item 14.4 do roadmap: monitoramento e alertas (Prometheus/Grafa
 
 ## O que esta implementado
 
-- **Prometheus**: coleta de metricas dos servicos AURIX (gateway, core, pix, credit, treasury, compliance, security, analytics, audit) e de dependencias (PostgreSQL, Redis, Kafka, etc.). Config: `infrastructure/monitoring/prometheus.yml`.
-- **Regras de alerta**: `infrastructure/monitoring/prometheus/rules/sla-uptime.yml` – alertas de servico critico down e SLA em risco; `keycloak-alerts.yml` para IAM.
-- **Grafana**: dashboards e datasources provisionados em `infrastructure/monitoring/grafana/`. Dashboards: overview AURIX, Keycloak.
+- **Prometheus**: coleta de metricas dos servicos AURIX (gateway, core, pix, credit, treasury, compliance, security, analytics, audit) e de dependencias (PostgreSQL, Redis, Kafka, etc.). Config: `infra/monitoring/prometheus.yml`.
+- **Regras de alerta**: `infra/monitoring/prometheus/rules/sla-uptime.yml` – alertas de servico critico down e SLA em risco; `keycloak-alerts.yml` para IAM.
+- **Grafana**: dashboards e datasources provisionados em `infra/monitoring/grafana/`. Dashboards: overview AURIX, Keycloak.
 - **Alertmanager**: configurado no Prometheus (target `alertmanager:9093`). Adicionar container Alertmanager no docker-compose se quiser envio de alertas por email/Slack/PagerDuty.
 
 ## Medicao de SLA 99,9%

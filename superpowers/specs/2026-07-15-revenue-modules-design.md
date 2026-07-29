@@ -336,9 +336,9 @@ Eventos no shared:
 - `Dockerfile` — `eclipse-temurin:25-jdk-jammy`, EXPOSE 8127/8128/8129
 - `application.yml` — porta, context-path, datasource (`jdbc:postgresql://postgres:5432/aurix`), kafka (`localhost:9092`), redis
 - `docker-compose.yml` — image, ports, environment, healthcheck, depends_on (postgres, kafka)
-- `infrastructure/traefik/dynamic.yml` — router + service para cada módulo
-- `aurix-tests/e2e/config.py` — health endpoint para cada módulo
-- `backend/pom.xml` — adicionar `<module>aurix-acquirer</module>`, `<module>aurix-collections</module>`, `<module>aurix-guarantee</module>`
+- `infra/traefik/dynamic.yml` — router + service para cada módulo
+- `tests/e2e/config.py` — health endpoint para cada módulo
+- `apps/backend/pom.xml` — adicionar `<module>aurix-acquirer</module>`, `<module>aurix-collections</module>`, `<module>aurix-guarantee</module>`
 
 ### Tabela de portas e context paths
 
@@ -369,8 +369,8 @@ Nenhum módulo Fase 2 depende de outro módulo Fase 2 — são independentes ent
 
 - **Unitários:** JUnit 5 + Mockito, service tests com entidades mockadas
 - **Integração:** Testcontainers (PostgreSQL + Kafka) para fluxos completos
-- **Contrato:** OpenAPI spec para cada módulo em `aurix-api-specs/`
-- **E2E:** Health-check endpoints em `aurix-tests/e2e/`
+- **Contrato:** OpenAPI spec para cada módulo em `specs/`
+- **E2E:** Health-check endpoints em `tests/e2e/`
 
 ## 9. Eventos no shared
 

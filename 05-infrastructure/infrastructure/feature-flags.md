@@ -44,5 +44,5 @@ CREATE INDEX idx_tenant_feature_flags_tenant ON aurix.tenant_feature_flags(tenan
 ## Referencias
 
 - Roadmap e status: [../roadmap.md](../roadmap.md)
-- Modulo: `backend/aurix-provisioning/`
+- Modulo: `apps/backend/aurix-provisioning/`
 - Runbook (config): [aurix-cloud-runbook.md](aurix-cloud-runbook.md)

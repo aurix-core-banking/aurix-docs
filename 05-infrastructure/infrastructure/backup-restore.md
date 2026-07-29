@@ -4,8 +4,8 @@ Procedimentos para backups automatizados do PostgreSQL, retencao e teste de rest
 
 ## Scripts
 
-- **Backup**: `infrastructure/scripts/backup-postgres.sh` (Linux/Mac) ou `backup-postgres.bat` (Windows).
-- **Restore**: `infrastructure/scripts/restore-postgres.sh` ou `restore-postgres.bat`.
+- **Backup**: `infra/scripts/backup-postgres.sh` (Linux/Mac) ou `backup-postgres.bat` (Windows).
+- **Restore**: `infra/scripts/restore-postgres.sh` ou `restore-postgres.bat`.
 
 Variaveis de ambiente (opcional):
 
@@ -21,13 +21,13 @@ Variaveis de ambiente (opcional):
 
 **Execucao manual (exemplo):**
 ```bash
-cd infrastructure/scripts
+cd infra/scripts
 ./backup-postgres.sh
 ```
 
 **Automatizacao (cron, diario 02:00):**
 ```cron
-0 2 * * * cd /caminho/para/aurix-platform/infrastructure/scripts && BACKUP_DIR=/var/backups/aurix RETENTION_DAYS=30 ./backup-postgres.sh
+0 2 * * * cd /caminho/para/aurix-platform/infra/scripts && BACKUP_DIR=/var/backups/aurix RETENTION_DAYS=30 ./backup-postgres.sh
 ```
 
 O script gera:

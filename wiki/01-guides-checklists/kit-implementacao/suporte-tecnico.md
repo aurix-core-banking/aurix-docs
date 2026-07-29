@@ -8,7 +8,7 @@ Canal de suporte, SLA de resposta e referência a runbooks. Item 13.5 do roadmap
 
 - **Email**: suporte@aurix.example.com (substituir pelo domínio real).
 - **Portal de tickets**: URL do sistema de tickets (ex.: Zendesk, Freshdesk, Jira Service Management) para abertura e acompanhamento de chamados.
-- **Documentação**: antes de abrir ticket, consultar [Portal do desenvolvedor](../../03-development/portal-desenvolvedor/README.md), [webhooks](../../03-development/portal-desenvolvedor/webhooks.md), [wiki](../../README.md) e [runbook AURIX Cloud](../../05-infrastructure/infrastructure/aurix-cloud-runbook.md).
+- **Documentação**: antes de abrir ticket, consultar [Portal do desenvolvedor](../../03-development/portal-desenvolvedor/README.md), [webhooks](../../03-development/portal-desenvolvedor/webhooks.md), [wiki](../../README.md) e [runbook AURIX Cloud](../../05-infra/infra/aurix-cloud-runbook.md).
 
 ---
 
@@ -37,7 +37,7 @@ Os tempos acima são exemplos; o contrato com o cliente deve definir os SLAs efe
 
 ## Runbook e escalação
 
-- **Runbook operacional**: [aurix-cloud-runbook.md](../../05-infrastructure/infrastructure/aurix-cloud-runbook.md) – procedimentos para operação (deploy, latência, banco, backup, incidente).
+- **Runbook operacional**: [aurix-cloud-runbook.md](../../05-infra/infra/aurix-cloud-runbook.md) – procedimentos para operação (deploy, latência, banco, backup, incidente).
 - **Escalação**: tickets críticos ou altos que não forem resolvidos no SLA devem ser escalados para o time de engenharia ou plantão conforme política interna.
 - **Pós-incidente**: para incidentes críticos, realizar reunião de revisão e atualizar runbook e documentação quando aplicável.
 

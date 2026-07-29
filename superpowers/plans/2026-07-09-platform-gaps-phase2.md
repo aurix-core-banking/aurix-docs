@@ -23,57 +23,57 @@
 ## File Map
 
 ### Gap 1 — OpenFinance
-- Modify: `backend/aurix-openfinance/src/main/java/com/aurix/platform/openfinance/controller/OpenFinanceController.java` (lines 93, 115)
-- Modify: `backend/aurix-openfinance/src/main/java/com/aurix/platform/openfinance/service/OpenFinanceDataService.java`
-- Create/test: `backend/aurix-openfinance/src/test/java/com/aurix/platform/openfinance/service/OpenFinanceDataServiceTest.java`
-- Create/test: `backend/aurix-openfinance/src/test/java/com/aurix/platform/openfinance/controller/OpenFinanceControllerTest.java`
+- Modify: `apps/backend/aurix-openfinance/src/main/java/com/aurix/platform/openfinance/controller/OpenFinanceController.java` (lines 93, 115)
+- Modify: `apps/backend/aurix-openfinance/src/main/java/com/aurix/platform/openfinance/service/OpenFinanceDataService.java`
+- Create/test: `apps/backend/aurix-openfinance/src/test/java/com/aurix/platform/openfinance/service/OpenFinanceDataServiceTest.java`
+- Create/test: `apps/backend/aurix-openfinance/src/test/java/com/aurix/platform/openfinance/controller/OpenFinanceControllerTest.java`
 
 ### Gap 2 — Auth/Password
-- Create: `backend/aurix-security/src/main/java/com/aurix/platform/security/entity/PasswordResetToken.java`
-- Create: `backend/aurix-security/src/main/java/com/aurix/platform/security/entity/RefreshToken.java`
-- Create: `backend/aurix-security/src/main/java/com/aurix/platform/security/repository/PasswordResetTokenRepository.java`
-- Create: `backend/aurix-security/src/main/java/com/aurix/platform/security/repository/RefreshTokenRepository.java`
-- Create: `backend/aurix-security/src/main/java/com/aurix/platform/security/dto/ForgotPasswordRequestDTO.java`
-- Create: `backend/aurix-security/src/main/java/com/aurix/platform/security/dto/ResetPasswordRequestDTO.java`
-- Create: `backend/aurix-security/src/main/java/com/aurix/platform/security/dto/RefreshTokenRequestDTO.java`
-- Modify: `backend/aurix-security/src/main/java/com/aurix/platform/security/controller/AuthController.java`
-- Modify: `backend/aurix-security/src/main/java/com/aurix/platform/security/service/AuthService.java`
-- Create/test: `backend/aurix-security/src/test/java/com/aurix/platform/security/service/AuthServiceTest.java`
-- Create/test: `backend/aurix-security/src/test/java/com/aurix/platform/security/controller/AuthControllerTest.java`
+- Create: `apps/backend/aurix-security/src/main/java/com/aurix/platform/security/entity/PasswordResetToken.java`
+- Create: `apps/backend/aurix-security/src/main/java/com/aurix/platform/security/entity/RefreshToken.java`
+- Create: `apps/backend/aurix-security/src/main/java/com/aurix/platform/security/repository/PasswordResetTokenRepository.java`
+- Create: `apps/backend/aurix-security/src/main/java/com/aurix/platform/security/repository/RefreshTokenRepository.java`
+- Create: `apps/backend/aurix-security/src/main/java/com/aurix/platform/security/dto/ForgotPasswordRequestDTO.java`
+- Create: `apps/backend/aurix-security/src/main/java/com/aurix/platform/security/dto/ResetPasswordRequestDTO.java`
+- Create: `apps/backend/aurix-security/src/main/java/com/aurix/platform/security/dto/RefreshTokenRequestDTO.java`
+- Modify: `apps/backend/aurix-security/src/main/java/com/aurix/platform/security/controller/AuthController.java`
+- Modify: `apps/backend/aurix-security/src/main/java/com/aurix/platform/security/service/AuthService.java`
+- Create/test: `apps/backend/aurix-security/src/test/java/com/aurix/platform/security/service/AuthServiceTest.java`
+- Create/test: `apps/backend/aurix-security/src/test/java/com/aurix/platform/security/controller/AuthControllerTest.java`
 
 ### Gap 3 — Kafka Staging
-- Modify: `aurix-data-platform/kafka/docker-compose.staging.yml`
-- Modify: `aurix-data-platform/kafka/.env.example`
+- Modify: `data/platform/kafka/docker-compose.staging.yml`
+- Modify: `data/platform/kafka/.env.example`
 
 ### Gap 4 — Web Pages
-- Create: `frontend/aurix-web/src/pages/Extrato.js`
-- Create: `frontend/aurix-web/src/pages/Extrato.test.js`
-- Create: `frontend/aurix-web/src/pages/Transferencia.js`
-- Create: `frontend/aurix-web/src/pages/Transferencia.test.js`
-- Create: `frontend/aurix-web/src/pages/Pagamento.js`
-- Create: `frontend/aurix-web/src/pages/Pagamento.test.js`
-- Create: `frontend/aurix-web/src/pages/Recarga.js`
-- Create: `frontend/aurix-web/src/pages/Recarga.test.js`
-- Modify: `frontend/aurix-web/src/App.js`
-- Modify: `frontend/aurix-web/src/components/Sidebar.js`
+- Create: `apps/frontend/aurix-web/src/pages/Extrato.js`
+- Create: `apps/frontend/aurix-web/src/pages/Extrato.test.js`
+- Create: `apps/frontend/aurix-web/src/pages/Transferencia.js`
+- Create: `apps/frontend/aurix-web/src/pages/Transferencia.test.js`
+- Create: `apps/frontend/aurix-web/src/pages/Pagamento.js`
+- Create: `apps/frontend/aurix-web/src/pages/Pagamento.test.js`
+- Create: `apps/frontend/aurix-web/src/pages/Recarga.js`
+- Create: `apps/frontend/aurix-web/src/pages/Recarga.test.js`
+- Modify: `apps/frontend/aurix-web/src/App.js`
+- Modify: `apps/frontend/aurix-web/src/components/Sidebar.js`
 
 ### Gap 5 — ML/BI/Chatbot
-- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/FraudService.java`
-- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/CreditScoreService.java`
-- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/ChatbotService.java`
-- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/BiService.java`
-- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/MlFraudServiceStub.java`
-- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/CreditScoreStubService.java`
-- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/ChatbotStubService.java`
-- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/BiStubService.java`
-- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/MlFraudServiceProd.java`
-- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/CreditScoreServiceProd.java`
-- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/ChatbotServiceProd.java`
-- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/BiServiceProd.java`
-- Modify/rename: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/MlStubController.java` → `MlController.java`
-- Modify/rename: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/ChatbotStubController.java` → `ChatbotController.java`
-- Modify/rename: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/BiStubController.java` → `BiController.java`
-- Modify: `backend/aurix-analytics/src/test/java/com/aurix/platform/analytics/integration/AnalyticsFlowIntegrationTest.java`
+- Create: `apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/FraudService.java`
+- Create: `apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/CreditScoreService.java`
+- Create: `apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/ChatbotService.java`
+- Create: `apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/BiService.java`
+- Create: `apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/MlFraudServiceStub.java`
+- Create: `apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/CreditScoreStubService.java`
+- Create: `apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/ChatbotStubService.java`
+- Create: `apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/BiStubService.java`
+- Create: `apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/MlFraudServiceProd.java`
+- Create: `apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/CreditScoreServiceProd.java`
+- Create: `apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/ChatbotServiceProd.java`
+- Create: `apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/BiServiceProd.java`
+- Modify/rename: `apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/MlStubController.java` → `MlController.java`
+- Modify/rename: `apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/ChatbotStubController.java` → `ChatbotController.java`
+- Modify/rename: `apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/BiStubController.java` → `BiController.java`
+- Modify: `apps/backend/aurix-analytics/src/test/java/com/aurix/platform/analytics/integration/AnalyticsFlowIntegrationTest.java`
 
 ---
 
@@ -86,8 +86,8 @@ Each gap is fully independent. They can be executed in parallel by separate agen
 ### Task G1-1: OpenFinanceDataService — add credit cards and identifications methods
 
 **Files:**
-- Modify: `backend/aurix-openfinance/src/main/java/com/aurix/platform/openfinance/service/OpenFinanceDataService.java`
-- Test: `backend/aurix-openfinance/src/test/java/com/aurix/platform/openfinance/service/OpenFinanceDataServiceTest.java`
+- Modify: `apps/backend/aurix-openfinance/src/main/java/com/aurix/platform/openfinance/service/OpenFinanceDataService.java`
+- Test: `apps/backend/aurix-openfinance/src/test/java/com/aurix/platform/openfinance/service/OpenFinanceDataServiceTest.java`
 
 **Interfaces:**
 - Consumes: existing `TokenOpenFinance`, `ConsentimentoOpenFinance`, `CoreApiClient`
@@ -250,7 +250,7 @@ Expected: PASS
 - [ ] **Step 6: Commit**
 
 ```bash
-git add backend/aurix-openfinance/src/main/java/com/aurix/platform/openfinance/service/OpenFinanceDataService.java backend/aurix-openfinance/src/test/java/com/aurix/platform/openfinance/service/OpenFinanceDataServiceTest.java
+git add apps/backend/aurix-openfinance/src/main/java/com/aurix/platform/openfinance/service/OpenFinanceDataService.java apps/backend/aurix-openfinance/src/test/java/com/aurix/platform/openfinance/service/OpenFinanceDataServiceTest.java
 git commit -m "feat(openfinance): add credit cards and personal identifications data methods"
 ```
 
@@ -259,8 +259,8 @@ git commit -m "feat(openfinance): add credit cards and personal identifications 
 ### Task G1-2: Update OpenFinanceController — replace TODO stubs
 
 **Files:**
-- Modify: `backend/aurix-openfinance/src/main/java/com/aurix/platform/openfinance/controller/OpenFinanceController.java`
-- Test: `backend/aurix-openfinance/src/test/java/com/aurix/platform/openfinance/controller/OpenFinanceControllerTest.java`
+- Modify: `apps/backend/aurix-openfinance/src/main/java/com/aurix/platform/openfinance/controller/OpenFinanceController.java`
+- Test: `apps/backend/aurix-openfinance/src/test/java/com/aurix/platform/openfinance/controller/OpenFinanceControllerTest.java`
 
 **Interfaces:**
 - Consumes: `openFinanceDataService.listarCartoesCreditoPorToken()`, `openFinanceDataService.listarIdentificacoesPessoaisPorToken()`
@@ -365,7 +365,7 @@ Expected: PASS
 - [ ] **Step 5: Commit**
 
 ```bash
-git add backend/aurix-openfinance/src/main/java/com/aurix/platform/openfinance/controller/OpenFinanceController.java backend/aurix-openfinance/src/test/java/com/aurix/platform/openfinance/controller/OpenFinanceControllerTest.java
+git add apps/backend/aurix-openfinance/src/main/java/com/aurix/platform/openfinance/controller/OpenFinanceController.java apps/backend/aurix-openfinance/src/test/java/com/aurix/platform/openfinance/controller/OpenFinanceControllerTest.java
 git commit -m "feat(openfinance): implement credit cards and personal identifications endpoints"
 ```
 
@@ -374,13 +374,13 @@ git commit -m "feat(openfinance): implement credit cards and personal identifica
 ### Task G2-1: Create entities and repositories for password reset and refresh tokens
 
 **Files:**
-- Create: `backend/aurix-security/src/main/java/com/aurix/platform/security/entity/PasswordResetToken.java`
-- Create: `backend/aurix-security/src/main/java/com/aurix/platform/security/entity/RefreshToken.java`
-- Create: `backend/aurix-security/src/main/java/com/aurix/platform/security/repository/PasswordResetTokenRepository.java`
-- Create: `backend/aurix-security/src/main/java/com/aurix/platform/security/repository/RefreshTokenRepository.java`
-- Create: `backend/aurix-security/src/main/java/com/aurix/platform/security/dto/ForgotPasswordRequestDTO.java`
-- Create: `backend/aurix-security/src/main/java/com/aurix/platform/security/dto/ResetPasswordRequestDTO.java`
-- Create: `backend/aurix-security/src/main/java/com/aurix/platform/security/dto/RefreshTokenRequestDTO.java`
+- Create: `apps/backend/aurix-security/src/main/java/com/aurix/platform/security/entity/PasswordResetToken.java`
+- Create: `apps/backend/aurix-security/src/main/java/com/aurix/platform/security/entity/RefreshToken.java`
+- Create: `apps/backend/aurix-security/src/main/java/com/aurix/platform/security/repository/PasswordResetTokenRepository.java`
+- Create: `apps/backend/aurix-security/src/main/java/com/aurix/platform/security/repository/RefreshTokenRepository.java`
+- Create: `apps/backend/aurix-security/src/main/java/com/aurix/platform/security/dto/ForgotPasswordRequestDTO.java`
+- Create: `apps/backend/aurix-security/src/main/java/com/aurix/platform/security/dto/ResetPasswordRequestDTO.java`
+- Create: `apps/backend/aurix-security/src/main/java/com/aurix/platform/security/dto/RefreshTokenRequestDTO.java`
 - Test: created manually via schema check (no service yet)
 
 **Interfaces:**
@@ -578,7 +578,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 7: Commit**
 
 ```bash
-git add backend/aurix-security/src/main/java/com/aurix/platform/security/entity/PasswordResetToken.java backend/aurix-security/src/main/java/com/aurix/platform/security/entity/RefreshToken.java backend/aurix-security/src/main/java/com/aurix/platform/security/repository/PasswordResetTokenRepository.java backend/aurix-security/src/main/java/com/aurix/platform/security/repository/RefreshTokenRepository.java backend/aurix-security/src/main/java/com/aurix/platform/security/dto/ForgotPasswordRequestDTO.java backend/aurix-security/src/main/java/com/aurix/platform/security/dto/ResetPasswordRequestDTO.java backend/aurix-security/src/main/java/com/aurix/platform/security/dto/RefreshTokenRequestDTO.java
+git add apps/backend/aurix-security/src/main/java/com/aurix/platform/security/entity/PasswordResetToken.java apps/backend/aurix-security/src/main/java/com/aurix/platform/security/entity/RefreshToken.java apps/backend/aurix-security/src/main/java/com/aurix/platform/security/repository/PasswordResetTokenRepository.java apps/backend/aurix-security/src/main/java/com/aurix/platform/security/repository/RefreshTokenRepository.java apps/backend/aurix-security/src/main/java/com/aurix/platform/security/dto/ForgotPasswordRequestDTO.java apps/backend/aurix-security/src/main/java/com/aurix/platform/security/dto/ResetPasswordRequestDTO.java apps/backend/aurix-security/src/main/java/com/aurix/platform/security/dto/RefreshTokenRequestDTO.java
 git commit -m "feat(security): add password reset and refresh token entities, repositories, DTOs"
 ```
 
@@ -587,8 +587,8 @@ git commit -m "feat(security): add password reset and refresh token entities, re
 ### Task G2-2: Add forgot-password, reset-password, refresh-token and timed lockout to AuthService
 
 **Files:**
-- Modify: `backend/aurix-security/src/main/java/com/aurix/platform/security/service/AuthService.java`
-- Test: `backend/aurix-security/src/test/java/com/aurix/platform/security/service/AuthServiceTest.java`
+- Modify: `apps/backend/aurix-security/src/main/java/com/aurix/platform/security/service/AuthService.java`
+- Test: `apps/backend/aurix-security/src/test/java/com/aurix/platform/security/service/AuthServiceTest.java`
 
 **Interfaces:**
 - Consumes: `PasswordResetTokenRepository`, `RefreshTokenRepository`, `PasswordEncoder`
@@ -874,7 +874,7 @@ Expected: PASS
 - [ ] **Step 5: Commit**
 
 ```bash
-git add backend/aurix-security/src/main/java/com/aurix/platform/security/service/AuthService.java backend/aurix-security/src/test/java/com/aurix/platform/security/service/AuthServiceTest.java
+git add apps/backend/aurix-security/src/main/java/com/aurix/platform/security/service/AuthService.java apps/backend/aurix-security/src/test/java/com/aurix/platform/security/service/AuthServiceTest.java
 git commit -m "feat(security): add forgot-password, reset-password, refresh-token, timed lockout"
 ```
 
@@ -883,8 +883,8 @@ git commit -m "feat(security): add forgot-password, reset-password, refresh-toke
 ### Task G2-3: Add new endpoints to AuthController
 
 **Files:**
-- Modify: `backend/aurix-security/src/main/java/com/aurix/platform/security/controller/AuthController.java`
-- Test: `backend/aurix-security/src/test/java/com/aurix/platform/security/controller/AuthControllerTest.java`
+- Modify: `apps/backend/aurix-security/src/main/java/com/aurix/platform/security/controller/AuthController.java`
+- Test: `apps/backend/aurix-security/src/test/java/com/aurix/platform/security/controller/AuthControllerTest.java`
 
 **Interfaces:**
 - Consumes: `authService.forgotPassword()`, `authService.resetPassword()`, `authService.refreshToken()`
@@ -1005,7 +1005,7 @@ Expected: PASS
 - [ ] **Step 5: Commit**
 
 ```bash
-git add backend/aurix-security/src/main/java/com/aurix/platform/security/controller/AuthController.java backend/aurix-security/src/test/java/com/aurix/platform/security/controller/AuthControllerTest.java
+git add apps/backend/aurix-security/src/main/java/com/aurix/platform/security/controller/AuthController.java apps/backend/aurix-security/src/test/java/com/aurix/platform/security/controller/AuthControllerTest.java
 git commit -m "feat(security): add forgot-password, reset-password, refresh-token endpoints"
 ```
 
@@ -1014,8 +1014,8 @@ git commit -m "feat(security): add forgot-password, reset-password, refresh-toke
 ### Task G3-1: Add Schema Registry and Kafka Connect to staging compose
 
 **Files:**
-- Modify: `aurix-data-platform/kafka/docker-compose.staging.yml`
-- Modify: `aurix-data-platform/kafka/.env.example`
+- Modify: `data/platform/kafka/docker-compose.staging.yml`
+- Modify: `data/platform/kafka/.env.example`
 
 - [ ] **Step 1: Read current docker-compose.staging.yml**
 
@@ -1086,7 +1086,7 @@ STAGING_KAFKA_REPLICATION_FACTOR=3
 - [ ] **Step 4: Validate YAML syntax**
 
 ```bash
-python3 -c "import yaml; yaml.safe_load(open('aurix-data-platform/kafka/docker-compose.staging.yml'))" && echo "Valid YAML"
+python3 -c "import yaml; yaml.safe_load(open('data/platform/kafka/docker-compose.staging.yml'))" && echo "Valid YAML"
 ```
 
 Expected: Valid YAML
@@ -1094,7 +1094,7 @@ Expected: Valid YAML
 - [ ] **Step 5: Commit**
 
 ```bash
-git add aurix-data-platform/kafka/docker-compose.staging.yml aurix-data-platform/kafka/.env.example
+git add data/platform/kafka/docker-compose.staging.yml data/platform/kafka/.env.example
 git commit -m "feat(kafka): add schema registry and kafka connect to staging profile"
 ```
 
@@ -1103,8 +1103,8 @@ git commit -m "feat(kafka): add schema registry and kafka connect to staging pro
 ### Task G4-1: Create Extrato page with tests
 
 **Files:**
-- Create: `frontend/aurix-web/src/pages/Extrato.js`
-- Create: `frontend/aurix-web/src/pages/Extrato.test.js`
+- Create: `apps/frontend/aurix-web/src/pages/Extrato.js`
+- Create: `apps/frontend/aurix-web/src/pages/Extrato.test.js`
 
 **Interfaces:**
 - Consumes: `user` prop, `apiService.getContas()` (or mock data)
@@ -1320,7 +1320,7 @@ Expected: PASS
 - [ ] **Step 5: Commit**
 
 ```bash
-git add frontend/aurix-web/src/pages/Extrato.js frontend/aurix-web/src/pages/Extrato.test.js
+git add apps/frontend/aurix-web/src/pages/Extrato.js apps/frontend/aurix-web/src/pages/Extrato.test.js
 git commit -m "feat(web): add Extrato page with filters and transactions table"
 ```
 
@@ -1329,8 +1329,8 @@ git commit -m "feat(web): add Extrato page with filters and transactions table"
 ### Task G4-2: Create Transferencia page with tests
 
 **Files:**
-- Create: `frontend/aurix-web/src/pages/Transferencia.js`
-- Create: `frontend/aurix-web/src/pages/Transferencia.test.js`
+- Create: `apps/frontend/aurix-web/src/pages/Transferencia.js`
+- Create: `apps/frontend/aurix-web/src/pages/Transferencia.test.js`
 
 **Interfaces:**
 - Consumes: `user` prop
@@ -1527,7 +1527,7 @@ Expected: PASS
 - [ ] **Step 5: Commit**
 
 ```bash
-git add frontend/aurix-web/src/pages/Transferencia.js frontend/aurix-web/src/pages/Transferencia.test.js
+git add apps/frontend/aurix-web/src/pages/Transferencia.js apps/frontend/aurix-web/src/pages/Transferencia.test.js
 git commit -m "feat(web): add Transferencia page with TED/DOC/PIX forms"
 ```
 
@@ -1536,8 +1536,8 @@ git commit -m "feat(web): add Transferencia page with TED/DOC/PIX forms"
 ### Task G4-3: Create Pagamento page with tests
 
 **Files:**
-- Create: `frontend/aurix-web/src/pages/Pagamento.js`
-- Create: `frontend/aurix-web/src/pages/Pagamento.test.js`
+- Create: `apps/frontend/aurix-web/src/pages/Pagamento.js`
+- Create: `apps/frontend/aurix-web/src/pages/Pagamento.test.js`
 
 - [ ] **Step 1: Write failing test**
 
@@ -1718,7 +1718,7 @@ Expected: PASS (or show failures to debug)
 - [ ] **Step 5: Commit**
 
 ```bash
-git add frontend/aurix-web/src/pages/Pagamento.js frontend/aurix-web/src/pages/Pagamento.test.js
+git add apps/frontend/aurix-web/src/pages/Pagamento.js apps/frontend/aurix-web/src/pages/Pagamento.test.js
 git commit -m "feat(web): add Pagamento page with barcode lookup and payment"
 ```
 
@@ -1727,10 +1727,10 @@ git commit -m "feat(web): add Pagamento page with barcode lookup and payment"
 ### Task G4-4: Create Recarga page with tests, wire routes and sidebar
 
 **Files:**
-- Create: `frontend/aurix-web/src/pages/Recarga.js`
-- Create: `frontend/aurix-web/src/pages/Recarga.test.js`
-- Modify: `frontend/aurix-web/src/App.js`
-- Modify: `frontend/aurix-web/src/components/Sidebar.js`
+- Create: `apps/frontend/aurix-web/src/pages/Recarga.js`
+- Create: `apps/frontend/aurix-web/src/pages/Recarga.test.js`
+- Modify: `apps/frontend/aurix-web/src/App.js`
+- Modify: `apps/frontend/aurix-web/src/components/Sidebar.js`
 
 **Interfaces:**
 - Produces: Recarga page, 4 new routes in App.js, 4 new sidebar links
@@ -1956,7 +1956,7 @@ Expected: All PASS
 - [ ] **Step 7: Commit**
 
 ```bash
-git add frontend/aurix-web/src/pages/Recarga.js frontend/aurix-web/src/pages/Recarga.test.js frontend/aurix-web/src/pages/Extrato.js frontend/aurix-web/src/pages/Extrato.test.js frontend/aurix-web/src/pages/Transferencia.js frontend/aurix-web/src/pages/Transferencia.test.js frontend/aurix-web/src/pages/Pagamento.js frontend/aurix-web/src/pages/Pagamento.test.js frontend/aurix-web/src/App.js frontend/aurix-web/src/components/Sidebar.js
+git add apps/frontend/aurix-web/src/pages/Recarga.js apps/frontend/aurix-web/src/pages/Recarga.test.js apps/frontend/aurix-web/src/pages/Extrato.js apps/frontend/aurix-web/src/pages/Extrato.test.js apps/frontend/aurix-web/src/pages/Transferencia.js apps/frontend/aurix-web/src/pages/Transferencia.test.js apps/frontend/aurix-web/src/pages/Pagamento.js apps/frontend/aurix-web/src/pages/Pagamento.test.js apps/frontend/aurix-web/src/App.js apps/frontend/aurix-web/src/components/Sidebar.js
 git commit -m "feat(web): add Extrato, Transferencia, Pagamento, Recarga pages with routes and sidebar"
 ```
 
@@ -1965,10 +1965,10 @@ git commit -m "feat(web): add Extrato, Transferencia, Pagamento, Recarga pages w
 ### Task G5-1: Create service interfaces for ML, Chatbot, BI
 
 **Files:**
-- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/FraudService.java`
-- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/CreditScoreService.java`
-- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/ChatbotService.java`
-- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/BiService.java`
+- Create: `apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/FraudService.java`
+- Create: `apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/CreditScoreService.java`
+- Create: `apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/ChatbotService.java`
+- Create: `apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/BiService.java`
 
 - [ ] **Step 1: Create FraudService interface**
 
@@ -2030,7 +2030,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 6: Commit**
 
 ```bash
-git add backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/FraudService.java backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/CreditScoreService.java backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/ChatbotService.java backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/BiService.java
+git add apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/FraudService.java apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/CreditScoreService.java apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/ChatbotService.java apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/BiService.java
 git commit -m "refactor(analytics): create service interfaces for ML, chatbot, BI"
 ```
 
@@ -2039,10 +2039,10 @@ git commit -m "refactor(analytics): create service interfaces for ML, chatbot, B
 ### Task G5-2: Create stub implementations with @Profile("!prod")
 
 **Files:**
-- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/MlFraudServiceStub.java`
-- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/CreditScoreStubService.java`
-- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/ChatbotStubService.java`
-- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/BiStubService.java`
+- Create: `apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/MlFraudServiceStub.java`
+- Create: `apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/CreditScoreStubService.java`
+- Create: `apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/ChatbotStubService.java`
+- Create: `apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/BiStubService.java`
 
 - [ ] **Step 1: Create MlFraudServiceStub**
 
@@ -2168,7 +2168,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 6: Commit**
 
 ```bash
-git add backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/MlFraudServiceStub.java backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/CreditScoreStubService.java backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/ChatbotStubService.java backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/BiStubService.java
+git add apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/MlFraudServiceStub.java apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/CreditScoreStubService.java apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/ChatbotStubService.java apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/BiStubService.java
 git commit -m "refactor(analytics): add stub service implementations with @Profile(!prod)"
 ```
 
@@ -2177,10 +2177,10 @@ git commit -m "refactor(analytics): add stub service implementations with @Profi
 ### Task G5-3: Create prod placeholder implementations
 
 **Files:**
-- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/MlFraudServiceProd.java`
-- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/CreditScoreServiceProd.java`
-- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/ChatbotServiceProd.java`
-- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/BiServiceProd.java`
+- Create: `apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/MlFraudServiceProd.java`
+- Create: `apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/CreditScoreServiceProd.java`
+- Create: `apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/ChatbotServiceProd.java`
+- Create: `apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/BiServiceProd.java`
 
 - [ ] **Step 1: Create MlFraudServiceProd**
 
@@ -2285,7 +2285,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 6: Commit**
 
 ```bash
-git add backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/MlFraudServiceProd.java backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/CreditScoreServiceProd.java backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/ChatbotServiceProd.java backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/BiServiceProd.java
+git add apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/MlFraudServiceProd.java apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/CreditScoreServiceProd.java apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/ChatbotServiceProd.java apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/BiServiceProd.java
 git commit -m "refactor(analytics): add prod placeholder service implementations"
 ```
 
@@ -2294,11 +2294,11 @@ git commit -m "refactor(analytics): add prod placeholder service implementations
 ### Task G5-4: Refactor controllers to use interfaces
 
 **Files:**
-- Replace: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/MlStubController.java` → renamed to `MlController.java`
-- Replace: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/ChatbotStubController.java` → renamed to `ChatbotController.java`
-- Replace: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/BiStubController.java` → renamed to `BiController.java`
+- Replace: `apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/MlStubController.java` → renamed to `MlController.java`
+- Replace: `apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/ChatbotStubController.java` → renamed to `ChatbotController.java`
+- Replace: `apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/BiStubController.java` → renamed to `BiController.java`
 - Delete: old stub controller files
-- Modify: `backend/aurix-analytics/src/test/java/com/aurix/platform/analytics/integration/AnalyticsFlowIntegrationTest.java`
+- Modify: `apps/backend/aurix-analytics/src/test/java/com/aurix/platform/analytics/integration/AnalyticsFlowIntegrationTest.java`
 
 - [ ] **Step 1: Create MlController.java** (replacing MlStubController)
 
@@ -2414,9 +2414,9 @@ public class BiController {
 - [ ] **Step 4: Remove old stub controllers**
 
 ```bash
-rm backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/MlStubController.java
-rm backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/ChatbotStubController.java
-rm backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/BiStubController.java
+rm apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/MlStubController.java
+rm apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/ChatbotStubController.java
+rm apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/BiStubController.java
 ```
 
 - [ ] **Step 5: Update AnalyticsFlowIntegrationTest.java**
@@ -2441,5 +2441,5 @@ Expected: BUILD SUCCESS, TESTS PASS
 - [ ] **Step 7: Commit**
 
 ```bash
-git add backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/MlController.java backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/ChatbotController.java backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/BiController.java backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/integration/AnalyticsFlowIntegrationTest.java && git rm backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/MlStubController.java backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/ChatbotStubController.java backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/BiStubController.java && git commit -m "refactor(analytics): replace stub controllers with interface-driven controllers"
+git add apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/MlController.java apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/ChatbotController.java apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/BiController.java apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/integration/AnalyticsFlowIntegrationTest.java && git rm apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/MlStubController.java apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/ChatbotStubController.java apps/backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/BiStubController.java && git commit -m "refactor(analytics): replace stub controllers with interface-driven controllers"
 ```

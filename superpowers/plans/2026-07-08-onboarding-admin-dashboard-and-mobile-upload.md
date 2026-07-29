@@ -21,26 +21,26 @@
 ## File Inventory
 
 ### Create:
-- `frontend/aurix-admin/src/components/BulkApproveReject.js` — bulk approve/reject toolbar
-- `frontend/aurix-mobile/src/pages/onboarding/StepDocumentosPF.js` — PF document upload screen
-- `frontend/aurix-mobile/src/pages/onboarding/StepDocumentosPJ.js` — PJ document upload screen
+- `apps/frontend/aurix-admin/src/components/BulkApproveReject.js` — bulk approve/reject toolbar
+- `apps/frontend/aurix-mobile/src/pages/onboarding/StepDocumentosPF.js` — PF document upload screen
+- `apps/frontend/aurix-mobile/src/pages/onboarding/StepDocumentosPJ.js` — PJ document upload screen
 
 ### Modify:
-- `frontend/aurix-admin/src/pages/Dashboard.js` — add onboarding stat cards + funnel chart
-- `frontend/aurix-admin/src/pages/SolicitacoesConta/SolicitacaoContaList.js` — add bulkActionButtons
-- `frontend/aurix-admin/src/pages/SolicitacoesPJ/SolicitacaoPJList.js` — add bulkActionButtons
-- `frontend/aurix-mobile/src/services/onboardingService.js` — add `uploadDocumento` method
-- `frontend/aurix-mobile/src/navigation/AuthNavigator.js` — add `StepDocumentosPF`, `StepDocumentosPJ` routes
-- `frontend/aurix-mobile/src/pages/onboarding/FormPF.js` — navigate to StepDocumentosPF instead of SuccessScreen
-- `frontend/aurix-mobile/src/pages/onboarding/StepSocios.js` — navigate to StepDocumentosPJ instead of SuccessScreen
-- `frontend/aurix-mobile/package.json` — add `react-native-image-picker` dependency
+- `apps/frontend/aurix-admin/src/pages/Dashboard.js` — add onboarding stat cards + funnel chart
+- `apps/frontend/aurix-admin/src/pages/SolicitacoesConta/SolicitacaoContaList.js` — add bulkActionButtons
+- `apps/frontend/aurix-admin/src/pages/SolicitacoesPJ/SolicitacaoPJList.js` — add bulkActionButtons
+- `apps/frontend/aurix-mobile/src/services/onboardingService.js` — add `uploadDocumento` method
+- `apps/frontend/aurix-mobile/src/navigation/AuthNavigator.js` — add `StepDocumentosPF`, `StepDocumentosPJ` routes
+- `apps/frontend/aurix-mobile/src/pages/onboarding/FormPF.js` — navigate to StepDocumentosPF instead of SuccessScreen
+- `apps/frontend/aurix-mobile/src/pages/onboarding/StepSocios.js` — navigate to StepDocumentosPJ instead of SuccessScreen
+- `apps/frontend/aurix-mobile/package.json` — add `react-native-image-picker` dependency
 
 ---
 
 ### Task 1: Admin Dashboard — Onboarding Metrics Section
 
 **Files:**
-- Modify: `frontend/aurix-admin/src/pages/Dashboard.js:40-end`
+- Modify: `apps/frontend/aurix-admin/src/pages/Dashboard.js:40-end`
 
 **Interfaces:**
 - Consumes: existing `fetchUtils` + `getResourceUrl` from `config/resources.js`
@@ -172,13 +172,13 @@ Add after the onboarding stat row (before the existing `</Box>` closing tag), in
 
 - [ ] **Step 3: Verify Dashboard renders without errors**
 
-Run: `npm run lint` from `frontend/`
+Run: `npm run lint` from `apps/frontend/`
 Expected: no new lint errors (pre-existing warnings OK)
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add frontend/aurix-admin/src/pages/Dashboard.js
+git add apps/frontend/aurix-admin/src/pages/Dashboard.js
 git commit -m "feat(admin): add onboarding metrics cards and funnel chart to Dashboard"
 ```
 
@@ -187,9 +187,9 @@ git commit -m "feat(admin): add onboarding metrics cards and funnel chart to Das
 ### Task 2: Admin Bulk Approve/Reject Component
 
 **Files:**
-- Create: `frontend/aurix-admin/src/components/BulkApproveReject.js`
-- Modify: `frontend/aurix-admin/src/pages/SolicitacoesConta/SolicitacaoContaList.js`
-- Modify: `frontend/aurix-admin/src/pages/SolicitacoesPJ/SolicitacaoPJList.js`
+- Create: `apps/frontend/aurix-admin/src/components/BulkApproveReject.js`
+- Modify: `apps/frontend/aurix-admin/src/pages/SolicitacoesConta/SolicitacaoContaList.js`
+- Modify: `apps/frontend/aurix-admin/src/pages/SolicitacoesPJ/SolicitacaoPJList.js`
 
 **Interfaces:**
 - Consumes: `fetchUtils`, `getActionUrl` from `config/resources.js`, selectedIds from Datagrid
@@ -197,7 +197,7 @@ git commit -m "feat(admin): add onboarding metrics cards and funnel chart to Das
 
 - [ ] **Step 1: Create BulkApproveReject component**
 
-File `frontend/aurix-admin/src/components/BulkApproveReject.js`:
+File `apps/frontend/aurix-admin/src/components/BulkApproveReject.js`:
 
 ```js
 import React, { useState } from 'react';
@@ -347,13 +347,13 @@ import { BulkApproveReject } from '../../components/BulkApproveReject';
 
 - [ ] **Step 4: Verify lint**
 
-Run: `npm run lint` from `frontend/`
+Run: `npm run lint` from `apps/frontend/`
 Expected: no new errors
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add frontend/aurix-admin/src/components/BulkApproveReject.js frontend/aurix-admin/src/pages/SolicitacoesConta/SolicitacaoContaList.js frontend/aurix-admin/src/pages/SolicitacoesPJ/SolicitacaoPJList.js
+git add apps/frontend/aurix-admin/src/components/BulkApproveReject.js apps/frontend/aurix-admin/src/pages/SolicitacoesConta/SolicitacaoContaList.js apps/frontend/aurix-admin/src/pages/SolicitacoesPJ/SolicitacaoPJList.js
 git commit -m "feat(admin): add bulk approve/reject actions to onboarding lists"
 ```
 
@@ -362,8 +362,8 @@ git commit -m "feat(admin): add bulk approve/reject actions to onboarding lists"
 ### Task 3: Mobile — Add uploadDocumento Service Method
 
 **Files:**
-- Modify: `frontend/aurix-mobile/src/services/onboardingService.js`
-- Modify: `frontend/aurix-mobile/package.json`
+- Modify: `apps/frontend/aurix-mobile/src/services/onboardingService.js`
+- Modify: `apps/frontend/aurix-mobile/package.json`
 
 **Interfaces:**
 - Consumes: existing axios instance from onboardingService
@@ -397,7 +397,7 @@ Read `package.json`. Add to `dependencies`:
 - [ ] **Step 3: Commit**
 
 ```bash
-git add frontend/aurix-mobile/src/services/onboardingService.js frontend/aurix-mobile/package.json
+git add apps/frontend/aurix-mobile/src/services/onboardingService.js apps/frontend/aurix-mobile/package.json
 git commit -m "feat(mobile): add uploadDocumento method and react-native-image-picker dep"
 ```
 
@@ -406,9 +406,9 @@ git commit -m "feat(mobile): add uploadDocumento method and react-native-image-p
 ### Task 4: Mobile — StepDocumentosPF Screen
 
 **Files:**
-- Create: `frontend/aurix-mobile/src/pages/onboarding/StepDocumentosPF.js`
-- Modify: `frontend/aurix-mobile/src/navigation/AuthNavigator.js`
-- Modify: `frontend/aurix-mobile/src/pages/onboarding/FormPF.js`
+- Create: `apps/frontend/aurix-mobile/src/pages/onboarding/StepDocumentosPF.js`
+- Modify: `apps/frontend/aurix-mobile/src/navigation/AuthNavigator.js`
+- Modify: `apps/frontend/aurix-mobile/src/pages/onboarding/FormPF.js`
 
 **Interfaces:**
 - Consumes: `onboardingService.uploadDocumento()`, `solicitacaoId` from route params
@@ -416,7 +416,7 @@ git commit -m "feat(mobile): add uploadDocumento method and react-native-image-p
 
 - [ ] **Step 1: Create StepDocumentosPF component**
 
-File `frontend/aurix-mobile/src/pages/onboarding/StepDocumentosPF.js`:
+File `apps/frontend/aurix-mobile/src/pages/onboarding/StepDocumentosPF.js`:
 
 ```js
 import React, { useState, useCallback } from 'react';
@@ -602,7 +602,7 @@ navigation.replace('StepDocumentosPF', { solicitacaoId: result.id });
 - [ ] **Step 4: Commit**
 
 ```bash
-git add frontend/aurix-mobile/src/pages/onboarding/StepDocumentosPF.js frontend/aurix-mobile/src/navigation/AuthNavigator.js frontend/aurix-mobile/src/pages/onboarding/FormPF.js
+git add apps/frontend/aurix-mobile/src/pages/onboarding/StepDocumentosPF.js apps/frontend/aurix-mobile/src/navigation/AuthNavigator.js apps/frontend/aurix-mobile/src/pages/onboarding/FormPF.js
 git commit -m "feat(mobile): add PF document upload screen"
 ```
 
@@ -611,9 +611,9 @@ git commit -m "feat(mobile): add PF document upload screen"
 ### Task 5: Mobile — StepDocumentosPJ Screen
 
 **Files:**
-- Create: `frontend/aurix-mobile/src/pages/onboarding/StepDocumentosPJ.js`
-- Modify: `frontend/aurix-mobile/src/navigation/AuthNavigator.js`
-- Modify: `frontend/aurix-mobile/src/pages/onboarding/StepSocios.js`
+- Create: `apps/frontend/aurix-mobile/src/pages/onboarding/StepDocumentosPJ.js`
+- Modify: `apps/frontend/aurix-mobile/src/navigation/AuthNavigator.js`
+- Modify: `apps/frontend/aurix-mobile/src/pages/onboarding/StepSocios.js`
 
 **Interfaces:**
 - Consumes: `onboardingService.uploadDocumento()`, `solicitacaoId` + `socios` from route params
@@ -621,7 +621,7 @@ git commit -m "feat(mobile): add PF document upload screen"
 
 - [ ] **Step 1: Create StepDocumentosPJ component**
 
-File `frontend/aurix-mobile/src/pages/onboarding/StepDocumentosPJ.js`:
+File `apps/frontend/aurix-mobile/src/pages/onboarding/StepDocumentosPJ.js`:
 
 ```js
 import React, { useState, useCallback } from 'react';
@@ -835,7 +835,7 @@ navigation.replace('StepDocumentosPJ', {
 - [ ] **Step 4: Commit**
 
 ```bash
-git add frontend/aurix-mobile/src/pages/onboarding/StepDocumentosPJ.js frontend/aurix-mobile/src/navigation/AuthNavigator.js frontend/aurix-mobile/src/pages/onboarding/StepSocios.js
+git add apps/frontend/aurix-mobile/src/pages/onboarding/StepDocumentosPJ.js apps/frontend/aurix-mobile/src/navigation/AuthNavigator.js apps/frontend/aurix-mobile/src/pages/onboarding/StepSocios.js
 git commit -m "feat(mobile): add PJ document upload screen"
 ```
 

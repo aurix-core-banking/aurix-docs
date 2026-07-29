@@ -25,14 +25,14 @@
 ### Task 1: Module Scaffold
 
 **Files:**
-- Modify: `backend/pom.xml` (add `<module>aurix-salario</module>` in `<modules>`)
-- Create: `backend/aurix-salario/pom.xml`
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/AurixSalarioApplication.java`
-- Create: `backend/aurix-salario/src/main/resources/application.yml`
-- Create: `backend/aurix-salario/src/main/resources/application-prod.yml`
-- Modify: `backend/aurix-gateway/src/main/resources/application.yml` (add route for salario)
+- Modify: `apps/backend/pom.xml` (add `<module>aurix-salario</module>` in `<modules>`)
+- Create: `apps/backend/aurix-salario/pom.xml`
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/AurixSalarioApplication.java`
+- Create: `apps/backend/aurix-salario/src/main/resources/application.yml`
+- Create: `apps/backend/aurix-salario/src/main/resources/application-prod.yml`
+- Modify: `apps/backend/aurix-gateway/src/main/resources/application.yml` (add route for salario)
 
-- [ ] **Step 1: Create `backend/aurix-salario/pom.xml`**
+- [ ] **Step 1: Create `apps/backend/aurix-salario/pom.xml`**
 
 Copied from `aurix-poupanca/pom.xml`, replace `aurix-poupanca` with `aurix-salario`, name "AURIX Salario", description "Modulo de conta salario do AURIX". Add `spring-boot-starter-batch` dependency for CNAB batch processing.
 
@@ -300,14 +300,14 @@ logging:
     com.aurix.platform: INFO
 ```
 
-- [ ] **Step 5: Add module to parent `backend/pom.xml`**
+- [ ] **Step 5: Add module to parent `apps/backend/pom.xml`**
 
 Add after `<module>aurix-poupanca</module>`:
 ```xml
 <module>aurix-salario</module>
 ```
 
-- [ ] **Step 6: Add gateway route in `backend/aurix-gateway/src/main/resources/application.yml`**
+- [ ] **Step 6: Add gateway route in `apps/backend/aurix-gateway/src/main/resources/application.yml`**
 
 Add after the poupanca route:
 ```yaml
@@ -328,7 +328,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 8: Commit**
 
 ```bash
-git add backend/pom.xml backend/aurix-salario/ backend/aurix-gateway/src/main/resources/application.yml
+git add apps/backend/pom.xml apps/backend/aurix-salario/ apps/backend/aurix-gateway/src/main/resources/application.yml
 git commit -m "feat(salario): scaffold module with pom, app, config, gateway route"
 ```
 
@@ -337,28 +337,28 @@ git commit -m "feat(salario): scaffold module with pom, app, config, gateway rou
 ### Task 2: Domain Layer
 
 **Files:**
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/entity/ContaSalario.java`
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/entity/ConvenioEmpresa.java`
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/entity/FolhaPagamento.java`
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/entity/ItemFolhaPagamento.java`
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/entity/SolicitacaoPortabilidade.java`
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/repository/ContaSalarioRepository.java`
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/repository/ConvenioEmpresaRepository.java`
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/repository/FolhaPagamentoRepository.java`
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/repository/ItemFolhaPagamentoRepository.java`
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/repository/SolicitacaoPortabilidadeRepository.java`
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/dto/ContaSalarioRequest.java`
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/dto/ContaSalarioResponse.java`
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/dto/ConvenioRequest.java`
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/dto/ConvenioResponse.java`
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/dto/PortabilidadeRequest.java`
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/dto/PortabilidadeResponse.java`
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/dto/FolhaResponse.java`
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/dto/ItemFolhaResponse.java`
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/dto/CreditoDiretoRequest.java`
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/event/ContaSalarioCriadaEvent.java`
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/event/SalarioCreditadoEvent.java`
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/event/PortabilidadeSolicitadaEvent.java`
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/entity/ContaSalario.java`
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/entity/ConvenioEmpresa.java`
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/entity/FolhaPagamento.java`
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/entity/ItemFolhaPagamento.java`
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/entity/SolicitacaoPortabilidade.java`
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/repository/ContaSalarioRepository.java`
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/repository/ConvenioEmpresaRepository.java`
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/repository/FolhaPagamentoRepository.java`
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/repository/ItemFolhaPagamentoRepository.java`
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/repository/SolicitacaoPortabilidadeRepository.java`
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/dto/ContaSalarioRequest.java`
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/dto/ContaSalarioResponse.java`
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/dto/ConvenioRequest.java`
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/dto/ConvenioResponse.java`
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/dto/PortabilidadeRequest.java`
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/dto/PortabilidadeResponse.java`
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/dto/FolhaResponse.java`
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/dto/ItemFolhaResponse.java`
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/dto/CreditoDiretoRequest.java`
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/event/ContaSalarioCriadaEvent.java`
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/event/SalarioCreditadoEvent.java`
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/event/PortabilidadeSolicitadaEvent.java`
 - Create: `package-info.java` in each package (entity, repository, dto, event, client, service, controller, config, job)
 
 - [ ] **Step 1: Create `entity/ContaSalario.java`**
@@ -1275,7 +1275,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 11: Commit**
 
 ```bash
-git add backend/aurix-salario/src/main/java/com/aurix/platform/salario/
+git add apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/
 git commit -m "feat(salario): add domain layer - entities, repos, DTOs, events"
 ```
 
@@ -1284,12 +1284,12 @@ git commit -m "feat(salario): add domain layer - entities, repos, DTOs, events"
 ### Task 3: HTTP Client + Config
 
 **Files:**
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/client/ContaCorrenteClient.java`
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/client/CreditoRequest.java` (inner DTO)
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/config/SalarioHttpConfig.java`
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/config/SalarioKafkaConfig.java`
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/config/SalarioSecurityConfig.java`
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/config/CnabConfig.java`
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/client/ContaCorrenteClient.java`
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/client/CreditoRequest.java` (inner DTO)
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/config/SalarioHttpConfig.java`
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/config/SalarioKafkaConfig.java`
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/config/SalarioSecurityConfig.java`
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/config/CnabConfig.java`
 
 - [ ] **Step 1: Create `ContaCorrenteClient.java`**
 
@@ -1446,7 +1446,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 7: Commit**
 
 ```bash
-git add backend/aurix-salario/src/main/java/com/aurix/platform/salario/client/ backend/aurix-salario/src/main/java/com/aurix/platform/salario/config/
+git add apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/client/ apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/config/
 git commit -m "feat(salario): add @HttpExchange client and config (Kafka, Security, CNAB)"
 ```
 
@@ -1455,10 +1455,10 @@ git commit -m "feat(salario): add @HttpExchange client and config (Kafka, Securi
 ### Task 4: ContaSalario Service + Controller + Tests
 
 **Files:**
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/service/ContaSalarioService.java`
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/controller/ContaSalarioController.java`
-- Create: `backend/aurix-salario/src/test/java/com/aurix/platform/salario/controller/ContaSalarioControllerTest.java`
-- Create: `backend/aurix-salario/src/test/resources/application-test.yml`
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/service/ContaSalarioService.java`
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/controller/ContaSalarioController.java`
+- Create: `apps/backend/aurix-salario/src/test/java/com/aurix/platform/salario/controller/ContaSalarioControllerTest.java`
+- Create: `apps/backend/aurix-salario/src/test/resources/application-test.yml`
 
 **Interfaces:**
 - Consumes: `ContaSalarioRepository`, `ConvenioEmpresaRepository`, `KafkaTemplate<String, String>`, `ObjectMapper`
@@ -1777,7 +1777,7 @@ Expected: BUILD SUCCESS, 2/2 tests pass
 - [ ] **Step 6: Commit**
 
 ```bash
-git add backend/aurix-salario/src/main/java/com/aurix/platform/salario/service/ContaSalarioService.java backend/aurix-salario/src/main/java/com/aurix/platform/salario/controller/ContaSalarioController.java backend/aurix-salario/src/test/
+git add apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/service/ContaSalarioService.java apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/controller/ContaSalarioController.java apps/backend/aurix-salario/src/test/
 git commit -m "feat(salario): add ContaSalarioService, controller, and tests"
 ```
 
@@ -1786,10 +1786,10 @@ git commit -m "feat(salario): add ContaSalarioService, controller, and tests"
 ### Task 5: Convenio + Portabilidade Services + Controllers
 
 **Files:**
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/service/ConvenioService.java`
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/controller/ConvenioController.java`
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/service/PortabilidadeService.java`
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/controller/PortabilidadeController.java`
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/service/ConvenioService.java`
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/controller/ConvenioController.java`
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/service/PortabilidadeService.java`
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/controller/PortabilidadeController.java`
 
 **Interfaces:**
 - Consumes: `ConvenioEmpresaRepository`, `ContaSalarioRepository`, `SolicitacaoPortabilidadeRepository`, `KafkaTemplate`, `ObjectMapper`
@@ -2080,7 +2080,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 6: Commit**
 
 ```bash
-git add backend/aurix-salario/src/main/java/com/aurix/platform/salario/service/ConvenioService.java backend/aurix-salario/src/main/java/com/aurix/platform/salario/controller/ConvenioController.java backend/aurix-salario/src/main/java/com/aurix/platform/salario/service/PortabilidadeService.java backend/aurix-salario/src/main/java/com/aurix/platform/salario/controller/PortabilidadeController.java
+git add apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/service/ConvenioService.java apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/controller/ConvenioController.java apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/service/PortabilidadeService.java apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/controller/PortabilidadeController.java
 git commit -m "feat(salario): add Convenio and Portabilidade services and controllers"
 ```
 
@@ -2089,11 +2089,11 @@ git commit -m "feat(salario): add Convenio and Portabilidade services and contro
 ### Task 6: CnabParser + CnabService
 
 **Files:**
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/client/CnabParser.java`
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/service/CnabService.java`
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/controller/FolhaController.java` (upload endpoint)
-- Create: `backend/aurix-salario/src/test/java/com/aurix/platform/salario/service/CnabParserTest.java`
-- Create: `backend/aurix-salario/src/test/resources/cnab/folha-valida.txt`
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/client/CnabParser.java`
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/service/CnabService.java`
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/controller/FolhaController.java` (upload endpoint)
+- Create: `apps/backend/aurix-salario/src/test/java/com/aurix/platform/salario/service/CnabParserTest.java`
+- Create: `apps/backend/aurix-salario/src/test/resources/cnab/folha-valida.txt`
 
 **Interfaces:**
 - Consumes: `CnabConfig`, `FolhaPagamentoRepository`, `ItemFolhaPagamentoRepository`, `ConvenioEmpresaRepository`, `ContaSalarioRepository`
@@ -2385,7 +2385,7 @@ Expected: BUILD SUCCESS, test passes
 - [ ] **Step 8: Commit**
 
 ```bash
-git add backend/aurix-salario/src/main/java/com/aurix/platform/salario/client/CnabParser.java backend/aurix-salario/src/main/java/com/aurix/platform/salario/service/CnabService.java backend/aurix-salario/src/main/java/com/aurix/platform/salario/controller/FolhaController.java backend/aurix-salario/src/test/
+git add apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/client/CnabParser.java apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/service/CnabService.java apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/controller/FolhaController.java apps/backend/aurix-salario/src/test/
 git commit -m "feat(salario): add CNAB parser, upload service, and CNAB test"
 ```
 
@@ -2394,9 +2394,9 @@ git commit -m "feat(salario): add CNAB parser, upload service, and CNAB test"
 ### Task 7: FolhaService + ProcessamentoFolhaJob
 
 **Files:**
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/service/FolhaService.java`
-- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/job/ProcessamentoFolhaJob.java`
-- Modify: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/controller/FolhaController.java` (add list, status, itens, credito-direto endpoints)
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/service/FolhaService.java`
+- Create: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/job/ProcessamentoFolhaJob.java`
+- Modify: `apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/controller/FolhaController.java` (add list, status, itens, credito-direto endpoints)
 
 **Interfaces:**
 - Consumes: `FolhaPagamentoRepository`, `ItemFolhaPagamentoRepository`, `ContaSalarioRepository`, `ContaCorrenteClient`, `KafkaTemplate`, `ObjectMapper`
@@ -2684,7 +2684,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 6: Commit**
 
 ```bash
-git add backend/aurix-salario/src/main/java/com/aurix/platform/salario/service/FolhaService.java backend/aurix-salario/src/main/java/com/aurix/platform/salario/job/ backend/aurix-salario/src/main/java/com/aurix/platform/salario/controller/FolhaController.java backend/aurix-salario/src/test/
+git add apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/service/FolhaService.java apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/job/ apps/backend/aurix-salario/src/main/java/com/aurix/platform/salario/controller/FolhaController.java apps/backend/aurix-salario/src/test/
 git commit -m "feat(salario): add FolhaService, ProcessamentoFolhaJob, and FolhaController"
 ```
 
@@ -2704,7 +2704,7 @@ Expected: BUILD SUCCESS, all tests pass
 
 - [ ] **Step 3: Verify gateway config**
 
-Check `backend/aurix-gateway/src/main/resources/application.yml` has the salario route:
+Check `apps/backend/aurix-gateway/src/main/resources/application.yml` has the salario route:
 ```yaml
 - id: aurix-salario
   uri: http://localhost:8112
@@ -2716,7 +2716,7 @@ Check `backend/aurix-gateway/src/main/resources/application.yml` has the salario
 
 - [ ] **Step 4: Verify parent pom has module**
 
-Check `backend/pom.xml` includes `<module>aurix-salario</module>` in `<modules>`.
+Check `apps/backend/pom.xml` includes `<module>aurix-salario</module>` in `<modules>`.
 
 - [ ] **Step 5: Final commit if any changes needed**
 

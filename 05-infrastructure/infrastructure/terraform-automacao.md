@@ -2,9 +2,9 @@
 
 ## A automação está funcional e integrada ao Terraform?
 
-**Sim, de forma limitada.** O script `infrastructure/scripts/deploy-terraform.sh` está integrado ao Terraform (chama `init`, `plan`, `apply` e opcionalmente aplica manifests Kubernetes). Porém:
+**Sim, de forma limitada.** O script `infra/scripts/deploy-terraform.sh` está integrado ao Terraform (chama `init`, `plan`, `apply` e opcionalmente aplica manifests Kubernetes). Porém:
 
-1. **Módulos são stubs:** Os módulos em `infrastructure/terraform/modules/` (AWS, Azure, GCP) não criam recursos reais; usam `null_resource` e retornam outputs fictícios (ex.: `vpc-stub-*`, `https://stub.eks.local`). Servem para validar a estrutura e o fluxo (`terraform init` e `terraform validate` funcionam); **não provisionam** VPC, EKS, RDS, Redis etc. de fato.
+1. **Módulos são stubs:** Os módulos em `infra/terraform/modules/` (AWS, Azure, GCP) não criam recursos reais; usam `null_resource` e retornam outputs fictícios (ex.: `vpc-stub-*`, `https://stub.eks.local`). Servem para validar a estrutura e o fluxo (`terraform init` e `terraform validate` funcionam); **não provisionam** VPC, EKS, RDS, Redis etc. de fato.
 2. **State local:** Não há bloco `backend` em `main.tf`; o state fica local por padrão. Para state remoto (ex.: S3), é preciso adicionar um `backend "s3"` em `main.tf` e passar `-backend-config` no `terraform init` (ou usar arquivo de config).
 3. **Um cloud por vez:** O `main.tf` declara recursos para AWS, Azure e GCP ao mesmo tempo. Para deploy real, use o script com `CLOUD_PROVIDER=aws` (ou `azure`/`gcp`); o script aplica só os módulos daquele cloud com `-target`. A opção `all` faz plan/apply de tudo (exige credenciais dos três clouds).
 
@@ -12,7 +12,7 @@
 
 | Item | Status |
 |------|--------|
-| `./infrastructure/scripts/deploy-terraform.sh` | Chama Terraform no diretório correto; suporta `--environment`, `--cloud-provider`, `--deploy-k8s` |
+| `./infra/scripts/deploy-terraform.sh` | Chama Terraform no diretório correto; suporta `--environment`, `--cloud-provider`, `--deploy-k8s` |
 | `terraform init -upgrade` | Funciona (state local) |
 | `terraform validate` | Funciona |
 | `terraform plan` / `apply` | Executam; criam apenas `null_resource` (stubs) |
@@ -49,7 +49,7 @@ Exemplos: `./deploy-terraform.sh --deploy-frontend --frontend-api-url https://ap
 ## Uso rápido do script
 
 ```bash
-cd infrastructure/scripts
+cd infra/scripts
 ./deploy-terraform.sh --environment dev --cloud-provider aws
 ```
 
@@ -74,5 +74,5 @@ Para deploy apenas do frontend (apontamento ajustado para outro backend):
 ## Referências
 
 - Status e roadmap: [../roadmap.md](../roadmap.md); indice infra: [index.md](./index.md)
-- Terraform root: `infrastructure/terraform/main.tf`, `variables.tf`
-- Módulos: `infrastructure/terraform/modules/{aws,azure,gcp}/`
+- Terraform root: `infra/terraform/main.tf`, `variables.tf`
+- Módulos: `infra/terraform/modules/{aws,azure,gcp}/`

@@ -7,7 +7,7 @@
 
 ## Contexto
 
-A plataforma tem 27+ módulos Spring Boot (`backend/aurix-*`) e hoje a comunicação entre eles é inconsistente, com dois padrões coexistindo de forma parcial e não documentada:
+A plataforma tem 27+ módulos Spring Boot (`apps/backend/aurix-*`) e hoje a comunicação entre eles é inconsistente, com dois padrões coexistindo de forma parcial e não documentada:
 
 - **Síncrono ad-hoc**: cada módulo consumidor escreve seu próprio client REST manualmente — `CoreApiClient` (`aurix-onboarding`), `CoreApiClientImpl` (`aurix-openfinance`) — sem contrato gerado, sem versionamento, com risco de drift entre o que o client espera e o que o serviço expõe.
 - **Assíncrono parcialmente adotado**: existe um `EventHub` em `aurix-shared` (`eventhub/EventHub.java`) com roteamento, retry exponencial, prioridade e Dead Letter Queue — bem desenhado — e um padrão de outbox transacional em `aurix-core` (`OutboxEventPublisher`/`OutboxRelay`). Mas só `aurix-core` e `aurix-pix` de fato publicam eventos hoje. Os módulos `aurix-analytics`, `aurix-audit`, `aurix-compliance`, `aurix-credit`, `aurix-security`, `aurix-treasury` declaram a dependência do Kafka no `pom.xml` mas não publicam nem consomem nada.
@@ -33,7 +33,7 @@ Kafka via **outbox transacional**, estendendo o padrão já existente em `aurix-
 **Saga coreografada via eventos Kafka**, não transação distribuída (2PC). Cada serviço reage a um evento, executa sua etapa local e publica o evento seguinte (ou um evento de compensação em caso de falha). Ex.: PIX liquidado → evento → lançamento contábil → evento → cálculo de imposto. Falha em qualquer etapa publica evento de compensação para desfazer etapas anteriores.
 
 ### 4. Contrato
-- **OpenAPI** para toda chamada síncrona (`aurix-api-specs/*.yaml`, um arquivo por módulo).
+- **OpenAPI** para toda chamada síncrona (`specs/*.yaml`, um arquivo por módulo).
 - **AsyncAPI** para todo tópico Kafka publicado, descrevendo schema do evento, versão e produtor — mesmo diretório `aurix-api-specs`.
 - Geração de client/DTO no build (Maven plugin de codegen), eliminando classes de client escritas à mão.
 

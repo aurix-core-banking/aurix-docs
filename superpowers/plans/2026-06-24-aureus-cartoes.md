@@ -35,10 +35,10 @@
 **Dependency:** NONE (can run first)
 
 **Files:**
-- `backend/aurix-cartoes/pom.xml` — modify
+- `apps/backend/aurix-cartoes/pom.xml` — modify
 
 **Steps:**
-1. Read `backend/aurix-cartoes/pom.xml`
+1. Read `apps/backend/aurix-cartoes/pom.xml`
 2. Add these dependencies (between existing `spring-boot-starter-test` and closing `</dependencies>`):
    - `spring-boot-starter-data-redis`
    - `spring-kafka`
@@ -54,7 +54,7 @@
 **Dependency:** NONE (can run in parallel with Task 1)
 
 **Files:**
-- `backend/aurix-cartoes/src/main/resources/application.yml` — modify
+- `apps/backend/aurix-cartoes/src/main/resources/application.yml` — modify
 
 **Changes:**
 - server.port: 8103 -> 8115
@@ -72,16 +72,16 @@
 **Dependency:** NONE (can run in parallel with Tasks 1-2)
 
 **Files to CREATE** (each with `@NullMarked`):
-- `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/package-info.java`
-- `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/entity/package-info.java`
-- `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/repository/package-info.java`
-- `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/dto/package-info.java`
-- `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/event/package-info.java`
-- `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/client/package-info.java`
-- `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/config/package-info.java`
-- `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/service/package-info.java`
-- `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/controller/package-info.java`
-- `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/job/package-info.java`
+- `apps/backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/package-info.java`
+- `apps/backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/entity/package-info.java`
+- `apps/backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/repository/package-info.java`
+- `apps/backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/dto/package-info.java`
+- `apps/backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/event/package-info.java`
+- `apps/backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/client/package-info.java`
+- `apps/backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/config/package-info.java`
+- `apps/backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/service/package-info.java`
+- `apps/backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/controller/package-info.java`
+- `apps/backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/job/package-info.java`
 
 Each file content:
 ```java
@@ -92,12 +92,12 @@ import org.jspecify.annotations.NullMarked;
 ```
 
 Also create empty directories:
-- `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/dto/`
-- `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/event/`
-- `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/client/`
-- `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/config/`
-- `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/job/`
-- `backend/aurix-cartoes/src/test/java/com/aurix/platform/cartoes/controller/`
+- `apps/backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/dto/`
+- `apps/backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/event/`
+- `apps/backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/client/`
+- `apps/backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/config/`
+- `apps/backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/job/`
+- `apps/backend/aurix-cartoes/src/test/java/com/aurix/platform/cartoes/controller/`
 
 ---
 
@@ -256,7 +256,7 @@ IMPORTANT: Preserve ALL existing fields. Only add new ones. Do not break existin
 
 **Dependency:** Tasks 4-5 (entities must exist first)
 
-Create all DTOs in `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/dto/`:
+Create all DTOs in `apps/backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/dto/`:
 
 - `EmitirCartaoRequest.java` — produtoId, contaId, titular, tipo
 - `CartaoResponse.java` — full cartao data (masked number, no CVV)
@@ -585,7 +585,7 @@ Insert before the Swagger UI route:
 
 ### Parent POM — already has `aurix-cartoes` module (line 49 in pom.xml). No change needed.
 
-### OpenAPI spec — after implementation, add to `aurix-api-specs/aurix-core.yaml`:
+### OpenAPI spec — after implementation, add to `specs/aurix-core.yaml`:
 - Tag: `Cartoes` with description
 - Paths for all 21 endpoints from Section 4.3
 - Schemas for all entities and DTOs

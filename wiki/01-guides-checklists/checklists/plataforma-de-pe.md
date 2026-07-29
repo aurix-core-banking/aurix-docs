@@ -17,7 +17,7 @@ Passos para colocar a plataforma AURIX de pé (primeira vez ou ambiente novo), n
 
 ## 2. Stack de dados (PostgreSQL, Kafka, Redis, etc.)
 
-- [ ] Entrar na pasta: `cd infrastructure/data-stack`
+- [ ] Entrar na pasta: `cd infra/data-stack`
 - [ ] Subir a stack: `docker-compose up -d`
 - [ ] Verificar serviços: `docker-compose ps` (postgres, redis, kafka, clickhouse, minio, etc.)
 - [ ] Se o Postgres já existia antes do script de Airflow: criar DB e usuário Airflow (ver [data-lakehouse.md](data-lakehouse.md#banco-airflow))
@@ -32,15 +32,15 @@ Referência: [Arquitetura de dados](../../../02-technical/arquitetura/evolucao-a
 - [ ] Na raiz: `cd backend && mvn clean install -DskipTests`
 - [ ] Configurar `application.yml` de cada módulo (ou usar defaults) com URL do Postgres: `jdbc:postgresql://localhost:5432/aurix`, user `aurix_user`, password `aurix_secure_password`
 - [ ] Configurar Kafka (se usar eventos): bootstrap `localhost:9092`
-- [ ] Subir os serviços necessários (ex.: gateway, core, pix, credit) ou usar script: `infrastructure/scripts/start-aurix.sh` / `start-aurix.bat`
+- [ ] Subir os serviços necessários (ex.: gateway, core, pix, credit) ou usar script: `infra/scripts/start-aurix.sh` / `start-aurix.bat`
 - [ ] Validar health: ex. `GET http://localhost:8080/actuator/health` (ajustar porta conforme gateway)
 
 ---
 
 ## 4. Frontend
 
-- [ ] **aurix-admin**: `cd frontend/aurix-admin && npm install && npm start` (ver [Instalação Aurix Admin](../guias/instalacao-admin.md))
-- [ ] **aurix-web**: `cd frontend/aurix-web && npm install && npm start` (se existir)
+- [ ] **aurix-admin**: `cd apps/frontend/aurix-admin && npm install && npm start` (ver [Instalação Aurix Admin](../guias/instalacao-admin.md))
+- [ ] **aurix-web**: `cd apps/frontend/aurix-web && npm install && npm start` (se existir)
 - [ ] Configurar URL da API (env ou config) apontando para o gateway
 
 ---
@@ -60,7 +60,7 @@ Ver [data-lakehouse.md](data-lakehouse.md) para detalhes.
 ## 6. Testes rápidos
 
 - [ ] Backend: `cd backend && mvn test`
-- [ ] E2E (se configurado): `pip install -r tests/e2e/requirements.txt` e `infrastructure/scripts/run-e2e-tests.bat` (ou `.sh`)
+- [ ] E2E (se configurado): `pip install -r tests/e2e/requirements.txt` e `infra/scripts/run-e2e-tests.bat` (ou `.sh`)
 
 Ver [testes/e2e.md](../../03-development/testes/e2e.md).
 

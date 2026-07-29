@@ -23,7 +23,7 @@ Produtos essenciais de um core banking que não existem ou estão incompletos.
 
 ## 2. Inconsistências Frontend vs Backend
 
-Divergências entre o que o frontend admin espera e o que o backend/spec entregam. Quebram a experiência do usuário e podem causar erros em produção.
+Divergências entre o que o frontend admin espera e o que o apps/backend/spec entregam. Quebram a experiência do usuário e podem causar erros em produção.
 
 | Inconsistência | Frontend Admin | Backend / OpenAPI Spec | Risco |
 |---------------|---------------|-----------------------|-------|

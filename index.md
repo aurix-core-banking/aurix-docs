@@ -22,17 +22,17 @@ Entenda as bases que sustentam a robustez da AURIX.
 
 ## 🛠️ Operação e Infraestrutura
 Guia para manter a plataforma rodando com segurança e escalabilidade.
-*   **[Runbook Operacional](./05-infrastructure/infrastructure/index.md)**: Tudo sobre deploy, monitoramento e SLA.
-*   **[Backup e Recuperação](./05-infrastructure/infrastructure/backup-restore.md)**: Procedimentos de segurança de dados.
-*   **[Disaster Recovery](./05-infrastructure/infrastructure/dr-procedimento.md)**: Estratégia de continuidade de negócio.
-*   **[Deploy sem Downtime](./05-infrastructure/infrastructure/deploy-sem-downtime.md)**: Técnicas de atualização contínua.
+*   **[Runbook Operacional](./05-infra/infra/index.md)**: Tudo sobre deploy, monitoramento e SLA.
+*   **[Backup e Recuperação](./05-infra/infra/backup-restore.md)**: Procedimentos de segurança de dados.
+*   **[Disaster Recovery](./05-infra/infra/dr-procedimento.md)**: Estratégia de continuidade de negócio.
+*   **[Deploy sem Downtime](./05-infra/infra/deploy-sem-downtime.md)**: Técnicas de atualização contínua.
 
 ---
 
 ## 💻 Desenvolvimento e Integração
 Recursos para desenvolvedores que constroem e integram com a AURIX.
 *   **[Portal do Desenvolvedor](./03-development/portal-desenvolvedor/README.md)**: Catálogo de APIs e guias de integração.
-*   **[Frontend](./03-development/frontend/)**: Documentação do Admin e Web Applications.
+*   **[Frontend](./03-development/apps/frontend/)**: Documentação do Admin e Web Applications.
 *   **[Data Lakehouse](./04-data-ai/data-pipelines/README.md)**: Pipelines de dados, Airflow e dbt.
 *   **[Inteligência Artificial](./04-data-ai/ml/README.md)**: Modelos de ML e MLOps.
 *   **[Testes E2E](./03-development/testes/e2e.md)**: Garantia de qualidade ponta a ponta.

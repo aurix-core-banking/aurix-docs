@@ -28,7 +28,7 @@
 ## File Structure Map
 
 ```
-backend/aurix-investimento/
+apps/backend/aurix-investimento/
 ├── pom.xml
 ├── src/main/java/com/aurix/platform/investimento/
 │   ├── AurixInvestimentoApplication.java
@@ -95,14 +95,14 @@ backend/aurix-investimento/
 ### Task 1: Module Scaffold
 
 **Files:**
-- Create: `backend/aurix-investimento/pom.xml`
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/AurixInvestimentoApplication.java`
-- Create: `backend/aurix-investimento/src/main/resources/application.yml`
-- Create: `backend/aurix-investimento/src/main/resources/application-prod.yml`
-- Modify: `backend/pom.xml` (add module)
+- Create: `apps/backend/aurix-investimento/pom.xml`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/AurixInvestimentoApplication.java`
+- Create: `apps/backend/aurix-investimento/src/main/resources/application.yml`
+- Create: `apps/backend/aurix-investimento/src/main/resources/application-prod.yml`
+- Modify: `apps/backend/pom.xml` (add module)
 
 **Interfaces:**
-- Consumes: parent POM at `backend/pom.xml`
+- Consumes: parent POM at `apps/backend/pom.xml`
 - Produces: compilable Maven module with empty Spring Boot app, server on port 8113
 
 - [ ] **Step 1: Create pom.xml**
@@ -366,7 +366,7 @@ logging:
 
 - [ ] **Step 5: Add module to parent pom.xml**
 
-Edit `backend/pom.xml`, insert `<module>aurix-investimento</module>` after `<module>aurix-internet-banking</module>` (alphabetical order among the new modules):
+Edit `apps/backend/pom.xml`, insert `<module>aurix-investimento</module>` after `<module>aurix-internet-banking</module>` (alphabetical order among the new modules):
 
 ```xml
         <module>aurix-internet-banking</module>
@@ -382,7 +382,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 7: Commit**
 
 ```bash
-git add backend/aurix-investimento/ backend/pom.xml
+git add apps/backend/aurix-investimento/ apps/backend/pom.xml
 git commit -m "feat: scaffold aurix-investimento module"
 ```
 
@@ -391,16 +391,16 @@ git commit -m "feat: scaffold aurix-investimento module"
 ### Task 2: Entities + Repositories
 
 **Files:**
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/entity/package-info.java`
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/entity/ContaInvestimento.java`
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/entity/ProdutoInvestimento.java`
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/entity/OrdemInvestimento.java`
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/entity/Carteira.java`
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/repository/package-info.java`
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/repository/ContaInvestimentoRepository.java`
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/repository/ProdutoInvestimentoRepository.java`
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/repository/OrdemInvestimentoRepository.java`
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/repository/CarteiraRepository.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/entity/package-info.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/entity/ContaInvestimento.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/entity/ProdutoInvestimento.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/entity/OrdemInvestimento.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/entity/Carteira.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/repository/package-info.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/repository/ContaInvestimentoRepository.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/repository/ProdutoInvestimentoRepository.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/repository/OrdemInvestimentoRepository.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/repository/CarteiraRepository.java`
 
 **Interfaces:**
 - Produces: `ContaInvestimento`, `ProdutoInvestimento`, `OrdemInvestimento`, `Carteira` JPA entities with repositories
@@ -944,8 +944,8 @@ Expected: BUILD SUCCESS
 - [ ] **Step 12: Commit**
 
 ```bash
-git add backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/entity/
-git add backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/repository/
+git add apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/entity/
+git add apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/repository/
 git commit -m "feat: add investimento entities and repositories"
 ```
 
@@ -954,19 +954,19 @@ git commit -m "feat: add investimento entities and repositories"
 ### Task 3: DTOs
 
 **Files:**
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/package-info.java`
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/request/package-info.java`
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/request/CriarContaInvestimentoRequest.java`
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/request/CriarProdutoRequest.java`
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/request/AtualizarProdutoRequest.java`
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/request/AplicarOrdemRequest.java`
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/request/ResgatarOrdemRequest.java`
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/response/package-info.java`
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/response/ContaInvestimentoResponse.java`
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/response/ProdutoInvestimentoResponse.java`
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/response/OrdemInvestimentoResponse.java`
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/response/CarteiraResponse.java`
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/response/ExtratoOrdemResponse.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/package-info.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/request/package-info.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/request/CriarContaInvestimentoRequest.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/request/CriarProdutoRequest.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/request/AtualizarProdutoRequest.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/request/AplicarOrdemRequest.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/request/ResgatarOrdemRequest.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/response/package-info.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/response/ContaInvestimentoResponse.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/response/ProdutoInvestimentoResponse.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/response/OrdemInvestimentoResponse.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/response/CarteiraResponse.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/response/ExtratoOrdemResponse.java`
 
 **Interfaces:**
 - Consumes: entity classes from Task 2
@@ -1389,7 +1389,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 15: Commit**
 
 ```bash
-git add backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/
+git add apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/
 git commit -m "feat: add investimento DTOs"
 ```
 
@@ -1398,13 +1398,13 @@ git commit -m "feat: add investimento DTOs"
 ### Task 4: Events + Config
 
 **Files:**
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/event/package-info.java`
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/event/ContaInvestimentoCriadaEvent.java`
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/event/OrdemExecutadaEvent.java`
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/event/ResgateProcessadoEvent.java`
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/config/package-info.java`
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/config/InvestimentoKafkaConfig.java`
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/config/InvestimentoSecurityConfig.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/event/package-info.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/event/ContaInvestimentoCriadaEvent.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/event/OrdemExecutadaEvent.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/event/ResgateProcessadoEvent.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/config/package-info.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/config/InvestimentoKafkaConfig.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/config/InvestimentoSecurityConfig.java`
 
 **Interfaces:**
 - Consumes: entity IDs, tenantId from Task 2
@@ -1550,8 +1550,8 @@ Expected: BUILD SUCCESS
 - [ ] **Step 9: Commit**
 
 ```bash
-git add backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/event/
-git add backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/config/
+git add apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/event/
+git add apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/config/
 git commit -m "feat: add investimento events and config"
 ```
 
@@ -1560,9 +1560,9 @@ git commit -m "feat: add investimento events and config"
 ### Task 5: ContaCorrenteClient + HTTP Config
 
 **Files:**
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/client/package-info.java`
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/client/ContaCorrenteClient.java`
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/config/InvestimentoHttpConfig.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/client/package-info.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/client/ContaCorrenteClient.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/config/InvestimentoHttpConfig.java`
 
 **Interfaces:**
 - Produces: `ContaCorrenteClient.debitar(id, request)` and `ContaCorrenteClient.creditar(id, request)` consumed by OrdemService in Task 6
@@ -1626,8 +1626,8 @@ Expected: BUILD SUCCESS
 - [ ] **Step 5: Commit**
 
 ```bash
-git add backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/client/
-git add backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/config/InvestimentoHttpConfig.java
+git add apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/client/
+git add apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/config/InvestimentoHttpConfig.java
 git commit -m "feat: add ContaCorrenteClient and HTTP config"
 ```
 
@@ -1636,11 +1636,11 @@ git commit -m "feat: add ContaCorrenteClient and HTTP config"
 ### Task 6: Services
 
 **Files:**
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/service/package-info.java`
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/service/ContaInvestimentoService.java`
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/service/ProdutoInvestimentoService.java`
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/service/OrdemService.java`
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/service/CarteiraService.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/service/package-info.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/service/ContaInvestimentoService.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/service/ProdutoInvestimentoService.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/service/OrdemService.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/service/CarteiraService.java`
 
 **Interfaces:**
 - Consumes: entities/repos from Task 2, DTOs from Task 3, events from Task 4, ContaCorrenteClient from Task 5
@@ -2164,8 +2164,8 @@ Expected: BUILD SUCCESS
 - [ ] **Step 8: Commit**
 
 ```bash
-git add backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/service/
-git add backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/repository/ContaInvestimentoRepository.java
+git add apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/service/
+git add apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/repository/ContaInvestimentoRepository.java
 git commit -m "feat: add investimento services"
 ```
 
@@ -2174,10 +2174,10 @@ git commit -m "feat: add investimento services"
 ### Task 7: Controllers
 
 **Files:**
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/controller/package-info.java`
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/controller/ContaInvestimentoController.java`
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/controller/ProdutoInvestimentoController.java`
-- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/controller/OrdemController.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/controller/package-info.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/controller/ContaInvestimentoController.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/controller/ProdutoInvestimentoController.java`
+- Create: `apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/controller/OrdemController.java`
 
 **Interfaces:**
 - Consumes: service methods from Task 6
@@ -2391,7 +2391,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 6: Commit**
 
 ```bash
-git add backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/controller/
+git add apps/backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/controller/
 git commit -m "feat: add investimento controllers"
 ```
 
@@ -2400,8 +2400,8 @@ git commit -m "feat: add investimento controllers"
 ### Task 8: Gateway Route + Parent POM
 
 **Files:**
-- Modify: `backend/aurix-gateway/src/main/resources/application.yml` (add gateway route)
-- Modify: `backend/pom.xml` (already done in Task 1, verify)
+- Modify: `apps/backend/aurix-gateway/src/main/resources/application.yml` (add gateway route)
+- Modify: `apps/backend/pom.xml` (already done in Task 1, verify)
 
 **Interfaces:**
 - Consumes: port 8113 from application.yml (Task 1)
@@ -2409,7 +2409,7 @@ git commit -m "feat: add investimento controllers"
 
 - [ ] **Step 1: Add gateway route**
 
-Edit `backend/aurix-gateway/src/main/resources/application.yml`, insert after the AURIX Internet Banking route:
+Edit `apps/backend/aurix-gateway/src/main/resources/application.yml`, insert after the AURIX Internet Banking route:
 
 ```yaml
         # AURIX Investimento
@@ -2423,7 +2423,7 @@ Edit `backend/aurix-gateway/src/main/resources/application.yml`, insert after th
 
 - [ ] **Step 2: Verify parent POM has module**
 
-Run: `grep -n 'aurix-investimento' backend/pom.xml`
+Run: `grep -n 'aurix-investimento' apps/backend/pom.xml`
 Expected: output showing `<module>aurix-investimento</module>` present
 
 - [ ] **Step 3: Verify full build compiles**
@@ -2434,7 +2434,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 4: Commit**
 
 ```bash
-git add backend/aurix-gateway/src/main/resources/application.yml
+git add apps/backend/aurix-gateway/src/main/resources/application.yml
 git commit -m "feat: add gateway route for aurix-investimento"
 ```
 
@@ -2443,12 +2443,12 @@ git commit -m "feat: add gateway route for aurix-investimento"
 ### Task 9: Controller Tests
 
 **Files:**
-- Create: `backend/aurix-investimento/src/test/java/com/aurix/platform/investimento/controller/package-info.java`
-- Create: `backend/aurix-investimento/src/test/java/com/aurix/platform/investimento/controller/ContaInvestimentoControllerTest.java`
-- Create: `backend/aurix-investimento/src/test/java/com/aurix/platform/investimento/controller/ProdutoInvestimentoControllerTest.java`
-- Create: `backend/aurix-investimento/src/test/java/com/aurix/platform/investimento/controller/OrdemControllerTest.java`
-- Modify: `backend/aurix-investimento/src/main/resources/application.yml` (add test profile)
-- Create: `backend/aurix-investimento/src/test/resources/application-test.yml`
+- Create: `apps/backend/aurix-investimento/src/test/java/com/aurix/platform/investimento/controller/package-info.java`
+- Create: `apps/backend/aurix-investimento/src/test/java/com/aurix/platform/investimento/controller/ContaInvestimentoControllerTest.java`
+- Create: `apps/backend/aurix-investimento/src/test/java/com/aurix/platform/investimento/controller/ProdutoInvestimentoControllerTest.java`
+- Create: `apps/backend/aurix-investimento/src/test/java/com/aurix/platform/investimento/controller/OrdemControllerTest.java`
+- Modify: `apps/backend/aurix-investimento/src/main/resources/application.yml` (add test profile)
+- Create: `apps/backend/aurix-investimento/src/test/resources/application-test.yml`
 
 - [ ] **Step 1: Create test controller/package-info.java**
 
@@ -2901,8 +2901,8 @@ Expected: BUILD SUCCESS (all tests pass)
 - [ ] **Step 7: Commit**
 
 ```bash
-git add backend/aurix-investimento/src/test/
-git add backend/aurix-investimento/src/test/resources/
+git add apps/backend/aurix-investimento/src/test/
+git add apps/backend/aurix-investimento/src/test/resources/
 git commit -m "test: add investimento controller tests"
 ```
 

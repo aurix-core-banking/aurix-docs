@@ -23,7 +23,7 @@ Checklist para manter relatórios e layouts em dia com BACEN e Receita Federal (
 ## Checklist de atualização (self-hosted)
 
 - [ ] **BACEN**: Verificar circulares e resoluções no site do BACEN; atualizar layouts (COSIF, PIX, SCR, BACEN Jud) conforme nova versão do formato.
-- [ ] **Receita Federal**: Verificar e-Financeira e SPED (ECD, ECF, EFD-Reinf); atualizar geradores em `backend/aurix-bacen/service/*ReportGenerator`.
+- [ ] **Receita Federal**: Verificar e-Financeira e SPED (ECD, ECF, EFD-Reinf); atualizar geradores em `apps/backend/aurix-bacen/service/*ReportGenerator`.
 - [ ] **Versão do formato**: Atualizar campo `versaoFormato` em RelatoriosBacenService (ex.: COSIF-2024 -> COSIF-2025) após mudança de layout.
 - [ ] **Testes**: Rodar geração para data de referência de teste e validar arquivo gerado contra especificação oficial.
 - [ ] **Vencimentos**: Conferir `calcularVencimentoPadrao` (RelatoriosBacenService) com prazos vigentes (ex.: COSIF até dia 10 do mês seguinte).
@@ -33,10 +33,10 @@ Checklist para manter relatórios e layouts em dia com BACEN e Receita Federal (
 
 ## Onde alterar no código
 
-- **Layouts**: `backend/aurix-bacen/src/main/java/com/aurix/platform/bacen/service/`
+- **Layouts**: `apps/backend/aurix-bacen/src/main/java/com/aurix/platform/bacen/service/`
   - CosifReportGenerator, EFinanceiraReportGenerator, ScrCcsReportGenerator, SpedReportGenerator, BacenJudReportGenerator
 - **Serviço e jobs**: RelatoriosBacenService, RegTechSchedulerConfig
-- **Config**: `backend/aurix-bacen/src/main/resources/application.yml` (scheduler, periodicidade)
+- **Config**: `apps/backend/aurix-bacen/src/main/resources/application.yml` (scheduler, periodicidade)
 
 ---
 

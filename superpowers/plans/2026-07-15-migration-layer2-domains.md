@@ -11,7 +11,7 @@
 ## Global Constraints
 
 - Nenhum módulo fonte (`aurix-*`) é deletado durante a migração — apenas copiado/movido
-- Código copiado para `backend/svc-{domain}/` mantém a funcionalidade original
+- Código copiado para `apps/backend/svc-{domain}/` mantém a funcionalidade original
 - Entidades duplicadas são resolvidas conforme seção 2 do spec (versão canônica)
 - Shared library `aurix-shared` permanece como dependência Maven
 - Cada fase termina com `mvn clean compile -pl svc-{domain}` passando
@@ -22,7 +22,7 @@
 ## File Structure (por domínio)
 
 ```
-backend/svc-{domain}/
+apps/backend/svc-{domain}/
   pom.xml                                      ← já existe (F0), adicionar dependências dos módulos fonte
   Dockerfile                                   ← já existe (F0)
   src/main/java/com/aurix/platform/{domain}/
@@ -59,34 +59,34 @@ backend/svc-{domain}/
 - [ ] **Step 1: Criar subpacotes no svc-customer**
 
 ```bash
-mkdir -p backend/svc-customer/src/main/java/com/aurix/platform/customer/kyc
-mkdir -p backend/svc-customer/src/main/java/com/aurix/platform/customer/onboarding
-mkdir -p backend/svc-customer/src/main/java/com/aurix/platform/customer/security
-mkdir -p backend/svc-customer/src/main/java/com/aurix/platform/customer/repository
-mkdir -p backend/svc-customer/src/main/java/com/aurix/platform/customer/config
-mkdir -p backend/svc-customer/src/main/java/com/aurix/platform/customer/client
-mkdir -p backend/svc-customer/src/main/java/com/aurix/platform/customer/dto
-mkdir -p backend/svc-customer/src/main/java/com/aurix/platform/customer/event
-mkdir -p backend/svc-customer/src/main/java/com/aurix/platform/customer/job
-mkdir -p backend/svc-customer/src/test/java/com/aurix/platform/customer
-mkdir -p backend/svc-customer/src/test/resources
+mkdir -p apps/backend/svc-customer/src/main/java/com/aurix/platform/customer/kyc
+mkdir -p apps/backend/svc-customer/src/main/java/com/aurix/platform/customer/onboarding
+mkdir -p apps/backend/svc-customer/src/main/java/com/aurix/platform/customer/security
+mkdir -p apps/backend/svc-customer/src/main/java/com/aurix/platform/customer/repository
+mkdir -p apps/backend/svc-customer/src/main/java/com/aurix/platform/customer/config
+mkdir -p apps/backend/svc-customer/src/main/java/com/aurix/platform/customer/client
+mkdir -p apps/backend/svc-customer/src/main/java/com/aurix/platform/customer/dto
+mkdir -p apps/backend/svc-customer/src/main/java/com/aurix/platform/customer/event
+mkdir -p apps/backend/svc-customer/src/main/java/com/aurix/platform/customer/job
+mkdir -p apps/backend/svc-customer/src/test/java/com/aurix/platform/customer
+mkdir -p apps/backend/svc-customer/src/test/resources
 ```
 
 - [ ] **Step 2: Copiar entidades de aurix-customer**
 
-Copiar cada arquivo `.java` de `backend/aurix-customer/src/main/java/.../entity/` para `backend/svc-customer/src/main/java/com/aurix/platform/customer/entity/`, atualizando o `package` declaration de `com.aurix.platform.customer.entity` para `com.aurix.platform.customer.entity`.
+Copiar cada arquivo `.java` de `apps/backend/aurix-customer/src/main/java/.../entity/` para `apps/backend/svc-customer/src/main/java/com/aurix/platform/customer/entity/`, atualizando o `package` declaration de `com.aurix.platform.customer.entity` para `com.aurix.platform.customer.entity`.
 
 - [ ] **Step 3: Copiar entidades de aurix-kyc**
 
-Copiar de `backend/aurix-kyc/src/main/java/.../entity/` para `backend/svc-customer/src/main/java/com/aurix/platform/customer/kyc/entity/`, atualizando package.
+Copiar de `apps/backend/aurix-kyc/src/main/java/.../entity/` para `apps/backend/svc-customer/src/main/java/com/aurix/platform/customer/kyc/entity/`, atualizando package.
 
 - [ ] **Step 4: Copiar entidades de aurix-onboarding**
 
-Copiar de `backend/aurix-onboarding/src/main/java/.../entity/` para `backend/svc-customer/src/main/java/com/aurix/platform/customer/onboarding/entity/`, atualizando package.
+Copiar de `apps/backend/aurix-onboarding/src/main/java/.../entity/` para `apps/backend/svc-customer/src/main/java/com/aurix/platform/customer/onboarding/entity/`, atualizando package.
 
 - [ ] **Step 5: Copiar entidades de aurix-security**
 
-Copiar de `backend/aurix-security/src/main/java/.../entity/` para `backend/svc-customer/src/main/java/com/aurix/platform/customer/security/entity/`, atualizando package.
+Copiar de `apps/backend/aurix-security/src/main/java/.../entity/` para `apps/backend/svc-customer/src/main/java/com/aurix/platform/customer/security/entity/`, atualizando package.
 
 - [ ] **Step 6: Copiar repositórios**
 
@@ -118,7 +118,7 @@ Adicionar dependências necessárias para os 4 módulos fonte:
 
 - [ ] **Step 11: Configurar application.yml**
 
-Atualizar `backend/svc-customer/src/main/resources/application.yml`:
+Atualizar `apps/backend/svc-customer/src/main/resources/application.yml`:
 ```yaml
 server:
   port: 8204
@@ -164,7 +164,7 @@ Corrigir erros de compilação — tipicamente: imports incorretos, classes falt
 
 - [ ] **Step 13: Migrar testes**
 
-Copiar testes de cada módulo fonte para `backend/svc-customer/src/test/java/`, atualizando packages e imports. Executar:
+Copiar testes de cada módulo fonte para `apps/backend/svc-customer/src/test/java/`, atualizando packages e imports. Executar:
 
 ```bash
 mvn test -pl svc-customer -q
@@ -174,7 +174,7 @@ Corrigir até `BUILD SUCCESS`.
 
 - [ ] **Step 14: Atualizar Traefik v2 paths**
 
-Adicionar os prefixes ao router `customer` em `infrastructure/traefik/dynamic.v2.yml`:
+Adicionar os prefixes ao router `customer` em `infra/traefik/dynamic.v2.yml`:
 ```yaml
 customer:
   rule: "PathPrefix(`/api/customer`) || PathPrefix(`/api/kyc`) || PathPrefix(`/api/onboarding`) || PathPrefix(`/api/auth`) || PathPrefix(`/api/mfa`) || PathPrefix(`/api/security`)"
@@ -185,7 +185,7 @@ customer:
 - [ ] **Step 15: Commit**
 
 ```bash
-git add backend/svc-customer/ infrastructure/traefik/dynamic.v2.yml
+git add apps/backend/svc-customer/ infra/traefik/dynamic.v2.yml
 git commit -m "feat(domain): merge customer, kyc, onboarding, security into svc-customer (F1)"
 ```
 
@@ -296,10 +296,10 @@ git commit -m "feat(domain): merge customer, kyc, onboarding, security into svc-
 
 Após todas as fases F1-F10 estarem verdes, remover módulos fonte:
 
-- [ ] **Step 1:** Remover módulos de `backend/pom.xml` (um por um, validando build)
-- [ ] **Step 2:** Remover diretórios `backend/aurix-*` (exceto `aurix-shared`)
-- [ ] **Step 3:** Remover entradas legadas de `infrastructure/docker-compose.yml`
-- [ ] **Step 4:** Remover entradas legadas de `infrastructure/traefik/dynamic.yml`
+- [ ] **Step 1:** Remover módulos de `apps/backend/pom.xml` (um por um, validando build)
+- [ ] **Step 2:** Remover diretórios `apps/backend/aurix-*` (exceto `aurix-shared`)
+- [ ] **Step 3:** Remover entradas legadas de `infra/docker-compose.yml`
+- [ ] **Step 4:** Remover entradas legadas de `infra/traefik/dynamic.yml`
 - [ ] **Step 5:** Remover jobs CI legados de `.github/workflows/`
 - [ ] **Step 6:** Renomear `docker-compose.v2.yml` → `docker-compose.yml` e `dynamic.v2.yml` → `dynamic.yml`
 - [ ] **Step 7:** Remover `aurix-gateway` módulo Maven (Traefik é o gateway real)

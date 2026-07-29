@@ -6,11 +6,11 @@ Backup, restore, DR, atualizações de versão, regulatório, Data Lakehouse, fe
 
 ## Backup e restore
 
-- **Backup**: scripts `infrastructure/scripts/backup-postgres.sh` (e `.bat`); retenção configurável; em multi-tenant incluir todos os bancos.
+- **Backup**: scripts `infra/scripts/backup-postgres.sh` (e `.bat`); retenção configurável; em multi-tenant incluir todos os bancos.
 - **Restore**: `restore-postgres.sh <arquivo.sql> [database]`; validar dados e comunicar impacto.
 - **Teste**: rodar restore periodicamente (ex.: trimestral).
 
-**Doc**: [backup-restore.md](../../05-infrastructure/infrastructure/backup-restore.md).
+**Doc**: [backup-restore.md](../../05-infra/infra/backup-restore.md).
 
 ---
 
@@ -18,7 +18,7 @@ Backup, restore, DR, atualizações de versão, regulatório, Data Lakehouse, fe
 
 - Procedimento documentado; teste periódico para garantir RTO/RPO.
 
-**Doc**: [dr-procedimento.md](../../05-infrastructure/infrastructure/dr-procedimento.md).
+**Doc**: [dr-procedimento.md](../../05-infra/infra/dr-procedimento.md).
 
 ---
 
@@ -26,7 +26,7 @@ Backup, restore, DR, atualizações de versão, regulatório, Data Lakehouse, fe
 
 - Deploy sem downtime: blue/green, canary, migrations (Flyway/Liquibase) antes ou durante o deploy.
 
-**Doc**: [deploy-sem-downtime.md](../../05-infrastructure/infrastructure/deploy-sem-downtime.md).
+**Doc**: [deploy-sem-downtime.md](../../05-infra/infra/deploy-sem-downtime.md).
 
 ---
 
@@ -50,6 +50,6 @@ Backup, restore, DR, atualizações de versão, regulatório, Data Lakehouse, fe
 
 - Por tenant via módulo provisioning (tabela e API).
 
-**Doc**: [feature-flags.md](../../05-infrastructure/infrastructure/feature-flags.md).
+**Doc**: [feature-flags.md](../../05-infra/infra/feature-flags.md).
 
 [Voltar ao ciclo de vida](README.md) | [Índice da wiki](../../README.md)

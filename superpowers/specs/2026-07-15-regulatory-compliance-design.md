@@ -585,9 +585,9 @@ String LGPD_EXECUTADA               = "lgpd.solicitacao.executada.v1";
 | `aurix-bacen/...CompulsorioService.java` | Novo |
 | `aurix-bacen/...ScrService.java` | Modificar (adicionar scheduled) |
 | `aurix-shared/...JurosReguladosValidator.java` | Novo |
-| `backend/aurix-ouvidoria/` | Novo módulo |
-| `backend/pom.xml` | Adicionar `aurix-ouvidoria` |
-| `infrastructure/docker-compose.yml` | Adicionar `aurix-ouvidoria` |
-| `infrastructure/traefik/dynamic.yml` | Rota para `/api/ouvidoria` |
+| `apps/backend/aurix-ouvidoria/` | Novo módulo |
+| `apps/backend/pom.xml` | Adicionar `aurix-ouvidoria` |
+| `infra/docker-compose.yml` | Adicionar `aurix-ouvidoria` |
+| `infra/traefik/dynamic.yml` | Rota para `/api/ouvidoria` |
 
 *Referência: business-gap-analysis.md — Gaps 3 (Regulatório), 10 (Juros).*

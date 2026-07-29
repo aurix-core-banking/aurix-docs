@@ -10,26 +10,26 @@
 
 ## Global Constraints
 
-- All code in `backend/` directory
+- All code in `apps/backend/` directory
 - Follow delombok pattern: manual getters/setters with `@java.lang.SuppressWarnings("all")`, `canEqual()`, PRIME=59
 - No Lombok annotations anywhere
 - Tests in `aurix-core` use `@SpringBootTest(webEnvironment = RANDOM_PORT)` + RestTemplate + `@MockitoBean`
 - Schema `aurix` for all tables
-- API spec in `aurix-api-specs/aurix-core.yaml`
+- API spec in `specs/aurix-core.yaml`
 
 ---
 
 ### Task 1: Add EMPRESARIAL to TipoConta + validation + tests
 
 **Files:**
-- Modify: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/entity/Conta.java` (add EMPRESARIAL to TipoConta enum)
-- Modify: `backend/aurix-core/src/main/java/com/aurix/platform/core/service/ContaService.java` (validation + DTO population)
-- Modify: `aurix-api-specs/aurix-core.yaml` (add EMPRESARIAL to tipoConta enum)
-- Create/test: `backend/aurix-core/src/test/java/com/aurix/platform/core/integration/ContaEmpresarialIntegrationTest.java`
+- Modify: `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/entity/Conta.java` (add EMPRESARIAL to TipoConta enum)
+- Modify: `apps/backend/aurix-core/src/main/java/com/aurix/platform/core/service/ContaService.java` (validation + DTO population)
+- Modify: `specs/aurix-core.yaml` (add EMPRESARIAL to tipoConta enum)
+- Create/test: `apps/backend/aurix-core/src/test/java/com/aurix/platform/core/integration/ContaEmpresarialIntegrationTest.java`
 
 - [ ] **Step 1: Add EMPRESARIAL to TipoConta enum**
 
-In `backend/aurix-shared/src/main/java/com/aurix/platform/shared/entity/Conta.java`, line 163, after `SALARIO("Conta Salário")`:
+In `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/entity/Conta.java`, line 163, after `SALARIO("Conta Salário")`:
 
 ```java
         /**
@@ -40,7 +40,7 @@ In `backend/aurix-shared/src/main/java/com/aurix/platform/shared/entity/Conta.ja
 
 - [ ] **Step 2: Update ContaService.criarConta() — validate PJ requirement**
 
-In `backend/aurix-core/src/main/java/com/aurix/platform/core/service/ContaService.java`, after line 36 (loading cliente), add:
+In `apps/backend/aurix-core/src/main/java/com/aurix/platform/core/service/ContaService.java`, after line 36 (loading cliente), add:
 
 ```java
         if (contaDTO.getTipoConta() == Conta.TipoConta.EMPRESARIAL
@@ -59,7 +59,7 @@ In `converterParaDTO()` at line 240 (after `setStatus`), add:
 
 - [ ] **Step 4: Update API spec**
 
-In `aurix-api-specs/aurix-core.yaml`, add `EMPRESARIAL` to the `tipoConta` enum. The exact location depends on the file — locate the `tipoConta` enum and add the value. For example:
+In `specs/aurix-core.yaml`, add `EMPRESARIAL` to the `tipoConta` enum. The exact location depends on the file — locate the `tipoConta` enum and add the value. For example:
 
 ```yaml
         tipoConta:
@@ -69,7 +69,7 @@ In `aurix-api-specs/aurix-core.yaml`, add `EMPRESARIAL` to the `tipoConta` enum.
 
 - [ ] **Step 5: Create integration test**
 
-Create `backend/aurix-core/src/test/java/com/aurix/platform/core/integration/ContaEmpresarialIntegrationTest.java`:
+Create `apps/backend/aurix-core/src/test/java/com/aurix/platform/core/integration/ContaEmpresarialIntegrationTest.java`:
 
 ```java
 package com.aurix.platform.core.integration;

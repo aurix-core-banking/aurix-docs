@@ -31,8 +31,8 @@ Para guias passo a passo de implantação, consulte a **[Wiki](./wiki/)**.
 
 Para detalhes específicos de baixo nível, cada módulo possui seu próprio guia:
 
-*   **Backend**: Localizados em cada submódulo da pasta `backend/`.
-*   **Frontend**: [Portal Web](../frontend/aurix-web/README.md) e [Painel Administrativo](../frontend/aurix-admin/README.md).
+*   **Backend**: Localizados em cada submódulo da pasta `apps/backend/`.
+*   **Frontend**: [Portal Web](../apps/frontend/aurix-web/README.md) e [Painel Administrativo](../apps/frontend/aurix-admin/README.md).
 *   **Dados e ML**: [Pipelines de Dados](./04-data-ai/data-pipelines/README.md) e [Modelos de IA](./04-data-ai/ml/README.md).
 
 ---

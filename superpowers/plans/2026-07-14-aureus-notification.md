@@ -23,7 +23,7 @@
 ## File Structure
 
 ```
-backend/aurix-notification/
+apps/backend/aurix-notification/
 ├── pom.xml                                          (replace stub)
 ├── src/main/java/com/aurix/platform/notification/
 │   ├── AurixNotificationApplication.java
@@ -67,13 +67,13 @@ backend/aurix-notification/
 ### Task 1: Scaffold — pom.xml, application classes, config
 
 **Files:**
-- Modify: `backend/aurix-notification/pom.xml` (replace stub)
-- Create: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/AurixNotificationApplication.java`
-- Create: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/config/KafkaConfig.java`
-- Create: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/config/SecurityConfig.java`
-- Create: `backend/aurix-notification/src/main/resources/application.yml`
-- Create: `backend/aurix-notification/src/test/resources/application-test.yml`
-- Create: `backend/aurix-notification/src/test/java/com/aurix/platform/notification/AurixNotificationApplicationTest.java`
+- Modify: `apps/backend/aurix-notification/pom.xml` (replace stub)
+- Create: `apps/backend/aurix-notification/src/main/java/com/aurix/platform/notification/AurixNotificationApplication.java`
+- Create: `apps/backend/aurix-notification/src/main/java/com/aurix/platform/notification/config/KafkaConfig.java`
+- Create: `apps/backend/aurix-notification/src/main/java/com/aurix/platform/notification/config/SecurityConfig.java`
+- Create: `apps/backend/aurix-notification/src/main/resources/application.yml`
+- Create: `apps/backend/aurix-notification/src/test/resources/application-test.yml`
+- Create: `apps/backend/aurix-notification/src/test/java/com/aurix/platform/notification/AurixNotificationApplicationTest.java`
 
 **Interfaces:**
 - Produces: application entry point, Kafka topic beans, security config, test context load
@@ -81,10 +81,10 @@ backend/aurix-notification/
 - [ ] **Step 1: Create directory structure**
 
 ```bash
-mkdir -p backend/aurix-notification/src/main/java/com/aurix/platform/notification/{config,controller,entity,repository,service/channel}
-mkdir -p backend/aurix-notification/src/main/resources
-mkdir -p backend/aurix-notification/src/test/java/com/aurix/platform/notification/{service/channel,controller}
-mkdir -p backend/aurix-notification/src/test/resources
+mkdir -p apps/backend/aurix-notification/src/main/java/com/aurix/platform/notification/{config,controller,entity,repository,service/channel}
+mkdir -p apps/backend/aurix-notification/src/main/resources
+mkdir -p apps/backend/aurix-notification/src/test/java/com/aurix/platform/notification/{service/channel,controller}
+mkdir -p apps/backend/aurix-notification/src/test/resources
 ```
 
 - [ ] **Step 2: Replace pom.xml**
@@ -394,14 +394,14 @@ Expected: PASS (context loads with mocked KafkaTemplate)
 ### Task 2: Entities and Repositories
 
 **Files:**
-- Create: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/entity/TemplateNotificacao.java`
-- Create: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/entity/FilaNotificacao.java`
-- Create: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/entity/ConfirmacaoRecebimento.java`
-- Create: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/entity/PreferenciaCliente.java`
-- Create: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/repository/TemplateNotificacaoRepository.java`
-- Create: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/repository/FilaNotificacaoRepository.java`
-- Create: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/repository/ConfirmacaoRecebimentoRepository.java`
-- Create: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/repository/PreferenciaClienteRepository.java`
+- Create: `apps/backend/aurix-notification/src/main/java/com/aurix/platform/notification/entity/TemplateNotificacao.java`
+- Create: `apps/backend/aurix-notification/src/main/java/com/aurix/platform/notification/entity/FilaNotificacao.java`
+- Create: `apps/backend/aurix-notification/src/main/java/com/aurix/platform/notification/entity/ConfirmacaoRecebimento.java`
+- Create: `apps/backend/aurix-notification/src/main/java/com/aurix/platform/notification/entity/PreferenciaCliente.java`
+- Create: `apps/backend/aurix-notification/src/main/java/com/aurix/platform/notification/repository/TemplateNotificacaoRepository.java`
+- Create: `apps/backend/aurix-notification/src/main/java/com/aurix/platform/notification/repository/FilaNotificacaoRepository.java`
+- Create: `apps/backend/aurix-notification/src/main/java/com/aurix/platform/notification/repository/ConfirmacaoRecebimentoRepository.java`
+- Create: `apps/backend/aurix-notification/src/main/java/com/aurix/platform/notification/repository/PreferenciaClienteRepository.java`
 
 **Interfaces:**
 - Produces: entity classes and repository interfaces consumed by service layer
@@ -705,12 +705,12 @@ Expected: PASS
 ### Task 3: Channel interface, LogChannel, NotificacaoService
 
 **Files:**
-- Create: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/service/channel/NotificacaoChannel.java`
-- Create: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/service/channel/LogChannel.java`
-- Create: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/service/NotificacaoService.java`
-- Create: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/service/NotificacaoProducer.java`
-- Create: `backend/aurix-notification/src/test/java/com/aurix/platform/notification/service/NotificacaoServiceTest.java`
-- Create: `backend/aurix-notification/src/test/java/com/aurix/platform/notification/service/channel/LogChannelTest.java`
+- Create: `apps/backend/aurix-notification/src/main/java/com/aurix/platform/notification/service/channel/NotificacaoChannel.java`
+- Create: `apps/backend/aurix-notification/src/main/java/com/aurix/platform/notification/service/channel/LogChannel.java`
+- Create: `apps/backend/aurix-notification/src/main/java/com/aurix/platform/notification/service/NotificacaoService.java`
+- Create: `apps/backend/aurix-notification/src/main/java/com/aurix/platform/notification/service/NotificacaoProducer.java`
+- Create: `apps/backend/aurix-notification/src/test/java/com/aurix/platform/notification/service/NotificacaoServiceTest.java`
+- Create: `apps/backend/aurix-notification/src/test/java/com/aurix/platform/notification/service/channel/LogChannelTest.java`
 
 **Interfaces:**
 - Consumes: `TemplateNotificacao`, `FilaNotificacao`, `PreferenciaCliente`, `ConfirmacaoRecebimento` entities, all repositories
@@ -1177,8 +1177,8 @@ Expected: All tests PASS
 ### Task 4: NotificacaoConsumer (Kafka listeners)
 
 **Files:**
-- Create: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/service/NotificacaoConsumer.java`
-- Create: `backend/aurix-notification/src/test/java/com/aurix/platform/notification/service/NotificacaoConsumerTest.java`
+- Create: `apps/backend/aurix-notification/src/main/java/com/aurix/platform/notification/service/NotificacaoConsumer.java`
+- Create: `apps/backend/aurix-notification/src/test/java/com/aurix/platform/notification/service/NotificacaoConsumerTest.java`
 
 **Interfaces:**
 - Consumes: `NotificacaoService.enviar()` from Task 3
@@ -1408,9 +1408,9 @@ Expected: All tests PASS
 ### Task 5: NotificacaoController + HealthController
 
 **Files:**
-- Create: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/controller/NotificacaoController.java`
-- Create: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/controller/HealthController.java`
-- Create: `backend/aurix-notification/src/test/java/com/aurix/platform/notification/controller/NotificacaoControllerTest.java`
+- Create: `apps/backend/aurix-notification/src/main/java/com/aurix/platform/notification/controller/NotificacaoController.java`
+- Create: `apps/backend/aurix-notification/src/main/java/com/aurix/platform/notification/controller/HealthController.java`
+- Create: `apps/backend/aurix-notification/src/test/java/com/aurix/platform/notification/controller/NotificacaoControllerTest.java`
 
 **Interfaces:**
 - Consumes: `NotificacaoService` (all public methods from Task 3)
@@ -1682,6 +1682,6 @@ Expected: PASS
 - [ ] **Step 4: Commit**
 
 ```bash
-git add backend/aurix-notification/
+git add apps/backend/aurix-notification/
 git commit -m "feat(notification): full module with template rendering, Kafka consumers, and channel dispatch"
 ```
