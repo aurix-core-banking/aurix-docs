@@ -35,7 +35,7 @@ O que SRE e Infra precisam saber: stack de dados, deploy, monitoramento, alertas
 
 ## Run e operação
 
-- **Runbook AUREUS Cloud**: [aureus-cloud-runbook.md](../../05-infrastructure/infrastructure/aureus-cloud-runbook.md).
+- **Runbook AURIX Cloud**: [aurix-cloud-runbook.md](../../05-infrastructure/infrastructure/aurix-cloud-runbook.md).
 - **Ciclo de vida Run**: [02-lifecycle/run.md](../../02-lifecycle/ciclo-de-vida/run.md).
 
 ---

@@ -1,6 +1,6 @@
-# Guia de Documentação AUREUS
+# Guia de Documentação AURIX
 
-Bem-vindo ao centro de documentação da plataforma AUREUS. Este guia organiza os recursos técnicos para facilitar a navegação por áreas de interesse.
+Bem-vindo ao centro de documentação da plataforma AURIX. Este guia organiza os recursos técnicos para facilitar a navegação por áreas de interesse.
 
 ---
 
@@ -12,7 +12,7 @@ Bem-vindo ao centro de documentação da plataforma AUREUS. Este guia organiza o
 ---
 
 ## 🏗️ Arquitetura e Dados
-Entenda as bases que sustentam a robustez da AUREUS.
+Entenda as bases que sustentam a robustez da AURIX.
 *   **[Visão Geral](./02-technical/arquitetura/visao-geral.md)**: Arquitetura do sistema e padrões.
 *   **[Multi-tenant](./02-technical/arquitetura/multi-tenant.md)**: Como gerenciamos múltiplos clientes de forma isolada.
 *   **[Banco de Dados](./02-technical/arquitetura/evolucao-arquitetura-dados.md)**: Estratégia de performance e particionamento.
@@ -30,7 +30,7 @@ Guia para manter a plataforma rodando com segurança e escalabilidade.
 ---
 
 ## 💻 Desenvolvimento e Integração
-Recursos para desenvolvedores que constroem e integram com a AUREUS.
+Recursos para desenvolvedores que constroem e integram com a AURIX.
 *   **[Portal do Desenvolvedor](./03-development/portal-desenvolvedor/README.md)**: Catálogo de APIs e guias de integração.
 *   **[Frontend](./03-development/frontend/)**: Documentação do Admin e Web Applications.
 *   **[Data Lakehouse](./04-data-ai/data-pipelines/README.md)**: Pipelines de dados, Airflow e dbt.

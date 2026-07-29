@@ -1,14 +1,14 @@
-# Specification: AUREUS Unified Shell (Dynamics 365 / Enterprise Suite Model)
+# Specification: AURIX Unified Shell (Dynamics 365 / Enterprise Suite Model)
 
 **Date:** 2026-07-24  
 **Status:** Approved  
-**Target:** `frontend/aureus-web` (with integrated modular shell supporting all Banking and Admin capabilities)
+**Target:** `frontend/aurix-web` (with integrated modular shell supporting all Banking and Admin capabilities)
 
 ---
 
 ## 1. Overview & Objectives
 
-The goal of the **AUREUS Unified Shell** is to unify the frontend experience into a modern, enterprise-grade application shell inspired by Microsoft Dynamics 365 and cloud financial suites.
+The goal of the **AURIX Unified Shell** is to unify the frontend experience into a modern, enterprise-grade application shell inspired by Microsoft Dynamics 365 and cloud financial suites.
 
 Key objectives:
 - **Suite Top Bar (Header):** Featuring a 9-dot Waffle menu (App Launcher) to seamlessly switch between apps (*Banking*, *Admin*, *Investments*, *Credit*, *Compliance & Risk*).
@@ -24,7 +24,7 @@ Key objectives:
 ```
 +---------------------------------------------------------------------------------------------------+
 | 🌐 GLOBAL TOPBAR (Suite Bar)                                                                      |
-| [::: Waffle Menu]  AUREUS Suite | Financial Cloud     [🔍 Buscar (Ctrl+K)] [🔔 3] [⚙️] [🌙] [👤 User] |
+| [::: Waffle Menu]  AURIX Suite | Financial Cloud     [🔍 Buscar (Ctrl+K)] [🔔 3] [⚙️] [🌙] [👤 User] |
 +---------------------------------------------------------------------------------------------------+
 | 📑 WORKSPACE TABS BAR                                                                            |
 | [🏠 Inicio] [💳 Pix / Transferência x] [📊 Contas Admin x] [➕ Nova Aba]                           |
@@ -103,8 +103,8 @@ interface ShellState {
 
 | App Key | App Title | Icon | Default Route | Included Views |
 | :--- | :--- | :--- | :--- | :--- |
-| `banking` | **AUREUS Banking** | `AccountBalance` | `/dashboard` | Dashboard, Contas, Extrato, Transações, Transferência, Pix, Cartões, Pagamentos, Recarga |
-| `admin` | **AUREUS Admin** | `AdminPanelSettings` | `/admin/dashboard` | Painel Admin, Gestão de Clientes, Aprovações, Tarifas, Logs de Auditoria |
+| `banking` | **AURIX Banking** | `AccountBalance` | `/dashboard` | Dashboard, Contas, Extrato, Transações, Transferência, Pix, Cartões, Pagamentos, Recarga |
+| `admin` | **AURIX Admin** | `AdminPanelSettings` | `/admin/dashboard` | Painel Admin, Gestão de Clientes, Aprovações, Tarifas, Logs de Auditoria |
 | `investments` | **Investimentos** | `TrendingUp` | `/investimentos` | Carteira de Investimentos, Renda Fixa, Renda Variável, Yields |
 | `credit` | **Crédito & Empréstimos** | `CreditScore` | `/credito` | Simulação de Crédito, Consignado, Contratos, Margem Consignável |
 | `compliance` | **Fraude & Risco** | `Security` | `/compliance/alertas` | Alertas de Risco, Monitoramento em Tempo Real, Regras de Antifraude |
@@ -115,7 +115,7 @@ interface ShellState {
 ## 6. Theme & Visual Aesthetics
 
 - **Primary Colors:** Slate Dark (`#0F172A`), Midnight Navy (`#1E293B`).
-- **Accent Color:** AUREUS Gold (`#D4AF37` / `#C5A028`).
+- **Accent Color:** AURIX Gold (`#D4AF37` / `#C5A028`).
 - **Header Glassmorphism:** `background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(212, 175, 55, 0.2);`
 - **Tab Bar Styling:** Elevated pill/card active tab indicator with golden accent bottom bar or border glow.
 - **Typography:** Clean sans-serif hierarchy (Inter / Roboto) with custom scrollbars and MUI transitions.

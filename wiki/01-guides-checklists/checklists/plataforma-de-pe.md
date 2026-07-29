@@ -1,6 +1,6 @@
 # Checklist – Plataforma de pé
 
-Passos para colocar a plataforma AUREUS de pé (primeira vez ou ambiente novo), na ordem recomendada.
+Passos para colocar a plataforma AURIX de pé (primeira vez ou ambiente novo), na ordem recomendada.
 
 ---
 
@@ -21,7 +21,7 @@ Passos para colocar a plataforma AUREUS de pé (primeira vez ou ambiente novo), 
 - [ ] Subir a stack: `docker-compose up -d`
 - [ ] Verificar serviços: `docker-compose ps` (postgres, redis, kafka, clickhouse, minio, etc.)
 - [ ] Se o Postgres já existia antes do script de Airflow: criar DB e usuário Airflow (ver [data-lakehouse.md](data-lakehouse.md#banco-airflow))
-- [ ] Criar buckets MinIO: executar `scripts/create-minio-buckets.sh` ou criar manualmente no Console (porta 9001) os buckets `aureus-bronze`, `aureus-silver`, `aureus-gold`
+- [ ] Criar buckets MinIO: executar `scripts/create-minio-buckets.sh` ou criar manualmente no Console (porta 9001) os buckets `aurix-bronze`, `aurix-silver`, `aurix-gold`
 
 Referência: [Arquitetura de dados](../../../02-technical/arquitetura/evolucao-arquitetura-dados.md).
 
@@ -30,17 +30,17 @@ Referência: [Arquitetura de dados](../../../02-technical/arquitetura/evolucao-a
 ## 3. Backend
 
 - [ ] Na raiz: `cd backend && mvn clean install -DskipTests`
-- [ ] Configurar `application.yml` de cada módulo (ou usar defaults) com URL do Postgres: `jdbc:postgresql://localhost:5432/aureus`, user `aureus_user`, password `aureus_secure_password`
+- [ ] Configurar `application.yml` de cada módulo (ou usar defaults) com URL do Postgres: `jdbc:postgresql://localhost:5432/aurix`, user `aurix_user`, password `aurix_secure_password`
 - [ ] Configurar Kafka (se usar eventos): bootstrap `localhost:9092`
-- [ ] Subir os serviços necessários (ex.: gateway, core, pix, credit) ou usar script: `infrastructure/scripts/start-aureus.sh` / `start-aureus.bat`
+- [ ] Subir os serviços necessários (ex.: gateway, core, pix, credit) ou usar script: `infrastructure/scripts/start-aurix.sh` / `start-aurix.bat`
 - [ ] Validar health: ex. `GET http://localhost:8080/actuator/health` (ajustar porta conforme gateway)
 
 ---
 
 ## 4. Frontend
 
-- [ ] **aureus-admin**: `cd frontend/aureus-admin && npm install && npm start` (ver [Instalação Aureus Admin](../guias/instalacao-admin.md))
-- [ ] **aureus-web**: `cd frontend/aureus-web && npm install && npm start` (se existir)
+- [ ] **aurix-admin**: `cd frontend/aurix-admin && npm install && npm start` (ver [Instalação Aurix Admin](../guias/instalacao-admin.md))
+- [ ] **aurix-web**: `cd frontend/aurix-web && npm install && npm start` (se existir)
 - [ ] Configurar URL da API (env ou config) apontando para o gateway
 
 ---

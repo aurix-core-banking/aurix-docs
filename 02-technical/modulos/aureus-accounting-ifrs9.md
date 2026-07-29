@@ -2,7 +2,7 @@
 
 ## Visao Geral
 
-O modulo IFRS 9 do AUREUS implementa os requisitos contabeis do IFRS 9 para instrumentos financeiros:
+O modulo IFRS 9 do AURIX implementa os requisitos contabeis do IFRS 9 para instrumentos financeiros:
 
 1. **Classificacao e Mensuracao** - Categorizacao de instrumentos financeiros
 2. **Expected Credit Loss (ECL)** - Provisao para perdas esperadas de credito
@@ -31,7 +31,7 @@ O modulo IFRS 9 do AUREUS implementa os requisitos contabeis do IFRS 9 para inst
 
 ## Integracao
 
-- Modulos: aureus-credit, aureus-treasury, aureus-analytics, aureus-compliance
+- Modulos: aurix-credit, aurix-treasury, aurix-analytics, aurix-compliance
 - Externos: agencias de rating, scoring, mercados, BACEN, CVM
 
 ## Compliance

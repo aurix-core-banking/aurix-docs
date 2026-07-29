@@ -1,4 +1,4 @@
-# Plano de Implementação: `aureus-cambio` — Câmbio
+# Plano de Implementação: `aurix-cambio` — Câmbio
 
 > Base: [Spec `2026-06-24-products-design.md`](../specs/2026-06-24-products-design.md) §5
 > Porta: **8116** | Gateway: `/api/cambio/**` | Context-path: `/api/cambio`
@@ -11,10 +11,10 @@
 
 - [ ] **Criar diretórios**
   ```
-  backend/aureus-cambio/
+  backend/aurix-cambio/
   ├── pom.xml
-  ├── src/main/java/com/aureus/platform/cambio/
-  │   ├── AureusCambioApplication.java
+  ├── src/main/java/com/aurix/platform/cambio/
+  │   ├── AurixCambioApplication.java
   │   ├── package-info.java
   │   ├── entity/
   │   ├── repository/
@@ -28,15 +28,15 @@
   ├── src/main/resources/
   │   ├── application.yml
   │   └── application-prod.yml
-  └── src/test/java/com/aureus/platform/cambio/
+  └── src/test/java/com/aurix/platform/cambio/
       ├── controller/
       └── resources/
           └── application-test.yml
   ```
-- [ ] **`pom.xml`** — copiar estrutura de `aureus-poupanca/pom.xml`, alterar `artifactId` para `aureus-cambio`, `name`/`description`. Dependências: `aureus-shared`, `spring-boot-starter-web`, `spring-boot-starter-data-jpa`, `spring-boot-starter-validation`, `spring-boot-starter-security`, `spring-boot-starter-actuator`, `spring-kafka`, `spring-boot-starter-data-redis`, `postgresql` (runtime), `h2` (test), `springdoc-openapi-starter-webmvc-ui` (2.2.0), `spring-boot-starter-test`, `spring-security-test`, `spring-kafka-test`, `testcontainers-junit-jupiter`, `testcontainers-postgresql`
-- [ ] **`AureusCambioApplication.java`** — `@SpringBootApplication`, `@EnableScheduling`
+- [ ] **`pom.xml`** — copiar estrutura de `aurix-poupanca/pom.xml`, alterar `artifactId` para `aurix-cambio`, `name`/`description`. Dependências: `aurix-shared`, `spring-boot-starter-web`, `spring-boot-starter-data-jpa`, `spring-boot-starter-validation`, `spring-boot-starter-security`, `spring-boot-starter-actuator`, `spring-kafka`, `spring-boot-starter-data-redis`, `postgresql` (runtime), `h2` (test), `springdoc-openapi-starter-webmvc-ui` (2.2.0), `spring-boot-starter-test`, `spring-security-test`, `spring-kafka-test`, `testcontainers-junit-jupiter`, `testcontainers-postgresql`
+- [ ] **`AurixCambioApplication.java`** — `@SpringBootApplication`, `@EnableScheduling`
 - [ ] **`package-info.java`** (root + cada subpacote) — `@NullMarked` com `import org.jspecify.annotations.NullMarked`
-- [ ] **`application.yml`** — `server.port: 8116`, `server.servlet.context-path: /api/cambio`, datasource PostgreSQL, JPA/Hibernate ddl-auto update, Redis, Kafka (`aureus-cambio-group`), Actuator, logging. Propriedades custom: `cambio.cotacao.fonte-bacen-api-url`, `cambio.limite-remessa-mensal-pf: 10000`, `cambio.limite-remessa-anual-pf: 30000`
+- [ ] **`application.yml`** — `server.port: 8116`, `server.servlet.context-path: /api/cambio`, datasource PostgreSQL, JPA/Hibernate ddl-auto update, Redis, Kafka (`aurix-cambio-group`), Actuator, logging. Propriedades custom: `cambio.cotacao.fonte-bacen-api-url`, `cambio.limite-remessa-mensal-pf: 10000`, `cambio.limite-remessa-anual-pf: 30000`
 - [ ] **`application-prod.yml`** — ddl-auto: validate, pool maior, logging INFO
 
 ### 1.2 Entidades
@@ -236,9 +236,9 @@
 
 ### 1.11 Integração com Gateway
 
-- [ ] **Gateway `application.yml`** — adicionar rota após a seção de AUREUS Credit:
+- [ ] **Gateway `application.yml`** — adicionar rota após a seção de AURIX Credit:
   ```yaml
-  - id: aureus-cambio
+  - id: aurix-cambio
     uri: http://localhost:8116
     predicates:
       - Path=/api/cambio/**
@@ -248,11 +248,11 @@
 
 ### 1.12 Parent POM
 
-- [ ] **`backend/pom.xml`** — adicionar `<module>aureus-cambio</module>` na lista de modules (entre `aureus-bacen` e `aureus-cartoes`, ordem alfabética).
+- [ ] **`backend/pom.xml`** — adicionar `<module>aurix-cambio</module>` na lista de modules (entre `aurix-bacen` e `aurix-cartoes`, ordem alfabética).
 
 ### 1.13 OpenAPI Spec
 
-- [ ] **`aureus-api-specs/aureus-core.yaml`** — adicionar tag `cambio`, paths do câmbio (`/api/cambio/cotacoes`, `/api/cambio/contratos`, `/api/cambio/remessas`, `/api/cambio/operacoes`, `/api/cambio/clientes`) e schemas correspondentes (`Cotacao`, `ContratoCambio`, `Remessa`, `OperacaoCambio`, `ClienteCambio`).
+- [ ] **`aurix-api-specs/aurix-core.yaml`** — adicionar tag `cambio`, paths do câmbio (`/api/cambio/cotacoes`, `/api/cambio/contratos`, `/api/cambio/remessas`, `/api/cambio/operacoes`, `/api/cambio/clientes`) e schemas correspondentes (`Cotacao`, `ContratoCambio`, `Remessa`, `OperacaoCambio`, `ClienteCambio`).
 
 ### 1.14 Testes
 
@@ -303,6 +303,6 @@
 | Kafka fire-and-forget com try-catch | `AniversarioService.java:92-97` |
 | `@Scheduled` em `@Component` | `ProcessamentoFolhaJob.java` |
 | Test: `@SpringBootTest(RANDOM_PORT)` + TestConfig | `ContaPoupancaControllerTest.java` |
-| `application-test.yml` com H2 | `aureus-poupanca/src/test/resources/application-test.yml` |
+| `application-test.yml` com H2 | `aurix-poupanca/src/test/resources/application-test.yml` |
 | Validação de domínio na service (não no controller) | `ContaPoupancaService.java` |
 | Service `@Transactional` | `ContaPoupancaService.java` |

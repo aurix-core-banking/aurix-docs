@@ -9,7 +9,7 @@
 
 A plataforma usa JPA/Hibernate (Spring Data JPA) de forma uniforme em todos os 27+ módulos, sem distinção entre
 entidades de cadastro (cliente, empresa, produto) e operações que movem dinheiro (débito/crédito de saldo,
-liquidação, PIX). Ao construir e depurar o skill de execução do `aureus-core` (ver `docs/wiki/01-guides-checklists/checklists/plataforma-completude.md`), apareceram bugs concretos que expõem onde essa uniformidade já causou problemas reais, e a leitura dos serviços financeiros mostrou um padrão de concorrência que é uma falha de design, não só de implementação.
+liquidação, PIX). Ao construir e depurar o skill de execução do `aurix-core` (ver `docs/wiki/01-guides-checklists/checklists/plataforma-completude.md`), apareceram bugs concretos que expõem onde essa uniformidade já causou problemas reais, e a leitura dos serviços financeiros mostrou um padrão de concorrência que é uma falha de design, não só de implementação.
 
 **Bugs já encontrados causados por abstração do JPA mal usada** (corrigidos durante a construção do skill de run):
 - `OutboxEvent.payload` e `Transacao.dadosPix`/`dadosTed`: campos `String` com `@Column(columnDefinition =
@@ -18,12 +18,12 @@ liquidação, PIX). Ao construir e depurar o skill de execução do `aureus-core
   detectando (porque não há testes nesses módulos).
 
 **Padrão de concorrência sem proteção real nos fluxos que movem dinheiro:**
-- `aureus-core/.../service/ContaService.java` (`atualizarSaldo`, `atualizarLimiteUtilizado`): lê a `Conta`, faz
+- `aurix-core/.../service/ContaService.java` (`atualizarSaldo`, `atualizarLimiteUtilizado`): lê a `Conta`, faz
   `setSaldo(novoSaldo)`, salva. Não há `@Lock(PESSIMISTIC_WRITE)` nem SQL atômico (`UPDATE ... SET saldo =
   saldo - ? WHERE ...`). A única rede de segurança é o `@Version` herdado de `BaseEntity` (optimistic locking
-  automático do Hibernate) — protege contra *lost update* dentro do próprio `aureus-core`, mas lança excessão
+  automático do Hibernate) — protege contra *lost update* dentro do próprio `aurix-core`, mas lança excessão
   sob concorrência em vez de resolver o conflito, e nada no código trata/retenta esse erro.
-- `aureus-settlement/.../service/SettlementService.java` (`validarSaldoDisponivel` + `atualizarSaldoConta`,
+- `aurix-settlement/.../service/SettlementService.java` (`validarSaldoDisponivel` + `atualizarSaldoConta`,
   linhas ~175-238): clássico TOCTOU (time-of-check-to-time-of-use) — valida saldo disponível, e só depois,
   numa chamada separada, debita/credita. Entre as duas chamadas duas liquidações concorrentes podem aprovar
   com base no mesmo saldo e gerar saldo negativo sem detecção. `SaldoConta` (a entidade que guarda esse saldo)
@@ -33,10 +33,10 @@ liquidação, PIX). Ao construir e depurar o skill de execução do `aureus-core
   método que chama `atualizarSaldos` o fazia **incondicionalmente**, mesmo quando a liquidação era rejeitada
   por regra de negócio (ex.: TED fora do horário de funcionamento) — ou seja, dinheiro era debitado/creditado
   mesmo em operações rejeitadas.
-- `SaldoConta` (`aureus-settlement`) e `Conta.saldo` (`aureus-core`, usado por `aureus-pix`) são **fontes de
+- `SaldoConta` (`aurix-settlement`) e `Conta.saldo` (`aurix-core`, usado por `aurix-pix`) são **fontes de
   saldo completamente separadas e não sincronizadas** — o mesmo tipo de duplicação de entidade já identificado
   na auditoria de completude da plataforma (`ConciliacaoBancaria` e `Cliente` duplicados entre módulos).
-- `aureus-pix/.../service/PixTransferenciaService.java` (`processarTransferencia`): muda o status da
+- `aurix-pix/.../service/PixTransferenciaService.java` (`processarTransferencia`): muda o status da
   `PixTransferencia` para `PROCESSADA` e publica um evento, mas **nunca chama nada que debite a conta origem
   ou credite o destino**. Não é um problema de locking — é a ausência completa da movimentação de saldo no
   PIX, reforçando o achado já registrado no checklist de completude ("PIX é simulação").
@@ -110,10 +110,10 @@ operação dentro dos mesmos módulos.
 
 | Módulo / fluxo | Situação atual | Ação | Status |
 |---|---|---|---|
-| `aureus-core` `ContaService.atualizarSaldo` / `atualizarLimiteUtilizado` | Read-modify-write, só `@Version` como rede de segurança | Trocar por `UPDATE` atômico condicional (`saldo >= :valor` no débito) | ✅ Feito — `ContaRepository.debitarSaldoAtomico`/`creditarSaldoAtomico`/`utilizarLimiteAtomico`/`liberarLimiteAtomico` |
-| `aureus-settlement` `SettlementService.validarSaldoDisponivel` + `atualizarSaldoConta` | TOCTOU explícito; saldo movimentado mesmo em liquidação rejeitada | Unificar validação+escrita numa operação atômica; só movimentar saldo quando status final for LIQUIDADO; constraint única (`conta`, `data_referencia`) | ✅ Feito — `SaldoContaRepository.debitarSaldoAtomico`/`creditarSaldoAtomico`, `SettlementService.movimentarSaldos` |
-| `aureus-settlement` `SaldoConta` vs `aureus-core` `Conta.saldo` | Fontes de saldo duplicadas e dessincronizadas | Consolidar em uma única fonte (acompanhar seção 12 do checklist de completude) | ⏳ Pendente — é migração de dado real, não só código |
-| `aureus-pix` `PixTransferenciaService.processarTransferencia` | Não debita/credita saldo nenhum | Implementar a movimentação real usando o padrão de atualização atômica acima como parte da implementação, não depois | ✅ Feito — debita origem atomicamente, credita destino se a chave PIX resolver para conta local |
-| `aureus-credit`, `aureus-treasury` | Não auditado neste ADR | Revisar com o mesmo critério (debita/credita saldo ou decide com base em saldo?) antes de assumir que está protegido | ⏳ Pendente |
+| `aurix-core` `ContaService.atualizarSaldo` / `atualizarLimiteUtilizado` | Read-modify-write, só `@Version` como rede de segurança | Trocar por `UPDATE` atômico condicional (`saldo >= :valor` no débito) | ✅ Feito — `ContaRepository.debitarSaldoAtomico`/`creditarSaldoAtomico`/`utilizarLimiteAtomico`/`liberarLimiteAtomico` |
+| `aurix-settlement` `SettlementService.validarSaldoDisponivel` + `atualizarSaldoConta` | TOCTOU explícito; saldo movimentado mesmo em liquidação rejeitada | Unificar validação+escrita numa operação atômica; só movimentar saldo quando status final for LIQUIDADO; constraint única (`conta`, `data_referencia`) | ✅ Feito — `SaldoContaRepository.debitarSaldoAtomico`/`creditarSaldoAtomico`, `SettlementService.movimentarSaldos` |
+| `aurix-settlement` `SaldoConta` vs `aurix-core` `Conta.saldo` | Fontes de saldo duplicadas e dessincronizadas | Consolidar em uma única fonte (acompanhar seção 12 do checklist de completude) | ⏳ Pendente — é migração de dado real, não só código |
+| `aurix-pix` `PixTransferenciaService.processarTransferencia` | Não debita/credita saldo nenhum | Implementar a movimentação real usando o padrão de atualização atômica acima como parte da implementação, não depois | ✅ Feito — debita origem atomicamente, credita destino se a chave PIX resolver para conta local |
+| `aurix-credit`, `aurix-treasury` | Não auditado neste ADR | Revisar com o mesmo critério (debita/credita saldo ou decide com base em saldo?) antes de assumir que está protegido | ⏳ Pendente |
 
 [Voltar ao índice de ADRs](README.md)

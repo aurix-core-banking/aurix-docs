@@ -1,10 +1,10 @@
-# AUREUS Conta Salário Implementation Plan
+# AURIX Conta Salário Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Build the `aureus-salario` module — dedicated salary account management with CNAB 240 payroll processing, employer agreements, portability, and batch credit jobs.
+**Goal:** Build the `aurix-salario` module — dedicated salary account management with CNAB 240 payroll processing, employer agreements, portability, and batch credit jobs.
 
-**Architecture:** Dedicated Spring Boot module (port 8112, route `/api/salario/**`, StripPrefix=0). 5 entities, 5 services, 4 controllers, CNAB parser, @Scheduled job. Same patterns as `aureus-poupanca`: no Lombok, no Feign, `@HttpExchange`, `@NullMarked`, Kafka fire-and-forget.
+**Architecture:** Dedicated Spring Boot module (port 8112, route `/api/salario/**`, StripPrefix=0). 5 entities, 5 services, 4 controllers, CNAB parser, @Scheduled job. Same patterns as `aurix-poupanca`: no Lombok, no Feign, `@HttpExchange`, `@NullMarked`, Kafka fire-and-forget.
 
 **Tech Stack:** Java 25, Spring Boot 4.1.0, Spring Cloud 2025.1.2, JPA, PostgreSQL, Kafka, Redis, Testcontainers, H2 (tests).
 
@@ -25,16 +25,16 @@
 ### Task 1: Module Scaffold
 
 **Files:**
-- Modify: `backend/pom.xml` (add `<module>aureus-salario</module>` in `<modules>`)
-- Create: `backend/aureus-salario/pom.xml`
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/AureusSalarioApplication.java`
-- Create: `backend/aureus-salario/src/main/resources/application.yml`
-- Create: `backend/aureus-salario/src/main/resources/application-prod.yml`
-- Modify: `backend/aureus-gateway/src/main/resources/application.yml` (add route for salario)
+- Modify: `backend/pom.xml` (add `<module>aurix-salario</module>` in `<modules>`)
+- Create: `backend/aurix-salario/pom.xml`
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/AurixSalarioApplication.java`
+- Create: `backend/aurix-salario/src/main/resources/application.yml`
+- Create: `backend/aurix-salario/src/main/resources/application-prod.yml`
+- Modify: `backend/aurix-gateway/src/main/resources/application.yml` (add route for salario)
 
-- [ ] **Step 1: Create `backend/aureus-salario/pom.xml`**
+- [ ] **Step 1: Create `backend/aurix-salario/pom.xml`**
 
-Copied from `aureus-poupanca/pom.xml`, replace `aureus-poupanca` with `aureus-salario`, name "AUREUS Salario", description "Modulo de conta salario do AUREUS". Add `spring-boot-starter-batch` dependency for CNAB batch processing.
+Copied from `aurix-poupanca/pom.xml`, replace `aurix-poupanca` with `aurix-salario`, name "AURIX Salario", description "Modulo de conta salario do AURIX". Add `spring-boot-starter-batch` dependency for CNAB batch processing.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -45,21 +45,21 @@ Copied from `aureus-poupanca/pom.xml`, replace `aureus-poupanca` with `aureus-sa
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.aureus.platform</groupId>
-        <artifactId>aureus-platform</artifactId>
+        <groupId>com.aurix.platform</groupId>
+        <artifactId>aurix-platform</artifactId>
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>aureus-salario</artifactId>
+    <artifactId>aurix-salario</artifactId>
     <packaging>jar</packaging>
 
-    <name>AUREUS Salario</name>
-    <description>Modulo de conta salario do AUREUS</description>
+    <name>AURIX Salario</name>
+    <description>Modulo de conta salario do AURIX</description>
 
     <dependencies>
         <dependency>
-            <groupId>com.aureus.platform</groupId>
-            <artifactId>aureus-shared</artifactId>
+            <groupId>com.aurix.platform</groupId>
+            <artifactId>aurix-shared</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -142,12 +142,12 @@ Copied from `aureus-poupanca/pom.xml`, replace `aureus-poupanca` with `aureus-sa
 </project>
 ```
 
-- [ ] **Step 2: Create `AureusSalarioApplication.java`**
+- [ ] **Step 2: Create `AurixSalarioApplication.java`**
 
 Standard Spring Boot app with `@EnableScheduling`:
 
 ```java
-package com.aureus.platform.salario;
+package com.aurix.platform.salario;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -155,10 +155,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-public class AureusSalarioApplication {
+public class AurixSalarioApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(AureusSalarioApplication.class, args);
+        SpringApplication.run(AurixSalarioApplication.class, args);
     }
 }
 ```
@@ -175,13 +175,13 @@ server:
 
 spring:
   application:
-    name: aureus-salario
+    name: aurix-salario
   profiles:
     active: dev
   datasource:
-    url: jdbc:postgresql://localhost:5432/aureus
-    username: aureus
-    password: aureus123
+    url: jdbc:postgresql://localhost:5432/aurix
+    username: aurix
+    password: aurix123
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
@@ -211,7 +211,7 @@ spring:
   kafka:
     bootstrap-servers: localhost:9092
     consumer:
-      group-id: aureus-salario-group
+      group-id: aurix-salario-group
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
@@ -223,7 +223,7 @@ spring:
 
 logging:
   level:
-    com.aureus.platform: DEBUG
+    com.aurix.platform: DEBUG
     org.springframework.web: DEBUG
     org.hibernate.SQL: DEBUG
 
@@ -240,7 +240,7 @@ management:
       prometheus:
         enabled: true
 
-aureus:
+aurix:
   salario:
     cnab:
       dir-upload: ./data/cnab
@@ -249,7 +249,7 @@ aureus:
       max-salario: 50000.00
   security:
     jwt:
-      secret: "aureus-jwt-secret-key-2024"
+      secret: "aurix-jwt-secret-key-2024"
       expiration: 86400000
 
 ---
@@ -263,7 +263,7 @@ spring:
     show-sql: true
 logging:
   level:
-    com.aureus.platform: DEBUG
+    com.aurix.platform: DEBUG
 
 ---
 spring:
@@ -280,7 +280,7 @@ spring:
       minimum-idle: 5
 logging:
   level:
-    com.aureus.platform: INFO
+    com.aurix.platform: INFO
 ```
 
 - [ ] **Step 4: Create `application-prod.yml`**
@@ -297,22 +297,22 @@ spring:
       minimum-idle: 5
 logging:
   level:
-    com.aureus.platform: INFO
+    com.aurix.platform: INFO
 ```
 
 - [ ] **Step 5: Add module to parent `backend/pom.xml`**
 
-Add after `<module>aureus-poupanca</module>`:
+Add after `<module>aurix-poupanca</module>`:
 ```xml
-<module>aureus-salario</module>
+<module>aurix-salario</module>
 ```
 
-- [ ] **Step 6: Add gateway route in `backend/aureus-gateway/src/main/resources/application.yml`**
+- [ ] **Step 6: Add gateway route in `backend/aurix-gateway/src/main/resources/application.yml`**
 
 Add after the poupanca route:
 ```yaml
-# AUREUS Salario
-- id: aureus-salario
+# AURIX Salario
+- id: aurix-salario
   uri: http://localhost:8112
   predicates:
     - Path=/api/salario/**
@@ -322,13 +322,13 @@ Add after the poupanca route:
 
 - [ ] **Step 7: Verify compilation**
 
-Run: `mvn compile -pl aureus-salario -am -DskipTests -q`
+Run: `mvn compile -pl aurix-salario -am -DskipTests -q`
 Expected: BUILD SUCCESS
 
 - [ ] **Step 8: Commit**
 
 ```bash
-git add backend/pom.xml backend/aureus-salario/ backend/aureus-gateway/src/main/resources/application.yml
+git add backend/pom.xml backend/aurix-salario/ backend/aurix-gateway/src/main/resources/application.yml
 git commit -m "feat(salario): scaffold module with pom, app, config, gateway route"
 ```
 
@@ -337,36 +337,36 @@ git commit -m "feat(salario): scaffold module with pom, app, config, gateway rou
 ### Task 2: Domain Layer
 
 **Files:**
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/entity/ContaSalario.java`
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/entity/ConvenioEmpresa.java`
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/entity/FolhaPagamento.java`
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/entity/ItemFolhaPagamento.java`
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/entity/SolicitacaoPortabilidade.java`
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/repository/ContaSalarioRepository.java`
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/repository/ConvenioEmpresaRepository.java`
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/repository/FolhaPagamentoRepository.java`
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/repository/ItemFolhaPagamentoRepository.java`
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/repository/SolicitacaoPortabilidadeRepository.java`
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/dto/ContaSalarioRequest.java`
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/dto/ContaSalarioResponse.java`
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/dto/ConvenioRequest.java`
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/dto/ConvenioResponse.java`
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/dto/PortabilidadeRequest.java`
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/dto/PortabilidadeResponse.java`
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/dto/FolhaResponse.java`
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/dto/ItemFolhaResponse.java`
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/dto/CreditoDiretoRequest.java`
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/event/ContaSalarioCriadaEvent.java`
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/event/SalarioCreditadoEvent.java`
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/event/PortabilidadeSolicitadaEvent.java`
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/entity/ContaSalario.java`
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/entity/ConvenioEmpresa.java`
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/entity/FolhaPagamento.java`
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/entity/ItemFolhaPagamento.java`
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/entity/SolicitacaoPortabilidade.java`
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/repository/ContaSalarioRepository.java`
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/repository/ConvenioEmpresaRepository.java`
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/repository/FolhaPagamentoRepository.java`
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/repository/ItemFolhaPagamentoRepository.java`
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/repository/SolicitacaoPortabilidadeRepository.java`
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/dto/ContaSalarioRequest.java`
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/dto/ContaSalarioResponse.java`
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/dto/ConvenioRequest.java`
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/dto/ConvenioResponse.java`
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/dto/PortabilidadeRequest.java`
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/dto/PortabilidadeResponse.java`
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/dto/FolhaResponse.java`
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/dto/ItemFolhaResponse.java`
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/dto/CreditoDiretoRequest.java`
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/event/ContaSalarioCriadaEvent.java`
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/event/SalarioCreditadoEvent.java`
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/event/PortabilidadeSolicitadaEvent.java`
 - Create: `package-info.java` in each package (entity, repository, dto, event, client, service, controller, config, job)
 
 - [ ] **Step 1: Create `entity/ContaSalario.java`**
 
 ```java
-package com.aureus.platform.salario.entity;
+package com.aurix.platform.salario.entity;
 
-import com.aureus.platform.shared.entity.BaseEntity;
+import com.aurix.platform.shared.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -381,7 +381,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "contas_salario", schema = "aureus")
+@Table(name = "contas_salario", schema = "aurix")
 public class ContaSalario extends BaseEntity {
 
     @NotNull
@@ -471,9 +471,9 @@ public class ContaSalario extends BaseEntity {
 - [ ] **Step 2: Create `entity/ConvenioEmpresa.java`**
 
 ```java
-package com.aureus.platform.salario.entity;
+package com.aurix.platform.salario.entity;
 
-import com.aureus.platform.shared.entity.BaseEntity;
+import com.aurix.platform.shared.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -481,7 +481,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "convenios_empresa", schema = "aureus")
+@Table(name = "convenios_empresa", schema = "aurix")
 public class ConvenioEmpresa extends BaseEntity {
 
     @NotBlank
@@ -521,9 +521,9 @@ public class ConvenioEmpresa extends BaseEntity {
 - [ ] **Step 3: Create `entity/FolhaPagamento.java`**
 
 ```java
-package com.aureus.platform.salario.entity;
+package com.aurix.platform.salario.entity;
 
-import com.aureus.platform.shared.entity.BaseEntity;
+import com.aurix.platform.shared.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -536,7 +536,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "folhas_pagamento", schema = "aureus")
+@Table(name = "folhas_pagamento", schema = "aurix")
 public class FolhaPagamento extends BaseEntity {
 
     @NotNull
@@ -604,9 +604,9 @@ public class FolhaPagamento extends BaseEntity {
 - [ ] **Step 4: Create `entity/ItemFolhaPagamento.java`**
 
 ```java
-package com.aureus.platform.salario.entity;
+package com.aurix.platform.salario.entity;
 
-import com.aureus.platform.shared.entity.BaseEntity;
+import com.aurix.platform.shared.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -618,7 +618,7 @@ import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "itens_folha_pagamento", schema = "aureus")
+@Table(name = "itens_folha_pagamento", schema = "aurix")
 public class ItemFolhaPagamento extends BaseEntity {
 
     @NotNull
@@ -678,9 +678,9 @@ public class ItemFolhaPagamento extends BaseEntity {
 - [ ] **Step 5: Create `entity/SolicitacaoPortabilidade.java`**
 
 ```java
-package com.aureus.platform.salario.entity;
+package com.aurix.platform.salario.entity;
 
-import com.aureus.platform.shared.entity.BaseEntity;
+import com.aurix.platform.shared.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -694,7 +694,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "solicitacoes_portabilidade", schema = "aureus")
+@Table(name = "solicitacoes_portabilidade", schema = "aurix")
 public class SolicitacaoPortabilidade extends BaseEntity {
 
     @NotNull
@@ -762,9 +762,9 @@ public class SolicitacaoPortabilidade extends BaseEntity {
 
 `ContaSalarioRepository.java`:
 ```java
-package com.aureus.platform.salario.repository;
+package com.aurix.platform.salario.repository;
 
-import com.aureus.platform.salario.entity.ContaSalario;
+import com.aurix.platform.salario.entity.ContaSalario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
@@ -782,9 +782,9 @@ public interface ContaSalarioRepository extends JpaRepository<ContaSalario, Long
 
 `ConvenioEmpresaRepository.java`:
 ```java
-package com.aureus.platform.salario.repository;
+package com.aurix.platform.salario.repository;
 
-import com.aureus.platform.salario.entity.ConvenioEmpresa;
+import com.aurix.platform.salario.entity.ConvenioEmpresa;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
@@ -800,9 +800,9 @@ public interface ConvenioEmpresaRepository extends JpaRepository<ConvenioEmpresa
 
 `FolhaPagamentoRepository.java`:
 ```java
-package com.aureus.platform.salario.repository;
+package com.aurix.platform.salario.repository;
 
-import com.aureus.platform.salario.entity.FolhaPagamento;
+import com.aurix.platform.salario.entity.FolhaPagamento;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
@@ -818,9 +818,9 @@ public interface FolhaPagamentoRepository extends JpaRepository<FolhaPagamento, 
 
 `ItemFolhaPagamentoRepository.java`:
 ```java
-package com.aureus.platform.salario.repository;
+package com.aurix.platform.salario.repository;
 
-import com.aureus.platform.salario.entity.ItemFolhaPagamento;
+import com.aurix.platform.salario.entity.ItemFolhaPagamento;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
@@ -834,9 +834,9 @@ public interface ItemFolhaPagamentoRepository extends JpaRepository<ItemFolhaPag
 
 `SolicitacaoPortabilidadeRepository.java`:
 ```java
-package com.aureus.platform.salario.repository;
+package com.aurix.platform.salario.repository;
 
-import com.aureus.platform.salario.entity.SolicitacaoPortabilidade;
+import com.aurix.platform.salario.entity.SolicitacaoPortabilidade;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
@@ -855,7 +855,7 @@ Note: The repositories use `clienteId` as a query parameter for ContaSalarioRepo
 
 `ContaSalarioRequest.java`:
 ```java
-package com.aureus.platform.salario.dto;
+package com.aurix.platform.salario.dto;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Max;
@@ -906,9 +906,9 @@ public class ContaSalarioRequest {
 
 `ContaSalarioResponse.java`:
 ```java
-package com.aureus.platform.salario.dto;
+package com.aurix.platform.salario.dto;
 
-import com.aureus.platform.salario.entity.ContaSalario.StatusContaSalario;
+import com.aurix.platform.salario.entity.ContaSalario.StatusContaSalario;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -961,7 +961,7 @@ public class ContaSalarioResponse {
 
 `ConvenioRequest.java`:
 ```java
-package com.aureus.platform.salario.dto;
+package com.aurix.platform.salario.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -987,7 +987,7 @@ public class ConvenioRequest {
 
 `ConvenioResponse.java`:
 ```java
-package com.aureus.platform.salario.dto;
+package com.aurix.platform.salario.dto;
 
 import java.time.LocalDateTime;
 
@@ -1021,7 +1021,7 @@ public class ConvenioResponse {
 
 `PortabilidadeRequest.java`:
 ```java
-package com.aureus.platform.salario.dto;
+package com.aurix.platform.salario.dto;
 
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
@@ -1059,9 +1059,9 @@ public class PortabilidadeRequest {
 
 `PortabilidadeResponse.java`:
 ```java
-package com.aureus.platform.salario.dto;
+package com.aurix.platform.salario.dto;
 
-import com.aureus.platform.salario.entity.SolicitacaoPortabilidade.StatusPortabilidade;
+import com.aurix.platform.salario.entity.SolicitacaoPortabilidade.StatusPortabilidade;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -1101,9 +1101,9 @@ public class PortabilidadeResponse {
 
 `FolhaResponse.java`:
 ```java
-package com.aureus.platform.salario.dto;
+package com.aurix.platform.salario.dto;
 
-import com.aureus.platform.salario.entity.FolhaPagamento.StatusFolha;
+import com.aurix.platform.salario.entity.FolhaPagamento.StatusFolha;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -1144,9 +1144,9 @@ public class FolhaResponse {
 
 `ItemFolhaResponse.java`:
 ```java
-package com.aureus.platform.salario.dto;
+package com.aurix.platform.salario.dto;
 
-import com.aureus.platform.salario.entity.ItemFolhaPagamento.StatusItem;
+import com.aurix.platform.salario.entity.ItemFolhaPagamento.StatusItem;
 import java.math.BigDecimal;
 
 public class ItemFolhaResponse {
@@ -1179,7 +1179,7 @@ public class ItemFolhaResponse {
 
 `CreditoDiretoRequest.java`:
 ```java
-package com.aureus.platform.salario.dto;
+package com.aurix.platform.salario.dto;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
@@ -1213,7 +1213,7 @@ public class CreditoDiretoRequest {
 
 `ContaSalarioCriadaEvent.java`:
 ```java
-package com.aureus.platform.salario.event;
+package com.aurix.platform.salario.event;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -1229,7 +1229,7 @@ public record ContaSalarioCriadaEvent(
 
 `SalarioCreditadoEvent.java`:
 ```java
-package com.aureus.platform.salario.event;
+package com.aurix.platform.salario.event;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -1245,7 +1245,7 @@ public record SalarioCreditadoEvent(
 
 `PortabilidadeSolicitadaEvent.java`:
 ```java
-package com.aureus.platform.salario.event;
+package com.aurix.platform.salario.event;
 
 import java.math.BigDecimal;
 
@@ -1262,20 +1262,20 @@ public record PortabilidadeSolicitadaEvent(
 For each package (entity, repository, dto, event, client, service, controller, config, job):
 ```java
 @NullMarked
-package com.aureus.platform.salario.entity;
+package com.aurix.platform.salario.entity;
 
 import org.jspecify.annotations.NullMarked;
 ```
 
 - [ ] **Step 10: Verify compilation**
 
-Run: `mvn compile -pl aureus-salario -am -DskipTests -q`
+Run: `mvn compile -pl aurix-salario -am -DskipTests -q`
 Expected: BUILD SUCCESS
 
 - [ ] **Step 11: Commit**
 
 ```bash
-git add backend/aureus-salario/src/main/java/com/aureus/platform/salario/
+git add backend/aurix-salario/src/main/java/com/aurix/platform/salario/
 git commit -m "feat(salario): add domain layer - entities, repos, DTOs, events"
 ```
 
@@ -1284,17 +1284,17 @@ git commit -m "feat(salario): add domain layer - entities, repos, DTOs, events"
 ### Task 3: HTTP Client + Config
 
 **Files:**
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/client/ContaCorrenteClient.java`
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/client/CreditoRequest.java` (inner DTO)
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/config/SalarioHttpConfig.java`
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/config/SalarioKafkaConfig.java`
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/config/SalarioSecurityConfig.java`
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/config/CnabConfig.java`
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/client/ContaCorrenteClient.java`
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/client/CreditoRequest.java` (inner DTO)
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/config/SalarioHttpConfig.java`
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/config/SalarioKafkaConfig.java`
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/config/SalarioSecurityConfig.java`
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/config/CnabConfig.java`
 
 - [ ] **Step 1: Create `ContaCorrenteClient.java`**
 
 ```java
-package com.aureus.platform.salario.client;
+package com.aurix.platform.salario.client;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
@@ -1329,9 +1329,9 @@ public interface ContaCorrenteClient {
 - [ ] **Step 2: Create `SalarioHttpConfig.java`**
 
 ```java
-package com.aureus.platform.salario.config;
+package com.aurix.platform.salario.config;
 
-import com.aureus.platform.salario.client.ContaCorrenteClient;
+import com.aurix.platform.salario.client.ContaCorrenteClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.service.registry.HttpServiceProxyFactory;
@@ -1351,7 +1351,7 @@ public class SalarioHttpConfig {
 - [ ] **Step 3: Create `SalarioKafkaConfig.java`**
 
 ```java
-package com.aureus.platform.salario.config;
+package com.aurix.platform.salario.config;
 
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.context.annotation.Bean;
@@ -1387,7 +1387,7 @@ public class SalarioKafkaConfig {
 Same pattern as poupanca — stateless, actuator/swagger public, business endpoints authenticated.
 
 ```java
-package com.aureus.platform.salario.config;
+package com.aurix.platform.salario.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -1420,13 +1420,13 @@ public class SalarioSecurityConfig {
 - [ ] **Step 5: Create `CnabConfig.java`**
 
 ```java
-package com.aureus.platform.salario.config;
+package com.aurix.platform.salario.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConfigurationProperties(prefix = "aureus.salario.cnab")
+@ConfigurationProperties(prefix = "aurix.salario.cnab")
 public class CnabConfig {
     private String dirUpload = "./data/cnab";
     private String maxFileSize = "10MB";
@@ -1440,13 +1440,13 @@ public class CnabConfig {
 
 - [ ] **Step 6: Verify compilation**
 
-Run: `mvn compile -pl aureus-salario -am -DskipTests -q`
+Run: `mvn compile -pl aurix-salario -am -DskipTests -q`
 Expected: BUILD SUCCESS
 
 - [ ] **Step 7: Commit**
 
 ```bash
-git add backend/aureus-salario/src/main/java/com/aureus/platform/salario/client/ backend/aureus-salario/src/main/java/com/aureus/platform/salario/config/
+git add backend/aurix-salario/src/main/java/com/aurix/platform/salario/client/ backend/aurix-salario/src/main/java/com/aurix/platform/salario/config/
 git commit -m "feat(salario): add @HttpExchange client and config (Kafka, Security, CNAB)"
 ```
 
@@ -1455,10 +1455,10 @@ git commit -m "feat(salario): add @HttpExchange client and config (Kafka, Securi
 ### Task 4: ContaSalario Service + Controller + Tests
 
 **Files:**
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/service/ContaSalarioService.java`
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/controller/ContaSalarioController.java`
-- Create: `backend/aureus-salario/src/test/java/com/aureus/platform/salario/controller/ContaSalarioControllerTest.java`
-- Create: `backend/aureus-salario/src/test/resources/application-test.yml`
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/service/ContaSalarioService.java`
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/controller/ContaSalarioController.java`
+- Create: `backend/aurix-salario/src/test/java/com/aurix/platform/salario/controller/ContaSalarioControllerTest.java`
+- Create: `backend/aurix-salario/src/test/resources/application-test.yml`
 
 **Interfaces:**
 - Consumes: `ContaSalarioRepository`, `ConvenioEmpresaRepository`, `KafkaTemplate<String, String>`, `ObjectMapper`
@@ -1467,17 +1467,17 @@ git commit -m "feat(salario): add @HttpExchange client and config (Kafka, Securi
 - [ ] **Step 1: Create `ContaSalarioService.java`**
 
 ```java
-package com.aureus.platform.salario.service;
+package com.aurix.platform.salario.service;
 
-import com.aureus.platform.salario.config.SalarioKafkaConfig;
-import com.aureus.platform.salario.dto.ContaSalarioRequest;
-import com.aureus.platform.salario.dto.ContaSalarioResponse;
-import com.aureus.platform.salario.entity.ContaSalario;
-import com.aureus.platform.salario.entity.ContaSalario.StatusContaSalario;
-import com.aureus.platform.salario.entity.ConvenioEmpresa;
-import com.aureus.platform.salario.event.ContaSalarioCriadaEvent;
-import com.aureus.platform.salario.repository.ContaSalarioRepository;
-import com.aureus.platform.salario.repository.ConvenioEmpresaRepository;
+import com.aurix.platform.salario.config.SalarioKafkaConfig;
+import com.aurix.platform.salario.dto.ContaSalarioRequest;
+import com.aurix.platform.salario.dto.ContaSalarioResponse;
+import com.aurix.platform.salario.entity.ContaSalario;
+import com.aurix.platform.salario.entity.ContaSalario.StatusContaSalario;
+import com.aurix.platform.salario.entity.ConvenioEmpresa;
+import com.aurix.platform.salario.event.ContaSalarioCriadaEvent;
+import com.aurix.platform.salario.repository.ContaSalarioRepository;
+import com.aurix.platform.salario.repository.ConvenioEmpresaRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -1512,7 +1512,7 @@ public class ContaSalarioService {
         log.info("Criando conta salario para matricula: {}", request.getMatriculaFuncionario());
 
         ConvenioEmpresa empresa = convenioEmpresaRepository.findByTenantIdAndId(
-            com.aureus.platform.shared.tenant.TenantContext.getTenantId(),
+            com.aurix.platform.shared.tenant.TenantContext.getTenantId(),
             request.getEmpresaId()
         ).orElseThrow(() -> new IllegalArgumentException("Empresa conveniada nao encontrada: " + request.getEmpresaId()));
 
@@ -1525,7 +1525,7 @@ public class ContaSalarioService {
             request.getValorSalarioLiquido(),
             request.getDiaPagamento()
         );
-        conta.setTenantId(com.aureus.platform.shared.tenant.TenantContext.getTenantId());
+        conta.setTenantId(com.aurix.platform.shared.tenant.TenantContext.getTenantId());
 
         ContaSalario salva = contaSalarioRepository.save(conta);
 
@@ -1538,7 +1538,7 @@ public class ContaSalarioService {
     @Transactional(readOnly = true)
     public ContaSalarioResponse buscarPorId(Long id) {
         ContaSalario conta = contaSalarioRepository.findByTenantIdAndId(
-            com.aureus.platform.shared.tenant.TenantContext.getTenantId(), id
+            com.aurix.platform.shared.tenant.TenantContext.getTenantId(), id
         ).orElseThrow(() -> new IllegalArgumentException("Conta salario nao encontrada: " + id));
         return converterParaResponse(conta);
     }
@@ -1546,13 +1546,13 @@ public class ContaSalarioService {
     @Transactional(readOnly = true)
     public List<ContaSalarioResponse> listarPorEmpresa(Long empresaId) {
         return contaSalarioRepository.findByTenantIdAndEmpresaId(
-            com.aureus.platform.shared.tenant.TenantContext.getTenantId(), empresaId
+            com.aurix.platform.shared.tenant.TenantContext.getTenantId(), empresaId
         ).stream().map(this::converterParaResponse).collect(Collectors.toList());
     }
 
     public void bloquearConta(Long id) {
         ContaSalario conta = contaSalarioRepository.findByTenantIdAndId(
-            com.aureus.platform.shared.tenant.TenantContext.getTenantId(), id
+            com.aurix.platform.shared.tenant.TenantContext.getTenantId(), id
         ).orElseThrow(() -> new IllegalArgumentException("Conta salario nao encontrada: " + id));
         conta.setStatus(StatusContaSalario.BLOQUEADA);
         contaSalarioRepository.save(conta);
@@ -1561,7 +1561,7 @@ public class ContaSalarioService {
 
     public void rescindirConta(Long id) {
         ContaSalario conta = contaSalarioRepository.findByTenantIdAndId(
-            com.aureus.platform.shared.tenant.TenantContext.getTenantId(), id
+            com.aurix.platform.shared.tenant.TenantContext.getTenantId(), id
         ).orElseThrow(() -> new IllegalArgumentException("Conta salario nao encontrada: " + id));
         conta.setStatus(StatusContaSalario.RESCINDIDA);
         conta.setDataRescisao(LocalDate.now());
@@ -1605,11 +1605,11 @@ public class ContaSalarioService {
 - [ ] **Step 2: Create `ContaSalarioController.java`**
 
 ```java
-package com.aureus.platform.salario.controller;
+package com.aurix.platform.salario.controller;
 
-import com.aureus.platform.salario.dto.ContaSalarioRequest;
-import com.aureus.platform.salario.dto.ContaSalarioResponse;
-import com.aureus.platform.salario.service.ContaSalarioService;
+import com.aurix.platform.salario.dto.ContaSalarioRequest;
+import com.aurix.platform.salario.dto.ContaSalarioResponse;
+import com.aurix.platform.salario.service.ContaSalarioService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -1686,23 +1686,23 @@ spring:
         jwt:
           issuer-uri: http://localhost:8080
 
-aureus:
+aurix:
   salario:
     cnab:
       dir-upload: ./target/test-cnab
 
 logging:
   level:
-    com.aureus.platform: DEBUG
+    com.aurix.platform: DEBUG
 ```
 
 - [ ] **Step 4: Create `ContaSalarioControllerTest.java`**
 
 ```java
-package com.aureus.platform.salario.controller;
+package com.aurix.platform.salario.controller;
 
-import com.aureus.platform.salario.dto.ContaSalarioRequest;
-import com.aureus.platform.salario.dto.ContaSalarioResponse;
+import com.aurix.platform.salario.dto.ContaSalarioRequest;
+import com.aurix.platform.salario.dto.ContaSalarioResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1771,13 +1771,13 @@ class ContaSalarioControllerTest {
 
 - [ ] **Step 5: Run tests**
 
-Run: `mvn test -pl aureus-salario -am -Dtest=ContaSalarioControllerTest -Dsurefire.failIfNoSpecifiedTests=false`
+Run: `mvn test -pl aurix-salario -am -Dtest=ContaSalarioControllerTest -Dsurefire.failIfNoSpecifiedTests=false`
 Expected: BUILD SUCCESS, 2/2 tests pass
 
 - [ ] **Step 6: Commit**
 
 ```bash
-git add backend/aureus-salario/src/main/java/com/aureus/platform/salario/service/ContaSalarioService.java backend/aureus-salario/src/main/java/com/aureus/platform/salario/controller/ContaSalarioController.java backend/aureus-salario/src/test/
+git add backend/aurix-salario/src/main/java/com/aurix/platform/salario/service/ContaSalarioService.java backend/aurix-salario/src/main/java/com/aurix/platform/salario/controller/ContaSalarioController.java backend/aurix-salario/src/test/
 git commit -m "feat(salario): add ContaSalarioService, controller, and tests"
 ```
 
@@ -1786,10 +1786,10 @@ git commit -m "feat(salario): add ContaSalarioService, controller, and tests"
 ### Task 5: Convenio + Portabilidade Services + Controllers
 
 **Files:**
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/service/ConvenioService.java`
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/controller/ConvenioController.java`
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/service/PortabilidadeService.java`
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/controller/PortabilidadeController.java`
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/service/ConvenioService.java`
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/controller/ConvenioController.java`
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/service/PortabilidadeService.java`
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/controller/PortabilidadeController.java`
 
 **Interfaces:**
 - Consumes: `ConvenioEmpresaRepository`, `ContaSalarioRepository`, `SolicitacaoPortabilidadeRepository`, `KafkaTemplate`, `ObjectMapper`
@@ -1798,13 +1798,13 @@ git commit -m "feat(salario): add ContaSalarioService, controller, and tests"
 - [ ] **Step 1: Create `ConvenioService.java`**
 
 ```java
-package com.aureus.platform.salario.service;
+package com.aurix.platform.salario.service;
 
-import com.aureus.platform.salario.dto.ConvenioRequest;
-import com.aureus.platform.salario.dto.ConvenioResponse;
-import com.aureus.platform.salario.entity.ConvenioEmpresa;
-import com.aureus.platform.salario.repository.ConvenioEmpresaRepository;
-import com.aureus.platform.shared.tenant.TenantContext;
+import com.aurix.platform.salario.dto.ConvenioRequest;
+import com.aurix.platform.salario.dto.ConvenioResponse;
+import com.aurix.platform.salario.entity.ConvenioEmpresa;
+import com.aurix.platform.salario.repository.ConvenioEmpresaRepository;
+import com.aurix.platform.shared.tenant.TenantContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -1870,11 +1870,11 @@ public class ConvenioService {
 - [ ] **Step 2: Create `ConvenioController.java`**
 
 ```java
-package com.aureus.platform.salario.controller;
+package com.aurix.platform.salario.controller;
 
-import com.aureus.platform.salario.dto.ConvenioRequest;
-import com.aureus.platform.salario.dto.ConvenioResponse;
-import com.aureus.platform.salario.service.ConvenioService;
+import com.aurix.platform.salario.dto.ConvenioRequest;
+import com.aurix.platform.salario.dto.ConvenioResponse;
+import com.aurix.platform.salario.service.ConvenioService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -1916,16 +1916,16 @@ public class ConvenioController {
 - [ ] **Step 3: Create `PortabilidadeService.java`**
 
 ```java
-package com.aureus.platform.salario.service;
+package com.aurix.platform.salario.service;
 
-import com.aureus.platform.salario.config.SalarioKafkaConfig;
-import com.aureus.platform.salario.dto.PortabilidadeRequest;
-import com.aureus.platform.salario.dto.PortabilidadeResponse;
-import com.aureus.platform.salario.entity.ContaSalario;
-import com.aureus.platform.salario.entity.SolicitacaoPortabilidade;
-import com.aureus.platform.salario.event.PortabilidadeSolicitadaEvent;
-import com.aureus.platform.salario.repository.ContaSalarioRepository;
-import com.aureus.platform.salario.repository.SolicitacaoPortabilidadeRepository;
+import com.aurix.platform.salario.config.SalarioKafkaConfig;
+import com.aurix.platform.salario.dto.PortabilidadeRequest;
+import com.aurix.platform.salario.dto.PortabilidadeResponse;
+import com.aurix.platform.salario.entity.ContaSalario;
+import com.aurix.platform.salario.entity.SolicitacaoPortabilidade;
+import com.aurix.platform.salario.event.PortabilidadeSolicitadaEvent;
+import com.aurix.platform.salario.repository.ContaSalarioRepository;
+import com.aurix.platform.salario.repository.SolicitacaoPortabilidadeRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -2033,11 +2033,11 @@ public class PortabilidadeService {
 - [ ] **Step 4: Create `PortabilidadeController.java`**
 
 ```java
-package com.aureus.platform.salario.controller;
+package com.aurix.platform.salario.controller;
 
-import com.aureus.platform.salario.dto.PortabilidadeRequest;
-import com.aureus.platform.salario.dto.PortabilidadeResponse;
-import com.aureus.platform.salario.service.PortabilidadeService;
+import com.aurix.platform.salario.dto.PortabilidadeRequest;
+import com.aurix.platform.salario.dto.PortabilidadeResponse;
+import com.aurix.platform.salario.service.PortabilidadeService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -2074,13 +2074,13 @@ public class PortabilidadeController {
 
 - [ ] **Step 5: Verify compilation**
 
-Run: `mvn compile -pl aureus-salario -am -DskipTests -q`
+Run: `mvn compile -pl aurix-salario -am -DskipTests -q`
 Expected: BUILD SUCCESS
 
 - [ ] **Step 6: Commit**
 
 ```bash
-git add backend/aureus-salario/src/main/java/com/aureus/platform/salario/service/ConvenioService.java backend/aureus-salario/src/main/java/com/aureus/platform/salario/controller/ConvenioController.java backend/aureus-salario/src/main/java/com/aureus/platform/salario/service/PortabilidadeService.java backend/aureus-salario/src/main/java/com/aureus/platform/salario/controller/PortabilidadeController.java
+git add backend/aurix-salario/src/main/java/com/aurix/platform/salario/service/ConvenioService.java backend/aurix-salario/src/main/java/com/aurix/platform/salario/controller/ConvenioController.java backend/aurix-salario/src/main/java/com/aurix/platform/salario/service/PortabilidadeService.java backend/aurix-salario/src/main/java/com/aurix/platform/salario/controller/PortabilidadeController.java
 git commit -m "feat(salario): add Convenio and Portabilidade services and controllers"
 ```
 
@@ -2089,11 +2089,11 @@ git commit -m "feat(salario): add Convenio and Portabilidade services and contro
 ### Task 6: CnabParser + CnabService
 
 **Files:**
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/client/CnabParser.java`
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/service/CnabService.java`
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/controller/FolhaController.java` (upload endpoint)
-- Create: `backend/aureus-salario/src/test/java/com/aureus/platform/salario/service/CnabParserTest.java`
-- Create: `backend/aureus-salario/src/test/resources/cnab/folha-valida.txt`
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/client/CnabParser.java`
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/service/CnabService.java`
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/controller/FolhaController.java` (upload endpoint)
+- Create: `backend/aurix-salario/src/test/java/com/aurix/platform/salario/service/CnabParserTest.java`
+- Create: `backend/aurix-salario/src/test/resources/cnab/folha-valida.txt`
 
 **Interfaces:**
 - Consumes: `CnabConfig`, `FolhaPagamentoRepository`, `ItemFolhaPagamentoRepository`, `ConvenioEmpresaRepository`, `ContaSalarioRepository`
@@ -2104,7 +2104,7 @@ git commit -m "feat(salario): add Convenio and Portabilidade services and contro
 Simple parser for CNAB 240 layout (Febraban standard — lines of 240 chars).
 
 ```java
-package com.aureus.platform.salario.client;
+package com.aurix.platform.salario.client;
 
 import org.springframework.stereotype.Component;
 import java.io.BufferedReader;
@@ -2202,9 +2202,9 @@ Note: The fixture above is illustrative. Each line must be exactly 240 character
 - [ ] **Step 3: Create `CnabParserTest.java`**
 
 ```java
-package com.aureus.platform.salario.service;
+package com.aurix.platform.salario.service;
 
-import com.aureus.platform.salario.client.CnabParser;
+import com.aurix.platform.salario.client.CnabParser;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -2237,17 +2237,17 @@ class CnabParserTest {
 - [ ] **Step 4: Create `CnabService.java`**
 
 ```java
-package com.aureus.platform.salario.service;
+package com.aurix.platform.salario.service;
 
-import com.aureus.platform.salario.client.CnabParser;
-import com.aureus.platform.salario.config.CnabConfig;
-import com.aureus.platform.salario.entity.FolhaPagamento;
-import com.aureus.platform.salario.entity.ItemFolhaPagamento;
-import com.aureus.platform.salario.repository.ContaSalarioRepository;
-import com.aureus.platform.salario.repository.ConvenioEmpresaRepository;
-import com.aureus.platform.salario.repository.FolhaPagamentoRepository;
-import com.aureus.platform.salario.repository.ItemFolhaPagamentoRepository;
-import com.aureus.platform.shared.tenant.TenantContext;
+import com.aurix.platform.salario.client.CnabParser;
+import com.aurix.platform.salario.config.CnabConfig;
+import com.aurix.platform.salario.entity.FolhaPagamento;
+import com.aurix.platform.salario.entity.ItemFolhaPagamento;
+import com.aurix.platform.salario.repository.ContaSalarioRepository;
+import com.aurix.platform.salario.repository.ConvenioEmpresaRepository;
+import com.aurix.platform.salario.repository.FolhaPagamentoRepository;
+import com.aurix.platform.salario.repository.ItemFolhaPagamentoRepository;
+import com.aurix.platform.shared.tenant.TenantContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.io.InputStream;
@@ -2331,11 +2331,11 @@ Revised approach for `CnabService.processarUpload`: extract the empresa name fro
 First pass — just the upload endpoint (more endpoints added in Task 7):
 
 ```java
-package com.aureus.platform.salario.controller;
+package com.aurix.platform.salario.controller;
 
-import com.aureus.platform.salario.dto.FolhaResponse;
-import com.aureus.platform.salario.entity.FolhaPagamento;
-import com.aureus.platform.salario.service.CnabService;
+import com.aurix.platform.salario.dto.FolhaResponse;
+import com.aurix.platform.salario.entity.FolhaPagamento;
+import com.aurix.platform.salario.service.CnabService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -2374,18 +2374,18 @@ public class FolhaController {
 
 - [ ] **Step 6: Verify compilation**
 
-Run: `mvn compile -pl aureus-salario -am -DskipTests -q`
+Run: `mvn compile -pl aurix-salario -am -DskipTests -q`
 Expected: BUILD SUCCESS
 
 - [ ] **Step 7: Run parser test**
 
-Run: `mvn test -pl aureus-salario -am -Dtest=CnabParserTest -Dsurefire.failIfNoSpecifiedTests=false`
+Run: `mvn test -pl aurix-salario -am -Dtest=CnabParserTest -Dsurefire.failIfNoSpecifiedTests=false`
 Expected: BUILD SUCCESS, test passes
 
 - [ ] **Step 8: Commit**
 
 ```bash
-git add backend/aureus-salario/src/main/java/com/aureus/platform/salario/client/CnabParser.java backend/aureus-salario/src/main/java/com/aureus/platform/salario/service/CnabService.java backend/aureus-salario/src/main/java/com/aureus/platform/salario/controller/FolhaController.java backend/aureus-salario/src/test/
+git add backend/aurix-salario/src/main/java/com/aurix/platform/salario/client/CnabParser.java backend/aurix-salario/src/main/java/com/aurix/platform/salario/service/CnabService.java backend/aurix-salario/src/main/java/com/aurix/platform/salario/controller/FolhaController.java backend/aurix-salario/src/test/
 git commit -m "feat(salario): add CNAB parser, upload service, and CNAB test"
 ```
 
@@ -2394,9 +2394,9 @@ git commit -m "feat(salario): add CNAB parser, upload service, and CNAB test"
 ### Task 7: FolhaService + ProcessamentoFolhaJob
 
 **Files:**
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/service/FolhaService.java`
-- Create: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/job/ProcessamentoFolhaJob.java`
-- Modify: `backend/aureus-salario/src/main/java/com/aureus/platform/salario/controller/FolhaController.java` (add list, status, itens, credito-direto endpoints)
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/service/FolhaService.java`
+- Create: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/job/ProcessamentoFolhaJob.java`
+- Modify: `backend/aurix-salario/src/main/java/com/aurix/platform/salario/controller/FolhaController.java` (add list, status, itens, credito-direto endpoints)
 
 **Interfaces:**
 - Consumes: `FolhaPagamentoRepository`, `ItemFolhaPagamentoRepository`, `ContaSalarioRepository`, `ContaCorrenteClient`, `KafkaTemplate`, `ObjectMapper`
@@ -2406,18 +2406,18 @@ git commit -m "feat(salario): add CNAB parser, upload service, and CNAB test"
 - [ ] **Step 1: Create `FolhaService.java`**
 
 ```java
-package com.aureus.platform.salario.service;
+package com.aurix.platform.salario.service;
 
-import com.aureus.platform.salario.client.ContaCorrenteClient;
-import com.aureus.platform.salario.config.SalarioKafkaConfig;
-import com.aureus.platform.salario.dto.CreditoDiretoRequest;
-import com.aureus.platform.salario.entity.ContaSalario;
-import com.aureus.platform.salario.entity.FolhaPagamento;
-import com.aureus.platform.salario.entity.ItemFolhaPagamento;
-import com.aureus.platform.salario.event.SalarioCreditadoEvent;
-import com.aureus.platform.salario.repository.ContaSalarioRepository;
-import com.aureus.platform.salario.repository.FolhaPagamentoRepository;
-import com.aureus.platform.salario.repository.ItemFolhaPagamentoRepository;
+import com.aurix.platform.salario.client.ContaCorrenteClient;
+import com.aurix.platform.salario.config.SalarioKafkaConfig;
+import com.aurix.platform.salario.dto.CreditoDiretoRequest;
+import com.aurix.platform.salario.entity.ContaSalario;
+import com.aurix.platform.salario.entity.FolhaPagamento;
+import com.aurix.platform.salario.entity.ItemFolhaPagamento;
+import com.aurix.platform.salario.event.SalarioCreditadoEvent;
+import com.aurix.platform.salario.repository.ContaSalarioRepository;
+import com.aurix.platform.salario.repository.FolhaPagamentoRepository;
+import com.aurix.platform.salario.repository.ItemFolhaPagamentoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -2457,7 +2457,7 @@ public class FolhaService {
         log.info("Credito direto para CPF: {}", request.getCpfFuncionario());
 
         ContaSalario conta = contaSalarioRepository.findByTenantIdAndEmpresaIdAndMatriculaFuncionario(
-            com.aureus.platform.shared.tenant.TenantContext.getTenantId(),
+            com.aurix.platform.shared.tenant.TenantContext.getTenantId(),
             request.getEmpresaId(), request.getCpfFuncionario()
         ).orElseThrow(() -> new IllegalArgumentException(
             "Conta salario nao encontrada para CPF " + request.getCpfFuncionario()));
@@ -2518,7 +2518,7 @@ public class FolhaService {
     @Transactional(readOnly = true)
     public List<FolhaPagamento> listarFolhasPendentes() {
         return folhaRepository.findByTenantIdAndStatus(
-            com.aureus.platform.shared.tenant.TenantContext.getTenantId(),
+            com.aurix.platform.shared.tenant.TenantContext.getTenantId(),
             FolhaPagamento.StatusFolha.VALIDADO);
     }
 
@@ -2537,10 +2537,10 @@ public class FolhaService {
 - [ ] **Step 2: Create `ProcessamentoFolhaJob.java`**
 
 ```java
-package com.aureus.platform.salario.job;
+package com.aurix.platform.salario.job;
 
-import com.aureus.platform.salario.entity.FolhaPagamento;
-import com.aureus.platform.salario.service.FolhaService;
+import com.aurix.platform.salario.entity.FolhaPagamento;
+import com.aurix.platform.salario.service.FolhaService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import java.util.List;
@@ -2596,7 +2596,7 @@ public ResponseEntity<FolhaResponse> buscarPorId(@PathVariable Long id) {
 @GetMapping
 public ResponseEntity<List<FolhaResponse>> listarFolhas() {
     List<FolhaPagamento> folhas = folhaRepository.findByTenantIdAndEmpresaId(
-        com.aureus.platform.shared.tenant.TenantContext.getTenantId(), null);
+        com.aurix.platform.shared.tenant.TenantContext.getTenantId(), null);
     return ResponseEntity.ok(folhas.stream().map(this::converterParaResponse).toList());
 }
 
@@ -2617,13 +2617,13 @@ Full controller content will be generated by the implementer.
 - [ ] **Step 4: Create `FolhaServiceTest.java`**
 
 ```java
-package com.aureus.platform.salario.service;
+package com.aurix.platform.salario.service;
 
-import com.aureus.platform.salario.dto.CreditoDiretoRequest;
-import com.aureus.platform.salario.entity.FolhaPagamento;
-import com.aureus.platform.salario.entity.ItemFolhaPagamento;
-import com.aureus.platform.salario.repository.FolhaPagamentoRepository;
-import com.aureus.platform.salario.repository.ItemFolhaPagamentoRepository;
+import com.aurix.platform.salario.dto.CreditoDiretoRequest;
+import com.aurix.platform.salario.entity.FolhaPagamento;
+import com.aurix.platform.salario.entity.ItemFolhaPagamento;
+import com.aurix.platform.salario.repository.FolhaPagamentoRepository;
+import com.aurix.platform.salario.repository.ItemFolhaPagamentoRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -2675,16 +2675,16 @@ class FolhaServiceTest {
 
 - [ ] **Step 5: Verify compilation and tests**
 
-Run: `mvn compile -pl aureus-salario -am -DskipTests -q`
+Run: `mvn compile -pl aurix-salario -am -DskipTests -q`
 Expected: BUILD SUCCESS
 
-Run: `mvn test -pl aureus-salario -am -Dsurefire.failIfNoSpecifiedTests=false`
+Run: `mvn test -pl aurix-salario -am -Dsurefire.failIfNoSpecifiedTests=false`
 Expected: BUILD SUCCESS
 
 - [ ] **Step 6: Commit**
 
 ```bash
-git add backend/aureus-salario/src/main/java/com/aureus/platform/salario/service/FolhaService.java backend/aureus-salario/src/main/java/com/aureus/platform/salario/job/ backend/aureus-salario/src/main/java/com/aureus/platform/salario/controller/FolhaController.java backend/aureus-salario/src/test/
+git add backend/aurix-salario/src/main/java/com/aurix/platform/salario/service/FolhaService.java backend/aurix-salario/src/main/java/com/aurix/platform/salario/job/ backend/aurix-salario/src/main/java/com/aurix/platform/salario/controller/FolhaController.java backend/aurix-salario/src/test/
 git commit -m "feat(salario): add FolhaService, ProcessamentoFolhaJob, and FolhaController"
 ```
 
@@ -2695,18 +2695,18 @@ git commit -m "feat(salario): add FolhaService, ProcessamentoFolhaJob, and Folha
 - [ ] **Step 1: Compile full project**
 
 Run: `mvn compile -DskipTests -q`
-Expected: BUILD SUCCESS (all 30+ modules including aureus-salario)
+Expected: BUILD SUCCESS (all 30+ modules including aurix-salario)
 
 - [ ] **Step 2: Run all salario tests**
 
-Run: `mvn test -pl aureus-salario -am -Dsurefire.failIfNoSpecifiedTests=false`
+Run: `mvn test -pl aurix-salario -am -Dsurefire.failIfNoSpecifiedTests=false`
 Expected: BUILD SUCCESS, all tests pass
 
 - [ ] **Step 3: Verify gateway config**
 
-Check `backend/aureus-gateway/src/main/resources/application.yml` has the salario route:
+Check `backend/aurix-gateway/src/main/resources/application.yml` has the salario route:
 ```yaml
-- id: aureus-salario
+- id: aurix-salario
   uri: http://localhost:8112
   predicates:
     - Path=/api/salario/**
@@ -2716,11 +2716,11 @@ Check `backend/aureus-gateway/src/main/resources/application.yml` has the salari
 
 - [ ] **Step 4: Verify parent pom has module**
 
-Check `backend/pom.xml` includes `<module>aureus-salario</module>` in `<modules>`.
+Check `backend/pom.xml` includes `<module>aurix-salario</module>` in `<modules>`.
 
 - [ ] **Step 5: Final commit if any changes needed**
 
 ```bash
 git add -A
-git commit -m "chore: full build verification for aureus-salario module"
+git commit -m "chore: full build verification for aurix-salario module"
 ```

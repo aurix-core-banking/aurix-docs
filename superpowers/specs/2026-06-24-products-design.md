@@ -1,4 +1,4 @@
-# Design: 6 Novos Produtos Bancários — AUREUS Platform
+# Design: 6 Novos Produtos Bancários — AURIX Platform
 
 > Data: 2026-06-24
 > Status: Design aprovado, aguardando planos de implementação
@@ -30,12 +30,12 @@
 
 | # | Módulo | Porta | Gateway | Dependências |
 |---|--------|-------|---------|-------------|
-| 1 | `aureus-investimento` | 8113 | `/api/investimento/**` | — |
-| 2 | `aureus-consignado` | 8114 | `/api/consignado/**` | `aureus-salario`, SRCC |
-| 3 | `aureus-cartoes` | 8115 | `/api/cartoes/**` | `aureus-ml` (antifraude) |
-| 4 | `aureus-cambio` | 8116 | `/api/cambio/**` | `aureus-compliance` |
-| 5 | `aureus-seguros` | 8117 | `/api/seguros/**` | `aureus-credit`, `aureus-consignado` |
-| 6 | `aureus-financiamento` | 8118 | `/api/financiamento/**` | `aureus-core` (contas) |
+| 1 | `aurix-investimento` | 8113 | `/api/investimento/**` | — |
+| 2 | `aurix-consignado` | 8114 | `/api/consignado/**` | `aurix-salario`, SRCC |
+| 3 | `aurix-cartoes` | 8115 | `/api/cartoes/**` | `aurix-ml` (antifraude) |
+| 4 | `aurix-cambio` | 8116 | `/api/cambio/**` | `aurix-compliance` |
+| 5 | `aurix-seguros` | 8117 | `/api/seguros/**` | `aurix-credit`, `aurix-consignado` |
+| 6 | `aurix-financiamento` | 8118 | `/api/financiamento/**` | `aurix-core` (contas) |
 
 ### 1.3 Testes
 
@@ -46,11 +46,11 @@
 
 ---
 
-## 2. `aureus-investimento` — Conta Investimento
+## 2. `aurix-investimento` — Conta Investimento
 
 ### 2.1 Propósito
 
-Permite ao cliente investir em produtos de renda fixa e variável. Conta pode operar no modo **vinculado** (exige conta corrente AUREUS) ou **standalone** (conta independente — útil para CNPJ separado), configurável por tenant via `investimento.conta-independente: true`.
+Permite ao cliente investir em produtos de renda fixa e variável. Conta pode operar no modo **vinculado** (exige conta corrente AURIX) ou **standalone** (conta independente — útil para CNPJ separado), configurável por tenant via `investimento.conta-independente: true`.
 
 ### 2.2 Entidades
 
@@ -102,15 +102,15 @@ GET    /api/investimento/ordens/{contaId}          → extrato de ordens
 
 ### 2.6 HTTP Clients
 
-- `ContaCorrenteClient` → `aureus-core` (débito/crédito na conta corrente, modo vinculado)
+- `ContaCorrenteClient` → `aurix-core` (débito/crédito na conta corrente, modo vinculado)
 
 ---
 
-## 3. `aureus-consignado` — Crédito Consignado
+## 3. `aurix-consignado` — Crédito Consignado
 
 ### 3.1 Propósito
 
-Empréstimo com desconto em folha de pagamento. Módulo independente que consulta `aureus-salario` para validar vínculo empregatício. Suporta três fontes de margem: **INSS** (Dataprev), **Servidor Público** (SIAFI), **Empresa Privada Conveniada** (eSocial ou manual). Integrado com **SRCC (CIP)** para consulta centralizada de contratos ativos entre instituições.
+Empréstimo com desconto em folha de pagamento. Módulo independente que consulta `aurix-salario` para validar vínculo empregatício. Suporta três fontes de margem: **INSS** (Dataprev), **Servidor Público** (SIAFI), **Empresa Privada Conveniada** (eSocial ou manual). Integrado com **SRCC (CIP)** para consulta centralizada de contratos ativos entre instituições.
 
 ### 3.2 Entidades
 
@@ -145,7 +145,7 @@ PATCH  /api/consignado/contratos/{id}/renegociar     → renegociar
    - Cria `ContratoConsignado` + `Parcela`s
    - Publica `ContratoAssinadoEvent`
    - Se SRCC → registra contrato na CIP
-4. Job `@Scheduled` diário: processa parcelas vencidas → debita via `aureus-salario`
+4. Job `@Scheduled` diário: processa parcelas vencidas → debita via `aurix-salario`
 5. Publica `ParcelaDebitadaEvent`, `MargemAtualizadaEvent`
 
 ### 3.5 Kafka Events
@@ -157,7 +157,7 @@ PATCH  /api/consignado/contratos/{id}/renegociar     → renegociar
 
 ### 3.6 HTTP Clients
 
-- `ContaSalarioClient` → `aureus-salario` (valida vínculo, debita parcela)
+- `ContaSalarioClient` → `aurix-salario` (valida vínculo, debita parcela)
 - `SrccClient` → CIP/SRCC (consulta margem interestadual, registra contrato)
 - `DataprevClient` → INSS (consulta margem Dataprev)
 - `SiafiClient` → servidor público (quando aplicável)
@@ -165,11 +165,11 @@ PATCH  /api/consignado/contratos/{id}/renegociar     → renegociar
 
 ---
 
-## 4. `aureus-cartoes` — Cartões de Crédito/Débito
+## 4. `aurix-cartoes` — Cartões de Crédito/Débito
 
 ### 4.1 Propósito
 
-Motor de cartões configurável por bandeira e adquirente. Suporta **bandeiras parceiras** (Visa, Mastercard, Elo) e **private label** (bandeira própria, processamento interno). **Adquirentes parceiros** (Rede, Stone, GetNet) e **own-acquirer** (processamento full issuer). Antifraude integrado com `aureus-ml`.
+Motor de cartões configurável por bandeira e adquirente. Suporta **bandeiras parceiras** (Visa, Mastercard, Elo) e **private label** (bandeira própria, processamento interno). **Adquirentes parceiros** (Rede, Stone, GetNet) e **own-acquirer** (processamento full issuer). Antifraude integrado com `aurix-ml`.
 
 Configurável por produto/tenant: `brandPartner` e `acquirerPartner` definem qual parceiro ou se é processamento próprio.
 
@@ -246,18 +246,18 @@ POST   /api/cartoes/parceiros-adquirente         → configurar adquirente
 
 ### 4.7 HTTP Clients
 
-- `ContaCorrenteClient` → `aureus-core` (débito de faturas, crédito de estornos)
+- `ContaCorrenteClient` → `aurix-core` (débito de faturas, crédito de estornos)
 - `VisaClient`, `MastercardClient`, `EloClient` → parceiros bandeira
 - `RedeClient`, `StoneClient`, `GetNetClient` → parceiros adquirente
-- `MlFraudClient` → `aureus-ml` (antifraude, se disponível)
+- `MlFraudClient` → `aurix-ml` (antifraude, se disponível)
 
 ---
 
-## 5. `aureus-cambio` — Câmbio
+## 5. `aurix-cambio` — Câmbio
 
 ### 5.1 Propósito
 
-Operações de câmbio completas: câmbio contratual BACEN (Decreto 23.258), plataforma digital de câmbio (tipo Remessa Online), remessa internacional (SWIFT), câmbio turismo. Compliance cambial integrado com `aureus-compliance` (ROE, limites por CPF/CNPJ, finalidade de remessa). Configurável por tenant.
+Operações de câmbio completas: câmbio contratual BACEN (Decreto 23.258), plataforma digital de câmbio (tipo Remessa Online), remessa internacional (SWIFT), câmbio turismo. Compliance cambial integrado com `aurix-compliance` (ROE, limites por CPF/CNPJ, finalidade de remessa). Configurável por tenant.
 
 ### 5.2 Entidades
 
@@ -305,7 +305,7 @@ PUT    /api/cambio/clientes/{id}/limites          → ajustar limites
 
 1. Simulação → GET `/cotacoes/{moeda}` mostra taxa
 2. POST `/contratos` → cria `ContratoCambio` com status `COTADO`
-3. Valida compliance (`aureus-compliance`): ROE, finalidade, limite cliente
+3. Valida compliance (`aurix-compliance`): ROE, finalidade, limite cliente
 4. Aceita → status `CONTRATADO`, registra no SISBACEN se aplicável
 5. Liquidação → PATCH `/liquidar` → debita/credita conforme tipo
 6. Registro BACEN e publicação de `ContratoFechadoEvent`
@@ -335,16 +335,16 @@ PUT    /api/cambio/clientes/{id}/limites          → ajustar limites
 
 - `BacenClient` → SISBACEN (registro contratos, consulta taxas)
 - `SwiftClient` → SWIFT (envio de remessas)
-- `ComplianceClient` → `aureus-compliance` (validação ROE, limites)
+- `ComplianceClient` → `aurix-compliance` (validação ROE, limites)
 - `ParceiroCambioClient` → provedor de liquidez (se parceiro)
 
 ---
 
-## 6. `aureus-seguros` — Seguros
+## 6. `aurix-seguros` — Seguros
 
 ### 6.1 Propósito
 
-Módulo completo de seguros: Vida (individual/grupo), Prestamista (vinculado a crédito), Residencial, Automóvel, Empresarial. Precificação atuarial, comissionamento de corretores, registro SUSEP, cessão a resseguradoras. Prestamista integrado com `aureus-credit` e `aureus-consignado`.
+Módulo completo de seguros: Vida (individual/grupo), Prestamista (vinculado a crédito), Residencial, Automóvel, Empresarial. Precificação atuarial, comissionamento de corretores, registro SUSEP, cessão a resseguradoras. Prestamista integrado com `aurix-credit` e `aurix-consignado`.
 
 ### 6.2 Entidades
 
@@ -392,7 +392,7 @@ GET    /api/seguros/produtos/{id}/tabelas-atuariais → tabelas de precificaçã
 
 ### 6.4 Fluxo de emissão (prestamista)
 
-1. POST `/cotacoes` → dados do cliente + valor financiado (`aureus-credit`/`aureus-consignado`)
+1. POST `/cotacoes` → dados do cliente + valor financiado (`aurix-credit`/`aurix-consignado`)
 2. Calcula prêmio baseado em tabela atuarial (idade, valor, prazo)
 3. POST `/cotacoes/{id}/emitir` → cria `Apolice`, gera `ParcelaPremio`s
 4. Publica `ApoliceEmitidaEvent`
@@ -417,13 +417,13 @@ GET    /api/seguros/produtos/{id}/tabelas-atuariais → tabelas de precificaçã
 
 - `SusepClient` → SUSEP (registro de apólices e sinistros)
 - `ResseguradoraClient` → resseguradora (cessão de risco)
-- `ContaCorrenteClient` → `aureus-core` (débito prêmio, crédito sinistro)
-- `CreditClient` → `aureus-credit` (dados do contrato para prestamista)
-- `ConsignadoClient` → `aureus-consignado` (dados do contrato para prestamista)
+- `ContaCorrenteClient` → `aurix-core` (débito prêmio, crédito sinistro)
+- `CreditClient` → `aurix-credit` (dados do contrato para prestamista)
+- `ConsignadoClient` → `aurix-consignado` (dados do contrato para prestamista)
 
 ---
 
-## 7. `aureus-financiamento` — Financiamento
+## 7. `aurix-financiamento` — Financiamento
 
 ### 7.1 Propósito
 
@@ -494,10 +494,10 @@ Job `@Scheduled` diário: gera `ParcelaFinanciamento` com valores calculados. Pa
 
 ### 7.7 HTTP Clients
 
-- `ContaCorrenteClient` → `aureus-core` (crédito do valor, débito de parcelas)
+- `ContaCorrenteClient` → `aurix-core` (crédito do valor, débito de parcelas)
 - `CartorioRgiClient` → registro de garantia imobiliária
 - `DetranClient` → registro de garantia veicular
-- `BacenClient` → `aureus-bacen` (consulta taxa referencial, TR)
+- `BacenClient` → `aurix-bacen` (consulta taxa referencial, TR)
 
 ---
 
@@ -505,46 +505,46 @@ Job `@Scheduled` diário: gera `ParcelaFinanciamento` com valores calculados. Pa
 
 ### 8.1 Gateway
 
-Inserir no `application.yml` do `aureus-gateway`:
+Inserir no `application.yml` do `aurix-gateway`:
 
 ```yaml
 spring.cloud.gateway.routes:
-  - id: aureus-investimento
+  - id: aurix-investimento
     uri: http://localhost:8113
     predicates:
       - Path=/api/investimento/**
     filters:
       - StripPrefix=0
 
-  - id: aureus-consignado
+  - id: aurix-consignado
     uri: http://localhost:8114
     predicates:
       - Path=/api/consignado/**
     filters:
       - StripPrefix=0
 
-  - id: aureus-cartoes
+  - id: aurix-cartoes
     uri: http://localhost:8115
     predicates:
       - Path=/api/cartoes/**
     filters:
       - StripPrefix=0
 
-  - id: aureus-cambio
+  - id: aurix-cambio
     uri: http://localhost:8116
     predicates:
       - Path=/api/cambio/**
     filters:
       - StripPrefix=0
 
-  - id: aureus-seguros
+  - id: aurix-seguros
     uri: http://localhost:8117
     predicates:
       - Path=/api/seguros/**
     filters:
       - StripPrefix=0
 
-  - id: aureus-financiamento
+  - id: aurix-financiamento
     uri: http://localhost:8118
     predicates:
       - Path=/api/financiamento/**
@@ -557,23 +557,23 @@ spring.cloud.gateway.routes:
 Adicionar no `backend/pom.xml`:
 
 ```xml
-<module>aureus-investimento</module>
-<module>aureus-consignado</module>
-<module>aureus-cartoes</module>
-<module>aureus-cambio</module>
-<module>aureus-seguros</module>
-<module>aureus-financiamento</module>
+<module>aurix-investimento</module>
+<module>aurix-consignado</module>
+<module>aurix-cartoes</module>
+<module>aurix-cambio</module>
+<module>aurix-seguros</module>
+<module>aurix-financiamento</module>
 ```
 
 ### 8.3 API Spec
 
-Após implementação, adicionar tags, paths e schemas no `aureus-api-specs/aureus-core.yaml` para cada módulo.
+Após implementação, adicionar tags, paths e schemas no `aurix-api-specs/aurix-core.yaml` para cada módulo.
 
 ### 8.4 Frontend
 
-- `aureus-admin`: corrigir `TIPOS_CONTA` (remover `INVESTIMENTO`, adicionar `SALARIO` já existe). Adicionar resources para os novos módulos.
-- `aureus-web` (internet banking): adicionar páginas para investimentos, cartões, seguros, financiamento.
-- `aureus-mobile` (mobile): adicionar telas correspondentes.
+- `aurix-admin`: corrigir `TIPOS_CONTA` (remover `INVESTIMENTO`, adicionar `SALARIO` já existe). Adicionar resources para os novos módulos.
+- `aurix-web` (internet banking): adicionar páginas para investimentos, cartões, seguros, financiamento.
+- `aurix-mobile` (mobile): adicionar telas correspondentes.
 
 ---
 
@@ -581,12 +581,12 @@ Após implementação, adicionar tags, paths e schemas no `aureus-api-specs/aure
 
 | Ordem | Módulo | Justificativa |
 |-------|--------|---------------|
-| 1 | `aureus-cartoes` | Já existe esqueleto, expandir é mais rápido. Inconsistência ativa no frontend. |
-| 2 | `aureus-investimento` | Inconsistência ativa frontend-backend (`TIPOS_CONTA`). Demanda imediata. |
-| 3 | `aureus-consignado` | Depende de `aureus-salario` (já pronto). Produto de alto valor no BR. |
-| 4 | `aureus-seguros` | Depende de `aureus-credit` e `aureus-consignado` (prestamista). |
-| 5 | `aureus-financiamento` | Maior escopo, faz sentido depois dos produtos de crédito. |
-| 6 | `aureus-cambio` | Independente, pode ser feito em paralelo com outros. |
+| 1 | `aurix-cartoes` | Já existe esqueleto, expandir é mais rápido. Inconsistência ativa no frontend. |
+| 2 | `aurix-investimento` | Inconsistência ativa frontend-backend (`TIPOS_CONTA`). Demanda imediata. |
+| 3 | `aurix-consignado` | Depende de `aurix-salario` (já pronto). Produto de alto valor no BR. |
+| 4 | `aurix-seguros` | Depende de `aurix-credit` e `aurix-consignado` (prestamista). |
+| 5 | `aurix-financiamento` | Maior escopo, faz sentido depois dos produtos de crédito. |
+| 6 | `aurix-cambio` | Independente, pode ser feito em paralelo com outros. |
 
 ---
 
@@ -595,11 +595,11 @@ Após implementação, adicionar tags, paths e schemas no `aureus-api-specs/aure
 ### 10.1 Módulo scaffold (todos seguem)
 
 ```
-aureus-<modulo>/
+aurix-<modulo>/
 ├── pom.xml
 ├── docker/
-├── src/main/java/com/aureus/platform/<modulo>/
-│   ├── Aureus<Modulo>Application.java
+├── src/main/java/com/aurix/platform/<modulo>/
+│   ├── Aurix<Modulo>Application.java
 │   ├── entity/
 │   ├── repository/
 │   ├── dto/
@@ -612,7 +612,7 @@ aureus-<modulo>/
 ├── src/main/resources/
 │   ├── application.yml
 │   └── application-prod.yml
-└── src/test/java/com/aureus/platform/<modulo>/
+└── src/test/java/com/aurix/platform/<modulo>/
     └── controller/
 ```
 

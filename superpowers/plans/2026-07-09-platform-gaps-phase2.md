@@ -23,57 +23,57 @@
 ## File Map
 
 ### Gap 1 — OpenFinance
-- Modify: `backend/aureus-openfinance/src/main/java/com/aureus/platform/openfinance/controller/OpenFinanceController.java` (lines 93, 115)
-- Modify: `backend/aureus-openfinance/src/main/java/com/aureus/platform/openfinance/service/OpenFinanceDataService.java`
-- Create/test: `backend/aureus-openfinance/src/test/java/com/aureus/platform/openfinance/service/OpenFinanceDataServiceTest.java`
-- Create/test: `backend/aureus-openfinance/src/test/java/com/aureus/platform/openfinance/controller/OpenFinanceControllerTest.java`
+- Modify: `backend/aurix-openfinance/src/main/java/com/aurix/platform/openfinance/controller/OpenFinanceController.java` (lines 93, 115)
+- Modify: `backend/aurix-openfinance/src/main/java/com/aurix/platform/openfinance/service/OpenFinanceDataService.java`
+- Create/test: `backend/aurix-openfinance/src/test/java/com/aurix/platform/openfinance/service/OpenFinanceDataServiceTest.java`
+- Create/test: `backend/aurix-openfinance/src/test/java/com/aurix/platform/openfinance/controller/OpenFinanceControllerTest.java`
 
 ### Gap 2 — Auth/Password
-- Create: `backend/aureus-security/src/main/java/com/aureus/platform/security/entity/PasswordResetToken.java`
-- Create: `backend/aureus-security/src/main/java/com/aureus/platform/security/entity/RefreshToken.java`
-- Create: `backend/aureus-security/src/main/java/com/aureus/platform/security/repository/PasswordResetTokenRepository.java`
-- Create: `backend/aureus-security/src/main/java/com/aureus/platform/security/repository/RefreshTokenRepository.java`
-- Create: `backend/aureus-security/src/main/java/com/aureus/platform/security/dto/ForgotPasswordRequestDTO.java`
-- Create: `backend/aureus-security/src/main/java/com/aureus/platform/security/dto/ResetPasswordRequestDTO.java`
-- Create: `backend/aureus-security/src/main/java/com/aureus/platform/security/dto/RefreshTokenRequestDTO.java`
-- Modify: `backend/aureus-security/src/main/java/com/aureus/platform/security/controller/AuthController.java`
-- Modify: `backend/aureus-security/src/main/java/com/aureus/platform/security/service/AuthService.java`
-- Create/test: `backend/aureus-security/src/test/java/com/aureus/platform/security/service/AuthServiceTest.java`
-- Create/test: `backend/aureus-security/src/test/java/com/aureus/platform/security/controller/AuthControllerTest.java`
+- Create: `backend/aurix-security/src/main/java/com/aurix/platform/security/entity/PasswordResetToken.java`
+- Create: `backend/aurix-security/src/main/java/com/aurix/platform/security/entity/RefreshToken.java`
+- Create: `backend/aurix-security/src/main/java/com/aurix/platform/security/repository/PasswordResetTokenRepository.java`
+- Create: `backend/aurix-security/src/main/java/com/aurix/platform/security/repository/RefreshTokenRepository.java`
+- Create: `backend/aurix-security/src/main/java/com/aurix/platform/security/dto/ForgotPasswordRequestDTO.java`
+- Create: `backend/aurix-security/src/main/java/com/aurix/platform/security/dto/ResetPasswordRequestDTO.java`
+- Create: `backend/aurix-security/src/main/java/com/aurix/platform/security/dto/RefreshTokenRequestDTO.java`
+- Modify: `backend/aurix-security/src/main/java/com/aurix/platform/security/controller/AuthController.java`
+- Modify: `backend/aurix-security/src/main/java/com/aurix/platform/security/service/AuthService.java`
+- Create/test: `backend/aurix-security/src/test/java/com/aurix/platform/security/service/AuthServiceTest.java`
+- Create/test: `backend/aurix-security/src/test/java/com/aurix/platform/security/controller/AuthControllerTest.java`
 
 ### Gap 3 — Kafka Staging
-- Modify: `aureus-data-platform/kafka/docker-compose.staging.yml`
-- Modify: `aureus-data-platform/kafka/.env.example`
+- Modify: `aurix-data-platform/kafka/docker-compose.staging.yml`
+- Modify: `aurix-data-platform/kafka/.env.example`
 
 ### Gap 4 — Web Pages
-- Create: `frontend/aureus-web/src/pages/Extrato.js`
-- Create: `frontend/aureus-web/src/pages/Extrato.test.js`
-- Create: `frontend/aureus-web/src/pages/Transferencia.js`
-- Create: `frontend/aureus-web/src/pages/Transferencia.test.js`
-- Create: `frontend/aureus-web/src/pages/Pagamento.js`
-- Create: `frontend/aureus-web/src/pages/Pagamento.test.js`
-- Create: `frontend/aureus-web/src/pages/Recarga.js`
-- Create: `frontend/aureus-web/src/pages/Recarga.test.js`
-- Modify: `frontend/aureus-web/src/App.js`
-- Modify: `frontend/aureus-web/src/components/Sidebar.js`
+- Create: `frontend/aurix-web/src/pages/Extrato.js`
+- Create: `frontend/aurix-web/src/pages/Extrato.test.js`
+- Create: `frontend/aurix-web/src/pages/Transferencia.js`
+- Create: `frontend/aurix-web/src/pages/Transferencia.test.js`
+- Create: `frontend/aurix-web/src/pages/Pagamento.js`
+- Create: `frontend/aurix-web/src/pages/Pagamento.test.js`
+- Create: `frontend/aurix-web/src/pages/Recarga.js`
+- Create: `frontend/aurix-web/src/pages/Recarga.test.js`
+- Modify: `frontend/aurix-web/src/App.js`
+- Modify: `frontend/aurix-web/src/components/Sidebar.js`
 
 ### Gap 5 — ML/BI/Chatbot
-- Create: `backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/service/FraudService.java`
-- Create: `backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/service/CreditScoreService.java`
-- Create: `backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/service/ChatbotService.java`
-- Create: `backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/service/BiService.java`
-- Create: `backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/service/MlFraudServiceStub.java`
-- Create: `backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/service/CreditScoreStubService.java`
-- Create: `backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/service/ChatbotStubService.java`
-- Create: `backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/service/BiStubService.java`
-- Create: `backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/service/MlFraudServiceProd.java`
-- Create: `backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/service/CreditScoreServiceProd.java`
-- Create: `backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/service/ChatbotServiceProd.java`
-- Create: `backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/service/BiServiceProd.java`
-- Modify/rename: `backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/controller/MlStubController.java` → `MlController.java`
-- Modify/rename: `backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/controller/ChatbotStubController.java` → `ChatbotController.java`
-- Modify/rename: `backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/controller/BiStubController.java` → `BiController.java`
-- Modify: `backend/aureus-analytics/src/test/java/com/aureus/platform/analytics/integration/AnalyticsFlowIntegrationTest.java`
+- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/FraudService.java`
+- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/CreditScoreService.java`
+- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/ChatbotService.java`
+- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/BiService.java`
+- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/MlFraudServiceStub.java`
+- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/CreditScoreStubService.java`
+- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/ChatbotStubService.java`
+- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/BiStubService.java`
+- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/MlFraudServiceProd.java`
+- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/CreditScoreServiceProd.java`
+- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/ChatbotServiceProd.java`
+- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/BiServiceProd.java`
+- Modify/rename: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/MlStubController.java` → `MlController.java`
+- Modify/rename: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/ChatbotStubController.java` → `ChatbotController.java`
+- Modify/rename: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/BiStubController.java` → `BiController.java`
+- Modify: `backend/aurix-analytics/src/test/java/com/aurix/platform/analytics/integration/AnalyticsFlowIntegrationTest.java`
 
 ---
 
@@ -86,8 +86,8 @@ Each gap is fully independent. They can be executed in parallel by separate agen
 ### Task G1-1: OpenFinanceDataService — add credit cards and identifications methods
 
 **Files:**
-- Modify: `backend/aureus-openfinance/src/main/java/com/aureus/platform/openfinance/service/OpenFinanceDataService.java`
-- Test: `backend/aureus-openfinance/src/test/java/com/aureus/platform/openfinance/service/OpenFinanceDataServiceTest.java`
+- Modify: `backend/aurix-openfinance/src/main/java/com/aurix/platform/openfinance/service/OpenFinanceDataService.java`
+- Test: `backend/aurix-openfinance/src/test/java/com/aurix/platform/openfinance/service/OpenFinanceDataServiceTest.java`
 
 **Interfaces:**
 - Consumes: existing `TokenOpenFinance`, `ConsentimentoOpenFinance`, `CoreApiClient`
@@ -100,11 +100,11 @@ Read the file to understand existing patterns.
 - [ ] **Step 2: Write failing test for listarCartoesCreditoPorToken**
 
 ```java
-package com.aureus.platform.openfinance.service;
+package com.aurix.platform.openfinance.service;
 
-import com.aureus.platform.openfinance.entity.TokenOpenFinance;
-import com.aureus.platform.openfinance.entity.ConsentimentoOpenFinance;
-import com.aureus.platform.shared.client.CoreApiClient;
+import com.aurix.platform.openfinance.entity.TokenOpenFinance;
+import com.aurix.platform.openfinance.entity.ConsentimentoOpenFinance;
+import com.aurix.platform.shared.client.CoreApiClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -200,12 +200,12 @@ class OpenFinanceDataServiceTest {
 }
 ```
 
-Note: Adjust entity imports to match actual package names. The entities are in `com.aureus.platform.openfinance.entity.*`. If `setContasAutorizadas` or `setUserId` don't exist on `TokenOpenFinance`, use actual setter names from the entity.
+Note: Adjust entity imports to match actual package names. The entities are in `com.aurix.platform.openfinance.entity.*`. If `setContasAutorizadas` or `setUserId` don't exist on `TokenOpenFinance`, use actual setter names from the entity.
 
 - [ ] **Step 3: Run test to verify it fails**
 
 ```bash
-mvn -pl aureus-openfinance -am test -Dtest=OpenFinanceDataServiceTest -Dsurefire.failIfNoSpecifiedTests=false
+mvn -pl aurix-openfinance -am test -Dtest=OpenFinanceDataServiceTest -Dsurefire.failIfNoSpecifiedTests=false
 ```
 
 Expected: COMPILATION ERROR (methods don't exist yet)
@@ -242,7 +242,7 @@ public List<Map<String, Object>> listarIdentificacoesPessoaisPorToken(TokenOpenF
 - [ ] **Step 5: Run test to verify it passes**
 
 ```bash
-mvn test -pl aureus-openfinance -am -Dtest=OpenFinanceDataServiceTest -Dsurefire.failIfNoSpecifiedTests=false
+mvn test -pl aurix-openfinance -am -Dtest=OpenFinanceDataServiceTest -Dsurefire.failIfNoSpecifiedTests=false
 ```
 
 Expected: PASS
@@ -250,7 +250,7 @@ Expected: PASS
 - [ ] **Step 6: Commit**
 
 ```bash
-git add backend/aureus-openfinance/src/main/java/com/aureus/platform/openfinance/service/OpenFinanceDataService.java backend/aureus-openfinance/src/test/java/com/aureus/platform/openfinance/service/OpenFinanceDataServiceTest.java
+git add backend/aurix-openfinance/src/main/java/com/aurix/platform/openfinance/service/OpenFinanceDataService.java backend/aurix-openfinance/src/test/java/com/aurix/platform/openfinance/service/OpenFinanceDataServiceTest.java
 git commit -m "feat(openfinance): add credit cards and personal identifications data methods"
 ```
 
@@ -259,8 +259,8 @@ git commit -m "feat(openfinance): add credit cards and personal identifications 
 ### Task G1-2: Update OpenFinanceController — replace TODO stubs
 
 **Files:**
-- Modify: `backend/aureus-openfinance/src/main/java/com/aureus/platform/openfinance/controller/OpenFinanceController.java`
-- Test: `backend/aureus-openfinance/src/test/java/com/aureus/platform/openfinance/controller/OpenFinanceControllerTest.java`
+- Modify: `backend/aurix-openfinance/src/main/java/com/aurix/platform/openfinance/controller/OpenFinanceController.java`
+- Test: `backend/aurix-openfinance/src/test/java/com/aurix/platform/openfinance/controller/OpenFinanceControllerTest.java`
 
 **Interfaces:**
 - Consumes: `openFinanceDataService.listarCartoesCreditoPorToken()`, `openFinanceDataService.listarIdentificacoesPessoaisPorToken()`
@@ -269,12 +269,12 @@ git commit -m "feat(openfinance): add credit cards and personal identifications 
 - [ ] **Step 1: Write the failing test**
 
 ```java
-package com.aureus.platform.openfinance.controller;
+package com.aurix.platform.openfinance.controller;
 
-import com.aureus.platform.openfinance.service.OpenFinanceDataService;
-import com.aureus.platform.openfinance.service.TokenOpenFinanceService;
-import com.aureus.platform.openfinance.service.LogAcessoOpenFinanceService;
-import com.aureus.platform.openfinance.entity.TokenOpenFinance;
+import com.aurix.platform.openfinance.service.OpenFinanceDataService;
+import com.aurix.platform.openfinance.service.TokenOpenFinanceService;
+import com.aurix.platform.openfinance.service.LogAcessoOpenFinanceService;
+import com.aurix.platform.openfinance.entity.TokenOpenFinance;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -325,7 +325,7 @@ class OpenFinanceControllerTest {
 - [ ] **Step 2: Run test to verify it fails**
 
 ```bash
-mvn test -pl aureus-openfinance -am -Dtest=OpenFinanceControllerTest -Dsurefire.failIfNoSpecifiedTests=false
+mvn test -pl aurix-openfinance -am -Dtest=OpenFinanceControllerTest -Dsurefire.failIfNoSpecifiedTests=false
 ```
 
 Expected: FAIL (controller still returns hardcoded `"[]"`)
@@ -357,7 +357,7 @@ return ResponseEntity.ok(response);
 - [ ] **Step 4: Run test to verify it passes**
 
 ```bash
-mvn test -pl aureus-openfinance -am -Dtest=OpenFinanceControllerTest -Dsurefire.failIfNoSpecifiedTests=false
+mvn test -pl aurix-openfinance -am -Dtest=OpenFinanceControllerTest -Dsurefire.failIfNoSpecifiedTests=false
 ```
 
 Expected: PASS
@@ -365,7 +365,7 @@ Expected: PASS
 - [ ] **Step 5: Commit**
 
 ```bash
-git add backend/aureus-openfinance/src/main/java/com/aureus/platform/openfinance/controller/OpenFinanceController.java backend/aureus-openfinance/src/test/java/com/aureus/platform/openfinance/controller/OpenFinanceControllerTest.java
+git add backend/aurix-openfinance/src/main/java/com/aurix/platform/openfinance/controller/OpenFinanceController.java backend/aurix-openfinance/src/test/java/com/aurix/platform/openfinance/controller/OpenFinanceControllerTest.java
 git commit -m "feat(openfinance): implement credit cards and personal identifications endpoints"
 ```
 
@@ -374,13 +374,13 @@ git commit -m "feat(openfinance): implement credit cards and personal identifica
 ### Task G2-1: Create entities and repositories for password reset and refresh tokens
 
 **Files:**
-- Create: `backend/aureus-security/src/main/java/com/aureus/platform/security/entity/PasswordResetToken.java`
-- Create: `backend/aureus-security/src/main/java/com/aureus/platform/security/entity/RefreshToken.java`
-- Create: `backend/aureus-security/src/main/java/com/aureus/platform/security/repository/PasswordResetTokenRepository.java`
-- Create: `backend/aureus-security/src/main/java/com/aureus/platform/security/repository/RefreshTokenRepository.java`
-- Create: `backend/aureus-security/src/main/java/com/aureus/platform/security/dto/ForgotPasswordRequestDTO.java`
-- Create: `backend/aureus-security/src/main/java/com/aureus/platform/security/dto/ResetPasswordRequestDTO.java`
-- Create: `backend/aureus-security/src/main/java/com/aureus/platform/security/dto/RefreshTokenRequestDTO.java`
+- Create: `backend/aurix-security/src/main/java/com/aurix/platform/security/entity/PasswordResetToken.java`
+- Create: `backend/aurix-security/src/main/java/com/aurix/platform/security/entity/RefreshToken.java`
+- Create: `backend/aurix-security/src/main/java/com/aurix/platform/security/repository/PasswordResetTokenRepository.java`
+- Create: `backend/aurix-security/src/main/java/com/aurix/platform/security/repository/RefreshTokenRepository.java`
+- Create: `backend/aurix-security/src/main/java/com/aurix/platform/security/dto/ForgotPasswordRequestDTO.java`
+- Create: `backend/aurix-security/src/main/java/com/aurix/platform/security/dto/ResetPasswordRequestDTO.java`
+- Create: `backend/aurix-security/src/main/java/com/aurix/platform/security/dto/RefreshTokenRequestDTO.java`
 - Test: created manually via schema check (no service yet)
 
 **Interfaces:**
@@ -389,14 +389,14 @@ git commit -m "feat(openfinance): implement credit cards and personal identifica
 - [ ] **Step 1: Create PasswordResetToken entity**
 
 ```java
-package com.aureus.platform.security.entity;
+package com.aurix.platform.security.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "password_reset_tokens", schema = "aureus")
+@Table(name = "password_reset_tokens", schema = "aurix")
 public class PasswordResetToken {
 
     @Id
@@ -440,14 +440,14 @@ public class PasswordResetToken {
 - [ ] **Step 2: Create RefreshToken entity**
 
 ```java
-package com.aureus.platform.security.entity;
+package com.aurix.platform.security.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "refresh_tokens", schema = "aureus")
+@Table(name = "refresh_tokens", schema = "aurix")
 public class RefreshToken {
 
     @Id
@@ -491,9 +491,9 @@ public class RefreshToken {
 - [ ] **Step 3: Create PasswordResetTokenRepository**
 
 ```java
-package com.aureus.platform.security.repository;
+package com.aurix.platform.security.repository;
 
-import com.aureus.platform.security.entity.PasswordResetToken;
+import com.aurix.platform.security.entity.PasswordResetToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
@@ -506,9 +506,9 @@ public interface PasswordResetTokenRepository extends JpaRepository<PasswordRese
 - [ ] **Step 4: Create RefreshTokenRepository**
 
 ```java
-package com.aureus.platform.security.repository;
+package com.aurix.platform.security.repository;
 
-import com.aureus.platform.security.entity.RefreshToken;
+import com.aurix.platform.security.entity.RefreshToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
@@ -522,7 +522,7 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long
 
 ```java
 // ForgotPasswordRequestDTO.java
-package com.aureus.platform.security.dto;
+package com.aurix.platform.security.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -536,7 +536,7 @@ public class ForgotPasswordRequestDTO {
 }
 
 // ResetPasswordRequestDTO.java
-package com.aureus.platform.security.dto;
+package com.aurix.platform.security.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
@@ -554,7 +554,7 @@ public class ResetPasswordRequestDTO {
 }
 
 // RefreshTokenRequestDTO.java
-package com.aureus.platform.security.dto;
+package com.aurix.platform.security.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
@@ -570,7 +570,7 @@ public class RefreshTokenRequestDTO {
 - [ ] **Step 6: Compile to verify**
 
 ```bash
-mvn compile -pl aureus-security -am
+mvn compile -pl aurix-security -am
 ```
 
 Expected: BUILD SUCCESS
@@ -578,7 +578,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 7: Commit**
 
 ```bash
-git add backend/aureus-security/src/main/java/com/aureus/platform/security/entity/PasswordResetToken.java backend/aureus-security/src/main/java/com/aureus/platform/security/entity/RefreshToken.java backend/aureus-security/src/main/java/com/aureus/platform/security/repository/PasswordResetTokenRepository.java backend/aureus-security/src/main/java/com/aureus/platform/security/repository/RefreshTokenRepository.java backend/aureus-security/src/main/java/com/aureus/platform/security/dto/ForgotPasswordRequestDTO.java backend/aureus-security/src/main/java/com/aureus/platform/security/dto/ResetPasswordRequestDTO.java backend/aureus-security/src/main/java/com/aureus/platform/security/dto/RefreshTokenRequestDTO.java
+git add backend/aurix-security/src/main/java/com/aurix/platform/security/entity/PasswordResetToken.java backend/aurix-security/src/main/java/com/aurix/platform/security/entity/RefreshToken.java backend/aurix-security/src/main/java/com/aurix/platform/security/repository/PasswordResetTokenRepository.java backend/aurix-security/src/main/java/com/aurix/platform/security/repository/RefreshTokenRepository.java backend/aurix-security/src/main/java/com/aurix/platform/security/dto/ForgotPasswordRequestDTO.java backend/aurix-security/src/main/java/com/aurix/platform/security/dto/ResetPasswordRequestDTO.java backend/aurix-security/src/main/java/com/aurix/platform/security/dto/RefreshTokenRequestDTO.java
 git commit -m "feat(security): add password reset and refresh token entities, repositories, DTOs"
 ```
 
@@ -587,8 +587,8 @@ git commit -m "feat(security): add password reset and refresh token entities, re
 ### Task G2-2: Add forgot-password, reset-password, refresh-token and timed lockout to AuthService
 
 **Files:**
-- Modify: `backend/aureus-security/src/main/java/com/aureus/platform/security/service/AuthService.java`
-- Test: `backend/aureus-security/src/test/java/com/aureus/platform/security/service/AuthServiceTest.java`
+- Modify: `backend/aurix-security/src/main/java/com/aurix/platform/security/service/AuthService.java`
+- Test: `backend/aurix-security/src/test/java/com/aurix/platform/security/service/AuthServiceTest.java`
 
 **Interfaces:**
 - Consumes: `PasswordResetTokenRepository`, `RefreshTokenRepository`, `PasswordEncoder`
@@ -597,15 +597,15 @@ git commit -m "feat(security): add password reset and refresh token entities, re
 - [ ] **Step 1: Write failing test**
 
 ```java
-package com.aureus.platform.security.service;
+package com.aurix.platform.security.service;
 
-import com.aureus.platform.security.entity.PasswordResetToken;
-import com.aureus.platform.security.entity.RefreshToken;
-import com.aureus.platform.security.repository.PasswordResetTokenRepository;
-import com.aureus.platform.security.repository.RefreshTokenRepository;
-import com.aureus.platform.security.repository.UsuarioRepository;
-import com.aureus.platform.shared.dto.LoginRequestDTO;
-import com.aureus.platform.shared.entity.Usuario;
+import com.aurix.platform.security.entity.PasswordResetToken;
+import com.aurix.platform.security.entity.RefreshToken;
+import com.aurix.platform.security.repository.PasswordResetTokenRepository;
+import com.aurix.platform.security.repository.RefreshTokenRepository;
+import com.aurix.platform.security.repository.UsuarioRepository;
+import com.aurix.platform.shared.dto.LoginRequestDTO;
+import com.aurix.platform.shared.entity.Usuario;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -739,7 +739,7 @@ class AuthServiceTest {
 - [ ] **Step 2: Run test to verify it fails**
 
 ```bash
-mvn test -pl aureus-security -am -Dtest=AuthServiceTest -Dsurefire.failIfNoSpecifiedTests=false
+mvn test -pl aurix-security -am -Dtest=AuthServiceTest -Dsurefire.failIfNoSpecifiedTests=false
 ```
 
 Expected: FAIL (compilation — AuthService doesn't have new constructor or methods yet)
@@ -856,17 +856,17 @@ public LoginResponseDTO refreshToken(String refreshTokenValue) {
 
 Add imports:
 ```java
-import com.aureus.platform.security.entity.PasswordResetToken;
-import com.aureus.platform.security.entity.RefreshToken;
-import com.aureus.platform.security.repository.PasswordResetTokenRepository;
-import com.aureus.platform.security.repository.RefreshTokenRepository;
+import com.aurix.platform.security.entity.PasswordResetToken;
+import com.aurix.platform.security.entity.RefreshToken;
+import com.aurix.platform.security.repository.PasswordResetTokenRepository;
+import com.aurix.platform.security.repository.RefreshTokenRepository;
 import java.util.UUID;
 ```
 
 - [ ] **Step 4: Run test to verify it passes**
 
 ```bash
-mvn test -pl aureus-security -am -Dtest=AuthServiceTest -Dsurefire.failIfNoSpecifiedTests=false
+mvn test -pl aurix-security -am -Dtest=AuthServiceTest -Dsurefire.failIfNoSpecifiedTests=false
 ```
 
 Expected: PASS
@@ -874,7 +874,7 @@ Expected: PASS
 - [ ] **Step 5: Commit**
 
 ```bash
-git add backend/aureus-security/src/main/java/com/aureus/platform/security/service/AuthService.java backend/aureus-security/src/test/java/com/aureus/platform/security/service/AuthServiceTest.java
+git add backend/aurix-security/src/main/java/com/aurix/platform/security/service/AuthService.java backend/aurix-security/src/test/java/com/aurix/platform/security/service/AuthServiceTest.java
 git commit -m "feat(security): add forgot-password, reset-password, refresh-token, timed lockout"
 ```
 
@@ -883,8 +883,8 @@ git commit -m "feat(security): add forgot-password, reset-password, refresh-toke
 ### Task G2-3: Add new endpoints to AuthController
 
 **Files:**
-- Modify: `backend/aureus-security/src/main/java/com/aureus/platform/security/controller/AuthController.java`
-- Test: `backend/aureus-security/src/test/java/com/aureus/platform/security/controller/AuthControllerTest.java`
+- Modify: `backend/aurix-security/src/main/java/com/aurix/platform/security/controller/AuthController.java`
+- Test: `backend/aurix-security/src/test/java/com/aurix/platform/security/controller/AuthControllerTest.java`
 
 **Interfaces:**
 - Consumes: `authService.forgotPassword()`, `authService.resetPassword()`, `authService.refreshToken()`
@@ -893,10 +893,10 @@ git commit -m "feat(security): add forgot-password, reset-password, refresh-toke
 - [ ] **Step 1: Write the failing test**
 
 ```java
-package com.aureus.platform.security.controller;
+package com.aurix.platform.security.controller;
 
-import com.aureus.platform.security.service.AuthService;
-import com.aureus.platform.shared.dto.LoginResponseDTO;
+import com.aurix.platform.security.service.AuthService;
+import com.aurix.platform.shared.dto.LoginResponseDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -952,7 +952,7 @@ class AuthControllerTest {
 - [ ] **Step 2: Run test to verify it fails**
 
 ```bash
-mvn test -pl aureus-security -am -Dtest=AuthControllerTest -Dsurefire.failIfNoSpecifiedTests=false
+mvn test -pl aurix-security -am -Dtest=AuthControllerTest -Dsurefire.failIfNoSpecifiedTests=false
 ```
 
 Expected: FAIL
@@ -989,15 +989,15 @@ public ResponseEntity<LoginResponseDTO> refresh(@Valid @RequestBody RefreshToken
 
 Add imports:
 ```java
-import com.aureus.platform.security.dto.ForgotPasswordRequestDTO;
-import com.aureus.platform.security.dto.ResetPasswordRequestDTO;
-import com.aureus.platform.security.dto.RefreshTokenRequestDTO;
+import com.aurix.platform.security.dto.ForgotPasswordRequestDTO;
+import com.aurix.platform.security.dto.ResetPasswordRequestDTO;
+import com.aurix.platform.security.dto.RefreshTokenRequestDTO;
 ```
 
 - [ ] **Step 4: Run test to verify it passes**
 
 ```bash
-mvn test -pl aureus-security -am -Dtest=AuthControllerTest -Dsurefire.failIfNoSpecifiedTests=false
+mvn test -pl aurix-security -am -Dtest=AuthControllerTest -Dsurefire.failIfNoSpecifiedTests=false
 ```
 
 Expected: PASS
@@ -1005,7 +1005,7 @@ Expected: PASS
 - [ ] **Step 5: Commit**
 
 ```bash
-git add backend/aureus-security/src/main/java/com/aureus/platform/security/controller/AuthController.java backend/aureus-security/src/test/java/com/aureus/platform/security/controller/AuthControllerTest.java
+git add backend/aurix-security/src/main/java/com/aurix/platform/security/controller/AuthController.java backend/aurix-security/src/test/java/com/aurix/platform/security/controller/AuthControllerTest.java
 git commit -m "feat(security): add forgot-password, reset-password, refresh-token endpoints"
 ```
 
@@ -1014,8 +1014,8 @@ git commit -m "feat(security): add forgot-password, reset-password, refresh-toke
 ### Task G3-1: Add Schema Registry and Kafka Connect to staging compose
 
 **Files:**
-- Modify: `aureus-data-platform/kafka/docker-compose.staging.yml`
-- Modify: `aureus-data-platform/kafka/.env.example`
+- Modify: `aurix-data-platform/kafka/docker-compose.staging.yml`
+- Modify: `aurix-data-platform/kafka/.env.example`
 
 - [ ] **Step 1: Read current docker-compose.staging.yml**
 
@@ -1029,7 +1029,7 @@ Insert after kafka-3 block (before kafka-ui):
   schema-registry:
     image: confluentinc/cp-schema-registry:7.4.0
     hostname: schema-registry
-    container_name: aureus-schema-registry-staging
+    container_name: aurix-schema-registry-staging
     depends_on:
       - kafka-1
       - kafka-2
@@ -1041,12 +1041,12 @@ Insert after kafka-3 block (before kafka-ui):
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'kafka-1:29092,kafka-2:29093,kafka-3:29094'
       SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
     networks:
-      - aureus-data-network-staging
+      - aurix-data-network-staging
 
   kafka-connect:
     image: confluentinc/cp-kafka-connect:7.4.0
     hostname: kafka-connect
-    container_name: aureus-kafka-connect-staging
+    container_name: aurix-kafka-connect-staging
     depends_on:
       - kafka-1
       - kafka-2
@@ -1068,7 +1068,7 @@ Insert after kafka-3 block (before kafka-ui):
       CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect=INFO"
       CONNECT_PLUGIN_PATH: "/usr/share/java,/etc/kafka-connect/jars"
     networks:
-      - aureus-data-network-staging
+      - aurix-data-network-staging
 ```
 
 - [ ] **Step 3: Update .env.example**
@@ -1086,7 +1086,7 @@ STAGING_KAFKA_REPLICATION_FACTOR=3
 - [ ] **Step 4: Validate YAML syntax**
 
 ```bash
-python3 -c "import yaml; yaml.safe_load(open('aureus-data-platform/kafka/docker-compose.staging.yml'))" && echo "Valid YAML"
+python3 -c "import yaml; yaml.safe_load(open('aurix-data-platform/kafka/docker-compose.staging.yml'))" && echo "Valid YAML"
 ```
 
 Expected: Valid YAML
@@ -1094,7 +1094,7 @@ Expected: Valid YAML
 - [ ] **Step 5: Commit**
 
 ```bash
-git add aureus-data-platform/kafka/docker-compose.staging.yml aureus-data-platform/kafka/.env.example
+git add aurix-data-platform/kafka/docker-compose.staging.yml aurix-data-platform/kafka/.env.example
 git commit -m "feat(kafka): add schema registry and kafka connect to staging profile"
 ```
 
@@ -1103,8 +1103,8 @@ git commit -m "feat(kafka): add schema registry and kafka connect to staging pro
 ### Task G4-1: Create Extrato page with tests
 
 **Files:**
-- Create: `frontend/aureus-web/src/pages/Extrato.js`
-- Create: `frontend/aureus-web/src/pages/Extrato.test.js`
+- Create: `frontend/aurix-web/src/pages/Extrato.js`
+- Create: `frontend/aurix-web/src/pages/Extrato.test.js`
 
 **Interfaces:**
 - Consumes: `user` prop, `apiService.getContas()` (or mock data)
@@ -1320,7 +1320,7 @@ Expected: PASS
 - [ ] **Step 5: Commit**
 
 ```bash
-git add frontend/aureus-web/src/pages/Extrato.js frontend/aureus-web/src/pages/Extrato.test.js
+git add frontend/aurix-web/src/pages/Extrato.js frontend/aurix-web/src/pages/Extrato.test.js
 git commit -m "feat(web): add Extrato page with filters and transactions table"
 ```
 
@@ -1329,8 +1329,8 @@ git commit -m "feat(web): add Extrato page with filters and transactions table"
 ### Task G4-2: Create Transferencia page with tests
 
 **Files:**
-- Create: `frontend/aureus-web/src/pages/Transferencia.js`
-- Create: `frontend/aureus-web/src/pages/Transferencia.test.js`
+- Create: `frontend/aurix-web/src/pages/Transferencia.js`
+- Create: `frontend/aurix-web/src/pages/Transferencia.test.js`
 
 **Interfaces:**
 - Consumes: `user` prop
@@ -1527,7 +1527,7 @@ Expected: PASS
 - [ ] **Step 5: Commit**
 
 ```bash
-git add frontend/aureus-web/src/pages/Transferencia.js frontend/aureus-web/src/pages/Transferencia.test.js
+git add frontend/aurix-web/src/pages/Transferencia.js frontend/aurix-web/src/pages/Transferencia.test.js
 git commit -m "feat(web): add Transferencia page with TED/DOC/PIX forms"
 ```
 
@@ -1536,8 +1536,8 @@ git commit -m "feat(web): add Transferencia page with TED/DOC/PIX forms"
 ### Task G4-3: Create Pagamento page with tests
 
 **Files:**
-- Create: `frontend/aureus-web/src/pages/Pagamento.js`
-- Create: `frontend/aureus-web/src/pages/Pagamento.test.js`
+- Create: `frontend/aurix-web/src/pages/Pagamento.js`
+- Create: `frontend/aurix-web/src/pages/Pagamento.test.js`
 
 - [ ] **Step 1: Write failing test**
 
@@ -1718,7 +1718,7 @@ Expected: PASS (or show failures to debug)
 - [ ] **Step 5: Commit**
 
 ```bash
-git add frontend/aureus-web/src/pages/Pagamento.js frontend/aureus-web/src/pages/Pagamento.test.js
+git add frontend/aurix-web/src/pages/Pagamento.js frontend/aurix-web/src/pages/Pagamento.test.js
 git commit -m "feat(web): add Pagamento page with barcode lookup and payment"
 ```
 
@@ -1727,10 +1727,10 @@ git commit -m "feat(web): add Pagamento page with barcode lookup and payment"
 ### Task G4-4: Create Recarga page with tests, wire routes and sidebar
 
 **Files:**
-- Create: `frontend/aureus-web/src/pages/Recarga.js`
-- Create: `frontend/aureus-web/src/pages/Recarga.test.js`
-- Modify: `frontend/aureus-web/src/App.js`
-- Modify: `frontend/aureus-web/src/components/Sidebar.js`
+- Create: `frontend/aurix-web/src/pages/Recarga.js`
+- Create: `frontend/aurix-web/src/pages/Recarga.test.js`
+- Modify: `frontend/aurix-web/src/App.js`
+- Modify: `frontend/aurix-web/src/components/Sidebar.js`
 
 **Interfaces:**
 - Produces: Recarga page, 4 new routes in App.js, 4 new sidebar links
@@ -1956,7 +1956,7 @@ Expected: All PASS
 - [ ] **Step 7: Commit**
 
 ```bash
-git add frontend/aureus-web/src/pages/Recarga.js frontend/aureus-web/src/pages/Recarga.test.js frontend/aureus-web/src/pages/Extrato.js frontend/aureus-web/src/pages/Extrato.test.js frontend/aureus-web/src/pages/Transferencia.js frontend/aureus-web/src/pages/Transferencia.test.js frontend/aureus-web/src/pages/Pagamento.js frontend/aureus-web/src/pages/Pagamento.test.js frontend/aureus-web/src/App.js frontend/aureus-web/src/components/Sidebar.js
+git add frontend/aurix-web/src/pages/Recarga.js frontend/aurix-web/src/pages/Recarga.test.js frontend/aurix-web/src/pages/Extrato.js frontend/aurix-web/src/pages/Extrato.test.js frontend/aurix-web/src/pages/Transferencia.js frontend/aurix-web/src/pages/Transferencia.test.js frontend/aurix-web/src/pages/Pagamento.js frontend/aurix-web/src/pages/Pagamento.test.js frontend/aurix-web/src/App.js frontend/aurix-web/src/components/Sidebar.js
 git commit -m "feat(web): add Extrato, Transferencia, Pagamento, Recarga pages with routes and sidebar"
 ```
 
@@ -1965,15 +1965,15 @@ git commit -m "feat(web): add Extrato, Transferencia, Pagamento, Recarga pages w
 ### Task G5-1: Create service interfaces for ML, Chatbot, BI
 
 **Files:**
-- Create: `backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/service/FraudService.java`
-- Create: `backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/service/CreditScoreService.java`
-- Create: `backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/service/ChatbotService.java`
-- Create: `backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/service/BiService.java`
+- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/FraudService.java`
+- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/CreditScoreService.java`
+- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/ChatbotService.java`
+- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/BiService.java`
 
 - [ ] **Step 1: Create FraudService interface**
 
 ```java
-package com.aureus.platform.analytics.service;
+package com.aurix.platform.analytics.service;
 
 import java.util.Map;
 
@@ -1985,7 +1985,7 @@ public interface FraudService {
 - [ ] **Step 2: Create CreditScoreService interface**
 
 ```java
-package com.aureus.platform.analytics.service;
+package com.aurix.platform.analytics.service;
 
 import java.util.Map;
 
@@ -1997,7 +1997,7 @@ public interface CreditScoreService {
 - [ ] **Step 3: Create ChatbotService interface**
 
 ```java
-package com.aureus.platform.analytics.service;
+package com.aurix.platform.analytics.service;
 
 import java.util.Map;
 
@@ -2009,7 +2009,7 @@ public interface ChatbotService {
 - [ ] **Step 4: Create BiService interface**
 
 ```java
-package com.aureus.platform.analytics.service;
+package com.aurix.platform.analytics.service;
 
 import java.util.Map;
 
@@ -2022,7 +2022,7 @@ public interface BiService {
 - [ ] **Step 5: Compile to verify**
 
 ```bash
-mvn -pl aureus-analytics -am compile
+mvn -pl aurix-analytics -am compile
 ```
 
 Expected: BUILD SUCCESS
@@ -2030,7 +2030,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 6: Commit**
 
 ```bash
-git add backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/service/FraudService.java backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/service/CreditScoreService.java backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/service/ChatbotService.java backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/service/BiService.java
+git add backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/FraudService.java backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/CreditScoreService.java backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/ChatbotService.java backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/BiService.java
 git commit -m "refactor(analytics): create service interfaces for ML, chatbot, BI"
 ```
 
@@ -2039,15 +2039,15 @@ git commit -m "refactor(analytics): create service interfaces for ML, chatbot, B
 ### Task G5-2: Create stub implementations with @Profile("!prod")
 
 **Files:**
-- Create: `backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/service/MlFraudServiceStub.java`
-- Create: `backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/service/CreditScoreStubService.java`
-- Create: `backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/service/ChatbotStubService.java`
-- Create: `backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/service/BiStubService.java`
+- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/MlFraudServiceStub.java`
+- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/CreditScoreStubService.java`
+- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/ChatbotStubService.java`
+- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/BiStubService.java`
 
 - [ ] **Step 1: Create MlFraudServiceStub**
 
 ```java
-package com.aureus.platform.analytics.service;
+package com.aurix.platform.analytics.service;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -2072,7 +2072,7 @@ public class MlFraudServiceStub implements FraudService {
 - [ ] **Step 2: Create CreditScoreStubService**
 
 ```java
-package com.aureus.platform.analytics.service;
+package com.aurix.platform.analytics.service;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -2097,7 +2097,7 @@ public class CreditScoreStubService implements CreditScoreService {
 - [ ] **Step 3: Create ChatbotStubService**
 
 ```java
-package com.aureus.platform.analytics.service;
+package com.aurix.platform.analytics.service;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -2121,9 +2121,9 @@ public class ChatbotStubService implements ChatbotService {
 - [ ] **Step 4: Create BiStubService**
 
 ```java
-package com.aureus.platform.analytics.service;
+package com.aurix.platform.analytics.service;
 
-import com.aureus.platform.analytics.repository.MetricaRepository;
+import com.aurix.platform.analytics.repository.MetricaRepository;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import java.util.HashMap;
@@ -2160,7 +2160,7 @@ public class BiStubService implements BiService {
 - [ ] **Step 5: Compile to verify**
 
 ```bash
-mvn -pl aureus-analytics -am compile
+mvn -pl aurix-analytics -am compile
 ```
 
 Expected: BUILD SUCCESS
@@ -2168,7 +2168,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 6: Commit**
 
 ```bash
-git add backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/service/MlFraudServiceStub.java backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/service/CreditScoreStubService.java backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/service/ChatbotStubService.java backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/service/BiStubService.java
+git add backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/MlFraudServiceStub.java backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/CreditScoreStubService.java backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/ChatbotStubService.java backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/BiStubService.java
 git commit -m "refactor(analytics): add stub service implementations with @Profile(!prod)"
 ```
 
@@ -2177,15 +2177,15 @@ git commit -m "refactor(analytics): add stub service implementations with @Profi
 ### Task G5-3: Create prod placeholder implementations
 
 **Files:**
-- Create: `backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/service/MlFraudServiceProd.java`
-- Create: `backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/service/CreditScoreServiceProd.java`
-- Create: `backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/service/ChatbotServiceProd.java`
-- Create: `backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/service/BiServiceProd.java`
+- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/MlFraudServiceProd.java`
+- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/CreditScoreServiceProd.java`
+- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/ChatbotServiceProd.java`
+- Create: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/BiServiceProd.java`
 
 - [ ] **Step 1: Create MlFraudServiceProd**
 
 ```java
-package com.aureus.platform.analytics.service;
+package com.aurix.platform.analytics.service;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -2205,7 +2205,7 @@ public class MlFraudServiceProd implements FraudService {
 - [ ] **Step 2: Create CreditScoreServiceProd**
 
 ```java
-package com.aureus.platform.analytics.service;
+package com.aurix.platform.analytics.service;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -2225,7 +2225,7 @@ public class CreditScoreServiceProd implements CreditScoreService {
 - [ ] **Step 3: Create ChatbotServiceProd**
 
 ```java
-package com.aureus.platform.analytics.service;
+package com.aurix.platform.analytics.service;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -2245,9 +2245,9 @@ public class ChatbotServiceProd implements ChatbotService {
 - [ ] **Step 4: Create BiServiceProd**
 
 ```java
-package com.aureus.platform.analytics.service;
+package com.aurix.platform.analytics.service;
 
-import com.aureus.platform.analytics.repository.MetricaRepository;
+import com.aurix.platform.analytics.repository.MetricaRepository;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import java.util.Map;
@@ -2277,7 +2277,7 @@ public class BiServiceProd implements BiService {
 - [ ] **Step 5: Compile**
 
 ```bash
-mvn -pl aureus-analytics -am compile
+mvn -pl aurix-analytics -am compile
 ```
 
 Expected: BUILD SUCCESS
@@ -2285,7 +2285,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 6: Commit**
 
 ```bash
-git add backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/service/MlFraudServiceProd.java backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/service/CreditScoreServiceProd.java backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/service/ChatbotServiceProd.java backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/service/BiServiceProd.java
+git add backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/MlFraudServiceProd.java backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/CreditScoreServiceProd.java backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/ChatbotServiceProd.java backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/BiServiceProd.java
 git commit -m "refactor(analytics): add prod placeholder service implementations"
 ```
 
@@ -2294,19 +2294,19 @@ git commit -m "refactor(analytics): add prod placeholder service implementations
 ### Task G5-4: Refactor controllers to use interfaces
 
 **Files:**
-- Replace: `backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/controller/MlStubController.java` → renamed to `MlController.java`
-- Replace: `backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/controller/ChatbotStubController.java` → renamed to `ChatbotController.java`
-- Replace: `backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/controller/BiStubController.java` → renamed to `BiController.java`
+- Replace: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/MlStubController.java` → renamed to `MlController.java`
+- Replace: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/ChatbotStubController.java` → renamed to `ChatbotController.java`
+- Replace: `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/BiStubController.java` → renamed to `BiController.java`
 - Delete: old stub controller files
-- Modify: `backend/aureus-analytics/src/test/java/com/aureus/platform/analytics/integration/AnalyticsFlowIntegrationTest.java`
+- Modify: `backend/aurix-analytics/src/test/java/com/aurix/platform/analytics/integration/AnalyticsFlowIntegrationTest.java`
 
 - [ ] **Step 1: Create MlController.java** (replacing MlStubController)
 
 ```java
-package com.aureus.platform.analytics.controller;
+package com.aurix.platform.analytics.controller;
 
-import com.aureus.platform.analytics.service.FraudService;
-import com.aureus.platform.analytics.service.CreditScoreService;
+import com.aurix.platform.analytics.service.FraudService;
+import com.aurix.platform.analytics.service.CreditScoreService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -2343,9 +2343,9 @@ public class MlController {
 - [ ] **Step 2: Create ChatbotController.java** (replacing ChatbotStubController)
 
 ```java
-package com.aureus.platform.analytics.controller;
+package com.aurix.platform.analytics.controller;
 
-import com.aureus.platform.analytics.service.ChatbotService;
+import com.aurix.platform.analytics.service.ChatbotService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -2375,9 +2375,9 @@ public class ChatbotController {
 - [ ] **Step 3: Create BiController.java** (replacing BiStubController)
 
 ```java
-package com.aureus.platform.analytics.controller;
+package com.aurix.platform.analytics.controller;
 
-import com.aureus.platform.analytics.service.BiService;
+import com.aurix.platform.analytics.service.BiService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -2414,9 +2414,9 @@ public class BiController {
 - [ ] **Step 4: Remove old stub controllers**
 
 ```bash
-rm backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/controller/MlStubController.java
-rm backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/controller/ChatbotStubController.java
-rm backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/controller/BiStubController.java
+rm backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/MlStubController.java
+rm backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/ChatbotStubController.java
+rm backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/BiStubController.java
 ```
 
 - [ ] **Step 5: Update AnalyticsFlowIntegrationTest.java**
@@ -2432,8 +2432,8 @@ Read the existing file, update the 3 test methods to reference the new controlle
 - [ ] **Step 6: Compile and run tests**
 
 ```bash
-mvn -pl aureus-analytics -am compile
-mvn test -pl aureus-analytics -am -Dtest=AnalyticsFlowIntegrationTest -Dsurefire.failIfNoSpecifiedTests=false
+mvn -pl aurix-analytics -am compile
+mvn test -pl aurix-analytics -am -Dtest=AnalyticsFlowIntegrationTest -Dsurefire.failIfNoSpecifiedTests=false
 ```
 
 Expected: BUILD SUCCESS, TESTS PASS
@@ -2441,5 +2441,5 @@ Expected: BUILD SUCCESS, TESTS PASS
 - [ ] **Step 7: Commit**
 
 ```bash
-git add backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/controller/MlController.java backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/controller/ChatbotController.java backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/controller/BiController.java backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/integration/AnalyticsFlowIntegrationTest.java && git rm backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/controller/MlStubController.java backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/controller/ChatbotStubController.java backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/controller/BiStubController.java && git commit -m "refactor(analytics): replace stub controllers with interface-driven controllers"
+git add backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/MlController.java backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/ChatbotController.java backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/BiController.java backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/integration/AnalyticsFlowIntegrationTest.java && git rm backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/MlStubController.java backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/ChatbotStubController.java backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/controller/BiStubController.java && git commit -m "refactor(analytics): replace stub controllers with interface-driven controllers"
 ```

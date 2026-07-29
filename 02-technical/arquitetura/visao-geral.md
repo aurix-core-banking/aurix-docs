@@ -1,4 +1,4 @@
-# AUREUS - Arquitetura
+# AURIX - Arquitetura
 
 ## Visão Geral
 
@@ -10,8 +10,8 @@
 
 ### 1. Domínios Consolidados
 - **13 serviços** `svc-*` cada um responsável por um domínio de negócio
-- **aureus-shared** — biblioteca compartilhada (DTOs, configs, utils)
-- **aureus-gateway** — roteamento interno (sendo substituído por Traefik)
+- **aurix-shared** — biblioteca compartilhada (DTOs, configs, utils)
+- **aurix-gateway** — roteamento interno (sendo substituído por Traefik)
 
 ### 2. API-First
 - APIs RESTful com OpenAPI 3.0

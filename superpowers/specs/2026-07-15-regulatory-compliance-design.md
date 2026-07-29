@@ -2,7 +2,7 @@
 
 > **Objetivo:** Implementar as obrigações regulatórias ausentes: COAF, Basileia III, Recolhimento Compulsório, Ouvidoria, LGPD Portal do Titular, SCR automático, e enforcement de juros regulados.
 > **Prioridade:** P0 (COAF) e P1 (demais) — risco de sanção e cassação de licença bancária.
-> **Módulos impactados:** `aureus-compliance`, `aureus-bacen`, `aureus-credit`, `aureus-financial`, novo `aureus-ouvidoria`.
+> **Módulos impactados:** `aurix-compliance`, `aurix-bacen`, `aurix-credit`, `aurix-financial`, novo `aurix-ouvidoria`.
 
 ---
 
@@ -15,9 +15,9 @@ O BACEN exige que instituições financeiras comuniquem ao COAF operações susp
 ### Arquitetura
 
 ```
-[aureus-financial]  ──Kafka: financial.movimentacao.criada.v1──▶ [aureus-compliance]
-[aureus-pix]        ──Kafka: pix.transferencia.iniciada.v1──▶   [aureus-compliance]
-[aureus-cartoes]    ──Kafka: cartoes.transacao.autorizada.v1──▶ [aureus-compliance]
+[aurix-financial]  ──Kafka: financial.movimentacao.criada.v1──▶ [aurix-compliance]
+[aurix-pix]        ──Kafka: pix.transferencia.iniciada.v1──▶   [aurix-compliance]
+[aurix-cartoes]    ──Kafka: cartoes.transacao.autorizada.v1──▶ [aurix-compliance]
                                         │
                               ComunicacaoCoafService
                                         │
@@ -25,7 +25,7 @@ O BACEN exige que instituições financeiras comuniquem ao COAF operações susp
                      [HTTP POST COAF API]     [Kafka: coaf.comunicacao.enviada.v1]
 ```
 
-### Novas Entidades em `aureus-compliance`
+### Novas Entidades em `aurix-compliance`
 
 **`RegrasCoaf`** (`compliance.regras_coaf`)
 | Campo | Tipo | Descrição |
@@ -177,7 +177,7 @@ No perfil `prod`: integração real via certificado digital ICP-Brasil.
 
 O BACEN exige que instituições financeiras calculem e mantenham o Patrimônio de Referência (PR) acima do mínimo regulatório (Res. BCB 4.955/2021). Nenhum módulo calcula isso.
 
-### Entidades em `aureus-compliance`
+### Entidades em `aurix-compliance`
 
 **`CapitalRegulatorio`** (`compliance.capital_regulatorio`)
 | Campo | Tipo | Descrição |
@@ -258,7 +258,7 @@ public class BasileiaService {
 
 Bancos comerciais devem recolher um percentual dos depósitos ao BACEN (Circ. BCB 3.916/2018). Nenhum módulo calcula nem processa o compulsório.
 
-### Entidades em `aureus-bacen`
+### Entidades em `aurix-bacen`
 
 **`RecolhimentoCompulsorio`** (`bacen.recolhimentos`)
 | Campo | Tipo | Descrição |
@@ -309,7 +309,7 @@ public class CompulsorioCService {
 
 O BACEN exige que toda IF tenha ouvidoria com: canal de atendimento, prazo de resposta de 10 dias úteis, relatório semestral e registro numerado de manifestações.
 
-### Novo módulo: `aureus-ouvidoria` (Porta 8130)
+### Novo módulo: `aurix-ouvidoria` (Porta 8130)
 
 #### Entidades
 
@@ -376,9 +376,9 @@ public void alertarPrazoVencendo() {
 #### Infra
 
 - Porta: **8130**
-- Docker Compose: adicionar `aureus-ouvidoria`
-- Traefik: rota `/api/ouvidoria` → `http://aureus-ouvidoria:8130`
-- Maven parent: adicionar `<module>aureus-ouvidoria</module>`
+- Docker Compose: adicionar `aurix-ouvidoria`
+- Traefik: rota `/api/ouvidoria` → `http://aurix-ouvidoria:8130`
+- Maven parent: adicionar `<module>aurix-ouvidoria</module>`
 
 ---
 
@@ -386,7 +386,7 @@ public void alertarPrazoVencendo() {
 
 ### Problema
 
-`aureus-compliance` tem entidades `ConsentimentoLGPD` e `DireitoEsquecimento`, mas não há: portal para o titular exercer direitos, workflow com prazos, nem endpoints expostos.
+`aurix-compliance` tem entidades `ConsentimentoLGPD` e `DireitoEsquecimento`, mas não há: portal para o titular exercer direitos, workflow com prazos, nem endpoints expostos.
 
 ### Direitos do Titular (Art. 18 LGPD)
 
@@ -399,7 +399,7 @@ public void alertarPrazoVencendo() {
 | Eliminação de dados tratados com consentimento | 15 dias |
 | Revogação de consentimento | Imediato |
 
-### Novos Endpoints em `aureus-compliance`
+### Novos Endpoints em `aurix-compliance`
 
 ```java
 // Portal do Titular
@@ -451,9 +451,9 @@ public void alertarPrazosLgpd() {
 
 ### Problema
 
-`aureus-bacen` gera relatório SCR, mas é exportação manual. O BACEN exige que as IFs alimentem o SCR mensalmente com posições de crédito.
+`aurix-bacen` gera relatório SCR, mas é exportação manual. O BACEN exige que as IFs alimentem o SCR mensalmente com posições de crédito.
 
-### Service em `aureus-bacen`
+### Service em `aurix-bacen`
 
 **`ScrService`** — atualizar para sincronização automática:
 
@@ -489,9 +489,9 @@ public class ScrService {
 
 ### Problema
 
-`aureus-credit`, `aureus-consignado` e `aureus-financiamento` não validam os limites de taxa de juros regulados pelo CMN. É possível criar produtos com taxas ilegais.
+`aurix-credit`, `aurix-consignado` e `aurix-financiamento` não validam os limites de taxa de juros regulados pelo CMN. É possível criar produtos com taxas ilegais.
 
-### Service de validação em `aureus-shared`
+### Service de validação em `aurix-shared`
 
 **`JurosReguladosValidator`** — componente compartilhado:
 
@@ -548,7 +548,7 @@ Injetar `JurosReguladosValidator` em:
 
 ## Infra — Novos Tópicos Kafka
 
-Adicionar em `Topics.java` (`aureus-shared`):
+Adicionar em `Topics.java` (`aurix-shared`):
 
 ```java
 // ===== COAF =====
@@ -576,18 +576,18 @@ String LGPD_EXECUTADA               = "lgpd.solicitacao.executada.v1";
 
 | Arquivo | Ação |
 |---------|------|
-| `aureus-compliance/...ComunicacaoCoafService.java` | Novo |
-| `aureus-compliance/...AnaliseCoafService.java` | Novo |
-| `aureus-compliance/...CoafApiClient.java` | Novo |
-| `aureus-compliance/...BasileiaService.java` | Novo |
-| `aureus-compliance/...SolicitacaoLgpdController.java` | Novo |
-| `aureus-compliance/...SolicitacaoLgpdService.java` | Novo |
-| `aureus-bacen/...CompulsorioService.java` | Novo |
-| `aureus-bacen/...ScrService.java` | Modificar (adicionar scheduled) |
-| `aureus-shared/...JurosReguladosValidator.java` | Novo |
-| `backend/aureus-ouvidoria/` | Novo módulo |
-| `backend/pom.xml` | Adicionar `aureus-ouvidoria` |
-| `infrastructure/docker-compose.yml` | Adicionar `aureus-ouvidoria` |
+| `aurix-compliance/...ComunicacaoCoafService.java` | Novo |
+| `aurix-compliance/...AnaliseCoafService.java` | Novo |
+| `aurix-compliance/...CoafApiClient.java` | Novo |
+| `aurix-compliance/...BasileiaService.java` | Novo |
+| `aurix-compliance/...SolicitacaoLgpdController.java` | Novo |
+| `aurix-compliance/...SolicitacaoLgpdService.java` | Novo |
+| `aurix-bacen/...CompulsorioService.java` | Novo |
+| `aurix-bacen/...ScrService.java` | Modificar (adicionar scheduled) |
+| `aurix-shared/...JurosReguladosValidator.java` | Novo |
+| `backend/aurix-ouvidoria/` | Novo módulo |
+| `backend/pom.xml` | Adicionar `aurix-ouvidoria` |
+| `infrastructure/docker-compose.yml` | Adicionar `aurix-ouvidoria` |
 | `infrastructure/traefik/dynamic.yml` | Rota para `/api/ouvidoria` |
 
 *Referência: business-gap-analysis.md — Gaps 3 (Regulatório), 10 (Juros).*

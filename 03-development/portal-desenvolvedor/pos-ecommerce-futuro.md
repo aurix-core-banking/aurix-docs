@@ -17,7 +17,7 @@ Integracao com PDV (POS) e e-commerce esta prevista para uma proxima fase. Este 
 Enquanto a integracao dedicada POS/e-commerce nao for entregue, e possivel:
 
 1. Usar a **API de QR PIX** (`POST /api/pix/qr/gerar/cobranca`) para obter o payload e exibir o QR no front-end (ou em tela do PDV).
-2. Configurar **webhook** (docs/portal-desenvolvedor/webhooks.md) com a URL do seu sistema; ao concluir o PIX ou boleto, o AUREUS envia o evento e o payload para essa URL.
+2. Configurar **webhook** (docs/portal-desenvolvedor/webhooks.md) com a URL do seu sistema; ao concluir o PIX ou boleto, o AURIX envia o evento e o payload para essa URL.
 3. Implementar no seu sistema o endpoint que recebe o webhook e atualiza o pedido/transacao.
 
 Quando houver documentacao e exemplos especificos para POS/e-commerce, eles serao publicados aqui ou em guia dedicado.

@@ -6,9 +6,9 @@ Visão de produto, roadmap, go-live e regulatório para perfis de negócio e ges
 
 ## Visão de produto
 
-- **Plataforma AUREUS**: BaaS (Banking as a Service) com contas, PIX, crédito, open finance, analytics, multi-tenant.
+- **Plataforma AURIX**: BaaS (Banking as a Service) com contas, PIX, crédito, open finance, analytics, multi-tenant.
 - **Documento**: [plataforma.md](../../01-business/big-picture.md).
-- **AUREUS Cloud (SaaS)**: acesso, limites e SLA para clientes: [aureus-cloud.md](aureus-cloud.md).
+- **AURIX Cloud (SaaS)**: acesso, limites e SLA para clientes: [aurix-cloud.md](aurix-cloud.md).
 
 ---
 

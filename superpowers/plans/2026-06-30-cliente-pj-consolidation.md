@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Consolidate the two parallel `Cliente` entities (shared PF-only + financial PF/PJ) into a single `Cliente` in `aureus-shared` that supports both PF and PJ, with financial-specific attributes moved to a separate `PerfilFinanceiroCliente` entity.
+**Goal:** Consolidate the two parallel `Cliente` entities (shared PF-only + financial PF/PJ) into a single `Cliente` in `aurix-shared` that supports both PF and PJ, with financial-specific attributes moved to a separate `PerfilFinanceiroCliente` entity.
 
 **Architecture:** The shared `Cliente` entity gets `tipoPessoa` (FISICA/JURIDICA), making CPF/CNPJ optional based on type. Financial module's own `Cliente` is removed; its finance-specific fields migrate to `PerfilFinanceiroCliente` (FK → shared Cliente). All consuming modules (core, pix, credit, security) adapt to the unified entity.
 
@@ -16,46 +16,46 @@
 - Checkstyle max line length 120
 - `@SuppressWarnings("all")` on all getters/setters/equals/hashCode (existing pattern)
 - Test: `@SpringBootTest(webEnvironment = RANDOM_PORT)` + `RestTemplate` + `@LocalServerPort`
-- Build: `mvn compile -pl aureus-{module} -am` from `backend/` directory
+- Build: `mvn compile -pl aurix-{module} -am` from `backend/` directory
 - All new code must compile before moving to next task
 
 ---
 ## File Structure
 
 ### Create
-- `aureus-shared/.../util/CNPJUtil.java` — CNPJ validation (mirrors CPFUtil)
-- `aureus-shared/.../entity/Cliente.java` — **replace** existing with consolidated version
-- `aureus-shared/.../dto/ClienteDTO.java` — **replace** existing with PF/PJ DTO
-- `aureus-financial/.../entity/PerfilFinanceiroCliente.java` — new entity
-- `aureus-financial/.../repository/PerfilFinanceiroClienteRepository.java` — new repo
-- `aureus-financial/.../service/PerfilFinanceiroClienteService.java` — new service
-- `aureus-financial/.../controller/PerfilFinanceiroClienteController.java` — new controller
+- `aurix-shared/.../util/CNPJUtil.java` — CNPJ validation (mirrors CPFUtil)
+- `aurix-shared/.../entity/Cliente.java` — **replace** existing with consolidated version
+- `aurix-shared/.../dto/ClienteDTO.java` — **replace** existing with PF/PJ DTO
+- `aurix-financial/.../entity/PerfilFinanceiroCliente.java` — new entity
+- `aurix-financial/.../repository/PerfilFinanceiroClienteRepository.java` — new repo
+- `aurix-financial/.../service/PerfilFinanceiroClienteService.java` — new service
+- `aurix-financial/.../controller/PerfilFinanceiroClienteController.java` — new controller
 - Test files for each module
 
 ### Modify
-- `aureus-shared/.../exception/ClienteNaoEncontradoException.java` — add CNPJ constructor
-- `aureus-core/.../repository/ClienteRepository.java` — add CNPJ queries
-- `aureus-core/.../service/ClienteService.java` — PF/PJ validation + CRUD
-- `aureus-core/.../controller/ClienteController.java` — add CNPJ endpoint
-- `aureus-pix/.../repository/ClienteRepository.java` — no changes needed (uses shared entity)
-- `aureus-credit/.../repository/ClienteRepository.java` — no changes needed
-- `aureus-credit/.../service/SolicitacaoCreditoService.java` — adapt clienteNome display
-- `aureus-shared/.../dto/UsuarioDTO.java` — add clienteDocumento + clienteTipoPessoa
-- `aureus-security/.../service/AuthService.java` — adapt converterParaDTO
-- `aureus-shared/.../dto/ContaDTO.java` — add clienteTipoPessoa
-- `aureus-shared/.../dto/SolicitacaoCreditoDTO.java` — add clienteTipoPessoa
-- `aureus-shared/.../integration/IntegrationService.java` — handle PF/PJ in buscarClienteUnificado
-- `aureus-shared/.../integration/IntegrationController.java` — handle PF/PJ
-- `aureus-shared/.../cache/SharedCacheService.java` — handle PF/PJ cache keys
-- **Delete** `aureus-financial/.../entity/Cliente.java` — no longer needed
+- `aurix-shared/.../exception/ClienteNaoEncontradoException.java` — add CNPJ constructor
+- `aurix-core/.../repository/ClienteRepository.java` — add CNPJ queries
+- `aurix-core/.../service/ClienteService.java` — PF/PJ validation + CRUD
+- `aurix-core/.../controller/ClienteController.java` — add CNPJ endpoint
+- `aurix-pix/.../repository/ClienteRepository.java` — no changes needed (uses shared entity)
+- `aurix-credit/.../repository/ClienteRepository.java` — no changes needed
+- `aurix-credit/.../service/SolicitacaoCreditoService.java` — adapt clienteNome display
+- `aurix-shared/.../dto/UsuarioDTO.java` — add clienteDocumento + clienteTipoPessoa
+- `aurix-security/.../service/AuthService.java` — adapt converterParaDTO
+- `aurix-shared/.../dto/ContaDTO.java` — add clienteTipoPessoa
+- `aurix-shared/.../dto/SolicitacaoCreditoDTO.java` — add clienteTipoPessoa
+- `aurix-shared/.../integration/IntegrationService.java` — handle PF/PJ in buscarClienteUnificado
+- `aurix-shared/.../integration/IntegrationController.java` — handle PF/PJ
+- `aurix-shared/.../cache/SharedCacheService.java` — handle PF/PJ cache keys
+- **Delete** `aurix-financial/.../entity/Cliente.java` — no longer needed
 
 ---
 
 ### Task 1: CNPJUtil
 
 **Files:**
-- Create: `backend/aureus-shared/src/main/java/com/aureus/platform/shared/util/CNPJUtil.java`
-- Test: `backend/aureus-shared/src/test/java/com/aureus/platform/shared/util/CNPJUtilTest.java`
+- Create: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/util/CNPJUtil.java`
+- Test: `backend/aurix-shared/src/test/java/com/aurix/platform/shared/util/CNPJUtilTest.java`
 
 **Interfaces:**
 - Produces: `CNPJUtil.isValid(String cnpj) → boolean`, `CNPJUtil.format(String cnpj) → String`, `CNPJUtil.unformat(String cnpj) → String`, `CNPJUtil.mask(String cnpj) → String`
@@ -65,7 +65,7 @@
 - [ ] **Step 1: Write the failing test**
 
 ```java
-package com.aureus.platform.shared.util;
+package com.aurix.platform.shared.util;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -125,13 +125,13 @@ class CNPJUtilTest {
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `mvn test -pl aureus-shared -Dtest=CNPJUtilTest -DfailIfNoTests=false`
+Run: `mvn test -pl aurix-shared -Dtest=CNPJUtilTest -DfailIfNoTests=false`
 Expected: Compilation error (CNPJUtil not found)
 
 - [ ] **Step 3: Write minimal implementation**
 
 ```java
-package com.aureus.platform.shared.util;
+package com.aurix.platform.shared.util;
 
 import java.util.regex.Pattern;
 
@@ -212,13 +212,13 @@ public final class CNPJUtil {
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `mvn test -pl aureus-shared -Dtest=CNPJUtilTest -DfailIfNoTests=false`
+Run: `mvn test -pl aurix-shared -Dtest=CNPJUtilTest -DfailIfNoTests=false`
 Expected: All 9 tests pass
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add backend/aureus-shared/src/main/java/com/aureus/platform/shared/util/CNPJUtil.java backend/aureus-shared/src/test/java/com/aureus/platform/shared/util/CNPJUtilTest.java
+git add backend/aurix-shared/src/main/java/com/aurix/platform/shared/util/CNPJUtil.java backend/aurix-shared/src/test/java/com/aurix/platform/shared/util/CNPJUtilTest.java
 git commit -m "feat: add CNPJUtil validation utility"
 ```
 
@@ -227,9 +227,9 @@ git commit -m "feat: add CNPJUtil validation utility"
 ### Task 2: Consolidated Shared Cliente Entity + DTO
 
 **Files:**
-- Modify: `backend/aureus-shared/src/main/java/com/aureus/platform/shared/entity/Cliente.java`
-- Modify: `backend/aureus-shared/src/main/java/com/aureus/platform/shared/dto/ClienteDTO.java`
-- Modify: `backend/aureus-shared/src/main/java/com/aureus/platform/shared/exception/ClienteNaoEncontradoException.java`
+- Modify: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/entity/Cliente.java`
+- Modify: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/dto/ClienteDTO.java`
+- Modify: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/exception/ClienteNaoEncontradoException.java`
 
 **Interfaces:**
 - Consumes: `CNPJUtil` (Task 1)
@@ -238,8 +238,8 @@ git commit -m "feat: add CNPJUtil validation utility"
 - [ ] **Step 1: Write the failing test for the consolidated entity**
 
 ```java
-// At: aureus-shared/src/test/java/com/aureus/platform/shared/entity/ClienteConsolidadoTest.java
-package com.aureus.platform.shared.entity;
+// At: aurix-shared/src/test/java/com/aurix/platform/shared/entity/ClienteConsolidadoTest.java
+package com.aurix.platform.shared.entity;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -273,12 +273,12 @@ class ClienteConsolidadoTest {
 }
 ```
 
-Run: `mvn test -pl aureus-shared -Dtest=ClienteConsolidadoTest -DfailIfNoTests=false`
+Run: `mvn test -pl aurix-shared -Dtest=ClienteConsolidadoTest -DfailIfNoTests=false`
 Expected: Compilation error (TipoPessoa not in Cliente)
 
 - [ ] **Step 2: Update Cliente entity**
 
-Replace `backend/aureus-shared/src/main/java/com/aureus/platform/shared/entity/Cliente.java` with consolidated version. Key changes:
+Replace `backend/aurix-shared/src/main/java/com/aurix/platform/shared/entity/Cliente.java` with consolidated version. Key changes:
 - Add `TipoPessoa` enum: `FISICA, JURIDICA`
 - `cpf`: keep `@Pattern("\\d{11}")` but remove `@NotBlank` (only required for FISICA)
 - `nome`: keep but only required for FISICA
@@ -297,7 +297,7 @@ Replace `backend/aureus-shared/src/main/java/com/aureus/platform/shared/entity/C
 Entity code (full replacement - follow existing delomboked pattern):
 
 ```java
-package com.aureus.platform.shared.entity;
+package com.aurix.platform.shared.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -314,7 +314,7 @@ import org.hibernate.type.SqlTypes;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "clientes", schema = "aureus", uniqueConstraints = {
+@Table(name = "clientes", schema = "aurix", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"tenantId", "cpf"}),
     @UniqueConstraint(columnNames = {"tenantId", "cnpj"}),
     @UniqueConstraint(columnNames = {"tenantId", "email"})
@@ -427,13 +427,13 @@ Keep existing Long (ID) and String (CPF) constructors for backward compatibility
 
 - [ ] **Step 5: Compile to verify**
 
-Run: `mvn compile -pl aureus-shared -am`
+Run: `mvn compile -pl aurix-shared -am`
 Expected: Compilation succeeds
 
 - [ ] **Step 6: Commit**
 
 ```bash
-git add backend/aureus-shared/src/main/java/com/aureus/platform/shared/entity/Cliente.java backend/aureus-shared/src/main/java/com/aureus/platform/shared/dto/ClienteDTO.java backend/aureus-shared/src/main/java/com/aureus/platform/shared/exception/ClienteNaoEncontradoException.java
+git add backend/aurix-shared/src/main/java/com/aurix/platform/shared/entity/Cliente.java backend/aurix-shared/src/main/java/com/aurix/platform/shared/dto/ClienteDTO.java backend/aurix-shared/src/main/java/com/aurix/platform/shared/exception/ClienteNaoEncontradoException.java
 git commit -m "feat: consolidate Cliente with PF/PJ support"
 ```
 
@@ -442,9 +442,9 @@ git commit -m "feat: consolidate Cliente with PF/PJ support"
 ### Task 3: Update Core Module (Repository + Service + Controller)
 
 **Files:**
-- Modify: `backend/aureus-core/src/main/java/com/aureus/platform/core/repository/ClienteRepository.java`
-- Modify: `backend/aureus-core/src/main/java/com/aureus/platform/core/service/ClienteService.java`
-- Modify: `backend/aureus-core/src/main/java/com/aureus/platform/core/controller/ClienteController.java`
+- Modify: `backend/aurix-core/src/main/java/com/aurix/platform/core/repository/ClienteRepository.java`
+- Modify: `backend/aurix-core/src/main/java/com/aurix/platform/core/service/ClienteService.java`
+- Modify: `backend/aurix-core/src/main/java/com/aurix/platform/core/controller/ClienteController.java`
 
 **Interfaces:**
 - Consumes: `Cliente` with `TipoPessoa` (Task 2), `CNPJUtil` (Task 1)
@@ -544,13 +544,13 @@ public ResponseEntity<ClienteDTO> buscarClientePorCnpj(@PathVariable String cnpj
 
 - [ ] **Step 4: Compile Core module**
 
-Run: `mvn compile -pl aureus-core -am`
+Run: `mvn compile -pl aurix-core -am`
 Expected: Compilation succeeds
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add backend/aureus-core/src/main/java/com/aureus/platform/core/repository/ClienteRepository.java backend/aureus-core/src/main/java/com/aureus/platform/core/service/ClienteService.java backend/aureus-core/src/main/java/com/aureus/platform/core/controller/ClienteController.java
+git add backend/aurix-core/src/main/java/com/aurix/platform/core/repository/ClienteRepository.java backend/aurix-core/src/main/java/com/aurix/platform/core/service/ClienteService.java backend/aurix-core/src/main/java/com/aurix/platform/core/controller/ClienteController.java
 git commit -m "feat: update core module with PF/PJ Cliente CRUD"
 ```
 
@@ -559,9 +559,9 @@ git commit -m "feat: update core module with PF/PJ Cliente CRUD"
 ### Task 4: Update Pix + Credit Module Repositories
 
 **Files:**
-- No changes needed to `aureus-pix/.../repository/ClienteRepository.java` (already uses shared entity)
-- No changes needed to `aureus-credit/.../repository/ClienteRepository.java` (already uses shared entity)
-- Modify: `backend/aureus-credit/src/main/java/com/aureus/platform/credit/service/SolicitacaoCreditoService.java`
+- No changes needed to `aurix-pix/.../repository/ClienteRepository.java` (already uses shared entity)
+- No changes needed to `aurix-credit/.../repository/ClienteRepository.java` (already uses shared entity)
+- Modify: `backend/aurix-credit/src/main/java/com/aurix/platform/credit/service/SolicitacaoCreditoService.java`
 
 - [ ] **Step 1: Update SolicitacaoCreditoService**
 
@@ -577,13 +577,13 @@ dto.setClienteTipoPessoa(solicitacao.getCliente().getTipoPessoa().name());
 
 - [ ] **Step 2: Compile both modules**
 
-Run: `mvn compile -pl aureus-pix,aureus-credit -am`
+Run: `mvn compile -pl aurix-pix,aurix-credit -am`
 Expected: Compilation succeeds
 
 - [ ] **Step 3: Commit**
 
 ```bash
-git add backend/aureus-credit/src/main/java/com/aureus/platform/credit/service/SolicitacaoCreditoService.java
+git add backend/aurix-credit/src/main/java/com/aurix/platform/credit/service/SolicitacaoCreditoService.java
 git commit -m "feat: adapt credit module for PJ client display"
 ```
 
@@ -592,8 +592,8 @@ git commit -m "feat: adapt credit module for PJ client display"
 ### Task 5: Update Security Module (UsuarioDTO + AuthService)
 
 **Files:**
-- Modify: `backend/aureus-shared/src/main/java/com/aureus/platform/shared/dto/UsuarioDTO.java`
-- Modify: `backend/aureus-security/src/main/java/com/aureus/platform/security/service/AuthService.java`
+- Modify: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/dto/UsuarioDTO.java`
+- Modify: `backend/aurix-security/src/main/java/com/aurix/platform/security/service/AuthService.java`
 
 - [ ] **Step 1: Add clienteDocumento + clienteTipoPessoa to UsuarioDTO**
 
@@ -625,13 +625,13 @@ if (usuario.getCliente() != null) {
 
 - [ ] **Step 3: Compile**
 
-Run: `mvn compile -pl aureus-security -am`
+Run: `mvn compile -pl aurix-security -am`
 Expected: Compilation succeeds
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add backend/aureus-shared/src/main/java/com/aureus/platform/shared/dto/UsuarioDTO.java backend/aureus-security/src/main/java/com/aureus/platform/security/service/AuthService.java
+git add backend/aurix-shared/src/main/java/com/aurix/platform/shared/dto/UsuarioDTO.java backend/aurix-security/src/main/java/com/aurix/platform/security/service/AuthService.java
 git commit -m "feat: update UsuarioDTO and AuthService for PF/PJ client"
 ```
 
@@ -640,8 +640,8 @@ git commit -m "feat: update UsuarioDTO and AuthService for PF/PJ client"
 ### Task 6: Update ContaDTO and SolicitacaoCreditoDTO
 
 **Files:**
-- Modify: `backend/aureus-shared/src/main/java/com/aureus/platform/shared/dto/ContaDTO.java`
-- Modify: `backend/aureus-shared/src/main/java/com/aureus/platform/shared/dto/SolicitacaoCreditoDTO.java`
+- Modify: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/dto/ContaDTO.java`
+- Modify: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/dto/SolicitacaoCreditoDTO.java`
 
 - [ ] **Step 1: Add clienteTipoPessoa to ContaDTO**
 
@@ -661,13 +661,13 @@ Add getter/setter, update equals/hashCode/toString/all-args constructor.
 
 - [ ] **Step 3: Compile**
 
-Run: `mvn compile -pl aureus-shared`
+Run: `mvn compile -pl aurix-shared`
 Expected: Compilation succeeds
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add backend/aureus-shared/src/main/java/com/aureus/platform/shared/dto/ContaDTO.java backend/aureus-shared/src/main/java/com/aureus/platform/shared/dto/SolicitacaoCreditoDTO.java
+git add backend/aurix-shared/src/main/java/com/aurix/platform/shared/dto/ContaDTO.java backend/aurix-shared/src/main/java/com/aurix/platform/shared/dto/SolicitacaoCreditoDTO.java
 git commit -m "feat: add clienteTipoPessoa to ContaDTO and SolicitacaoCreditoDTO"
 ```
 
@@ -676,9 +676,9 @@ git commit -m "feat: add clienteTipoPessoa to ContaDTO and SolicitacaoCreditoDTO
 ### Task 7: Update Integration Layer
 
 **Files:**
-- Modify: `backend/aureus-shared/src/main/java/com/aureus/platform/shared/integration/IntegrationService.java`
-- Modify: `backend/aureus-shared/src/main/java/com/aureus/platform/shared/integration/IntegrationController.java`
-- Modify: `backend/aureus-shared/src/main/java/com/aureus/platform/shared/cache/SharedCacheService.java`
+- Modify: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/integration/IntegrationService.java`
+- Modify: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/integration/IntegrationController.java`
+- Modify: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/cache/SharedCacheService.java`
 
 - [ ] **Step 1: Update IntegrationService.buscarClienteUnificado**
 
@@ -694,7 +694,7 @@ No changes needed — cache key pattern stays the same (`cliente:{id}`). Seriali
 
 - [ ] **Step 4: Compile**
 
-Run: `mvn compile -pl aureus-shared`
+Run: `mvn compile -pl aurix-shared`
 Expected: Compilation succeeds
 
 - [ ] **Step 5: Commit**
@@ -708,10 +708,10 @@ git commit -m "chore: integration layer compatible with consolidated Cliente"
 ### Task 8: PerfilFinanceiroCliente (Financial Module)
 
 **Files:**
-- Create: `backend/aureus-financial/src/main/java/com/aureus/platform/financial/entity/PerfilFinanceiroCliente.java`
-- Create: `backend/aureus-financial/src/main/java/com/aureus/platform/financial/repository/PerfilFinanceiroClienteRepository.java`
-- Create: `backend/aureus-financial/src/main/java/com/aureus/platform/financial/service/PerfilFinanceiroClienteService.java`
-- Create: `backend/aureus-financial/src/main/java/com/aureus/platform/financial/controller/PerfilFinanceiroClienteController.java`
+- Create: `backend/aurix-financial/src/main/java/com/aurix/platform/financial/entity/PerfilFinanceiroCliente.java`
+- Create: `backend/aurix-financial/src/main/java/com/aurix/platform/financial/repository/PerfilFinanceiroClienteRepository.java`
+- Create: `backend/aurix-financial/src/main/java/com/aurix/platform/financial/service/PerfilFinanceiroClienteService.java`
+- Create: `backend/aurix-financial/src/main/java/com/aurix/platform/financial/controller/PerfilFinanceiroClienteController.java`
 
 **Interfaces:**
 - Consumes: Shared `Cliente` entity (Task 2)
@@ -720,14 +720,14 @@ git commit -m "chore: integration layer compatible with consolidated Cliente"
 - [ ] **Step 1: Create PerfilFinanceiroCliente entity**
 
 ```java
-package com.aureus.platform.financial.entity;
+package com.aurix.platform.financial.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "perfis_financeiros_clientes", schema = "aureus")
+@Table(name = "perfis_financeiros_clientes", schema = "aurix")
 public class PerfilFinanceiroCliente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -780,9 +780,9 @@ public class PerfilFinanceiroCliente {
 - [ ] **Step 2: Create Repository**
 
 ```java
-package com.aureus.platform.financial.repository;
+package com.aurix.platform.financial.repository;
 
-import com.aureus.platform.financial.entity.PerfilFinanceiroCliente;
+import com.aurix.platform.financial.entity.PerfilFinanceiroCliente;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.Optional;
@@ -798,10 +798,10 @@ public interface PerfilFinanceiroClienteRepository extends JpaRepository<PerfilF
 - [ ] **Step 3: Create Service**
 
 ```java
-package com.aureus.platform.financial.service;
+package com.aurix.platform.financial.service;
 
-import com.aureus.platform.financial.entity.PerfilFinanceiroCliente;
-import com.aureus.platform.financial.repository.PerfilFinanceiroClienteRepository;
+import com.aurix.platform.financial.entity.PerfilFinanceiroCliente;
+import com.aurix.platform.financial.repository.PerfilFinanceiroClienteRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
@@ -854,10 +854,10 @@ public class PerfilFinanceiroClienteService {
 - [ ] **Step 4: Create Controller**
 
 ```java
-package com.aureus.platform.financial.controller;
+package com.aurix.platform.financial.controller;
 
-import com.aureus.platform.financial.entity.PerfilFinanceiroCliente;
-import com.aureus.platform.financial.service.PerfilFinanceiroClienteService;
+import com.aurix.platform.financial.entity.PerfilFinanceiroCliente;
+import com.aurix.platform.financial.service.PerfilFinanceiroClienteService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -910,22 +910,22 @@ public class PerfilFinanceiroClienteController {
 
 - [ ] **Step 5: Remove financial module's old Cliente entity**
 
-Delete: `backend/aureus-financial/src/main/java/com/aureus/platform/financial/entity/Cliente.java`
+Delete: `backend/aurix-financial/src/main/java/com/aurix/platform/financial/entity/Cliente.java`
 
 - [ ] **Step 6: Check financial module for any references to its own Cliente**
 
-Search for `import com.aureus.platform.financial.entity.Cliente` in other financial files. Remove/fix any references. The exploration showed no files reference it except the entity itself, but verify.
+Search for `import com.aurix.platform.financial.entity.Cliente` in other financial files. Remove/fix any references. The exploration showed no files reference it except the entity itself, but verify.
 
 - [ ] **Step 7: Compile financial module**
 
-Run: `mvn compile -pl aureus-financial -am`
+Run: `mvn compile -pl aurix-financial -am`
 Expected: Compilation succeeds
 
 - [ ] **Step 8: Commit**
 
 ```bash
-git add backend/aureus-financial/src/main/java/com/aureus/platform/financial/entity/PerfilFinanceiroCliente.java backend/aureus-financial/src/main/java/com/aureus/platform/financial/repository/PerfilFinanceiroClienteRepository.java backend/aureus-financial/src/main/java/com/aureus/platform/financial/service/PerfilFinanceiroClienteService.java backend/aureus-financial/src/main/java/com/aureus/platform/financial/controller/PerfilFinanceiroClienteController.java
-git rm backend/aureus-financial/src/main/java/com/aureus/platform/financial/entity/Cliente.java
+git add backend/aurix-financial/src/main/java/com/aurix/platform/financial/entity/PerfilFinanceiroCliente.java backend/aurix-financial/src/main/java/com/aurix/platform/financial/repository/PerfilFinanceiroClienteRepository.java backend/aurix-financial/src/main/java/com/aurix/platform/financial/service/PerfilFinanceiroClienteService.java backend/aurix-financial/src/main/java/com/aurix/platform/financial/controller/PerfilFinanceiroClienteController.java
+git rm backend/aurix-financial/src/main/java/com/aurix/platform/financial/entity/Cliente.java
 git commit -m "feat: add PerfilFinanceiroCliente, remove old financial Cliente"
 ```
 
@@ -934,16 +934,16 @@ git commit -m "feat: add PerfilFinanceiroCliente, remove old financial Cliente"
 ### Task 9: Tests — Core Module
 
 **Files:**
-- Create: `backend/aureus-core/src/test/java/com/aureus/platform/core/integration/ClientePFIntegrationTest.java`
-- Create: `backend/aureus-core/src/test/java/com/aureus/platform/core/integration/ClientePJIntegrationTest.java`
+- Create: `backend/aurix-core/src/test/java/com/aurix/platform/core/integration/ClientePFIntegrationTest.java`
+- Create: `backend/aurix-core/src/test/java/com/aurix/platform/core/integration/ClientePJIntegrationTest.java`
 
 - [ ] **Step 1: Write PF integration test**
 
 ```java
-package com.aureus.platform.core.integration;
+package com.aurix.platform.core.integration;
 
-import com.aureus.platform.shared.dto.ClienteDTO;
-import com.aureus.platform.shared.entity.Cliente;
+import com.aurix.platform.shared.dto.ClienteDTO;
+import com.aurix.platform.shared.entity.Cliente;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -1012,13 +1012,13 @@ void deveCriarEBuscarClientePJ() {
 
 - [ ] **Step 3: Run core tests**
 
-Run: `mvn test -pl aureus-core -am -Dtest=ClientePFIntegrationTest,ClientePJIntegrationTest`
+Run: `mvn test -pl aurix-core -am -Dtest=ClientePFIntegrationTest,ClientePJIntegrationTest`
 Expected: All tests pass
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add backend/aureus-core/src/test/java/com/aureus/platform/core/integration/ClientePFIntegrationTest.java backend/aureus-core/src/test/java/com/aureus/platform/core/integration/ClientePJIntegrationTest.java
+git add backend/aurix-core/src/test/java/com/aurix/platform/core/integration/ClientePFIntegrationTest.java backend/aurix-core/src/test/java/com/aurix/platform/core/integration/ClientePJIntegrationTest.java
 git commit -m "test: add PF/PJ Cliente integration tests"
 ```
 
@@ -1027,7 +1027,7 @@ git commit -m "test: add PF/PJ Cliente integration tests"
 ### Task 10: Tests — Financial Module + Regression
 
 **Files:**
-- Create: `backend/aureus-financial/src/test/java/com/aureus/platform/financial/integration/PerfilFinanceiroClienteIntegrationTest.java`
+- Create: `backend/aurix-financial/src/test/java/com/aurix/platform/financial/integration/PerfilFinanceiroClienteIntegrationTest.java`
 - Modify: Existing integration tests to use new Cliente type for PF clients
 
 - [ ] **Step 1: Write PerfilFinanceiroCliente test**
@@ -1040,13 +1040,13 @@ Test CRUD operations:
 
 - [ ] **Step 2: Run all tests**
 
-Run: `mvn test -pl aureus-shared,aureus-core,aureus-pix,aureus-credit,aureus-security,aureus-financial -am`
+Run: `mvn test -pl aurix-shared,aurix-core,aurix-pix,aurix-credit,aurix-security,aurix-financial -am`
 Expected: All tests pass
 
 - [ ] **Step 3: Commit**
 
 ```bash
-git add backend/aureus-financial/src/test/java/com/aureus/platform/financial/integration/PerfilFinanceiroClienteIntegrationTest.java
+git add backend/aurix-financial/src/test/java/com/aurix/platform/financial/integration/PerfilFinanceiroClienteIntegrationTest.java
 git commit -m "test: add PerfilFinanceiroCliente integration test"
 ```
 

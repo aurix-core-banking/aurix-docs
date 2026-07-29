@@ -1,4 +1,4 @@
-# AUREUS ML Models
+# AURIX ML Models
 
 Modelos de Machine Learning para deteccao de fraude, analise de risco e previsoes financeiras.
 

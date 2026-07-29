@@ -4,7 +4,7 @@
 
 **Goal:** Implement 3 revenue modules (Acquirer, Collections, Guarantee) — Guarantee extracted from finanziamento, Acquirer and Collections built from scratch.
 
-**Architecture:** 3 independent Spring Boot microservices (ports 8127-8129), same pattern as Foundation modules. Guarantee is extracted from `aureus-financiamento` with a Feign client for backwards compatibility.
+**Architecture:** 3 independent Spring Boot microservices (ports 8127-8129), same pattern as Foundation modules. Guarantee is extracted from `aurix-financiamento` with a Feign client for backwards compatibility.
 
 **Tech Stack:** Java 25, Spring Boot 4.1.0, Maven, PostgreSQL, Kafka, Feign, Testcontainers
 
@@ -12,34 +12,34 @@
 
 - All Java code: Project Lombok (`@Slf4j`), constructor injection, `TenantContext.getTenantId()`
 - All Java exceptions: `IllegalArgumentException` for business errors, `IllegalStateException` for state errors
-- Kafka events extend `BaseEvent` in `com.aureus.platform.shared.event`
+- Kafka events extend `BaseEvent` in `com.aurix.platform.shared.event`
 - Topic constants in `Topics.java` following ADR-0001: `<dominio>.<entidade>.<evento>.v1`
 - New modules added to `backend/pom.xml` `<modules>` list
 - Each module gets: Dockerfile, SecurityConfig, application.yml, docker-compose entry, traefik route, e2e config
 - `@Configuration("<nome>KafkaConfig")` for Kafka configs to avoid bean name conflicts
 - Ports: 8127 (acquirer), 8128 (collections), 8129 (guarantee)
 - Context paths: `/api/acquirer`, `/api/collections`, `/api/guarantee`
-- Package naming: `com.aureus.platform.acquirer`, `.collections`, `.guarantee`
+- Package naming: `com.aurix.platform.acquirer`, `.collections`, `.guarantee`
 
 ---
 
 ## File Map
 
 ### Guarantee (extracted)
-- Create: `backend/aureus-guarantee/pom.xml`
-- Create: `backend/aureus-guarantee/src/main/java/com/aureus/platform/guarantee/AureusGuaranteeApplication.java`
-- Create: `backend/aureus-guarantee/src/main/java/com/aureus/platform/guarantee/config/SecurityConfig.java`
-- Create: `backend/aureus-guarantee/src/main/java/com/aureus/platform/guarantee/config/GuaranteeKafkaConfig.java`
+- Create: `backend/aurix-guarantee/pom.xml`
+- Create: `backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/AurixGuaranteeApplication.java`
+- Create: `backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/config/SecurityConfig.java`
+- Create: `backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/config/GuaranteeKafkaConfig.java`
 - Move (from finanziamento): `Garantia.java`, `GarantiaRepository.java`, `GarantiaService.java`, `GarantiaRequest.java`, `GarantiaResponse.java`, `GarantiaController.java`, `AtualizacaoGarantiasJob.java`, `GarantiaControllerTest.java`
-- Create: `backend/aureus-guarantee/src/main/java/com/aureus/platform/guarantee/client/GarantiaClient.java` (Feign)
-- Create: `backend/aureus-guarantee/src/main/resources/application.yml`
-- Create: `backend/aureus-guarantee/Dockerfile`
-- Modify: `backend/aureus-financiamento/pom.xml` (add guarantee dependency)
-- Modify: `backend/aureus-financiamento/src/main/java/.../service/ContratoFinanciamentoService.java` (use GarantiaClient)
+- Create: `backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/client/GarantiaClient.java` (Feign)
+- Create: `backend/aurix-guarantee/src/main/resources/application.yml`
+- Create: `backend/aurix-guarantee/Dockerfile`
+- Modify: `backend/aurix-financiamento/pom.xml` (add guarantee dependency)
+- Modify: `backend/aurix-financiamento/src/main/java/.../service/ContratoFinanciamentoService.java` (use GarantiaClient)
 
 ### Acquirer (new)
-- Create: `backend/aureus-acquirer/pom.xml`
-- Create: `backend/aureus-acquirer/src/main/java/com/aureus/platform/acquirer/AureusAcquirerApplication.java`
+- Create: `backend/aurix-acquirer/pom.xml`
+- Create: `backend/aurix-acquirer/src/main/java/com/aurix/platform/acquirer/AurixAcquirerApplication.java`
 - Create: entity classes (Estabelecimento, Terminal, TransacaoCaptura, Liquidacao, TaxaAcquirer)
 - Create: repository interfaces
 - Create: services (TransacaoService, LiquidacaoService, EstabelecimentoService)
@@ -48,8 +48,8 @@
 - Create: `application.yml`, `Dockerfile`
 
 ### Collections (new)
-- Create: `backend/aureus-collections/pom.xml`
-- Create: `backend/aureus-collections/src/main/java/com/aureus/platform/collections/AureusCollectionsApplication.java`
+- Create: `backend/aurix-collections/pom.xml`
+- Create: `backend/aurix-collections/src/main/java/com/aurix/platform/collections/AurixCollectionsApplication.java`
 - Create: entity classes (Cobranca, CarnetParcela, Acordo, Negativacao, RegistroCobranca)
 - Create: repository interfaces
 - Create: services (BoletoService, CarnetService, AcordoService, NegativacaoService)
@@ -58,13 +58,13 @@
 - Create: `application.yml`, `Dockerfile`
 
 ### Shared events (for all 3)
-- Modify: `backend/aureus-shared/src/main/java/.../event/Topics.java`
+- Modify: `backend/aurix-shared/src/main/java/.../event/Topics.java`
 - Create: 10 event classes in `...shared.event`
 
 ### Infra
 - Modify: `infrastructure/docker-compose.yml` (add 3 services)
 - Modify: `infrastructure/traefik/dynamic.yml` (add 3 routers/services)
-- Modify: `aureus-tests/e2e/config.py` (add 3 health endpoints)
+- Modify: `aurix-tests/e2e/config.py` (add 3 health endpoints)
 - Modify: `backend/pom.xml` (add 3 modules)
 
 ---
@@ -72,7 +72,7 @@
 ### Task 1: Shared — Add events and topic constants for all 3 modules
 
 **Files:**
-- Modify: `backend/aureus-shared/src/main/java/com/aureus/platform/shared/event/Topics.java`
+- Modify: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/Topics.java`
 - Create: `TransacaoAutorizadaEvent.java`
 - Create: `TransacaoCapturadaEvent.java`
 - Create: `TransacaoLiquidadaEvent.java`
@@ -112,10 +112,10 @@ public static final String GUARANTEE_GARANTIA_LIBERADA = "guarantee.garantia.lib
 
 - [ ] **Step 2: Create acquirer event classes**
 
-Create `TransacaoAutorizadaEvent.java` in `com.aureus.platform.shared.event`:
+Create `TransacaoAutorizadaEvent.java` in `com.aurix.platform.shared.event`:
 
 ```java
-package com.aureus.platform.shared.event;
+package com.aurix.platform.shared.event;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -132,7 +132,7 @@ public class TransacaoAutorizadaEvent extends BaseEvent {
         TransacaoAutorizadaEvent e = new TransacaoAutorizadaEvent();
         e.setEventId(java.util.UUID.randomUUID().toString());
         e.setEventType("TRANSACAO_AUTORIZADA");
-        e.setSource("aureus-acquirer");
+        e.setSource("aurix-acquirer");
         e.setTimestamp(LocalDateTime.now());
         e.setCorrelationId(java.util.UUID.randomUUID().toString());
         e.transacaoId = transacaoId;
@@ -163,15 +163,15 @@ public class TransacaoAutorizadaEvent extends BaseEvent {
 
 Then create `TransacaoCapturadaEvent.java`, `TransacaoLiquidadaEvent.java`, `TransacaoEstornadaEvent.java` with the same pattern (factory method + empty constructor + getters/setters).
 
-TransacaoCapturadaEvent: transacaoId, valor, parcelas, bandeira (source "aureus-acquirer", eventType "TRANSACAO_CAPTURADA")
-TransacaoLiquidadaEvent: liquidacaoId, transacaoId, valorLiquido, valorRepasse (source "aureus-acquirer", eventType "TRANSACAO_LIQUIDADA")
-TransacaoEstornadaEvent: transacaoId, valor, motivo (source "aureus-acquirer", eventType "TRANSACAO_ESTORNADA")
+TransacaoCapturadaEvent: transacaoId, valor, parcelas, bandeira (source "aurix-acquirer", eventType "TRANSACAO_CAPTURADA")
+TransacaoLiquidadaEvent: liquidacaoId, transacaoId, valorLiquido, valorRepasse (source "aurix-acquirer", eventType "TRANSACAO_LIQUIDADA")
+TransacaoEstornadaEvent: transacaoId, valor, motivo (source "aurix-acquirer", eventType "TRANSACAO_ESTORNADA")
 
 - [ ] **Step 3: Create collections event classes**
 
 Create `BoletoEmitidoEvent.java`:
 ```java
-package com.aureus.platform.shared.event;
+package com.aurix.platform.shared.event;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -188,7 +188,7 @@ public class BoletoEmitidoEvent extends BaseEvent {
         BoletoEmitidoEvent e = new BoletoEmitidoEvent();
         e.setEventId(java.util.UUID.randomUUID().toString());
         e.setEventType("BOLETO_EMITIDO");
-        e.setSource("aureus-collections");
+        e.setSource("aurix-collections");
         e.setTimestamp(LocalDateTime.now());
         e.setCorrelationId(java.util.UUID.randomUUID().toString());
         e.cobrancaId = cobrancaId;
@@ -216,15 +216,15 @@ public class BoletoEmitidoEvent extends BaseEvent {
 
 Create `CobrancaPagaEvent.java`, `CobrancaNegativadaEvent.java`, `CobrancaCanceladaEvent.java` with the same pattern.
 
-CobrancaPagaEvent: cobrancaId, valorPago (BigDecimal), dataPagamento (LocalDate), source "aureus-collections", eventType "COBRANCA_PAGA"
-CobrancaNegativadaEvent: cobrancaId, orgao (String), dataEnvio (LocalDate), source "aureus-collections", eventType "COBRANCA_NEGATIVADA"
-CobrancaCanceladaEvent: cobrancaId, motivo (String), source "aureus-collections", eventType "COBRANCA_CANCELADA"
+CobrancaPagaEvent: cobrancaId, valorPago (BigDecimal), dataPagamento (LocalDate), source "aurix-collections", eventType "COBRANCA_PAGA"
+CobrancaNegativadaEvent: cobrancaId, orgao (String), dataEnvio (LocalDate), source "aurix-collections", eventType "COBRANCA_NEGATIVADA"
+CobrancaCanceladaEvent: cobrancaId, motivo (String), source "aurix-collections", eventType "COBRANCA_CANCELADA"
 
 - [ ] **Step 4: Create guarantee event classes**
 
 Create `GarantiaRegistradaEvent.java`:
 ```java
-package com.aureus.platform.shared.event;
+package com.aurix.platform.shared.event;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -240,7 +240,7 @@ public class GarantiaRegistradaEvent extends BaseEvent {
         GarantiaRegistradaEvent e = new GarantiaRegistradaEvent();
         e.setEventId(java.util.UUID.randomUUID().toString());
         e.setEventType("GARANTIA_REGISTRADA");
-        e.setSource("aureus-guarantee");
+        e.setSource("aurix-guarantee");
         e.setTimestamp(LocalDateTime.now());
         e.setCorrelationId(java.util.UUID.randomUUID().toString());
         e.garantiaId = garantiaId;
@@ -266,12 +266,12 @@ public class GarantiaRegistradaEvent extends BaseEvent {
 }
 ```
 
-Create `GarantiaLiberadaEvent.java`: garantiaId, contratoId, dataBaixa (LocalDate), source "aureus-guarantee", eventType "GARANTIA_LIBERADA"
+Create `GarantiaLiberadaEvent.java`: garantiaId, contratoId, dataBaixa (LocalDate), source "aurix-guarantee", eventType "GARANTIA_LIBERADA"
 
 - [ ] **Step 5: Compile shared module**
 
 ```bash
-mvn -pl backend/aureus-shared -am compile -DskipTests
+mvn -pl backend/aurix-shared -am compile -DskipTests
 ```
 
 Expected: BUILD SUCCESS
@@ -279,7 +279,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 6: Commit**
 
 ```bash
-git add backend/aureus-shared/src/main/java/com/aureus/platform/shared/event/TransacaoAutorizadaEvent.java backend/aureus-shared/src/main/java/com/aureus/platform/shared/event/TransacaoCapturadaEvent.java backend/aureus-shared/src/main/java/com/aureus/platform/shared/event/TransacaoLiquidadaEvent.java backend/aureus-shared/src/main/java/com/aureus/platform/shared/event/TransacaoEstornadaEvent.java backend/aureus-shared/src/main/java/com/aureus/platform/shared/event/BoletoEmitidoEvent.java backend/aureus-shared/src/main/java/com/aureus/platform/shared/event/CobrancaPagaEvent.java backend/aureus-shared/src/main/java/com/aureus/platform/shared/event/CobrancaNegativadaEvent.java backend/aureus-shared/src/main/java/com/aureus/platform/shared/event/CobrancaCanceladaEvent.java backend/aureus-shared/src/main/java/com/aureus/platform/shared/event/GarantiaRegistradaEvent.java backend/aureus-shared/src/main/java/com/aureus/platform/shared/event/GarantiaLiberadaEvent.java
+git add backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/TransacaoAutorizadaEvent.java backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/TransacaoCapturadaEvent.java backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/TransacaoLiquidadaEvent.java backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/TransacaoEstornadaEvent.java backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/BoletoEmitidoEvent.java backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/CobrancaPagaEvent.java backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/CobrancaNegativadaEvent.java backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/CobrancaCanceladaEvent.java backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/GarantiaRegistradaEvent.java backend/aurix-shared/src/main/java/com/aurix/platform/shared/event/GarantiaLiberadaEvent.java
 git commit -m "feat(shared): add revenue module event classes and ADR-0001 topic constants"
 ```
 
@@ -288,12 +288,12 @@ git commit -m "feat(shared): add revenue module event classes and ADR-0001 topic
 ### Task 2: Guarantee — Create module skeleton
 
 **Files:**
-- Create: `backend/aureus-guarantee/pom.xml`
-- Create: `backend/aureus-guarantee/src/main/java/com/aureus/platform/guarantee/AureusGuaranteeApplication.java`
-- Create: `backend/aureus-guarantee/src/main/resources/application.yml`
-- Create: `backend/aureus-guarantee/src/main/java/com/aureus/platform/guarantee/config/SecurityConfig.java`
-- Create: `backend/aureus-guarantee/src/main/java/com/aureus/platform/guarantee/config/GuaranteeKafkaConfig.java`
-- Create: `backend/aureus-guarantee/Dockerfile`
+- Create: `backend/aurix-guarantee/pom.xml`
+- Create: `backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/AurixGuaranteeApplication.java`
+- Create: `backend/aurix-guarantee/src/main/resources/application.yml`
+- Create: `backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/config/SecurityConfig.java`
+- Create: `backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/config/GuaranteeKafkaConfig.java`
+- Create: `backend/aurix-guarantee/Dockerfile`
 - Modify: `backend/pom.xml`
 
 **Interfaces:**
@@ -311,20 +311,20 @@ git commit -m "feat(shared): add revenue module event classes and ADR-0001 topic
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.aureus.platform</groupId>
-        <artifactId>aureus-platform</artifactId>
+        <groupId>com.aurix.platform</groupId>
+        <artifactId>aurix-platform</artifactId>
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>aureus-guarantee</artifactId>
+    <artifactId>aurix-guarantee</artifactId>
     <packaging>jar</packaging>
-    <name>AUREUS Guarantee</name>
+    <name>AURIX Guarantee</name>
     <description>Módulo de Garantias - Alienação Fiduciária, Penhor, Hipoteca</description>
 
     <dependencies>
         <dependency>
-            <groupId>com.aureus.platform</groupId>
-            <artifactId>aureus-shared</artifactId>
+            <groupId>com.aurix.platform</groupId>
+            <artifactId>aurix-shared</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -368,7 +368,7 @@ git commit -m "feat(shared): add revenue module event classes and ADR-0001 topic
 - [ ] **Step 2: Create application main class**
 
 ```java
-package com.aureus.platform.guarantee;
+package com.aurix.platform.guarantee;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -376,9 +376,9 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
 @EnableFeignClients
-public class AureusGuaranteeApplication {
+public class AurixGuaranteeApplication {
     public static void main(String[] args) {
-        SpringApplication.run(AureusGuaranteeApplication.class, args);
+        SpringApplication.run(AurixGuaranteeApplication.class, args);
     }
 }
 ```
@@ -393,11 +393,11 @@ server:
 
 spring:
   application:
-    name: aureus-guarantee
+    name: aurix-guarantee
   datasource:
-    url: jdbc:postgresql://localhost:5432/aureus
-    username: aureus
-    password: aureus
+    url: jdbc:postgresql://localhost:5432/aurix
+    username: aurix
+    password: aurix
   jpa:
     hibernate:
       ddl-auto: validate
@@ -408,21 +408,21 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
     consumer:
-      group-id: aureus-guarantee-group
+      group-id: aurix-guarantee-group
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
-        spring.json.trusted.packages: "com.aureus.platform.shared.event"
+        spring.json.trusted.packages: "com.aurix.platform.shared.event"
 
 logging:
   level:
-    com.aureus.platform: DEBUG
+    com.aurix.platform: DEBUG
 ```
 
 - [ ] **Step 4: Create SecurityConfig**
 
 ```java
-package com.aureus.platform.guarantee.config;
+package com.aurix.platform.guarantee.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -445,9 +445,9 @@ public class SecurityConfig {
 - [ ] **Step 5: Create GuaranteeKafkaConfig**
 
 ```java
-package com.aureus.platform.guarantee.config;
+package com.aurix.platform.guarantee.config;
 
-import com.aureus.platform.shared.event.Topics;
+import com.aurix.platform.shared.event.Topics;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -477,11 +477,11 @@ WORKDIR /app
 COPY mvnw pom.xml ./
 RUN chmod +x mvnw
 COPY . .
-RUN ./mvnw -pl aureus-guarantee -am package -DskipTests -q
+RUN ./mvnw -pl aurix-guarantee -am package -DskipTests -q
 
 FROM eclipse-temurin:25-jre-jammy
 WORKDIR /app
-COPY --from=build /app/backend/aureus-guarantee/target/*.jar app.jar
+COPY --from=build /app/backend/aurix-guarantee/target/*.jar app.jar
 EXPOSE 8129
 ENTRYPOINT ["java", "-jar", "app.jar"]
 ```
@@ -490,13 +490,13 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 
 Read `backend/pom.xml`, find the `<modules>` section, and add:
 ```xml
-<module>aureus-guarantee</module>
+<module>aurix-guarantee</module>
 ```
 
 - [ ] **Step 8: Compile to verify**
 
 ```bash
-mvn -pl backend/aureus-guarantee -am compile -DskipTests
+mvn -pl backend/aurix-guarantee -am compile -DskipTests
 ```
 
 Expected: BUILD SUCCESS
@@ -504,7 +504,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 9: Commit**
 
 ```bash
-git add backend/aureus-guarantee/ backend/pom.xml
+git add backend/aurix-guarantee/ backend/pom.xml
 git commit -m "feat(guarantee): create module skeleton with pom.xml, application, security, kafka config"
 ```
 
@@ -526,11 +526,11 @@ git commit -m "feat(guarantee): create module skeleton with pom.xml, application
 
 - [ ] **Step 1: Read existing Garantia.java from finanziamento**
 
-Read `backend/aureus-financiamento/src/main/java/com/aureus/platform/financiamento/entity/Garantia.java` to understand its structure.
+Read `backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/entity/Garantia.java` to understand its structure.
 
 - [ ] **Step 2: Copy and adapt Garantia.java to guarantee module**
 
-Create `backend/aureus-guarantee/src/main/java/com/aureus/platform/guarantee/entity/Garantia.java`:
+Create `backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/entity/Garantia.java`:
 
 Use the same fields as the finanziamento version but update the package and add any missing fields from the spec (clienteId, contratoId as generic Long, tenantId).
 
@@ -547,16 +547,16 @@ The updated Garantia entity should have:
 - dataBaixa (LocalDate)
 - tenantId (String)
 
-Use `@Entity @Table(name = "garantias", schema = "aureus")` and appropriate JPA annotations.
+Use `@Entity @Table(name = "garantias", schema = "aurix")` and appropriate JPA annotations.
 
 - [ ] **Step 3: Copy GarantiaRepository**
 
-Create `backend/aureus-guarantee/src/main/java/com/aureus/platform/guarantee/repository/GarantiaRepository.java`:
+Create `backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/repository/GarantiaRepository.java`:
 
 ```java
-package com.aureus.platform.guarantee.repository;
+package com.aurix.platform.guarantee.repository;
 
-import com.aureus.platform.guarantee.entity.Garantia;
+import com.aurix.platform.guarantee.entity.Garantia;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
@@ -569,7 +569,7 @@ public interface GarantiaRepository extends JpaRepository<Garantia, Long> {
 
 - [ ] **Step 4: Copy GarantiaRequest and GarantiaResponse DTOs**
 
-Create `backend/aureus-guarantee/src/main/java/com/aureus/platform/guarantee/dto/GarantiaRequest.java` and `GarantiaResponse.java`:
+Create `backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/dto/GarantiaRequest.java` and `GarantiaResponse.java`:
 
 GarantiaRequest: contratoId, clienteId, bemId, tipo, valor, dataVencimento
 GarantiaResponse: id, tipo, valor, dataRegistro, dataBaixa, status, orgaoRegistro (same as existing from finanziamento)
@@ -577,13 +577,13 @@ GarantiaResponse: id, tipo, valor, dataRegistro, dataBaixa, status, orgaoRegistr
 - [ ] **Step 5: Create Bem entity and repository**
 
 ```java
-package com.aureus.platform.guarantee.entity;
+package com.aurix.platform.guarantee.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "bens", schema = "aureus")
+@Table(name = "bens", schema = "aurix")
 public class Bem {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -618,9 +618,9 @@ public class Bem {
 
 Create `BemRepository.java`:
 ```java
-package com.aureus.platform.guarantee.repository;
+package com.aurix.platform.guarantee.repository;
 
-import com.aureus.platform.guarantee.entity.Bem;
+import com.aurix.platform.guarantee.entity.Bem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
@@ -632,14 +632,14 @@ public interface BemRepository extends JpaRepository<Bem, Long> {
 - [ ] **Step 6: Create Avaliacao entity and repository**
 
 ```java
-package com.aureus.platform.guarantee.entity;
+package com.aurix.platform.guarantee.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "avaliacoes", schema = "aureus")
+@Table(name = "avaliacoes", schema = "aurix")
 public class Avaliacao {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -670,9 +670,9 @@ public class Avaliacao {
 
 Create `AvaliacaoRepository.java`:
 ```java
-package com.aureus.platform.guarantee.repository;
+package com.aurix.platform.guarantee.repository;
 
-import com.aureus.platform.guarantee.entity.Avaliacao;
+import com.aurix.platform.guarantee.entity.Avaliacao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
@@ -684,13 +684,13 @@ public interface AvaliacaoRepository extends JpaRepository<Avaliacao, Long> {
 - [ ] **Step 7: Create RegistroGarantia entity and repository**
 
 ```java
-package com.aureus.platform.guarantee.entity;
+package com.aurix.platform.guarantee.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "registros_garantia", schema = "aureus")
+@Table(name = "registros_garantia", schema = "aurix")
 public class RegistroGarantia {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -718,9 +718,9 @@ public class RegistroGarantia {
 
 Create `RegistroGarantiaRepository.java`:
 ```java
-package com.aureus.platform.guarantee.repository;
+package com.aurix.platform.guarantee.repository;
 
-import com.aureus.platform.guarantee.entity.RegistroGarantia;
+import com.aurix.platform.guarantee.entity.RegistroGarantia;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
@@ -732,7 +732,7 @@ public interface RegistroGarantiaRepository extends JpaRepository<RegistroGarant
 - [ ] **Step 8: Compile to verify**
 
 ```bash
-mvn -pl backend/aureus-guarantee -am compile -DskipTests
+mvn -pl backend/aurix-guarantee -am compile -DskipTests
 ```
 
 Expected: BUILD SUCCESS
@@ -740,7 +740,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 9: Commit**
 
 ```bash
-git add backend/aureus-guarantee/src/main/java/com/aureus/platform/guarantee/entity/ backend/aureus-guarantee/src/main/java/com/aureus/platform/guarantee/repository/ backend/aureus-guarantee/src/main/java/com/aureus/platform/guarantee/dto/
+git add backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/entity/ backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/repository/ backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/dto/
 git commit -m "feat(guarantee): add entities, repositories, DTOs (extracted from finanziamento + new)"
 ```
 
@@ -749,9 +749,9 @@ git commit -m "feat(guarantee): add entities, repositories, DTOs (extracted from
 ### Task 4: Guarantee — Create services + Feign client
 
 **Files:**
-- Create: `backend/aureus-guarantee/src/main/java/com/aureus/platform/guarantee/service/GarantiaService.java`
-- Create: `backend/aureus-guarantee/src/main/java/com/aureus/platform/guarantee/service/BemService.java`
-- Create: `backend/aureus-guarantee/src/main/java/com/aureus/platform/guarantee/client/GarantiaClient.java`
+- Create: `backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/service/GarantiaService.java`
+- Create: `backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/service/BemService.java`
+- Create: `backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/client/GarantiaClient.java`
 - Create: test files
 
 **Interfaces:**
@@ -760,20 +760,20 @@ git commit -m "feat(guarantee): add entities, repositories, DTOs (extracted from
 
 - [ ] **Step 1: Read existing GarantiaService from finanziamento**
 
-Read `backend/aureus-financiamento/src/main/java/com/aureus/platform/financiamento/service/GarantiaService.java` to understand its methods.
+Read `backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/service/GarantiaService.java` to understand its methods.
 
 - [ ] **Step 2: Create GarantiaService in guarantee module**
 
 ```java
-package com.aureus.platform.guarantee.service;
+package com.aurix.platform.guarantee.service;
 
-import com.aureus.platform.guarantee.dto.GarantiaRequest;
-import com.aureus.platform.guarantee.dto.GarantiaResponse;
-import com.aureus.platform.guarantee.entity.Garantia;
-import com.aureus.platform.guarantee.repository.GarantiaRepository;
-import com.aureus.platform.shared.event.GarantiaRegistradaEvent;
-import com.aureus.platform.shared.event.GarantiaLiberadaEvent;
-import com.aureus.platform.shared.event.Topics;
+import com.aurix.platform.guarantee.dto.GarantiaRequest;
+import com.aurix.platform.guarantee.dto.GarantiaResponse;
+import com.aurix.platform.guarantee.entity.Garantia;
+import com.aurix.platform.guarantee.repository.GarantiaRepository;
+import com.aurix.platform.shared.event.GarantiaRegistradaEvent;
+import com.aurix.platform.shared.event.GarantiaLiberadaEvent;
+import com.aurix.platform.shared.event.Topics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -859,17 +859,17 @@ public class GarantiaService {
 - [ ] **Step 3: Create GarantiaClient (Feign)**
 
 ```java
-package com.aureus.platform.guarantee.client;
+package com.aurix.platform.guarantee.client;
 
-import com.aureus.platform.guarantee.dto.GarantiaRequest;
-import com.aureus.platform.guarantee.dto.GarantiaResponse;
+import com.aurix.platform.guarantee.dto.GarantiaRequest;
+import com.aurix.platform.guarantee.dto.GarantiaResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@FeignClient(name = "aureus-guarantee", path = "/api/guarantee")
+@FeignClient(name = "aurix-guarantee", path = "/api/guarantee")
 public interface GarantiaClient {
     @PostMapping("/garantias")
     ResponseEntity<GarantiaResponse> registrar(@RequestBody GarantiaRequest request);
@@ -886,9 +886,9 @@ public interface GarantiaClient {
 }
 ```
 
-You'll also need `LiberarGarantiaRequest.java` in `com.aureus.platform.guarantee.dto`:
+You'll also need `LiberarGarantiaRequest.java` in `com.aurix.platform.guarantee.dto`:
 ```java
-package com.aureus.platform.guarantee.dto;
+package com.aurix.platform.guarantee.dto;
 
 import java.time.LocalDate;
 
@@ -903,7 +903,7 @@ public class LiberarGarantiaRequest {
 - [ ] **Step 4: Compile to verify**
 
 ```bash
-mvn -pl backend/aureus-guarantee -am compile -DskipTests
+mvn -pl backend/aurix-guarantee -am compile -DskipTests
 ```
 
 Expected: BUILD SUCCESS
@@ -911,7 +911,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 5: Commit**
 
 ```bash
-git add backend/aureus-guarantee/src/main/java/com/aureus/platform/guarantee/service/ backend/aureus-guarantee/src/main/java/com/aureus/platform/guarantee/client/
+git add backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/service/ backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/client/
 git commit -m "feat(guarantee): add GarantiaService, BemService, and GarantiaClient Feign"
 ```
 
@@ -920,22 +920,22 @@ git commit -m "feat(guarantee): add GarantiaService, BemService, and GarantiaCli
 ### Task 5: Guarantee — Update finanziamento to use GarantiaClient
 
 **Files:**
-- Modify: `backend/aureus-financiamento/pom.xml` (add aureus-guarantee dependency)
-- Modify: `backend/aureus-financiamento/src/main/java/.../service/ContratoFinanciamentoService.java` (replace GarantiaRepository injections with GarantiaClient)
-- Modify: `backend/aureus-financiamento/src/main/java/.../service/GarantiaService.java` (remove — now in guarantee module)
+- Modify: `backend/aurix-financiamento/pom.xml` (add aurix-guarantee dependency)
+- Modify: `backend/aurix-financiamento/src/main/java/.../service/ContratoFinanciamentoService.java` (replace GarantiaRepository injections with GarantiaClient)
+- Modify: `backend/aurix-financiamento/src/main/java/.../service/GarantiaService.java` (remove — now in guarantee module)
 - Remove: Garantia entity, repository, DTOs from finanziamento (now in guarantee module)
 
 **Interfaces:**
-- Consumes: GarantiaClient from aureus-guarantee
+- Consumes: GarantiaClient from aurix-guarantee
 - Produces: finanziamento compiles without local Garantia classes
 
-- [ ] **Step 1: Add aureus-guarantee dependency to finanziamento pom.xml**
+- [ ] **Step 1: Add aurix-guarantee dependency to finanziamento pom.xml**
 
-Read `backend/aureus-financiamento/pom.xml` and add:
+Read `backend/aurix-financiamento/pom.xml` and add:
 ```xml
 <dependency>
-    <groupId>com.aureus.platform</groupId>
-    <artifactId>aureus-guarantee</artifactId>
+    <groupId>com.aurix.platform</groupId>
+    <artifactId>aurix-guarantee</artifactId>
     <version>${project.version}</version>
 </dependency>
 ```
@@ -957,19 +957,19 @@ Replace `garantiaRepository.findByContratoId(id)` with `garantiaClient.listar(nu
 - [ ] **Step 3: Remove old Garantia classes from finanziamento**
 
 ```bash
-rm backend/aureus-financiamento/src/main/java/com/aureus/platform/financiamento/entity/Garantia.java
-rm backend/aureus-financiamento/src/main/java/com/aureus/platform/financiamento/repository/GarantiaRepository.java
-rm backend/aureus-financiamento/src/main/java/com/aureus/platform/financiamento/service/GarantiaService.java
-rm backend/aureus-financiamento/src/main/java/com/aureus/platform/financiamento/dto/request/GarantiaRequest.java
-rm backend/aureus-financiamento/src/main/java/com/aureus/platform/financiamento/dto/response/GarantiaResponse.java
-rm backend/aureus-financiamento/src/main/java/com/aureus/platform/financiamento/controller/GarantiaController.java
-rm backend/aureus-financiamento/src/main/java/com/aureus/platform/financiamento/job/AtualizacaoGarantiasJob.java
+rm backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/entity/Garantia.java
+rm backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/repository/GarantiaRepository.java
+rm backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/service/GarantiaService.java
+rm backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/dto/request/GarantiaRequest.java
+rm backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/dto/response/GarantiaResponse.java
+rm backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/controller/GarantiaController.java
+rm backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/job/AtualizacaoGarantiasJob.java
 ```
 
 - [ ] **Step 4: Compile both modules**
 
 ```bash
-mvn -pl backend/aureus-financiamento,backend/aureus-guarantee -am compile -DskipTests
+mvn -pl backend/aurix-financiamento,backend/aurix-guarantee -am compile -DskipTests
 ```
 
 Expected: BUILD SUCCESS
@@ -977,8 +977,8 @@ Expected: BUILD SUCCESS
 - [ ] **Step 5: Commit**
 
 ```bash
-git add backend/aureus-financiamento/pom.xml backend/aureus-financiamento/src/main/java/com/aureus/platform/financiamento/service/ContratoFinanciamentoService.java && git rm backend/aureus-financiamento/src/main/java/com/aureus/platform/financiamento/entity/Garantia.java backend/aureus-financiamento/src/main/java/com/aureus/platform/financiamento/repository/GarantiaRepository.java backend/aureus-financiamento/src/main/java/com/aureus/platform/financiamento/service/GarantiaService.java backend/aureus-financiamento/src/main/java/com/aureus/platform/financiamento/dto/request/GarantiaRequest.java backend/aureus-financiamento/src/main/java/com/aureus/platform/financiamento/dto/response/GarantiaResponse.java backend/aureus-financiamento/src/main/java/com/aureus/platform/financiamento/controller/GarantiaController.java backend/aureus-financiamento/src/main/java/com/aureus/platform/financiamento/job/AtualizacaoGarantiasJob.java
-git commit -m "refactor(financiamento): replace local Garantia with aureus-guarantee Feign client"
+git add backend/aurix-financiamento/pom.xml backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/service/ContratoFinanciamentoService.java && git rm backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/entity/Garantia.java backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/repository/GarantiaRepository.java backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/service/GarantiaService.java backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/dto/request/GarantiaRequest.java backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/dto/response/GarantiaResponse.java backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/controller/GarantiaController.java backend/aurix-financiamento/src/main/java/com/aurix/platform/financiamento/job/AtualizacaoGarantiasJob.java
+git commit -m "refactor(financiamento): replace local Garantia with aurix-guarantee Feign client"
 ```
 
 ---
@@ -986,10 +986,10 @@ git commit -m "refactor(financiamento): replace local Garantia with aureus-guara
 ### Task 6: Guarantee — Create controller and tests
 
 **Files:**
-- Create: `backend/aureus-guarantee/src/main/java/com/aureus/platform/guarantee/controller/GarantiaController.java`
-- Create: `backend/aureus-guarantee/src/main/java/com/aureus/platform/guarantee/controller/BemController.java`
-- Create: `backend/aureus-guarantee/src/test/java/com/aureus/platform/guarantee/controller/GarantiaControllerTest.java`
-- Create: `backend/aureus-guarantee/src/test/java/com/aureus/platform/guarantee/service/GarantiaServiceTest.java`
+- Create: `backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/controller/GarantiaController.java`
+- Create: `backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/controller/BemController.java`
+- Create: `backend/aurix-guarantee/src/test/java/com/aurix/platform/guarantee/controller/GarantiaControllerTest.java`
+- Create: `backend/aurix-guarantee/src/test/java/com/aurix/platform/guarantee/service/GarantiaServiceTest.java`
 
 **Interfaces:**
 - Consumes: GarantiaService, BemService
@@ -998,12 +998,12 @@ git commit -m "refactor(financiamento): replace local Garantia with aureus-guara
 - [ ] **Step 1: Create GarantiaController**
 
 ```java
-package com.aureus.platform.guarantee.controller;
+package com.aurix.platform.guarantee.controller;
 
-import com.aureus.platform.guarantee.dto.GarantiaRequest;
-import com.aureus.platform.guarantee.dto.GarantiaResponse;
-import com.aureus.platform.guarantee.dto.LiberarGarantiaRequest;
-import com.aureus.platform.guarantee.service.GarantiaService;
+import com.aurix.platform.guarantee.dto.GarantiaRequest;
+import com.aurix.platform.guarantee.dto.GarantiaResponse;
+import com.aurix.platform.guarantee.dto.LiberarGarantiaRequest;
+import com.aurix.platform.guarantee.service.GarantiaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -1066,10 +1066,10 @@ public class GarantiaController {
 - [ ] **Step 2: Create BemController**
 
 ```java
-package com.aureus.platform.guarantee.controller;
+package com.aurix.platform.guarantee.controller;
 
-import com.aureus.platform.guarantee.entity.Bem;
-import com.aureus.platform.guarantee.service.BemService;
+import com.aurix.platform.guarantee.entity.Bem;
+import com.aurix.platform.guarantee.service.BemService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -1111,10 +1111,10 @@ public class BemController {
 - [ ] **Step 3: Create BemService**
 
 ```java
-package com.aureus.platform.guarantee.service;
+package com.aurix.platform.guarantee.service;
 
-import com.aureus.platform.guarantee.entity.Bem;
-import com.aureus.platform.guarantee.repository.BemRepository;
+import com.aurix.platform.guarantee.entity.Bem;
+import com.aurix.platform.guarantee.repository.BemRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -1145,11 +1145,11 @@ public class BemService {
 - [ ] **Step 4: Create GarantiaServiceTest**
 
 ```java
-package com.aureus.platform.guarantee.service;
+package com.aurix.platform.guarantee.service;
 
-import com.aureus.platform.guarantee.dto.GarantiaRequest;
-import com.aureus.platform.guarantee.entity.Garantia;
-import com.aureus.platform.guarantee.repository.GarantiaRepository;
+import com.aurix.platform.guarantee.dto.GarantiaRequest;
+import com.aurix.platform.guarantee.entity.Garantia;
+import com.aurix.platform.guarantee.repository.GarantiaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -1229,7 +1229,7 @@ class GarantiaServiceTest {
 - [ ] **Step 5: Compile and run tests**
 
 ```bash
-mvn test -pl backend/aureus-guarantee -am -Dtest='!*IntegrationTest' -Dsurefire.failIfNoSpecifiedTests=false
+mvn test -pl backend/aurix-guarantee -am -Dtest='!*IntegrationTest' -Dsurefire.failIfNoSpecifiedTests=false
 ```
 
 Expected: BUILD SUCCESS
@@ -1237,7 +1237,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 6: Commit**
 
 ```bash
-git add backend/aureus-guarantee/src/main/java/com/aureus/platform/guarantee/controller/ backend/aureus-guarantee/src/test/
+git add backend/aurix-guarantee/src/main/java/com/aurix/platform/guarantee/controller/ backend/aurix-guarantee/src/test/
 git commit -m "feat(guarantee): add controllers and unit tests"
 ```
 
@@ -1246,12 +1246,12 @@ git commit -m "feat(guarantee): add controllers and unit tests"
 ### Task 7: Acquirer — Create module skeleton + entities + repositories
 
 **Files:**
-- Create: `backend/aureus-acquirer/pom.xml`
-- Create: `backend/aureus-acquirer/src/main/java/com/aureus/platform/acquirer/AureusAcquirerApplication.java`
-- Create: `backend/aureus-acquirer/src/main/resources/application.yml`
-- Create: `backend/aureus-acquirer/Dockerfile`
-- Create: `backend/aureus-acquirer/src/main/java/com/aureus/platform/acquirer/config/SecurityConfig.java`
-- Create: `backend/aureus-acquirer/src/main/java/com/aureus/platform/acquirer/config/AcquirerKafkaConfig.java`
+- Create: `backend/aurix-acquirer/pom.xml`
+- Create: `backend/aurix-acquirer/src/main/java/com/aurix/platform/acquirer/AurixAcquirerApplication.java`
+- Create: `backend/aurix-acquirer/src/main/resources/application.yml`
+- Create: `backend/aurix-acquirer/Dockerfile`
+- Create: `backend/aurix-acquirer/src/main/java/com/aurix/platform/acquirer/config/SecurityConfig.java`
+- Create: `backend/aurix-acquirer/src/main/java/com/aurix/platform/acquirer/config/AcquirerKafkaConfig.java`
 - Create: entity classes (Estabelecimento, Terminal, TransacaoCaptura, Liquidacao, TaxaAcquirer)
 - Create: repository interfaces
 - Create: DTOs (TransacaoRequest, TransacaoResponse, EstabelecimentoRequest, etc.)
@@ -1268,17 +1268,17 @@ git commit -m "feat(guarantee): add controllers and unit tests"
 <project xmlns="http://maven.apache.org/POM/4.0.0" ...>
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.aureus.platform</groupId>
-        <artifactId>aureus-platform</artifactId>
+        <groupId>com.aurix.platform</groupId>
+        <artifactId>aurix-platform</artifactId>
         <version>1.0.0</version>
     </parent>
-    <artifactId>aureus-acquirer</artifactId>
+    <artifactId>aurix-acquirer</artifactId>
     <packaging>jar</packaging>
-    <name>AUREUS Acquirer</name>
+    <name>AURIX Acquirer</name>
     <description>Módulo de Adquirência - Captura e Liquidação de Transações</description>
     <dependencies>
         <!-- same as guarantee but without spring-cloud-starter-openfeign -->
-        <dependency><groupId>com.aureus.platform</groupId><artifactId>aureus-shared</artifactId></dependency>
+        <dependency><groupId>com.aurix.platform</groupId><artifactId>aurix-shared</artifactId></dependency>
         <dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-web</artifactId></dependency>
         <dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-data-jpa</artifactId></dependency>
         <dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-validation</artifactId></dependency>
@@ -1290,14 +1290,14 @@ git commit -m "feat(guarantee): add controllers and unit tests"
 </project>
 ```
 
-- [ ] **Step 2: Create application main class, application.yml, SecurityConfig, Dockerfile** (same patterns as guarantee with port 8127, context-path `/api/acquirer`, group-id `aureus-acquirer-group`)
+- [ ] **Step 2: Create application main class, application.yml, SecurityConfig, Dockerfile** (same patterns as guarantee with port 8127, context-path `/api/acquirer`, group-id `aurix-acquirer-group`)
 
 - [ ] **Step 3: Create AcquirerKafkaConfig**
 
 ```java
-package com.aureus.platform.acquirer.config;
+package com.aurix.platform.acquirer.config;
 
-import com.aureus.platform.shared.event.Topics;
+import com.aurix.platform.shared.event.Topics;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -1322,9 +1322,9 @@ public class AcquirerKafkaConfig {
 
 - [ ] **Step 4: Create entity classes**
 
-Create `Estabelecimento.java`, `Terminal.java`, `TransacaoCaptura.java`, `Liquidacao.java`, `TaxaAcquirer.java` in `com.aureus.platform.acquirer.entity` package, following the field definitions from the spec.
+Create `Estabelecimento.java`, `Terminal.java`, `TransacaoCaptura.java`, `Liquidacao.java`, `TaxaAcquirer.java` in `com.aurix.platform.acquirer.entity` package, following the field definitions from the spec.
 
-Each entity: `@Entity @Table(name = "acquirer_<nome>", schema = "aureus")`, JPA annotations, empty constructor, getters + setters.
+Each entity: `@Entity @Table(name = "acquirer_<nome>", schema = "aurix")`, JPA annotations, empty constructor, getters + setters.
 
 Estabelecimento: id, clienteId, nomeFantasia, cnpj, bandeirasHabilitadas (String), taxaAdmin (BigDecimal), prazoLiquidacao (Integer), status (String), tenantId
 Terminal: id, estabelecimentoId, modelo, tipo (String), codigo, status, tenantId
@@ -1352,13 +1352,13 @@ EstabelecimentoRepository:
 - [ ] **Step 6: Add module to backend/pom.xml**
 
 ```xml
-<module>aureus-acquirer</module>
+<module>aurix-acquirer</module>
 ```
 
 - [ ] **Step 7: Compile to verify**
 
 ```bash
-mvn -pl backend/aureus-acquirer -am compile -DskipTests
+mvn -pl backend/aurix-acquirer -am compile -DskipTests
 ```
 
 Expected: BUILD SUCCESS
@@ -1366,7 +1366,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 8: Commit**
 
 ```bash
-git add backend/aureus-acquirer/ backend/pom.xml
+git add backend/aurix-acquirer/ backend/pom.xml
 git commit -m "feat(acquirer): create module skeleton with entities, repositories, kafka config"
 ```
 
@@ -1386,14 +1386,14 @@ git commit -m "feat(acquirer): create module skeleton with entities, repositorie
 - [ ] **Step 1: Create TransacaoService**
 
 ```java
-package com.aureus.platform.acquirer.service;
+package com.aurix.platform.acquirer.service;
 
-import com.aureus.platform.acquirer.entity.TransacaoCaptura;
-import com.aureus.platform.acquirer.repository.TransacaoCapturaRepository;
-import com.aureus.platform.shared.event.TransacaoAutorizadaEvent;
-import com.aureus.platform.shared.event.TransacaoCapturadaEvent;
-import com.aureus.platform.shared.event.TransacaoEstornadaEvent;
-import com.aureus.platform.shared.event.Topics;
+import com.aurix.platform.acquirer.entity.TransacaoCaptura;
+import com.aurix.platform.acquirer.repository.TransacaoCapturaRepository;
+import com.aurix.platform.shared.event.TransacaoAutorizadaEvent;
+import com.aurix.platform.shared.event.TransacaoCapturadaEvent;
+import com.aurix.platform.shared.event.TransacaoEstornadaEvent;
+import com.aurix.platform.shared.event.Topics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -1488,12 +1488,12 @@ public class TransacaoService {
 - [ ] **Step 2: Create EstabelecimentoService** (CRUD for estabelecimentos and terminais)
 
 ```java
-package com.aureus.platform.acquirer.service;
+package com.aurix.platform.acquirer.service;
 
-import com.aureus.platform.acquirer.entity.Estabelecimento;
-import com.aureus.platform.acquirer.entity.Terminal;
-import com.aureus.platform.acquirer.repository.EstabelecimentoRepository;
-import com.aureus.platform.acquirer.repository.TerminalRepository;
+import com.aurix.platform.acquirer.entity.Estabelecimento;
+import com.aurix.platform.acquirer.entity.Terminal;
+import com.aurix.platform.acquirer.repository.EstabelecimentoRepository;
+import com.aurix.platform.acquirer.repository.TerminalRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -1541,14 +1541,14 @@ public class EstabelecimentoService {
 - [ ] **Step 3: Create LiquidacaoService**
 
 ```java
-package com.aureus.platform.acquirer.service;
+package com.aurix.platform.acquirer.service;
 
-import com.aureus.platform.acquirer.entity.Liquidacao;
-import com.aureus.platform.acquirer.entity.TransacaoCaptura;
-import com.aureus.platform.acquirer.repository.LiquidacaoRepository;
-import com.aureus.platform.acquirer.repository.TransacaoCapturaRepository;
-import com.aureus.platform.shared.event.TransacaoLiquidadaEvent;
-import com.aureus.platform.shared.event.Topics;
+import com.aurix.platform.acquirer.entity.Liquidacao;
+import com.aurix.platform.acquirer.entity.TransacaoCaptura;
+import com.aurix.platform.acquirer.repository.LiquidacaoRepository;
+import com.aurix.platform.acquirer.repository.TransacaoCapturaRepository;
+import com.aurix.platform.shared.event.TransacaoLiquidadaEvent;
+import com.aurix.platform.shared.event.Topics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -1608,7 +1608,7 @@ public class LiquidacaoService {
 - [ ] **Step 4: Compile to verify**
 
 ```bash
-mvn -pl backend/aureus-acquirer -am compile -DskipTests
+mvn -pl backend/aurix-acquirer -am compile -DskipTests
 ```
 
 Expected: BUILD SUCCESS
@@ -1616,7 +1616,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 5: Commit**
 
 ```bash
-git add backend/aureus-acquirer/src/main/java/com/aureus/platform/acquirer/service/
+git add backend/aurix-acquirer/src/main/java/com/aurix/platform/acquirer/service/
 git commit -m "feat(acquirer): add TransacaoService, EstabelecimentoService, LiquidacaoService"
 ```
 
@@ -1633,10 +1633,10 @@ git commit -m "feat(acquirer): add TransacaoService, EstabelecimentoService, Liq
 - [ ] **Step 1: Create TransacaoController**
 
 ```java
-package com.aureus.platform.acquirer.controller;
+package com.aurix.platform.acquirer.controller;
 
-import com.aureus.platform.acquirer.entity.TransacaoCaptura;
-import com.aureus.platform.acquirer.service.TransacaoService;
+import com.aurix.platform.acquirer.entity.TransacaoCaptura;
+import com.aurix.platform.acquirer.service.TransacaoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -1698,11 +1698,11 @@ public class TransacaoController {
 - [ ] **Step 2: Create EstabelecimentoController**
 
 ```java
-package com.aureus.platform.acquirer.controller;
+package com.aurix.platform.acquirer.controller;
 
-import com.aureus.platform.acquirer.entity.Estabelecimento;
-import com.aureus.platform.acquirer.entity.Terminal;
-import com.aureus.platform.acquirer.service.EstabelecimentoService;
+import com.aurix.platform.acquirer.entity.Estabelecimento;
+import com.aurix.platform.acquirer.entity.Terminal;
+import com.aurix.platform.acquirer.service.EstabelecimentoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -1757,10 +1757,10 @@ public class EstabelecimentoController {
 - [ ] **Step 3: Create LiquidacaoController**
 
 ```java
-package com.aureus.platform.acquirer.controller;
+package com.aurix.platform.acquirer.controller;
 
-import com.aureus.platform.acquirer.entity.Liquidacao;
-import com.aureus.platform.acquirer.service.LiquidacaoService;
+import com.aurix.platform.acquirer.entity.Liquidacao;
+import com.aurix.platform.acquirer.service.LiquidacaoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -1799,10 +1799,10 @@ public class LiquidacaoController {
 - [ ] **Step 4: Create TransacaoServiceTest**
 
 ```java
-package com.aureus.platform.acquirer.service;
+package com.aurix.platform.acquirer.service;
 
-import com.aureus.platform.acquirer.entity.TransacaoCaptura;
-import com.aureus.platform.acquirer.repository.TransacaoCapturaRepository;
+import com.aurix.platform.acquirer.entity.TransacaoCaptura;
+import com.aurix.platform.acquirer.repository.TransacaoCapturaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -1878,7 +1878,7 @@ class TransacaoServiceTest {
 - [ ] **Step 5: Compile and run tests**
 
 ```bash
-mvn test -pl backend/aureus-acquirer -am -Dtest='!*IntegrationTest' -Dsurefire.failIfNoSpecifiedTests=false
+mvn test -pl backend/aurix-acquirer -am -Dtest='!*IntegrationTest' -Dsurefire.failIfNoSpecifiedTests=false
 ```
 
 Expected: BUILD SUCCESS
@@ -1886,7 +1886,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 6: Commit**
 
 ```bash
-git add backend/aureus-acquirer/src/main/java/com/aureus/platform/acquirer/controller/ backend/aureus-acquirer/src/test/
+git add backend/aurix-acquirer/src/main/java/com/aurix/platform/acquirer/controller/ backend/aurix-acquirer/src/test/
 git commit -m "feat(acquirer): add controllers and unit tests"
 ```
 
@@ -1895,26 +1895,26 @@ git commit -m "feat(acquirer): add controllers and unit tests"
 ### Task 10: Collections — Create module skeleton + entities + repositories
 
 **Files:**
-- Create: `backend/aureus-collections/pom.xml`
-- Create: `backend/aureus-collections/src/main/java/com/aureus/platform/collections/AureusCollectionsApplication.java`
-- Create: `backend/aureus-collections/src/main/resources/application.yml`
-- Create: `backend/aureus-collections/Dockerfile`
-- Create: `backend/aureus-collections/src/main/java/.../config/SecurityConfig.java`
-- Create: `backend/aureus-collections/src/main/java/.../config/CollectionsKafkaConfig.java`
+- Create: `backend/aurix-collections/pom.xml`
+- Create: `backend/aurix-collections/src/main/java/com/aurix/platform/collections/AurixCollectionsApplication.java`
+- Create: `backend/aurix-collections/src/main/resources/application.yml`
+- Create: `backend/aurix-collections/Dockerfile`
+- Create: `backend/aurix-collections/src/main/java/.../config/SecurityConfig.java`
+- Create: `backend/aurix-collections/src/main/java/.../config/CollectionsKafkaConfig.java`
 - Create: entity classes (Cobranca, CarnetParcela, Acordo, Negativacao, RegistroCobranca)
 - Create: repository interfaces
 - Modify: `backend/pom.xml`
 
-- [ ] **Step 1: Create pom.xml** (same pattern as acquirer, with artifactId aureuis-collections, name "AUREUS Collections", description "Módulo de Cobrança")
+- [ ] **Step 1: Create pom.xml** (same pattern as acquirer, with artifactId aureuis-collections, name "AURIX Collections", description "Módulo de Cobrança")
 
-- [ ] **Step 2: Create application main class, application.yml, SecurityConfig** (port 8128, context-path `/api/collections`, group-id `aureus-collections-group`)
+- [ ] **Step 2: Create application main class, application.yml, SecurityConfig** (port 8128, context-path `/api/collections`, group-id `aurix-collections-group`)
 
 - [ ] **Step 3: Create CollectionsKafkaConfig**
 
 ```java
-package com.aureus.platform.collections.config;
+package com.aurix.platform.collections.config;
 
-import com.aureus.platform.shared.event.Topics;
+import com.aurix.platform.shared.event.Topics;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -1939,7 +1939,7 @@ public class CollectionsKafkaConfig {
 
 - [ ] **Step 4: Create entity classes**
 
-Create in `com.aureus.platform.collections.entity`:
+Create in `com.aurix.platform.collections.entity`:
 
 Cobranca: id, clienteId, tipo (BOLETO/CARNE/ACORDO), valor (BigDecimal), valorPago (BigDecimal), dataVencimento (LocalDate), dataPagamento (LocalDate), status (String), nossoNumero (String), linhaDigitavel (String), codigoBarras (String), tenantId
 
@@ -1951,7 +1951,7 @@ Negativacao: id, cobrancaId, orgao (String), dataEnvio (LocalDate), dataBaixa (L
 
 RegistroCobranca: id, cobrancaId, camara (String), dataRegistro (LocalDateTime), protocolo, status
 
-Each with `@Entity @Table(name = "...", schema = "aureus")`, empty constructor, getters + setters.
+Each with `@Entity @Table(name = "...", schema = "aurix")`, empty constructor, getters + setters.
 
 - [ ] **Step 5: Create repository interfaces**
 
@@ -1982,7 +1982,7 @@ RegistroCobrancaRepository:
 - [ ] **Step 7: Compile**
 
 ```bash
-mvn -pl backend/aureus-collections -am compile -DskipTests
+mvn -pl backend/aurix-collections -am compile -DskipTests
 ```
 
 Expected: BUILD SUCCESS
@@ -1990,7 +1990,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 8: Commit**
 
 ```bash
-git add backend/aureus-collections/ backend/pom.xml
+git add backend/aurix-collections/ backend/pom.xml
 git commit -m "feat(collections): create module skeleton with entities, repositories, kafka config"
 ```
 
@@ -2007,14 +2007,14 @@ git commit -m "feat(collections): create module skeleton with entities, reposito
 - [ ] **Step 1: Create BoletoService**
 
 ```java
-package com.aureus.platform.collections.service;
+package com.aurix.platform.collections.service;
 
-import com.aureus.platform.collections.entity.Cobranca;
-import com.aureus.platform.collections.repository.CobrancaRepository;
-import com.aureus.platform.shared.event.BoletoEmitidoEvent;
-import com.aureus.platform.shared.event.CobrancaPagaEvent;
-import com.aureus.platform.shared.event.CobrancaCanceladaEvent;
-import com.aureus.platform.shared.event.Topics;
+import com.aurix.platform.collections.entity.Cobranca;
+import com.aurix.platform.collections.repository.CobrancaRepository;
+import com.aurix.platform.shared.event.BoletoEmitidoEvent;
+import com.aurix.platform.shared.event.CobrancaPagaEvent;
+import com.aurix.platform.shared.event.CobrancaCanceladaEvent;
+import com.aurix.platform.shared.event.Topics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -2119,7 +2119,7 @@ NegativacaoService:
 - [ ] **Step 3: Compile to verify**
 
 ```bash
-mvn -pl backend/aureus-collections -am compile -DskipTests
+mvn -pl backend/aurix-collections -am compile -DskipTests
 ```
 
 Expected: BUILD SUCCESS
@@ -2127,7 +2127,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 4: Commit**
 
 ```bash
-git add backend/aureus-collections/src/main/java/com/aureus/platform/collections/service/
+git add backend/aurix-collections/src/main/java/com/aurix/platform/collections/service/
 git commit -m "feat(collections): add BoletoService, CarnetService, AcordoService, NegativacaoService"
 ```
 
@@ -2145,10 +2145,10 @@ git commit -m "feat(collections): add BoletoService, CarnetService, AcordoServic
 - [ ] **Step 1: Create BoletoController**
 
 ```java
-package com.aureus.platform.collections.controller;
+package com.aurix.platform.collections.controller;
 
-import com.aureus.platform.collections.entity.Cobranca;
-import com.aureus.platform.collections.service.BoletoService;
+import com.aurix.platform.collections.entity.Cobranca;
+import com.aurix.platform.collections.service.BoletoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -2214,10 +2214,10 @@ Each follows the same pattern — inject service, map request body to method cal
 - [ ] **Step 3: Create BoletoServiceTest**
 
 ```java
-package com.aureus.platform.collections.service;
+package com.aurix.platform.collections.service;
 
-import com.aureus.platform.collections.entity.Cobranca;
-import com.aureus.platform.collections.repository.CobrancaRepository;
+import com.aurix.platform.collections.entity.Cobranca;
+import com.aurix.platform.collections.repository.CobrancaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -2282,7 +2282,7 @@ class BoletoServiceTest {
 - [ ] **Step 4: Compile and run tests**
 
 ```bash
-mvn test -pl backend/aureus-collections -am -Dtest='!*IntegrationTest' -Dsurefire.failIfNoSpecifiedTests=false
+mvn test -pl backend/aurix-collections -am -Dtest='!*IntegrationTest' -Dsurefire.failIfNoSpecifiedTests=false
 ```
 
 Expected: BUILD SUCCESS
@@ -2290,7 +2290,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 5: Commit**
 
 ```bash
-git add backend/aureus-collections/src/main/java/com/aureus/platform/collections/controller/ backend/aureus-collections/src/test/
+git add backend/aurix-collections/src/main/java/com/aurix/platform/collections/controller/ backend/aurix-collections/src/test/
 git commit -m "feat(collections): add controllers and unit tests"
 ```
 
@@ -2299,27 +2299,27 @@ git commit -m "feat(collections): add controllers and unit tests"
 ### Task 13: Infra — Docker, Docker Compose, Traefik, E2E
 
 **Files:**
-- Create: `backend/aureus-acquirer/Dockerfile` (if not yet created)
-- Create: `backend/aureus-collections/Dockerfile` (if not yet created)
-- Create: `backend/aureus-guarantee/Dockerfile` (if not yet created)
+- Create: `backend/aurix-acquirer/Dockerfile` (if not yet created)
+- Create: `backend/aurix-collections/Dockerfile` (if not yet created)
+- Create: `backend/aurix-guarantee/Dockerfile` (if not yet created)
 - Modify: `infrastructure/docker-compose.yml`
 - Modify: `infrastructure/traefik/dynamic.yml`
-- Modify: `aureus-tests/e2e/config.py`
+- Modify: `aurix-tests/e2e/config.py`
 
 - [ ] **Step 1: Read existing docker-compose.yml** to understand service patterns
 
 - [ ] **Step 2: Add 3 services to docker-compose.yml**
 
 ```yaml
-aureus-acquirer:
+aurix-acquirer:
   build:
     context: ../backend
-    dockerfile: aureus-acquirer/Dockerfile
+    dockerfile: aurix-acquirer/Dockerfile
   ports:
     - "8127:8127"
   environment:
     - SPRING_PROFILES_ACTIVE=dev
-    - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/aureus
+    - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/aurix
     - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka-1:29092
   depends_on:
     postgres:
@@ -2327,7 +2327,7 @@ aureus-acquirer:
     kafka-1:
       condition: service_started
   networks:
-    - aureus-platform-network
+    - aurix-platform-network
   healthcheck:
     test: ["CMD", "curl", "-f", "http://localhost:8127/api/acquirer/actuator/health"]
     interval: 30s
@@ -2335,34 +2335,34 @@ aureus-acquirer:
     retries: 3
     start_period: 40s
 
-aureus-collections:
+aurix-collections:
   # same pattern, port 8128, context /api/collections
 
-aureus-guarantee:
+aurix-guarantee:
   # same pattern, port 8129, context /api/guarantee
 ```
 
 - [ ] **Step 3: Add routes to traefik/dynamic.yml**
 
 ```yaml
-- "traefik.http.routers.aureus-acquirer.rule=PathPrefix(`/api/acquirer`)"
-- "traefik.http.routers.aureus-acquirer.service=aureus-acquirer"
-- "traefik.http.services.aureus-acquirer.loadbalancer.server.port=8127"
+- "traefik.http.routers.aurix-acquirer.rule=PathPrefix(`/api/acquirer`)"
+- "traefik.http.routers.aurix-acquirer.service=aurix-acquirer"
+- "traefik.http.services.aurix-acquirer.loadbalancer.server.port=8127"
 # same for collections (8128) and guarantee (8129)
 ```
 
 - [ ] **Step 4: Add health endpoints to e2e/config.py**
 
 ```python
-"aureus-acquirer": "http://localhost:8127/api/acquirer/actuator/health",
-"aureus-collections": "http://localhost:8128/api/collections/actuator/health",
-"aureus-guarantee": "http://localhost:8129/api/guarantee/actuator/health",
+"aurix-acquirer": "http://localhost:8127/api/acquirer/actuator/health",
+"aurix-collections": "http://localhost:8128/api/collections/actuator/health",
+"aurix-guarantee": "http://localhost:8129/api/guarantee/actuator/health",
 ```
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add infrastructure/docker-compose.yml infrastructure/traefik/dynamic.yml aureus-tests/e2e/config.py
+git add infrastructure/docker-compose.yml infrastructure/traefik/dynamic.yml aurix-tests/e2e/config.py
 git commit -m "infra: add acquirer, collections, guarantee services to docker-compose, traefik, and e2e config"
 ```
 
@@ -2383,7 +2383,7 @@ Expected: BUILD SUCCESS
 - [ ] **Step 2: Run unit tests for all 3 new modules**
 
 ```bash
-mvn test -pl backend/aureus-guarantee,backend/aureus-acquirer,backend/aureus-collections -am -Dtest='!*IntegrationTest,!*ContractTest' -Dsurefire.failIfNoSpecifiedTests=false
+mvn test -pl backend/aurix-guarantee,backend/aurix-acquirer,backend/aurix-collections -am -Dtest='!*IntegrationTest,!*ContractTest' -Dsurefire.failIfNoSpecifiedTests=false
 ```
 
 Expected: BUILD SUCCESS

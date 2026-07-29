@@ -1,8 +1,8 @@
-# aureus-web Test Coverage Design
+# aurix-web Test Coverage Design
 
-> **Sub-project 1 of 3** (aureus-web first, aureus-admin and aureus-mobile follow)
+> **Sub-project 1 of 3** (aurix-web first, aurix-admin and aurix-mobile follow)
 
-**Goal:** Full test coverage for the Internet Banking portal (aureus-web) — all components, pages, services, and App routing.
+**Goal:** Full test coverage for the Internet Banking portal (aurix-web) — all components, pages, services, and App routing.
 
 **Architecture:** Jest (via CRA react-scripts) + @testing-library/react. Mock services via `jest.mock()` + `__mocks__` directory. Shared render wrapper for MUI ThemeProvider + BrowserRouter.
 
@@ -11,11 +11,11 @@
 ## Files
 
 ### New
-- `aureus-web/src/setupTests.js` — matchMedia mock + jest-dom import
-- `aureus-web/src/services/__mocks__/apiService.js` — mock factory for all API methods
-- `aureus-web/src/services/__mocks__/authService.js` — mock factory for auth methods
-- `aureus-web/src/test-utils.js` — shared `renderWithProviders` wrapper
-- `aureus-web/src/__mocks__/axios.js` — mock axios for service tests (optional, can use jest.mock inline)
+- `aurix-web/src/setupTests.js` — matchMedia mock + jest-dom import
+- `aurix-web/src/services/__mocks__/apiService.js` — mock factory for all API methods
+- `aurix-web/src/services/__mocks__/authService.js` — mock factory for auth methods
+- `aurix-web/src/test-utils.js` — shared `renderWithProviders` wrapper
+- `aurix-web/src/__mocks__/axios.js` — mock axios for service tests (optional, can use jest.mock inline)
 
 ### Test Suites
 
@@ -95,7 +95,7 @@ jest.mock('axios');
 import axios from 'axios';
 import api from './apiService';
 
-beforeEach(() => { localStorage.setItem('aureus_token', 'test-token'); });
+beforeEach(() => { localStorage.setItem('aurix_token', 'test-token'); });
 afterEach(() => { localStorage.clear(); });
 
 test('adiciona token no header', ...);

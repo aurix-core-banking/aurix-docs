@@ -17,11 +17,11 @@
 
 | Módulos fonte | Entidades que entram | Serviços que entram |
 |---|---|---|
-| `aureus-core` | `Conta`, `MovimentoConta`, `Transacao`, `Liquidacao`, `CalculoRemuneracao`, `SistemaRemuneracao`, `ControleSaldo`, `PacoteTarifas`, `Tarifa`, `CobrancaTarifa`, `ContaTarifa`, `AgendamentoDebito`, `AplicacaoFinanceira` | `ContaService`, `TransacaoService`, `LiquidacaoService`, `MotorTarifasService`, `ControleSaldoService`, `SistemaRemuneracaoService`, `AgendamentoDebitoService` |
-| `aureus-poupanca` | `ContaPoupanca`, `MovimentacaoPoupanca` | `ContaPoupancaService`, `MovimentacaoService`, `AniversarioService`, `ExtratoPdfService` |
-| `aureus-salario` | `ContaSalario`, `ConvenioEmpresa`, `FolhaPagamento`, `ItemFolhaPagamento`, `SolicitacaoPortabilidade` | `ContaSalarioService`, `ConvenioService`, `FolhaService`, `PortabilidadeService`, `CnabService` |
-| `aureus-settlement` | `ConciliacaoBancaria`, `Liquidez`, `SaldoConta` | `SettlementService` |
-| `aureus-pricing` | — (Tarifas migram do core) | `PricingEngineService` |
+| `aurix-core` | `Conta`, `MovimentoConta`, `Transacao`, `Liquidacao`, `CalculoRemuneracao`, `SistemaRemuneracao`, `ControleSaldo`, `PacoteTarifas`, `Tarifa`, `CobrancaTarifa`, `ContaTarifa`, `AgendamentoDebito`, `AplicacaoFinanceira` | `ContaService`, `TransacaoService`, `LiquidacaoService`, `MotorTarifasService`, `ControleSaldoService`, `SistemaRemuneracaoService`, `AgendamentoDebitoService` |
+| `aurix-poupanca` | `ContaPoupanca`, `MovimentacaoPoupanca` | `ContaPoupancaService`, `MovimentacaoService`, `AniversarioService`, `ExtratoPdfService` |
+| `aurix-salario` | `ContaSalario`, `ConvenioEmpresa`, `FolhaPagamento`, `ItemFolhaPagamento`, `SolicitacaoPortabilidade` | `ContaSalarioService`, `ConvenioService`, `FolhaService`, `PortabilidadeService`, `CnabService` |
+| `aurix-settlement` | `ConciliacaoBancaria`, `Liquidez`, `SaldoConta` | `SettlementService` |
+| `aurix-pricing` | — (Tarifas migram do core) | `PricingEngineService` |
 
 **Justificativa:** Conta, saldo, transação, liquidação e tarifas são o mesmo ciclo de vida de uma transação bancária. Poupança e salário são tipos de conta com regras específicas, não bounded contexts independentes.
 
@@ -33,9 +33,9 @@
 
 | Módulos fonte | Entidades que entram | Serviços que entram |
 |---|---|---|
-| `aureus-core` | `Boleto`, `AgendamentoDebito` | `BoletoService` |
-| `aureus-pix` | `PixChave`, `PixTransferencia` | `PixChaveService`, `PixTransferenciaService`, `QrPixService` |
-| `aureus-bacen` | `TransacaoSPI`, `TransacaoSTR`, `TaxaSelic`, `SpreadBancario`, `Liquidez` | `SpiStrIntegrationService`, `BacenIntegrationService` |
+| `aurix-core` | `Boleto`, `AgendamentoDebito` | `BoletoService` |
+| `aurix-pix` | `PixChave`, `PixTransferencia` | `PixChaveService`, `PixTransferenciaService`, `QrPixService` |
+| `aurix-bacen` | `TransacaoSPI`, `TransacaoSTR`, `TaxaSelic`, `SpreadBancario`, `Liquidez` | `SpiStrIntegrationService`, `BacenIntegrationService` |
 
 **Justificativa:** PIX é o principal meio de pagamento, integra diretamente com SPI/STR (BACEN). TED/DOC e boleto também são meios de pagamento — mesmo ciclo.
 
@@ -49,9 +49,9 @@
 
 | Módulos fonte | Entidades que entram | Serviços que entram |
 |---|---|---|
-| `aureus-credit` | `ProdutoCredito`, `SolicitacaoCredito` | `DecisaoCreditoService`, `ProdutoCreditoService`, `SimuladorCreditoService`, `SolicitacaoCreditoService` |
-| `aureus-consignado` | `ContratoConsignado`, `ConvenioConsignado`, `MargemConsignavel`, `Parcela`, `ConsignadoSource` | `ContratoConsignadoService`, `ConvenioService`, `MargemService`, `ParcelaService` |
-| `aureus-financiamento` | `ContratoFinanciamento`, `SimulacaoFinanciamento`, `ParcelaFinanciamento`, `BemFinanciado`, `Garantia` | `ContratoFinanciamentoService`, `AmortizacaoService`, `SimulacaoService`, `ParcelaService`, `GarantiaService`, `AdminService` |
+| `aurix-credit` | `ProdutoCredito`, `SolicitacaoCredito` | `DecisaoCreditoService`, `ProdutoCreditoService`, `SimuladorCreditoService`, `SolicitacaoCreditoService` |
+| `aurix-consignado` | `ContratoConsignado`, `ConvenioConsignado`, `MargemConsignavel`, `Parcela`, `ConsignadoSource` | `ContratoConsignadoService`, `ConvenioService`, `MargemService`, `ParcelaService` |
+| `aurix-financiamento` | `ContratoFinanciamento`, `SimulacaoFinanciamento`, `ParcelaFinanciamento`, `BemFinanciado`, `Garantia` | `ContratoFinanciamentoService`, `AmortizacaoService`, `SimulacaoService`, `ParcelaService`, `GarantiaService`, `AdminService` |
 
 **Justificativa:** Todos os produtos de crédito (livre, consignado, financiamento) compartilham o mesmo core: análise de risco, contrato, parcelas, amortização. Garantia é específica de financiamento mas faz parte do mesmo domínio.
 
@@ -63,12 +63,12 @@
 
 | Módulos fonte | Entidades que entram | Serviços que entram |
 |---|---|---|
-| `aureus-investimento` | `Carteira`, `ContaInvestimento`, `OrdemInvestimento`, `ProdutoInvestimento` | `CarteiraService`, `ContaInvestimentoService`, `OrdemService`, `ProdutoInvestimentoService` |
-| `aureus-cambio` | `ClienteCambio`, `ContaCambio`, `ContratoCambio`, `Cotacao`, `OperacaoCambio`, `Remessa` | `ClienteCambioService`, `ComplianceCambialService`, `ContratoCambioService`, `CotacaoService`, `RemessaService` |
-| `aureus-seguros` | `Apolice`, `Corretor`, `CotacaoSeguro`, `ParcelaPremio`, `ProdutoSeguro`, `Sinistro`, `Tomador`, `Comissao` | `CotacaoSeguroService`, `EmissaoService`, `ProdutoSeguroService`, `SinistroService`, `CorretorService`, `ComissaoService`, `ParcelaService` |
-| `aureus-cartoes` | `Cartao`, `Fatura`, `LancamentoFatura`, `LimiteCartao`, `ProdutoCartao`, `TransacaoCartao`, `ParceiroAdquirente`, `ParceiroBandeira` | `CartaoService`, `CartaoQueryService`, `EmissaoService`, `FaturaService`, `LimiteService`, `ParceiroService`, `ProdutoCartaoService`, `TransacaoService` |
-| `aureus-treasury` | — (usa Investimento) | `InvestimentoService`, `TesourariaAvancadaService` |
-| `aureus-guarantee` | `Bem`, `Avaliacao`, `RegistroGarantia` | — |
+| `aurix-investimento` | `Carteira`, `ContaInvestimento`, `OrdemInvestimento`, `ProdutoInvestimento` | `CarteiraService`, `ContaInvestimentoService`, `OrdemService`, `ProdutoInvestimentoService` |
+| `aurix-cambio` | `ClienteCambio`, `ContaCambio`, `ContratoCambio`, `Cotacao`, `OperacaoCambio`, `Remessa` | `ClienteCambioService`, `ComplianceCambialService`, `ContratoCambioService`, `CotacaoService`, `RemessaService` |
+| `aurix-seguros` | `Apolice`, `Corretor`, `CotacaoSeguro`, `ParcelaPremio`, `ProdutoSeguro`, `Sinistro`, `Tomador`, `Comissao` | `CotacaoSeguroService`, `EmissaoService`, `ProdutoSeguroService`, `SinistroService`, `CorretorService`, `ComissaoService`, `ParcelaService` |
+| `aurix-cartoes` | `Cartao`, `Fatura`, `LancamentoFatura`, `LimiteCartao`, `ProdutoCartao`, `TransacaoCartao`, `ParceiroAdquirente`, `ParceiroBandeira` | `CartaoService`, `CartaoQueryService`, `EmissaoService`, `FaturaService`, `LimiteService`, `ParceiroService`, `ProdutoCartaoService`, `TransacaoService` |
+| `aurix-treasury` | — (usa Investimento) | `InvestimentoService`, `TesourariaAvancadaService` |
+| `aurix-guarantee` | `Bem`, `Avaliacao`, `RegistroGarantia` | — |
 
 **Controllers finais:** `ContaInvestimentoController`, `OrdemController`, `ProdutoInvestimentoController`, `ContratoCambioController`, `CotacaoController`, `RemessaController`, `ApoliceController`, `SinistroController`, `CotacaoController`, `ProdutoSeguroController`, `CartaoController`, `FaturaController`, `LimiteController`, `ProdutoCartaoController`, `TransacaoController`
 
@@ -78,10 +78,10 @@
 
 | Módulos fonte | Entidades que entram | Serviços que entram |
 |---|---|---|
-| `aureus-customer` | `Cliente`, `Contato`, `Endereco` | `ClienteService` |
-| `aureus-kyc` | `DocumentoKYC`, `ScoreKYC`, `SolicitacaoKYC` | `SolicitacaoKycService` |
-| `aureus-onboarding` | `SolicitacaoOnboarding`, `DocumentoOnboarding`, `SolicitacaoPF`, `SolicitacaoPJ`, `Empresa`, `Participante`, `Pep`, `HistoricoAprovacao` | `OnboardingPFService`, `OnboardingPJService` (com integrações Bureau/Serasa/Quod) |
-| `aureus-security` | `MfaConfig`, `MfaToken`, `PasswordResetToken`, `RefreshToken` | `AuthService`, `JwtService`, `MfaService`, `PermissaoGranularService` |
+| `aurix-customer` | `Cliente`, `Contato`, `Endereco` | `ClienteService` |
+| `aurix-kyc` | `DocumentoKYC`, `ScoreKYC`, `SolicitacaoKYC` | `SolicitacaoKycService` |
+| `aurix-onboarding` | `SolicitacaoOnboarding`, `DocumentoOnboarding`, `SolicitacaoPF`, `SolicitacaoPJ`, `Empresa`, `Participante`, `Pep`, `HistoricoAprovacao` | `OnboardingPFService`, `OnboardingPJService` (com integrações Bureau/Serasa/Quod) |
+| `aurix-security` | `MfaConfig`, `MfaToken`, `PasswordResetToken`, `RefreshToken` | `AuthService`, `JwtService`, `MfaService`, `PermissaoGranularService` |
 
 **Justificativa:** Cliente, identidade, onboarding, KYC e autenticação formam o agregado de identidade. Security não é infra cross-cutting — é gestão de identidade do cliente.
 
@@ -93,8 +93,8 @@
 
 | Módulos fonte | Entidades que entram | Serviços que entram |
 |---|---|---|
-| `aureus-fraud` | `ScoreTransacao`, `OcorrenciaFraude`, `RegraFraude`, `BloqueioPreventivo` | `FraudScoringService` |
-| `aureus-analytics` | `CreditScore` | `CreditScoreServiceProd`, `MlFraudServiceProd` |
+| `aurix-fraud` | `ScoreTransacao`, `OcorrenciaFraude`, `RegraFraude`, `BloqueioPreventivo` | `FraudScoringService` |
+| `aurix-analytics` | `CreditScore` | `CreditScoreServiceProd`, `MlFraudServiceProd` |
 
 **Justificativa:** Fraude e scoring de crédito compartilham modelo de risco em tempo real. Analytics contribui com modelos ML de fraude.
 
@@ -106,11 +106,11 @@
 
 | Módulos fonte | Entidades que entram | Serviços que entram |
 |---|---|---|
-| `aureus-compliance` | `ConsentimentoLGPD`, `AnonimizacaoDados`, `PortabilidadeDados`, `DireitoEsquecimento` | `LgpdService`, `RegulacaoService` |
-| `aureus-audit` | `LogAuditoria` (via shared) | `LogAuditoriaService` |
-| `aureus-tax` | `Imposto`, `RetencaoImposto`, `SPED`, `ComplianceFiscal` | `ImpostoService` |
-| `aureus-accounting` | `PlanoContas`, `LancamentoContabil`, `ItemLancamentoContabil`, `ConciliacaoBancaria`, `RelatorioContabil`, `SaldoConta` | `ClassificationService`, `IFRS9Service`, `RelatorioIFRS9Service`, `RiskAssessmentService`, `ECLCalculationService`, `HedgeAccountingService` |
-| `aureus-bacen` | `RelatorioBacen`, `Liquidez` | `RelatoriosBacenService`, `CosifReportGenerator` |
+| `aurix-compliance` | `ConsentimentoLGPD`, `AnonimizacaoDados`, `PortabilidadeDados`, `DireitoEsquecimento` | `LgpdService`, `RegulacaoService` |
+| `aurix-audit` | `LogAuditoria` (via shared) | `LogAuditoriaService` |
+| `aurix-tax` | `Imposto`, `RetencaoImposto`, `SPED`, `ComplianceFiscal` | `ImpostoService` |
+| `aurix-accounting` | `PlanoContas`, `LancamentoContabil`, `ItemLancamentoContabil`, `ConciliacaoBancaria`, `RelatorioContabil`, `SaldoConta` | `ClassificationService`, `IFRS9Service`, `RelatorioIFRS9Service`, `RiskAssessmentService`, `ECLCalculationService`, `HedgeAccountingService` |
+| `aurix-bacen` | `RelatorioBacen`, `Liquidez` | `RelatoriosBacenService`, `CosifReportGenerator` |
 
 **Justificativa:** Compliance, auditoria, impostos e contabilidade formam o domínio regulatório-fiscal. IFRS9 e SPED são reportes regulatórios. BACEN Cosif é reporte também.
 
@@ -122,14 +122,14 @@
 
 | Módulos fonte | Entidades que entram | Serviços que entram |
 |---|---|---|
-| `aureus-controller` | `Orcamento`, `ItemOrcamento`, `PlanejamentoEstrategico`, `CentroCusto`, `KPI` | `OrcamentoService` |
-| `aureus-budget` | `Orcamento`, `ItemOrcamento`, `PlanejamentoEstrategico`, `VersaoOrcamento` | `OrcamentoService` |
-| `aureus-cost` | `CentroCusto`, `Custo`, `Rentabilidade`, `Atividade` | `CustoService` |
-| `aureus-financial` | `ContaPagar`, `ContaReceber`, `FluxoCaixa`, `PerfilFinanceiroCliente`, `Fornecedor` | `ContaPagarService`, `PerfilFinanceiroClienteService` |
+| `aurix-controller` | `Orcamento`, `ItemOrcamento`, `PlanejamentoEstrategico`, `CentroCusto`, `KPI` | `OrcamentoService` |
+| `aurix-budget` | `Orcamento`, `ItemOrcamento`, `PlanejamentoEstrategico`, `VersaoOrcamento` | `OrcamentoService` |
+| `aurix-cost` | `CentroCusto`, `Custo`, `Rentabilidade`, `Atividade` | `CustoService` |
+| `aurix-financial` | `ContaPagar`, `ContaReceber`, `FluxoCaixa`, `PerfilFinanceiroCliente`, `Fornecedor` | `ContaPagarService`, `PerfilFinanceiroClienteService` |
 
 **Justificativa:** Controladoria, orçamento, custo e contas a pagar/receber formam o domínio de gestão financeira interna. Não confundir com contabilidade regulatória (compliance).
 
-**Atenção:** `ConciliacaoBancaria` de `aureus-financial` NÃO entra aqui — a versão canônica fica em compliance (accounting).
+**Atenção:** `ConciliacaoBancaria` de `aurix-financial` NÃO entra aqui — a versão canônica fica em compliance (accounting).
 
 **Controllers finais:** `OrcamentoController`, `CustoController`, `ContaPagarController`, `PerfilFinanceiroClienteController`
 
@@ -139,13 +139,13 @@
 
 | Módulos fonte | Entidades que entram | Serviços que entram |
 |---|---|---|
-| `aureus-provisioning` | `TenantConfig`, `TenantFeatureFlag`, `Instituicao` | `TenantConfigService`, `TenantFeatureFlagService`, `InstituicaoService` |
-| `aureus-billing` | `Fatura`, `Plano`, `UsoMensal` | `BillingService`, `PlanoService`, `StripeServiceStub`, `UsoService` |
-| `aureus-webhooks` | `WebhookConfig`, `WebhookLog` | `WebhookConfigService`, `WebhookSenderService` |
-| `aureus-notification` | `PreferenciaCliente`, `TemplateNotificacao`, `FilaNotificacao`, `ConfirmacaoRecebimento` | `NotificacaoService` |
-| `aureus-catalog` | `Produto`, `Oferta`, `Campanha`, `Segmento`, `Categoria`, `PoliticaElegibilidade`, `CondicaoComercial`, `FamiliaProduto`, `ConfigCartao`, `ConfigConta`, `ConfigCredito` (28 entidades) | `CatalogoService`, `OfertaService`, `ProdutoService`, `CampanhaService`, `ElegibilidadeService`, `ConfigService` |
-| `aureus-baas` | `ParceiroCustodia`, `SubContaCustodia`, `ConsentimentoCustodia` | `CustodiaService` |
-| `aureus-organization` | `Empresa`, `Departamento`, `Cargo`, `Funcionario`, `Workflow`, `Aprovacao`, `ControleAlcada`, `DelegacaoPoder` | `EmpresaService`, `FuncionarioService`, `WorkflowService`, `ControleAlcadaService` |
+| `aurix-provisioning` | `TenantConfig`, `TenantFeatureFlag`, `Instituicao` | `TenantConfigService`, `TenantFeatureFlagService`, `InstituicaoService` |
+| `aurix-billing` | `Fatura`, `Plano`, `UsoMensal` | `BillingService`, `PlanoService`, `StripeServiceStub`, `UsoService` |
+| `aurix-webhooks` | `WebhookConfig`, `WebhookLog` | `WebhookConfigService`, `WebhookSenderService` |
+| `aurix-notification` | `PreferenciaCliente`, `TemplateNotificacao`, `FilaNotificacao`, `ConfirmacaoRecebimento` | `NotificacaoService` |
+| `aurix-catalog` | `Produto`, `Oferta`, `Campanha`, `Segmento`, `Categoria`, `PoliticaElegibilidade`, `CondicaoComercial`, `FamiliaProduto`, `ConfigCartao`, `ConfigConta`, `ConfigCredito` (28 entidades) | `CatalogoService`, `OfertaService`, `ProdutoService`, `CampanhaService`, `ElegibilidadeService`, `ConfigService` |
+| `aurix-baas` | `ParceiroCustodia`, `SubContaCustodia`, `ConsentimentoCustodia` | `CustodiaService` |
+| `aurix-organization` | `Empresa`, `Departamento`, `Cargo`, `Funcionario`, `Workflow`, `Aprovacao`, `ControleAlcada`, `DelegacaoPoder` | `EmpresaService`, `FuncionarioService`, `WorkflowService`, `ControleAlcadaService` |
 
 **Justificativa:** Serviços de plataforma SaaS (provisioning, billing, catalog, notificação, webhooks, organização). Não são domínio bancário — são infraestrutura da plataforma.
 
@@ -157,11 +157,11 @@
 
 | Módulos fonte | Entidades que entram | Serviços que entram |
 |---|---|---|
-| `aureus-analytics` | — (analytics-based entities) | `BiService`, `ChatbotService`, `MetricaService` |
-| `aureus-ai` | — | `AureusAgentFactory` |
-| `aureus-openfinance` | `ConsentimentoOpenFinance`, `LogAcessoOpenFinance`, `TokenOpenFinance` | `ConsentimentoOpenFinanceService`, `OpenFinanceDataService`, `RateLimitService`, `TokenOpenFinanceService` |
-| `aureus-internet-banking` | `SessaoInternetBanking`, `TransacaoInternetBanking`, `LogAtividadeInternetBanking` | `InternetBankingService` |
-| `aureus-mobile-banking` | `SessaoMobile`, `DispositivoMobile`, `NotificacaoMobile` | `MobileBankingService` |
+| `aurix-analytics` | — (analytics-based entities) | `BiService`, `ChatbotService`, `MetricaService` |
+| `aurix-ai` | — | `AurixAgentFactory` |
+| `aurix-openfinance` | `ConsentimentoOpenFinance`, `LogAcessoOpenFinance`, `TokenOpenFinance` | `ConsentimentoOpenFinanceService`, `OpenFinanceDataService`, `RateLimitService`, `TokenOpenFinanceService` |
+| `aurix-internet-banking` | `SessaoInternetBanking`, `TransacaoInternetBanking`, `LogAtividadeInternetBanking` | `InternetBankingService` |
+| `aurix-mobile-banking` | `SessaoMobile`, `DispositivoMobile`, `NotificacaoMobile` | `MobileBankingService` |
 
 **Justificativa:** Inteligência de negócio (BI, analytics, AI/ML) combinada com canais digitais (internet banking, mobile banking) e Open Finance. Canais digitais são camadas de apresentação thin — não têm domínio próprio.
 
@@ -175,7 +175,7 @@
 |---|---|---|---|
 | `ConciliacaoBancaria` | core, financial, settlement, accounting | **compliance** | Accounting é o dono da verdade contábil |
 | `SaldoConta` | accounting, settlement | **compliance** (accounting) | Dono é contabilidade |
-| `OutboxEvent` / `OutboxRelay` | core, pix, settlement | **aureus-shared** | Padrão técnico, não entidade de domínio — vira shared library |
+| `OutboxEvent` / `OutboxRelay` | core, pix, settlement | **aurix-shared** | Padrão técnico, não entidade de domínio — vira shared library |
 | `PacoteTarifas` / `Tarifa` | core, pricing | **banking-core** | Tarifação é do core bancário |
 | `PerfilRisco` / `AvaliacaoRisco` / `RegraRisco` | core, compliance, fraud | **fraud-risk** | Risco operacional é do domínio de fraude |
 | `Orcamento` / `PlanejamentoEstrategico` | controller, budget | **finance-mgmt** | Merge dos dois módulos |
@@ -184,7 +184,7 @@
 
 ## 3. Shared Library Strategy
 
-`aureus-shared` permanece como biblioteca Java (não serviço). Contém:
+`aurix-shared` permanece como biblioteca Java (não serviço). Contém:
 
 - **Event classes:** `OutboxEvent`, mensagens tipadas por domínio (ADR-0001)
 - **Base entities:** `BaseEntity`, `Auditable` — classes base, não entidades de domínio
@@ -227,18 +227,18 @@ A ordem segue dependências (domínios sem dependências primeiro):
 
 | Fase | Domínio | Merge destes módulos | Ação |
 |:---:|---|---|---|
-| F1 | `customer-identity` | `aureus-customer` + `aureus-kyc` + `aureus-onboarding` + `aureus-security` | Merge |
-| F2 | `banking-core` | `aureus-core` + `aureus-poupanca` + `aureus-salario` + `aureus-pricing` + `aureus-settlement` | Merge |
-| F3 | `payments` | `aureus-pix` + `aureus-bacen` (SPI/STR) | Merge |
-| F4 | `credit` | `aureus-credit` + `aureus-consignado` + `aureus-financiamento` | Merge |
-| F5 | `products` | `aureus-investimento` + `aureus-cambio` + `aureus-seguros` + `aureus-cartoes` + `aureus-treasury` + `aureus-guarantee` | Merge |
-| F6 | `fraud-risk` | `aureus-fraud` + modelos ML de `aureus-analytics` | Merge |
-| F7 | `compliance` | `aureus-compliance` + `aureus-audit` + `aureus-tax` + `aureus-accounting` + `aureus-bacen` (relatórios) | Merge |
-| F8 | `finance-mgmt` | `aureus-controller` + `aureus-budget` + `aureus-cost` + `aureus-financial` | Merge |
-| F9 | `platform` | `aureus-provisioning` + `aureus-billing` + `aureus-webhooks` + `aureus-notification` + `aureus-catalog` + `aureus-baas` + `aureus-organization` | Merge |
-| F10 | `intelligence` | `aureus-analytics` + `aureus-ai` + `aureus-openfinance` + `aureus-internet-banking` + `aureus-mobile-banking` | Merge |
+| F1 | `customer-identity` | `aurix-customer` + `aurix-kyc` + `aurix-onboarding` + `aurix-security` | Merge |
+| F2 | `banking-core` | `aurix-core` + `aurix-poupanca` + `aurix-salario` + `aurix-pricing` + `aurix-settlement` | Merge |
+| F3 | `payments` | `aurix-pix` + `aurix-bacen` (SPI/STR) | Merge |
+| F4 | `credit` | `aurix-credit` + `aurix-consignado` + `aurix-financiamento` | Merge |
+| F5 | `products` | `aurix-investimento` + `aurix-cambio` + `aurix-seguros` + `aurix-cartoes` + `aurix-treasury` + `aurix-guarantee` | Merge |
+| F6 | `fraud-risk` | `aurix-fraud` + modelos ML de `aurix-analytics` | Merge |
+| F7 | `compliance` | `aurix-compliance` + `aurix-audit` + `aurix-tax` + `aurix-accounting` + `aurix-bacen` (relatórios) | Merge |
+| F8 | `finance-mgmt` | `aurix-controller` + `aurix-budget` + `aurix-cost` + `aurix-financial` | Merge |
+| F9 | `platform` | `aurix-provisioning` + `aurix-billing` + `aurix-webhooks` + `aurix-notification` + `aurix-catalog` + `aurix-baas` + `aurix-organization` | Merge |
+| F10 | `intelligence` | `aurix-analytics` + `aurix-ai` + `aurix-openfinance` + `aurix-internet-banking` + `aurix-mobile-banking` | Merge |
 
-**Nota:** `aureus-gateway` é eliminado (Traefik já é o gateway real). `aureus-shared` permanece como biblioteca.
+**Nota:** `aurix-gateway` é eliminado (Traefik já é o gateway real). `aurix-shared` permanece como biblioteca.
 
 ---
 

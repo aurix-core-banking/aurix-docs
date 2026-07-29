@@ -2,7 +2,7 @@
 
 ## Goal
 
-Expand the `aureus-onboarding` module to support **Pessoa Jurídica** onboarding with a separate domain-specific flow while reusing a shared core (protocol, documents, events, integrations, audit, common services).
+Expand the `aurix-onboarding` module to support **Pessoa Jurídica** onboarding with a separate domain-specific flow while reusing a shared core (protocol, documents, events, integrations, audit, common services).
 
 ## Architecture
 
@@ -229,4 +229,4 @@ Rejeição possível em qualquer etapa: → `REJEITADA`
 
 ## 7. Dependências
 
-`aureus-onboarding` já depende de `aureus-shared`. O Cliente PJ consolidado (Sub-project 1) já existe em `aureus-shared`. O módulo `aureus-catalog` (Sub-project 2) não é dependência direta do onboarding — será usado pelo frontend para exibir ofertas durante o fluxo.
+`aurix-onboarding` já depende de `aurix-shared`. O Cliente PJ consolidado (Sub-project 1) já existe em `aurix-shared`. O módulo `aurix-catalog` (Sub-project 2) não é dependência direta do onboarding — será usado pelo frontend para exibir ofertas durante o fluxo.

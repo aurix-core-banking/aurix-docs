@@ -43,6 +43,6 @@ Solicitacoes de credito, produtos, simulador, decisao e workflow. Base URL: `htt
 
 | Metodo | Endpoint | Descricao |
 |--------|----------|-----------|
-| POST | /decisao/{solicitacaoId} | Retorna APPROVE / DECLINE / REFER, score e motivo. Consulta bureau (stub) e regras (aureus.credit.regras). |
+| POST | /decisao/{solicitacaoId} | Retorna APPROVE / DECLINE / REFER, score e motivo. Consulta bureau (stub) e regras (aurix.credit.regras). |
 
 Regras (config): score-min-aprovar (600), score-max-rejeitar (400). Entre os dois = REFER para analista.

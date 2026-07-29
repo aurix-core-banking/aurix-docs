@@ -1,8 +1,8 @@
-# Frontend Web — Onboarding PF/PJ (aureus-web)
+# Frontend Web — Onboarding PF/PJ (aurix-web)
 
 ## Overview
 
-Refatorar a página `/onboarding` do `aureus-web` (Internet Banking) para suportar abertura de conta **PF e PJ** integradas, com criação + acompanhamento pós-submissão.
+Refatorar a página `/onboarding` do `aurix-web` (Internet Banking) para suportar abertura de conta **PF e PJ** integradas, com criação + acompanhamento pós-submissão.
 
 ## Arquitetura
 

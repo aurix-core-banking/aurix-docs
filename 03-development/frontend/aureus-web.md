@@ -1,6 +1,6 @@
-# AUREUS Internet Banking - Frontend
+# AURIX Internet Banking - Frontend
 
-Frontend React para o AUREUS Internet Banking.
+Frontend React para o AURIX Internet Banking.
 
 ## Tecnologias
 

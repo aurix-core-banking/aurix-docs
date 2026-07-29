@@ -39,7 +39,7 @@ public interface BureauProvider {
 - Cliente HTTP REST (Spring `RestTemplate` / `WebClient`)
 - Endpoint configurável via `application-prod.yml`:
   ```yaml
-  aureus:
+  aurix:
     onboarding:
       bureau:
         serasa:
@@ -54,7 +54,7 @@ public interface BureauProvider {
 - Mesma interface `BureauProvider`, usado como fallback
 - Config separada:
   ```yaml
-  aureus:
+  aurix:
     onboarding:
       bureau:
         quod:
@@ -69,7 +69,7 @@ public interface BureauProvider {
 - Stub (`KycProviderStub`) permanece com `@Profile("!producao")`
 - `UnicoProvider` chama API REST da Unico (ex-ID One):
   ```yaml
-  aureus:
+  aurix:
     onboarding:
       kyc:
         unico:
@@ -121,7 +121,7 @@ public interface BureauProvider {
 
 ## Config
 ```yaml
-aureus:
+aurix:
   onboarding:
     bureau:
       serasa:

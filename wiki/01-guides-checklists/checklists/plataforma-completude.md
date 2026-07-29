@@ -8,8 +8,8 @@ Prioridades: **P0** = bloqueador (segurança/regulatório/financeiro, não pode 
 
 ## 1. Segurança – bloqueadores imediatos (P0)
 
-- [ ] **Remover todos os segredos hardcoded do repositório**: JWT secret e chave AES em `backend/aureus-security/.../application.yml` e `backend/aureus-compliance/.../application.yml`; senha de banco em claro; client secrets OAuth em `infrastructure/iam/keycloak/import/aureus-clients.json`. Migrar para secret manager (Vault/AWS Secrets Manager/Azure Key Vault) ou no mínimo variáveis de ambiente injetadas em runtime.
-- [ ] **Trocar todas as senhas padrão** (`aureus123`, `admin123`) em `infrastructure/docker-compose.yml`, `docker-compose.dev.yml`, `infrastructure/juju/bundle.yaml`, `aureus-data-pipelines/dbt/profiles.yml` — hoje idênticas entre "dev" e "prod".
+- [ ] **Remover todos os segredos hardcoded do repositório**: JWT secret e chave AES em `backend/aurix-security/.../application.yml` e `backend/aurix-compliance/.../application.yml`; senha de banco em claro; client secrets OAuth em `infrastructure/iam/keycloak/import/aurix-clients.json`. Migrar para secret manager (Vault/AWS Secrets Manager/Azure Key Vault) ou no mínimo variáveis de ambiente injetadas em runtime.
+- [ ] **Trocar todas as senhas padrão** (`aurix123`, `admin123`) em `infrastructure/docker-compose.yml`, `docker-compose.dev.yml`, `infrastructure/juju/bundle.yaml`, `aurix-data-pipelines/dbt/profiles.yml` — hoje idênticas entre "dev" e "prod".
 - [ ] **Corrigir geração de TOTP/MFA**: `MfaService.java` usa `random.nextInt` em vez de RFC 6238; comparação de token/biometria via `String.equals` (vulnerável a timing attack) — usar comparação em tempo constante.
 - [ ] **Habilitar TLS no Nginx** (`infrastructure/nginx/nginx.conf` só escuta porta 80) e configurar rate limiting (`limit_req`/`limit_conn`). Avaliar necessidade de WAF.
 - [ ] **Gitleaks/scan de histórico**: rodar scan retroativo no git history para confirmar se algum segredo já exposto precisa ser rotacionado (não só removido do HEAD).
@@ -22,10 +22,10 @@ Prioridades: **P0** = bloqueador (segurança/regulatório/financeiro, não pode 
 - [ ] **Implementar idempotência em endpoints financeiros** (PIX, settlement, billing) — chave de idempotência por requisição para evitar duplicidade em retry de cliente.
 - [ ] **Implementar limites PIX** (valor por transação, limite noturno, limite diário) — hoje inexistentes tanto na documentação quanto no código.
 - [ ] **Implementar MED (Mecanismo Especial de Devolução)** e fluxo de portabilidade de chave/SPI-DICT real.
-- [ ] **Corrigir geradores de relatório BACEN** (`CosifReportGenerator`, `ScrCcsReportGenerator`, `EFinanceiraReportGenerator` etc. em `aureus-bacen`) — hoje produzem dados fake (CNPJ fixo, saldo zero); qualquer envio real ao Bacen como está seria submissão incorreta.
+- [ ] **Corrigir geradores de relatório BACEN** (`CosifReportGenerator`, `ScrCcsReportGenerator`, `EFinanceiraReportGenerator` etc. em `aurix-bacen`) — hoje produzem dados fake (CNPJ fixo, saldo zero); qualquer envio real ao Bacen como está seria submissão incorreta.
 - [ ] **Implementar SPED/SCR de fato** — hoje apenas estrutura de classe com campos genéricos.
 - [x] **PIX não movimenta saldo nenhum** — corrigido: `PixTransferenciaService.processarTransferencia` agora debita a conta origem atomicamente e credita o destino quando a chave PIX resolve para uma conta local, seguindo o padrão do [ADR-0002](../../../02-technical/arquitetura/adr/0002-jpa-vs-sql-nativo-fluxos-financeiros.md).
-- [x] **Corrigir race condition em atualização de saldo** — corrigido em `aureus-core` (`ContaRepository`/`ContaService`, `UPDATE` atômico condicional) e `aureus-settlement` (`SaldoContaRepository`/`SettlementService.movimentarSaldos`, mesmo padrão; também corrigido um bug onde o saldo era movimentado mesmo em liquidação rejeitada). Pendente: **unificar a fonte de saldo** (`Conta.saldo` vs `SaldoConta` duplicados) — é migração de dado real, ver [ADR-0002](../../../02-technical/arquitetura/adr/0002-jpa-vs-sql-nativo-fluxos-financeiros.md).
+- [x] **Corrigir race condition em atualização de saldo** — corrigido em `aurix-core` (`ContaRepository`/`ContaService`, `UPDATE` atômico condicional) e `aurix-settlement` (`SaldoContaRepository`/`SettlementService.movimentarSaldos`, mesmo padrão; também corrigido um bug onde o saldo era movimentado mesmo em liquidação rejeitada). Pendente: **unificar a fonte de saldo** (`Conta.saldo` vs `SaldoConta` duplicados) — é migração de dado real, ver [ADR-0002](../../../02-technical/arquitetura/adr/0002-jpa-vs-sql-nativo-fluxos-financeiros.md).
 
 ## 3. Compliance, AML/PLD e LGPD reais (P0 — exigência legal)
 
@@ -51,8 +51,8 @@ Prioridades: **P0** = bloqueador (segurança/regulatório/financeiro, não pode 
 
 ## 6. Testes automatizados (P0 para módulos críticos)
 
-- [ ] **Cobrir com testes**: `aureus-bacen`, `aureus-settlement`, `aureus-compliance`, `aureus-security`, `aureus-credit` — hoje com **zero testes**.
-- [ ] **Expandir testes em `aureus-core`** (apenas 5 testes para 100 classes).
+- [ ] **Cobrir com testes**: `aurix-bacen`, `aurix-settlement`, `aurix-compliance`, `aurix-security`, `aurix-credit` — hoje com **zero testes**.
+- [ ] **Expandir testes em `aurix-core`** (apenas 5 testes para 100 classes).
 - [ ] **Vincular Checkstyle/PMD/SpotBugs ao lifecycle `verify`** do Maven (hoje configurados mas não bloqueiam build) e revisar `checkstyle-suppressions.xml` (atualmente desativa ~31 regras relevantes).
 - [ ] **Substituir `throw new RuntimeException(...)` genérico** por hierarquia de exceções de domínio com mapeamento HTTP consistente (padrão repetido em quase todos os módulos).
 
@@ -61,7 +61,7 @@ Prioridades: **P0** = bloqueador (segurança/regulatório/financeiro, não pode 
 - [ ] **Substituir módulos Terraform mock** (`null_resource` com outputs simulados como `vpc_id = "vpc-stub-..."`) por recursos reais provisionáveis (VPC, banco gerenciado, cluster Kubernetes).
 - [ ] **Configurar backend remoto de state** (S3+DynamoDB ou equivalente) — hoje sem gestão de state.
 - [ ] **Criar tfvars por ambiente** (dev/staging/produção) — hoje só uma variável `environment` default `dev`.
-- [ ] **Criar manifests Kubernetes para os 28 serviços que não têm** (hoje só `aureus-core` tem deployment completo com probes/limits).
+- [ ] **Criar manifests Kubernetes para os 28 serviços que não têm** (hoje só `aurix-core` tem deployment completo com probes/limits).
 - [ ] **Adicionar HPA, NetworkPolicy e PodDisruptionBudget**.
 - [ ] **Implantar gestão de segredos em runtime** (Vault, AWS/Azure Secrets Manager, ou sealed-secrets no Kubernetes) com rotação de credenciais.
 
@@ -79,54 +79,54 @@ Prioridades: **P0** = bloqueador (segurança/regulatório/financeiro, não pode 
 
 ## 10. Frontend (P1/P2)
 
-- [ ] **aureus-mobile**: implementar autenticação real (hoje `mock_jwt_token_...`, senha fixa `123456`, sem chamada de rede real) e inicializar projeto nativo (faltam pastas `android/`/`ios/` — não builda como app nativo hoje).
-- [ ] **aureus-web**: remover dados mock de `Dashboard.js`/`Contas.js` e o fallback `'mock_token'` no login; completar fluxo de solicitação de crédito (`Credito.js` é um esqueleto de 42 linhas).
-- [ ] **Adicionar testes reais** (Cypress está configurado em `aureus-web` mas sem specs; Jest configurado em mobile sem specs) nos 3 apps, com foco nos fluxos de PIX, login e transações.
+- [ ] **aurix-mobile**: implementar autenticação real (hoje `mock_jwt_token_...`, senha fixa `123456`, sem chamada de rede real) e inicializar projeto nativo (faltam pastas `android/`/`ios/` — não builda como app nativo hoje).
+- [ ] **aurix-web**: remover dados mock de `Dashboard.js`/`Contas.js` e o fallback `'mock_token'` no login; completar fluxo de solicitação de crédito (`Credito.js` é um esqueleto de 42 linhas).
+- [ ] **Adicionar testes reais** (Cypress está configurado em `aurix-web` mas sem specs; Jest configurado em mobile sem specs) nos 3 apps, com foco nos fluxos de PIX, login e transações.
 
 ---
 
 ## 11. Oportunidade estratégica: CRM de originação próprio com conector Salesforce
 
-**Situação atual**: não existe nenhum módulo de CRM/funil de vendas. `aureus-onboarding` só começa a atuar quando já existe uma `SolicitacaoConta` formal (ou seja, depois que o lead já decidiu abrir conta); `aureus-organization` é voltado para gestão interna/RH, não para originação de clientes.
+**Situação atual**: não existe nenhum módulo de CRM/funil de vendas. `aurix-onboarding` só começa a atuar quando já existe uma `SolicitacaoConta` formal (ou seja, depois que o lead já decidiu abrir conta); `aurix-organization` é voltado para gestão interna/RH, não para originação de clientes.
 
-**Oportunidade**: criar um módulo `aureus-crm` (ou `aureus-origination`) responsável pelo funil de vendas anterior ao onboarding formal — Lead, Oportunidade, Funil/Etapa, Vendedor/Parceiro, Atividade — reaproveitando o padrão arquitetural já usado em `aureus-onboarding` (interface de serviço + stub) e em `aureus-organization` (Workflow/EtapaWorkflow) para manter o domínio desacoplado.
+**Oportunidade**: criar um módulo `aurix-crm` (ou `aurix-origination`) responsável pelo funil de vendas anterior ao onboarding formal — Lead, Oportunidade, Funil/Etapa, Vendedor/Parceiro, Atividade — reaproveitando o padrão arquitetural já usado em `aurix-onboarding` (interface de serviço + stub) e em `aurix-organization` (Workflow/EtapaWorkflow) para manter o domínio desacoplado.
 
 - [ ] **Modelar domínio de originação**: entidades `Lead`, `Oportunidade`, `Funil`, `EtapaFunil`, `Vendedor/Parceiro`, `Atividade` (ligação posterior com `SolicitacaoConta` do onboarding quando o lead converte).
 - [ ] **Expor API REST própria** para captura de leads (formulário web, parceiros, indicação) e gestão do funil — usar isso como CRM nativo padrão, mais barato e já integrado aos dados do core (crédito, score, histórico).
-- [ ] **Desenhar a porta de integração antes de implementar o CRM nativo**: interface `OriginationCrmPort` (paralelo ao padrão `BureauService`/`BureauStub`) com duas implementações possíveis — `NativeCrmAdapter` (banco de dados próprio) e `SalesforceCrmAdapter` (Sales Cloud) — selecionável por tenant via `aureus-provisioning`, que já existe para configuração multi-tenant.
-- [ ] **Sincronização com Salesforce**: usar `aureus-webhooks` (já existe o mecanismo de dispatch genérico) para publicar eventos (`origination.lead.created`, `origination.opportunity.won`, `origination.lead.converted`) e consumir change events do Salesforce (Platform Events ou polling via REST/Bulk API) para manter os dois lados sincronizados quando o cliente final optar por usar Salesforce.
-- [ ] **Decidir modelo de dado mestre**: ao usar Salesforce, definir se Salesforce é "system of engagement" (vendas) e AUREUS continua "system of record" para entidades regulatórias (Cliente, Conta, Crédito) — evita duplicar verdade sobre dados sensíveis/regulados em uma ferramenta de terceiro.
+- [ ] **Desenhar a porta de integração antes de implementar o CRM nativo**: interface `OriginationCrmPort` (paralelo ao padrão `BureauService`/`BureauStub`) com duas implementações possíveis — `NativeCrmAdapter` (banco de dados próprio) e `SalesforceCrmAdapter` (Sales Cloud) — selecionável por tenant via `aurix-provisioning`, que já existe para configuração multi-tenant.
+- [ ] **Sincronização com Salesforce**: usar `aurix-webhooks` (já existe o mecanismo de dispatch genérico) para publicar eventos (`origination.lead.created`, `origination.opportunity.won`, `origination.lead.converted`) e consumir change events do Salesforce (Platform Events ou polling via REST/Bulk API) para manter os dois lados sincronizados quando o cliente final optar por usar Salesforce.
+- [ ] **Decidir modelo de dado mestre**: ao usar Salesforce, definir se Salesforce é "system of engagement" (vendas) e AURIX continua "system of record" para entidades regulatórias (Cliente, Conta, Crédito) — evita duplicar verdade sobre dados sensíveis/regulados em uma ferramenta de terceiro.
 - [ ] **Roadmap de fases**: (1) CRM nativo mínimo cobrindo captura de lead → conversão em `SolicitacaoConta`; (2) eventos de webhook para integrações externas; (3) adapter Salesforce sob demanda, sem reescrever o domínio.
 
 ## 12. Avaliação: ERP de contabilidade/fiscal/financeiro agregado ao core
 
 **Situação atual**: o "ERP" já existe parcialmente, espalhado em três módulos hoje desenvolvidos de forma isolada:
-- `aureus-financial` — contas a pagar/receber, fluxo de caixa, fornecedor (claramente back-office da própria instituição, não livro do cliente final).
-- `aureus-accounting` — plano de contas, lançamento contábil, IFRS9/ECL (o módulo mais maduro do backend hoje).
-- `aureus-tax` — impostos, retenção, SPED (hoje em estágio inicial, ver seção 5).
+- `aurix-financial` — contas a pagar/receber, fluxo de caixa, fornecedor (claramente back-office da própria instituição, não livro do cliente final).
+- `aurix-accounting` — plano de contas, lançamento contábil, IFRS9/ECL (o módulo mais maduro do backend hoje).
+- `aurix-tax` — impostos, retenção, SPED (hoje em estágio inicial, ver seção 5).
 
-**Achado relevante**: há duplicação de entidades entre módulos — `ConciliacaoBancaria` existe de forma independente em **quatro** módulos (`aureus-core`, `aureus-financial`, `aureus-accounting`, `aureus-settlement`) e `Cliente` existe de forma independente em pelo menos quatro lugares (`aureus-core`, `aureus-financial`, `aureus-credit`, `aureus-shared`). Isso indica que os módulos foram criados em paralelo sem um domínio compartilhado consistente — sintoma comum de "esqueleto plausível" sem integração real.
+**Achado relevante**: há duplicação de entidades entre módulos — `ConciliacaoBancaria` existe de forma independente em **quatro** módulos (`aurix-core`, `aurix-financial`, `aurix-accounting`, `aurix-settlement`) e `Cliente` existe de forma independente em pelo menos quatro lugares (`aurix-core`, `aurix-financial`, `aurix-credit`, `aurix-shared`). Isso indica que os módulos foram criados em paralelo sem um domínio compartilhado consistente — sintoma comum de "esqueleto plausível" sem integração real.
 
 **Recomendação**: faz sentido consolidar, mas não é necessário criar um quarto módulo do zero — o núcleo de ERP já está desenhado, falta integração e maturidade:
 
 - [ ] **Definir fronteira clara do domínio "ERP interno"**: este conjunto cuida das finanças/contabilidade/fiscal da **instituição financeira em si** (CAPEX, fornecedores, livro contábil, impostos da empresa) — separado do livro de clientes (saldo/extrato) que pertence ao core banking. Documentar essa fronteira para evitar mais duplicação.
-- [ ] **Eliminar duplicação de `ConciliacaoBancaria` e `Cliente`**: migrar para `aureus-shared` como fonte única, com os módulos consumindo via API/evento em vez de entidade própria.
-- [ ] **Fechar o ciclo financeiro automaticamente**: lançamento de fatura em `aureus-billing` deve gerar `ContaReceber` em `aureus-financial` e lançamento em `aureus-accounting` automaticamente (hoje não há evidência dessa integração ponta a ponta).
-- [ ] **Conectar `aureus-tax` ao fluxo de billing/settlement** para cálculo automático de impostos sobre receita/operações, em vez de cálculo manual isolado.
-- [ ] **Avaliar exposição como produto multi-tenant** (ERP-as-a-service para instituições clientes do BaaS) alinhado ao roadmap SaaS já mencionado em commits recentes — decisão de produto, não só técnica: o ERP interno serve só a própria operação da AUREUS, ou se torna oferta para os tenants?
+- [ ] **Eliminar duplicação de `ConciliacaoBancaria` e `Cliente`**: migrar para `aurix-shared` como fonte única, com os módulos consumindo via API/evento em vez de entidade própria.
+- [ ] **Fechar o ciclo financeiro automaticamente**: lançamento de fatura em `aurix-billing` deve gerar `ContaReceber` em `aurix-financial` e lançamento em `aurix-accounting` automaticamente (hoje não há evidência dessa integração ponta a ponta).
+- [ ] **Conectar `aurix-tax` ao fluxo de billing/settlement** para cálculo automático de impostos sobre receita/operações, em vez de cálculo manual isolado.
+- [ ] **Avaliar exposição como produto multi-tenant** (ERP-as-a-service para instituições clientes do BaaS) alinhado ao roadmap SaaS já mencionado em commits recentes — decisão de produto, não só técnica: o ERP interno serve só a própria operação da AURIX, ou se torna oferta para os tenants?
 - [ ] Após consolidação, tratar os itens da seção 5 (cálculo fiscal real) como parte deste núcleo, não como módulo isolado.
 
 ---
 
 ## 13. Comunicação entre serviços/módulos (P1)
 
-Padrão formalizado em [ADR-0001](../../../02-technical/arquitetura/adr/0001-comunicacao-entre-servicos.md): REST com client gerado de OpenAPI para chamadas síncronas, Kafka com outbox transacional para eventos de domínio, saga coreografada para fluxos multi-módulo. Hoje a adoção é parcial — só `aureus-core` e `aureus-pix` publicam eventos, e há clients REST escritos à mão em vez de gerados.
+Padrão formalizado em [ADR-0001](../../../02-technical/arquitetura/adr/0001-comunicacao-entre-servicos.md): REST com client gerado de OpenAPI para chamadas síncronas, Kafka com outbox transacional para eventos de domínio, saga coreografada para fluxos multi-módulo. Hoje a adoção é parcial — só `aurix-core` e `aurix-pix` publicam eventos, e há clients REST escritos à mão em vez de gerados.
 
-- [ ] **Migrar clients REST escritos à mão** (`CoreApiClient` em `aureus-onboarding`, `CoreApiClientImpl` em `aureus-openfinance`) para clients gerados a partir do OpenAPI do `aureus-core`.
-- [ ] **Expandir `aureus-api-specs`** para cobrir todos os módulos (hoje só `aureus-core.yaml` existe) e adicionar AsyncAPI para os tópicos Kafka.
-- [ ] **Adotar outbox transacional** nos módulos que mudam estado financeiro crítico sem publicar eventos: `aureus-settlement`, `aureus-billing`, `aureus-bacen`, `aureus-treasury`, `aureus-credit`, `aureus-tax`, `aureus-accounting`.
-- [ ] **Resolver dependências Kafka mortas** (declaradas no `pom.xml` mas nunca usadas): `aureus-analytics`, `aureus-audit`, `aureus-compliance`, `aureus-security` — adotar uso real (ex.: analytics/audit/compliance como consumidores) ou remover a dependência. (`aureus-gateway` já resolvido — dependência removida.)
-- [x] **Mover `EventListener` de `aureus-shared` para os serviços donos** de cada evento — feito: removido de `aureus-shared`; os 3 listeners com lógica real foram para `aureus-core/.../event/ContaTransacaoEventListener.java` (com lookups reais no lugar dos dados fabricados); os outros 5 (sem nenhum publicador) foram removidos.
+- [ ] **Migrar clients REST escritos à mão** (`CoreApiClient` em `aurix-onboarding`, `CoreApiClientImpl` em `aurix-openfinance`) para clients gerados a partir do OpenAPI do `aurix-core`.
+- [ ] **Expandir `aurix-api-specs`** para cobrir todos os módulos (hoje só `aurix-core.yaml` existe) e adicionar AsyncAPI para os tópicos Kafka.
+- [ ] **Adotar outbox transacional** nos módulos que mudam estado financeiro crítico sem publicar eventos: `aurix-settlement`, `aurix-billing`, `aurix-bacen`, `aurix-treasury`, `aurix-credit`, `aurix-tax`, `aurix-accounting`.
+- [ ] **Resolver dependências Kafka mortas** (declaradas no `pom.xml` mas nunca usadas): `aurix-analytics`, `aurix-audit`, `aurix-compliance`, `aurix-security` — adotar uso real (ex.: analytics/audit/compliance como consumidores) ou remover a dependência. (`aurix-gateway` já resolvido — dependência removida.)
+- [x] **Mover `EventListener` de `aurix-shared` para os serviços donos** de cada evento — feito: removido de `aurix-shared`; os 3 listeners com lógica real foram para `aurix-core/.../event/ContaTransacaoEventListener.java` (com lookups reais no lugar dos dados fabricados); os outros 5 (sem nenhum publicador) foram removidos.
 - [ ] **Padronizar nome de tópico** para `<dominio>.<entidade>.<evento>.<versao>` (hoje são nomes planos como `conta-criada`, sem domínio nem versão).
 - [x] **Corrigir `EventHub.publishEventWithDelay`** (e `publishEventWithRetryInternal`, mesmo bug) — agora usam `ScheduledExecutorService` em vez de `Thread.sleep` bloqueante.
 

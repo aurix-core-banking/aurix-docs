@@ -6,9 +6,9 @@ Documentação dos scripts e mecanismos de seed para produtos de crédito, tarif
 
 ## Onde estão os seeds
 
-- **Planos (billing)**: módulo `aureus-billing` possui `PlanoDataLoader` que, na primeira subida (`aureus.billing.seed-planos: true`), insere os planos STARTER, GROWTH e ENTERPRISE. Desativar em produção se os planos forem criados manualmente ou por script próprio.
-- **Produtos de crédito**: módulo `aureus-credit` utiliza entidade `ProdutoCredito`; não há seed padrão. Os scripts abaixo ou a API de administração devem criar os produtos por tenant.
-- **Tarifas**: módulo `aureus-pricing` possui entidades de tarifa e pacotes; a carga inicial pode ser feita via API ou script SQL/import.
+- **Planos (billing)**: módulo `aurix-billing` possui `PlanoDataLoader` que, na primeira subida (`aurix.billing.seed-planos: true`), insere os planos STARTER, GROWTH e ENTERPRISE. Desativar em produção se os planos forem criados manualmente ou por script próprio.
+- **Produtos de crédito**: módulo `aurix-credit` utiliza entidade `ProdutoCredito`; não há seed padrão. Os scripts abaixo ou a API de administração devem criar os produtos por tenant.
+- **Tarifas**: módulo `aurix-pricing` possui entidades de tarifa e pacotes; a carga inicial pode ser feita via API ou script SQL/import.
 
 ---
 
@@ -39,7 +39,7 @@ Repetir para outros produtos (capital de giro, CDC, etc.) conforme catálogo da 
 
 ### 2. Tarifas e parâmetros
 
-- **Tarifas**: usar a API do módulo `aureus-pricing` para cadastrar tarifas por operação (PIX, TED, saque, etc.) ou importar via script que insere em `aureus.pacote_tarifas` e tabelas relacionadas.
+- **Tarifas**: usar a API do módulo `aurix-pricing` para cadastrar tarifas por operação (PIX, TED, saque, etc.) ou importar via script que insere em `aurix.pacote_tarifas` e tabelas relacionadas.
 - **Parâmetros gerais**: se existir tabela de parâmetros por tenant, popular com valores default (limites, prazos, flags) no momento do provisioning ou via script pós-provisioning.
 
 ### 3. Dados de exemplo (sandbox/homolog)
@@ -69,8 +69,8 @@ A implementação desse passo pode ser um endpoint interno (ex.: `POST /api/prov
 ## Referências
 
 - [Portal do desenvolvedor – sandbox](../../03-development/portal-desenvolvedor/sandbox.md)
-- Módulo aureus-billing: `PlanoDataLoader` e README
-- Módulo aureus-credit: API de produtos de crédito
-- Módulo aureus-pricing: API de tarifas
+- Módulo aurix-billing: `PlanoDataLoader` e README
+- Módulo aurix-credit: API de produtos de crédito
+- Módulo aurix-pricing: API de tarifas
 
 [Voltar ao kit](README.md) | [Índice da wiki](../../README.md)

@@ -1,8 +1,8 @@
-# AUREUS Conta Salário — Design Specification
+# AURIX Conta Salário — Design Specification
 
 ## 1. Visão Geral
 
-Módulo dedicado `aureus-salario` para gestão de contas salário, convênios com empresas,
+Módulo dedicado `aurix-salario` para gestão de contas salário, convênios com empresas,
 portabilidade de salário, e processamento de folha de pagamento via CNAB 240.
 
 **Porta**: 8112
@@ -12,7 +12,7 @@ portabilidade de salário, e processamento de folha de pagamento via CNAB 240.
 
 | Decisão | Escolha |
 |---------|---------|
-| Arquitetura | Módulo dedicado (`aureus-salario`), mesma abordagem de `aureus-poupanca` |
+| Arquitetura | Módulo dedicado (`aurix-salario`), mesma abordagem de `aurix-poupanca` |
 | Folha de pagamento | Interna com CNAB 240 + API REST complementar |
 | Portabilidade | Sob demanda via app |
 | Depósito não-salário | Redirecionar para conta corrente vinculada |
@@ -28,9 +28,9 @@ portabilidade de salário, e processamento de folha de pagamento via CNAB 240.
 ## 3. Estrutura do Módulo
 
 ```
-aureus-salario/
-├── src/main/java/com/aureus/platform/salario/
-│   ├── AureusSalarioApplication.java           (@SpringBootApplication, @EnableScheduling)
+aurix-salario/
+├── src/main/java/com/aurix/platform/salario/
+│   ├── AurixSalarioApplication.java           (@SpringBootApplication, @EnableScheduling)
 │   ├── entity/
 │   │   ├── ContaSalario.java                   (FK lógica → Conta do core)
 │   │   ├── ConvenioEmpresa.java                (empresa conveniada)
@@ -235,12 +235,12 @@ Job noturno (ProcessamentoFolhaJob @Scheduled cron="0 3 * * *")
 
 ## 9. Dependências (pom.xml)
 
-Mesmas do `aureus-poupanca` (Spring Boot Starters JPA, Validation, Web, Security, Kafka, Test)
+Mesmas do `aurix-poupanca` (Spring Boot Starters JPA, Validation, Web, Security, Kafka, Test)
 + `spring-boot-starter-batch` (processamento em lote do CNAB — opcional, pode ser @Scheduled simples)
 
 ## 10. Plano de Implementação Sugerido
 
-1. **Scaffold**: pom.xml, AureusSalarioApplication, application.yml, gateway route, parent pom
+1. **Scaffold**: pom.xml, AurixSalarioApplication, application.yml, gateway route, parent pom
 2. **Domínio**: 5 entidades, 5 repos, DTOs, events, package-info
 3. **HTTP Clients**: ContaCorrenteClient, SalarioHttpConfig
 4. **Config**: Kafka, Security, CnabConfig

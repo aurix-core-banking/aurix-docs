@@ -1,12 +1,12 @@
-# AUREUS - Roadmap e Visão do Produto
+# AURIX - Roadmap e Visão do Produto
 
-Este documento descreve as capacidades atuais da plataforma AUREUS e a nossa visão para o futuro, com foco especial na evolução para um Data Lakehouse moderno e integrado.
+Este documento descreve as capacidades atuais da plataforma AURIX e a nossa visão para o futuro, com foco especial na evolução para um Data Lakehouse moderno e integrado.
 
 ---
 
 ## 1. Visão Geral da Plataforma
 
-A AUREUS é uma solução de Core Banking completa, projetada para atender às demandas do mercado brasileiro com alta performance, conformidade nativa e uma arquitetura orientada a dados.
+A AURIX é uma solução de Core Banking completa, projetada para atender às demandas do mercado brasileiro com alta performance, conformidade nativa e uma arquitetura orientada a dados.
 
 A plataforma já oferece suporte robusto para:
 - **Ecossistema Financeiro**: PIX, Crédito, Tesouraria, Liquidação e Pricing.
@@ -41,7 +41,7 @@ Geração nativa de relatórios fundamentais para o BACEN e Receita Federal, com
 
 ## 3. Direcionamento e Evolução (Roadmap)
 
-Nosso foco principal está na consolidação do **Data Lakehouse AUREUS**, transformando a plataforma em uma potência analítica.
+Nosso foco principal está na consolidação do **Data Lakehouse AURIX**, transformando a plataforma em uma potência analítica.
 
 ### Integração de Dados Modernas
 - **Orquestração Inteligente**: Expansão do uso do Apache Airflow para gerenciar pipelines complexos de ingestão e transformação.

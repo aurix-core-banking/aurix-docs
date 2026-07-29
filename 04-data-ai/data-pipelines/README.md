@@ -1,8 +1,8 @@
-# AUREUS Data Pipeline - Sistema Completo de Processamento de Dados
+# AURIX Data Pipeline - Sistema Completo de Processamento de Dados
 
 ## Visao Geral
 
-O AUREUS Data Pipeline e um sistema completo de processamento de dados em tempo real e batch para o AUREUS Core Banking Platform. Ele inclui componentes para analytics, machine learning, compliance LGPD e auditoria de dados.
+O AURIX Data Pipeline e um sistema completo de processamento de dados em tempo real e batch para o AURIX Core Banking Platform. Ele inclui componentes para analytics, machine learning, compliance LGPD e auditoria de dados.
 
 ## Arquitetura
 
@@ -35,4 +35,4 @@ O AUREUS Data Pipeline e um sistema completo de processamento de dados em tempo 
 
 ---
 
-**AUREUS Core Banking Platform** - O padrao de excelencia financeira
+**AURIX Core Banking Platform** - O padrao de excelencia financeira

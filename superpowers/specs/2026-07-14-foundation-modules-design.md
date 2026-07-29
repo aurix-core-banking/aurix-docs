@@ -1,6 +1,6 @@
 # Foundation Modules — Design Spec (Fase 1)
 
-> **Objetivo:** Implementar 4 módulos de fundação para a plataforma AUREUS: Customer, KYC, Fraud, Notification.
+> **Objetivo:** Implementar 4 módulos de fundação para a plataforma AURIX: Customer, KYC, Fraud, Notification.
 > **Prioridade:** Valor de negócio (Adquirência, Cobrança, Garantias na Fase 2 dependem destes).
 > **Arquitetura:** Microsserviços Spring Boot 4.1.0 + Kafka + PostgreSQL. Mesmo padrão dos 37 módulos existentes.
 
@@ -24,17 +24,17 @@
 
 - **Comunicação síncrona:** REST entre serviços (consultas pontuais)
 - **Comunicação assíncrona:** Kafka para eventos de domínio
-- **Cada módulo:** microsserviço independente com seu banco PostgreSQL (schema `aureus`)
+- **Cada módulo:** microsserviço independente com seu banco PostgreSQL (schema `aurix`)
 
 ## Módulos
 
-### 1. aureus-customer
+### 1. aurix-customer
 
 **Propósito:** Cadastro único de clientes (PF/PJ), perfis, segmentação, contatos, endereços.
 
 **Porta:** 8123
 **Context path:** `/api/customer`
-**Kafka consumer group:** `aureus-customer-group`
+**Kafka consumer group:** `aurix-customer-group`
 
 #### Entidades
 
@@ -65,13 +65,13 @@
 - `cliente.atualizado` — dados alterados
 - `cliente.status.alterado` — ativo/bloqueado/inativo
 
-### 2. aureus-kyc
+### 2. aurix-kyc
 
 **Propósito:** Validação documental, biometria, consulta PEP, score de risco do cliente.
 
 **Porta:** 8124
 **Context path:** `/api/kyc`
-**Kafka consumer group:** `aureus-kyc-group`
+**Kafka consumer group:** `aurix-kyc-group`
 
 #### Entidades
 
@@ -99,13 +99,13 @@
 Consume: `cliente.criado` (inicia workflow)
 Produz: `kyc.aprovado`, `kyc.rejeitado`, `kyc.documento.analise`
 
-### 3. aureus-fraud
+### 3. aurix-fraud
 
 **Propósito:** Scoring de risco em tempo real, regras de fraude, monitoramento transacional.
 
 **Porta:** 8125
 **Context path:** `/api/fraud`
-**Kafka consumer group:** `aureus-fraud-group`
+**Kafka consumer group:** `aurix-fraud-group`
 
 #### Entidades
 
@@ -134,13 +134,13 @@ Produz: `kyc.aprovado`, `kyc.rejeitado`, `kyc.documento.analise`
 Consume: `cliente.criado`, `kyc.aprovado`, `pix.transferencia.criada`, `credito.solicitacao.criada`, `cartoes.transacao.autorizada`
 Produz: `fraude.transacao.bloqueada`, `fraude.ocorrencia.criada`, `fraude.score.alterado`
 
-### 4. aureus-notification
+### 4. aurix-notification
 
 **Propósito:** Envio multicanal de notificações (Email, SMS, Push, WhatsApp).
 
 **Porta:** 8126
 **Context path:** `/api/notification`
-**Kafka consumer group:** `aureus-notification-group`
+**Kafka consumer group:** `aurix-notification-group`
 
 #### Entidades
 
@@ -172,10 +172,10 @@ Produz: `notificacao.enviada`, `notificacao.falhou`
 
 | Módulo | Porta | Context Path | Grupo Kafka |
 |--------|-------|-------------|-------------|
-| aureus-customer | 8123 | `/api/customer` | aureus-customer-group |
-| aureus-kyc | 8124 | `/api/kyc` | aureus-kyc-group |
-| aureus-fraud | 8125 | `/api/fraud` | aureus-fraud-group |
-| aureus-notification | 8126 | `/api/notification` | aureus-notification-group |
+| aurix-customer | 8123 | `/api/customer` | aurix-customer-group |
+| aurix-kyc | 8124 | `/api/kyc` | aurix-kyc-group |
+| aurix-fraud | 8125 | `/api/fraud` | aurix-fraud-group |
+| aurix-notification | 8126 | `/api/notification` | aurix-notification-group |
 
 ## Infra a adicionar
 
@@ -185,7 +185,7 @@ Por módulo:
 - application.yml (porta, context-path, datasource, kafka, redis)
 - Entrada no `docker-compose.yml` (imagem, porta, env vars, healthcheck, depends_on)
 - Entrada no `infrastructure/traefik/dynamic.yml` (router + service)
-- Entrada no `aureus-tests/e2e/config.py` (health endpoint)
+- Entrada no `aurix-tests/e2e/config.py` (health endpoint)
 - Módulo adicionado ao `backend/pom.xml` (`<modules>`)
 
 ## Dependências entre fases

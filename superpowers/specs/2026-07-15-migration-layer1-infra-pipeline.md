@@ -71,7 +71,7 @@ routers:
   # Rota LEGACY — fallback quando header ausente
   customer-legacy:
     rule: "PathPrefix(`/api/customer`)"
-    service: customer            # aureus-customer atual
+    service: customer            # aurix-customer atual
     priority: 100
 ```
 
@@ -123,19 +123,19 @@ services:
     environment:
       SERVER_PORT: 8200
       SPRING_PROFILES_ACTIVE: docker
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/aureus_db
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-aureus_user}
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-aureus_dev_password}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/aurix_db
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-aurix_user}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-aurix_dev_password}
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       SPRING_REDIS_HOST: redis
       SPRING_REDIS_PORT: 6379
-      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://keycloak:8080/realms/aureus
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://keycloak:8080/realms/aurix
     depends_on:
       postgres: { condition: service_healthy }
       kafka: { condition: service_healthy }
       redis: { condition: service_started }
     networks:
-      - aureus-network
+      - aurix-network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8200/actuator/health"]
       interval: 30s
@@ -156,17 +156,17 @@ services:
     environment:
       SERVER_PORT: 8201
       SPRING_PROFILES_ACTIVE: docker
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/aureus_db
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-aureus_user}
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-aureus_dev_password}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/aurix_db
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-aurix_user}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-aurix_dev_password}
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       SPRING_REDIS_HOST: redis
-      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://keycloak:8080/realms/aureus
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://keycloak:8080/realms/aurix
     depends_on:
       postgres: { condition: service_healthy }
       kafka: { condition: service_healthy }
     networks:
-      - aureus-network
+      - aurix-network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8201/actuator/health"]
       interval: 30s
@@ -187,17 +187,17 @@ services:
     environment:
       SERVER_PORT: 8202
       SPRING_PROFILES_ACTIVE: docker
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/aureus_db
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-aureus_user}
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-aureus_dev_password}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/aurix_db
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-aurix_user}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-aurix_dev_password}
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       SPRING_REDIS_HOST: redis
-      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://keycloak:8080/realms/aureus
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://keycloak:8080/realms/aurix
     depends_on:
       postgres: { condition: service_healthy }
       kafka: { condition: service_healthy }
     networks:
-      - aureus-network
+      - aurix-network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8202/actuator/health"]
       interval: 30s
@@ -218,17 +218,17 @@ services:
     environment:
       SERVER_PORT: 8203
       SPRING_PROFILES_ACTIVE: docker
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/aureus_db
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-aureus_user}
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-aureus_dev_password}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/aurix_db
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-aurix_user}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-aurix_dev_password}
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       SPRING_REDIS_HOST: redis
-      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://keycloak:8080/realms/aureus
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://keycloak:8080/realms/aurix
     depends_on:
       postgres: { condition: service_healthy }
       kafka: { condition: service_healthy }
     networks:
-      - aureus-network
+      - aurix-network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8203/actuator/health"]
       interval: 30s
@@ -249,19 +249,19 @@ services:
     environment:
       SERVER_PORT: 8204
       SPRING_PROFILES_ACTIVE: docker
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/aureus_db
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-aureus_user}
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-aureus_dev_password}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/aurix_db
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-aurix_user}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-aurix_dev_password}
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       SPRING_REDIS_HOST: redis
-      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://keycloak:8080/realms/aureus
-      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:8080/realms/aureus/protocol/openid-connect/certs
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://keycloak:8080/realms/aurix
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:8080/realms/aurix/protocol/openid-connect/certs
     depends_on:
       postgres: { condition: service_healthy }
       kafka: { condition: service_healthy }
       keycloak: { condition: service_healthy }
     networks:
-      - aureus-network
+      - aurix-network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8204/actuator/health"]
       interval: 30s
@@ -282,9 +282,9 @@ services:
     environment:
       SERVER_PORT: 8205
       SPRING_PROFILES_ACTIVE: docker
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/aureus_db
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-aureus_user}
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-aureus_dev_password}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/aurix_db
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-aurix_user}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-aurix_dev_password}
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       SPRING_REDIS_HOST: redis
     depends_on:
@@ -292,7 +292,7 @@ services:
       kafka: { condition: service_healthy }
       redis: { condition: service_started }
     networks:
-      - aureus-network
+      - aurix-network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8205/actuator/health"]
       interval: 30s
@@ -313,15 +313,15 @@ services:
     environment:
       SERVER_PORT: 8206
       SPRING_PROFILES_ACTIVE: docker
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/aureus_db
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-aureus_user}
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-aureus_dev_password}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/aurix_db
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-aurix_user}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-aurix_dev_password}
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     depends_on:
       postgres: { condition: service_healthy }
       kafka: { condition: service_healthy }
     networks:
-      - aureus-network
+      - aurix-network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8206/actuator/health"]
       interval: 30s
@@ -342,15 +342,15 @@ services:
     environment:
       SERVER_PORT: 8207
       SPRING_PROFILES_ACTIVE: docker
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/aureus_db
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-aureus_user}
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-aureus_dev_password}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/aurix_db
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-aurix_user}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-aurix_dev_password}
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
     depends_on:
       postgres: { condition: service_healthy }
       kafka: { condition: service_healthy }
     networks:
-      - aureus-network
+      - aurix-network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8207/actuator/health"]
       interval: 30s
@@ -371,16 +371,16 @@ services:
     environment:
       SERVER_PORT: 8208
       SPRING_PROFILES_ACTIVE: docker
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/aureus_db
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-aureus_user}
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-aureus_dev_password}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/aurix_db
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-aurix_user}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-aurix_dev_password}
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       SPRING_REDIS_HOST: redis
     depends_on:
       postgres: { condition: service_healthy }
       kafka: { condition: service_healthy }
     networks:
-      - aureus-network
+      - aurix-network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8208/actuator/health"]
       interval: 30s
@@ -401,16 +401,16 @@ services:
     environment:
       SERVER_PORT: 8209
       SPRING_PROFILES_ACTIVE: docker
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/aureus_db
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-aureus_user}
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-aureus_dev_password}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/aurix_db
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-aurix_user}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-aurix_dev_password}
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       SPRING_REDIS_HOST: redis
     depends_on:
       postgres: { condition: service_healthy }
       kafka: { condition: service_healthy }
     networks:
-      - aureus-network
+      - aurix-network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8209/actuator/health"]
       interval: 30s
@@ -579,7 +579,7 @@ http:
 
     # ──────── PLATFORM ────────
     platform:
-      rule: "PathPrefix(`/api/billing`) || PathPrefix(`/api/provisioning`) || PathPrefix(`/api/webhooks`) || PathPrefix(`/api/notification`) || PathPrefix(`/api/catalog`) || PathPrefix(`/api/baas`) || PathPrefix(`/aureus-organization`)"
+      rule: "PathPrefix(`/api/billing`) || PathPrefix(`/api/provisioning`) || PathPrefix(`/api/webhooks`) || PathPrefix(`/api/notification`) || PathPrefix(`/api/catalog`) || PathPrefix(`/api/baas`) || PathPrefix(`/aurix-organization`)"
       service: svc-platform
       middlewares:
         - ratelimit-default
@@ -706,8 +706,8 @@ RUN ./mvnw package -DskipTests -q
 FROM eclipse-temurin:25-jre-jammy
 WORKDIR /app
 
-RUN groupadd -r aureus && useradd -r -g aureus aureus
-USER aureus
+RUN groupadd -r aurix && useradd -r -g aurix aurix
+USER aurix
 
 COPY --from=builder /build/target/*.jar app.jar
 
@@ -770,9 +770,9 @@ jobs:
       postgres:
         image: postgres:15-alpine
         env:
-          POSTGRES_DB: aureus_test
-          POSTGRES_USER: aureus
-          POSTGRES_PASSWORD: aureus
+          POSTGRES_DB: aurix_test
+          POSTGRES_USER: aurix
+          POSTGRES_PASSWORD: aurix
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -804,9 +804,9 @@ jobs:
       - name: Integration Tests
         run: ./mvnw verify -Pintegration-tests -q
         env:
-          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/aureus_test
-          SPRING_DATASOURCE_USERNAME: aureus
-          SPRING_DATASOURCE_PASSWORD: aureus
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/aurix_test
+          SPRING_DATASOURCE_USERNAME: aurix
+          SPRING_DATASOURCE_PASSWORD: aurix
 
       - name: Static Analysis
         run: ./mvnw pmd:check spotbugs:check checkstyle:check -q
@@ -820,15 +820,15 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t aureus/svc-banking:${{ github.sha }} \
+          docker build -t aurix/svc-banking:${{ github.sha }} \
             backend/svc-banking/
 
       - name: Push to registry
         run: |
           echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login -u "${{ secrets.REGISTRY_USER }}" --password-stdin
-          docker push aureus/svc-banking:${{ github.sha }}
-          docker tag aureus/svc-banking:${{ github.sha }} aureus/svc-banking:latest
-          docker push aureus/svc-banking:latest
+          docker push aurix/svc-banking:${{ github.sha }}
+          docker tag aurix/svc-banking:${{ github.sha }} aurix/svc-banking:latest
+          docker push aurix/svc-banking:latest
 ```
 
 ### Durante a migração: pipeline híbrido
@@ -845,7 +845,7 @@ O parent raiz muda de 43 módulos para 10:
 <!-- backend/pom.xml (ALVO — após migração completa) -->
 <modules>
     <!-- Biblioteca compartilhada -->
-    <module>aureus-shared</module>
+    <module>aurix-shared</module>
 
     <!-- 10 domínios consolidados -->
     <module>svc-banking</module>
@@ -937,7 +937,7 @@ v2-up:
 # Derrubar legado por domínio conforme migração avança
 legacy-down:
 	docker compose -f infrastructure/docker-compose.yml stop $(SERVICES)
-# Uso: make legacy-down SERVICES="aureus-customer aureus-kyc aureus-onboarding aureus-security"
+# Uso: make legacy-down SERVICES="aurix-customer aurix-kyc aurix-onboarding aurix-security"
 
 # Build completo dos 10 domínios
 build-all:

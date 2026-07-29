@@ -18,7 +18,7 @@ POST /api/pix/transferencias → PixTransferenciaController
        ├─ 1. Valida status PENDENTE
        ├─ 2. Débito atômico (UPDATE saldo WHERE saldo >= valor)
        ├─ 3. Chama PixBacenClient.enviarPix(transacaoSPI)
-       │      └─ REST POST → aureus-bacen:8094/api/spi-str/spi/pix
+       │      └─ REST POST → aurix-bacen:8094/api/spi-str/spi/pix
        │           └─ SpiStrApiClientImpl
        │                ├─ dev/sandbox → http://bacen-mock:8095 (mock)
        │                └─ homolog/prod → https://spi-homologacao.bcb.gov.br (mTLS)
@@ -35,10 +35,10 @@ POST /api/pix/transferencias → PixTransferenciaController
 
 | Component | Module | Change |
 |-----------|--------|--------|
-| `PixBacenClient` | `aureus-pix` (new) | REST client → `aureus-bacen` SPI endpoint |
-| `PixTransferenciaService` | `aureus-pix` | Inject `PixBacenClient`, call SPI for ALL transfers |
-| `SpiStrIntegrationService` | `aureus-bacen` | No code change — just enable via config |
-| `SpiStrApiClientImpl` | `aureus-bacen` | Skip mTLS guard when URL is localhost/mock |
+| `PixBacenClient` | `aurix-pix` (new) | REST client → `aurix-bacen` SPI endpoint |
+| `PixTransferenciaService` | `aurix-pix` | Inject `PixBacenClient`, call SPI for ALL transfers |
+| `SpiStrIntegrationService` | `aurix-bacen` | No code change — just enable via config |
+| `SpiStrApiClientImpl` | `aurix-bacen` | Skip mTLS guard when URL is localhost/mock |
 | `bacen-mock` | `infrastructure/bacen-mock/` (new) | WireMock container |
 | `docker-compose.yml` | `infrastructure/` | Add bacen-mock service |
 
@@ -46,7 +46,7 @@ POST /api/pix/transferencias → PixTransferenciaController
 
 ## PixBacenClient
 
-**File:** `backend/aureus-pix/src/main/java/com/aureus/platform/pix/client/PixBacenClient.java`
+**File:** `backend/aurix-pix/src/main/java/com/aurix/platform/pix/client/PixBacenClient.java`
 
 ```java
 @Component
@@ -54,7 +54,7 @@ public class PixBacenClient {
     private final RestClient restClient;
 
     public PixBacenClient(RestClient.Builder builder,
-                          @Value("${aureus.pix.bacen.spi-url}") String spiUrl) {
+                          @Value("${aurix.pix.bacen.spi-url}") String spiUrl) {
         this.restClient = builder.baseUrl(spiUrl).build();
     }
 
@@ -68,7 +68,7 @@ public class PixBacenClient {
 }
 ```
 
-**Config:** `aureus.pix.bacen.spi-url: ${PIX_BACEN_SPI_URL:http://localhost:8094}`
+**Config:** `aurix.pix.bacen.spi-url: ${PIX_BACEN_SPI_URL:http://localhost:8094}`
 
 ---
 
@@ -141,10 +141,10 @@ private void estornarDebito(PixTransferencia pix, Long contaOrigemId) {
 
 ## SPI/STR — habilitar em dev
 
-**File:** `backend/aureus-bacen/src/main/resources/application-dev.yml` (new)
+**File:** `backend/aurix-bacen/src/main/resources/application-dev.yml` (new)
 
 ```yaml
-aureus:
+aurix:
   bacen:
     spi:
       enabled: true
@@ -232,14 +232,14 @@ EXPOSE 8095
 ```yaml
 bacen-mock:
   image: wiremock/wiremock:latest
-  container_name: aureus-bacen-mock
+  container_name: aurix-bacen-mock
   ports:
     - "8095:8095"
   volumes:
     - ./bacen-mock/mappings:/home/wiremock/mappings
   command: ["--port", "8095", "--verbose"]
   networks:
-    - aureus-network
+    - aurix-network
 ```
 
 ---
@@ -258,7 +258,7 @@ PIX_BACEN_SPI_URL=http://bacen-mock:8095              # Mock local (default dev)
 PIX_BACEN_STR_URL=http://bacen-mock:8095              # Mock local (default dev)
 ```
 
-### Resolution logic (aureus-bacen startup)
+### Resolution logic (aurix-bacen startup)
 1. If `BACEN_SANDBOX=true` → use `PIX_BACEN_SPI_URL` (mock), skip mTLS
 2. If `BACEN_SANDBOX=false` → use fixed BCB URLs, require mTLS certs
 
@@ -268,10 +268,10 @@ PIX_BACEN_STR_URL=http://bacen-mock:8095              # Mock local (default dev)
 
 | Test | File | What it covers |
 |------|------|----------------|
-| `PixBacenClientTest` | `aureus-pix/src/test/.../client/` | HTTP serialization, error mapping |
-| `PixTransferenciaServiceTest` | `aureus-pix/src/test/.../service/` | SPI success, failure, timeout, compensation |
-| `PixFlowIntegrationTest` | `aureus-pix/src/test/.../integration/` | Full flow with mock BACEN |
-| `SpiStrApiClientImplTest` | `aureus-bacen/src/test/.../client/` | Mock URL skip, mTLS guard |
+| `PixBacenClientTest` | `aurix-pix/src/test/.../client/` | HTTP serialization, error mapping |
+| `PixTransferenciaServiceTest` | `aurix-pix/src/test/.../service/` | SPI success, failure, timeout, compensation |
+| `PixFlowIntegrationTest` | `aurix-pix/src/test/.../integration/` | Full flow with mock BACEN |
+| `SpiStrApiClientImplTest` | `aurix-bacen/src/test/.../client/` | Mock URL skip, mTLS guard |
 
 ---
 
@@ -279,7 +279,7 @@ PIX_BACEN_STR_URL=http://bacen-mock:8095              # Mock local (default dev)
 
 1. **BACEN Mock** — WireMock container + docker-compose (independently testable)
 2. **SpiStrApiClientImpl guard** — mock URL skip + dev profile
-3. **PixBacenClient** — REST client in aureus-pix
+3. **PixBacenClient** — REST client in aurix-pix
 4. **PixTransferenciaService wire** — call SPI, compensation on failure
 5. **Environment config** — .env.example, resolution logic
 6. **Tests** — all levels (unit, integration)

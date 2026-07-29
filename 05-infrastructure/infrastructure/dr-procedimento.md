@@ -50,4 +50,4 @@ Recomendacao: **teste de DR pelo menos trimestral** (ou conforme politica intern
 
 - Roadmap e status: [../roadmap.md](../roadmap.md)
 - Backup e restore: [backup-restore.md](backup-restore.md)
-- Runbook: [aureus-cloud-runbook.md](aureus-cloud-runbook.md)
+- Runbook: [aurix-cloud-runbook.md](aurix-cloud-runbook.md)

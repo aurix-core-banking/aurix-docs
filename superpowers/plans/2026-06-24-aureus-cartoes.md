@@ -1,10 +1,10 @@
-# aureus-cartoes — Cartões de Crédito/Débito — Implementation Plan
+# aurix-cartoes — Cartões de Crédito/Débito — Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development to dispatch each task below as an independent subagent. Tasks 1–13 are independent in dependency groups as annotated. Run `mvn clean install -DskipTests -pl aureus-cartoes -am` after all tasks. Run `mvn test -pl aureus-cartoes` to verify. Gate: all `mvn test` green, `mvn pmd:check spotbugs:check checkstyle:check` pass.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development to dispatch each task below as an independent subagent. Tasks 1–13 are independent in dependency groups as annotated. Run `mvn clean install -DskipTests -pl aurix-cartoes -am` after all tasks. Run `mvn test -pl aurix-cartoes` to verify. Gate: all `mvn test` green, `mvn pmd:check spotbugs:check checkstyle:check` pass.
 
-**Goal:** Expand the existing `aureus-cartoes` module with partner-engine configuration (bandeira/adquirente), complete issuer authorization flow, monthly billing job, Kafka events, HTTP clients, full API surface (21 endpoints), and controller tests.
+**Goal:** Expand the existing `aurix-cartoes` module with partner-engine configuration (bandeira/adquirente), complete issuer authorization flow, monthly billing job, Kafka events, HTTP clients, full API surface (21 endpoints), and controller tests.
 
-**Architecture:** Motor de cartões configurável por bandeira e adquirente. Suporta bandeiras parceiras (Visa, Mastercard, Elo) e private label (processamento interno). Adquirentes parceiros (Rede, Stone, GetNet) e own-acquirer. Antifraude integrado com `aureus-ml`. Faturamento mensal via `@Scheduled` job. Eventos Kafka para cada fluxo. Conta corrente integrada via `@HttpExchange` `ContaCorrenteClient` para débito de faturas.
+**Architecture:** Motor de cartões configurável por bandeira e adquirente. Suporta bandeiras parceiras (Visa, Mastercard, Elo) e private label (processamento interno). Adquirentes parceiros (Rede, Stone, GetNet) e own-acquirer. Antifraude integrado com `aurix-ml`. Faturamento mensal via `@Scheduled` job. Eventos Kafka para cada fluxo. Conta corrente integrada via `@HttpExchange` `ContaCorrenteClient` para débito de faturas.
 
 **Tech Stack:** Spring Boot 4.1.0, Java 25, Spring Data JPA, PostgreSQL, H2 (test), Kafka, Redis, Spring Security, Springdoc OpenAPI 2.2.0, JSpecify `@NullMarked`, `@HttpExchange` + `@ImportHttpServices`, `@Retryable` (spring-resilience), Testcontainers.
 
@@ -19,12 +19,12 @@
 7. Test: `@SpringBootTest(webEnvironment = RANDOM_PORT)` + `RestTemplate` with `@LocalServerPort`
 8. H2 for repo tests, Testcontainers for integration
 9. Kafka events fire-and-forget with try-catch
-10. Entity base: extends `com.aureus.platform.shared.entity.BaseEntity`
-11. Table schema: `aureus`
+10. Entity base: extends `com.aurix.platform.shared.entity.BaseEntity`
+11. Table schema: `aurix`
 12. Port: 8115 (currently 8103 — change in application.yml)
 13. Gateway route: `/api/cartoes/**` -> `http://localhost:8115`, StripPrefix=0
 14. Controller base path: `/api/cartoes`
-15. Follow existing patterns from `aureus-poupanca` for service/controller/dto/event/client/config structure
+15. Follow existing patterns from `aurix-poupanca` for service/controller/dto/event/client/config structure
 16. API design per Section 4.3 of design spec (21 endpoints)
 17. Existing Cartao, Fatura, TransacaoCartao entities must be preserved and expanded (add fields, not removed)
 
@@ -35,10 +35,10 @@
 **Dependency:** NONE (can run first)
 
 **Files:**
-- `backend/aureus-cartoes/pom.xml` — modify
+- `backend/aurix-cartoes/pom.xml` — modify
 
 **Steps:**
-1. Read `backend/aureus-cartoes/pom.xml`
+1. Read `backend/aurix-cartoes/pom.xml`
 2. Add these dependencies (between existing `spring-boot-starter-test` and closing `</dependencies>`):
    - `spring-boot-starter-data-redis`
    - `spring-kafka`
@@ -46,19 +46,19 @@
    - `spring-kafka-test` (test scope)
    - `testcontainers-junit-jupiter` (test scope)
    - `testcontainers-postgresql` (test scope)
-3. Also add `aureus-organization` dependency for organization entity access
-4. Run `mvn clean install -DskipTests -pl aureus-cartoes -am` to verify POM compiles
+3. Also add `aurix-organization` dependency for organization entity access
+4. Run `mvn clean install -DskipTests -pl aurix-cartoes -am` to verify POM compiles
 
 ## Task 2 — application.yml: Update config for port 8115, Kafka, Redis, Security
 
 **Dependency:** NONE (can run in parallel with Task 1)
 
 **Files:**
-- `backend/aureus-cartoes/src/main/resources/application.yml` — modify
+- `backend/aurix-cartoes/src/main/resources/application.yml` — modify
 
 **Changes:**
 - server.port: 8103 -> 8115
-- Add Kafka producer/consumer config (same pattern as aureus-poupanca)
+- Add Kafka producer/consumer config (same pattern as aurix-poupanca)
 - Add Redis config
 - Add JPA/Hibernate SQL logging
 - Add JHipster-style multi-profile (dev/prod)
@@ -72,32 +72,32 @@
 **Dependency:** NONE (can run in parallel with Tasks 1-2)
 
 **Files to CREATE** (each with `@NullMarked`):
-- `backend/aureus-cartoes/src/main/java/com/aureus/platform/cartoes/package-info.java`
-- `backend/aureus-cartoes/src/main/java/com/aureus/platform/cartoes/entity/package-info.java`
-- `backend/aureus-cartoes/src/main/java/com/aureus/platform/cartoes/repository/package-info.java`
-- `backend/aureus-cartoes/src/main/java/com/aureus/platform/cartoes/dto/package-info.java`
-- `backend/aureus-cartoes/src/main/java/com/aureus/platform/cartoes/event/package-info.java`
-- `backend/aureus-cartoes/src/main/java/com/aureus/platform/cartoes/client/package-info.java`
-- `backend/aureus-cartoes/src/main/java/com/aureus/platform/cartoes/config/package-info.java`
-- `backend/aureus-cartoes/src/main/java/com/aureus/platform/cartoes/service/package-info.java`
-- `backend/aureus-cartoes/src/main/java/com/aureus/platform/cartoes/controller/package-info.java`
-- `backend/aureus-cartoes/src/main/java/com/aureus/platform/cartoes/job/package-info.java`
+- `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/package-info.java`
+- `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/entity/package-info.java`
+- `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/repository/package-info.java`
+- `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/dto/package-info.java`
+- `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/event/package-info.java`
+- `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/client/package-info.java`
+- `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/config/package-info.java`
+- `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/service/package-info.java`
+- `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/controller/package-info.java`
+- `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/job/package-info.java`
 
 Each file content:
 ```java
 @NullMarked
-package com.aureus.platform.cartoes.<subpackage>;
+package com.aurix.platform.cartoes.<subpackage>;
 
 import org.jspecify.annotations.NullMarked;
 ```
 
 Also create empty directories:
-- `backend/aureus-cartoes/src/main/java/com/aureus/platform/cartoes/dto/`
-- `backend/aureus-cartoes/src/main/java/com/aureus/platform/cartoes/event/`
-- `backend/aureus-cartoes/src/main/java/com/aureus/platform/cartoes/client/`
-- `backend/aureus-cartoes/src/main/java/com/aureus/platform/cartoes/config/`
-- `backend/aureus-cartoes/src/main/java/com/aureus/platform/cartoes/job/`
-- `backend/aureus-cartoes/src/test/java/com/aureus/platform/cartoes/controller/`
+- `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/dto/`
+- `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/event/`
+- `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/client/`
+- `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/config/`
+- `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/job/`
+- `backend/aurix-cartoes/src/test/java/com/aurix/platform/cartoes/controller/`
 
 ---
 
@@ -108,14 +108,14 @@ Also create empty directories:
 ### ProdutoCartao
 
 ```java
-package com.aureus.platform.cartoes.entity;
+package com.aurix.platform.cartoes.entity;
 
-import com.aureus.platform.shared.entity.BaseEntity;
+import com.aurix.platform.shared.entity.BaseEntity;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "produtos_cartao", schema = "aureus")
+@Table(name = "produtos_cartao", schema = "aurix")
 public class ProdutoCartao extends BaseEntity {
     private String nome;
     private String bandeira;
@@ -138,15 +138,15 @@ public class ProdutoCartao extends BaseEntity {
 ### LimiteCartao
 
 ```java
-package com.aureus.platform.cartoes.entity;
+package com.aurix.platform.cartoes.entity;
 
-import com.aureus.platform.shared.entity.BaseEntity;
+import com.aurix.platform.shared.entity.BaseEntity;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "limites_cartao", schema = "aureus")
+@Table(name = "limites_cartao", schema = "aurix")
 public class LimiteCartao extends BaseEntity {
     private Long cartaoId;
     private BigDecimal limiteTotal;
@@ -161,15 +161,15 @@ public class LimiteCartao extends BaseEntity {
 ### LancamentoFatura
 
 ```java
-package com.aureus.platform.cartoes.entity;
+package com.aurix.platform.cartoes.entity;
 
-import com.aureus.platform.shared.entity.BaseEntity;
+import com.aurix.platform.shared.entity.BaseEntity;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "lancamentos_fatura", schema = "aureus")
+@Table(name = "lancamentos_fatura", schema = "aurix")
 public class LancamentoFatura extends BaseEntity {
     private Long faturaId;
     private String descricao;
@@ -184,13 +184,13 @@ public class LancamentoFatura extends BaseEntity {
 ### ParceiroBandeira
 
 ```java
-package com.aureus.platform.cartoes.entity;
+package com.aurix.platform.cartoes.entity;
 
-import com.aureus.platform.shared.entity.BaseEntity;
+import com.aurix.platform.shared.entity.BaseEntity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "parceiros_bandeira", schema = "aureus")
+@Table(name = "parceiros_bandeira", schema = "aurix")
 public class ParceiroBandeira extends BaseEntity {
     private String nome; // VISA, MASTERCARD, ELO, PRIVATE_LABEL
     private String tipoEndpoint;
@@ -205,13 +205,13 @@ public class ParceiroBandeira extends BaseEntity {
 ### ParceiroAdquirente
 
 ```java
-package com.aureus.platform.cartoes.entity;
+package com.aurix.platform.cartoes.entity;
 
-import com.aureus.platform.shared.entity.BaseEntity;
+import com.aurix.platform.shared.entity.BaseEntity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "parceiros_adquirente", schema = "aureus")
+@Table(name = "parceiros_adquirente", schema = "aurix")
 public class ParceiroAdquirente extends BaseEntity {
     private String nome; // REDE, STONE, GETNET, OWN_ACQUIRER
     private String tipoEndpoint;
@@ -256,7 +256,7 @@ IMPORTANT: Preserve ALL existing fields. Only add new ones. Do not break existin
 
 **Dependency:** Tasks 4-5 (entities must exist first)
 
-Create all DTOs in `backend/aureus-cartoes/src/main/java/com/aureus/platform/cartoes/dto/`:
+Create all DTOs in `backend/aurix-cartoes/src/main/java/com/aurix/platform/cartoes/dto/`:
 
 - `EmitirCartaoRequest.java` — produtoId, contaId, titular, tipo
 - `CartaoResponse.java` — full cartao data (masked number, no CVV)
@@ -275,7 +275,7 @@ Create all DTOs in `backend/aureus-cartoes/src/main/java/com/aureus/platform/car
 - `ParceiroAdquirenteRequest.java` — nome, tipoEndpoint, config JSON
 - `ParceiroAdquirenteResponse.java`
 
-All DTOs follow the manual getters/setters pattern from `aureus-poupanca/dto/`.
+All DTOs follow the manual getters/setters pattern from `aurix-poupanca/dto/`.
 
 ---
 
@@ -357,7 +357,7 @@ public interface ContaCorrenteClient {
 }
 ```
 
-### MlFraudClient.java (antifraude — aureus-ml)
+### MlFraudClient.java (antifraude — aurix-ml)
 ```java
 @HttpExchange("/api/ml/fraud")
 public interface MlFraudClient {
@@ -485,7 +485,7 @@ GET    /api/cartoes/parceiros-adquirente           -> listarAdquirentes
 POST   /api/cartoes/parceiros-adquirente           -> configurarAdquirente
 ```
 
-All controllers follow the `aureus-poupanca` pattern: constructor injection, `@Tag` for Swagger, `@Operation` on each method, ResponseEntity return types.
+All controllers follow the `aurix-poupanca` pattern: constructor injection, `@Tag` for Swagger, `@Operation` on each method, ResponseEntity return types.
 
 ---
 
@@ -495,7 +495,7 @@ All controllers follow the `aureus-poupanca` pattern: constructor injection, `@T
 
 ### FaturamentoJob.java
 ```java
-package com.aureus.platform.cartoes.job;
+package com.aurix.platform.cartoes.job;
 
 @Component
 public class FaturamentoJob {
@@ -543,7 +543,7 @@ public class CartoesSecurityConfig {
 **Dependency:** Tasks 1-12 (all implementation must exist)
 
 **Test structure** (follow `ContaPoupancaControllerTest.java` pattern exactly):
-- `@SpringBootTest(classes = AureusCartoesApplication.class, webEnvironment = RANDOM_PORT)`
+- `@SpringBootTest(classes = AurixCartoesApplication.class, webEnvironment = RANDOM_PORT)`
 - `@ActiveProfiles("test")`
 - `@Import(TestConfig.class)` with:
   - `SecurityFilterChain` permitAll
@@ -571,11 +571,11 @@ Also add `application-test.yml` in `src/test/resources/` with H2 config.
 
 **Dependency:** Task 1 (POM) + all implementation
 
-### Gateway route — add to `aureus-gateway/src/main/resources/application.yml`
+### Gateway route — add to `aurix-gateway/src/main/resources/application.yml`
 Insert before the Swagger UI route:
 ```yaml
-# AUREUS Cartoes
-- id: aureus-cartoes
+# AURIX Cartoes
+- id: aurix-cartoes
   uri: http://localhost:8115
   predicates:
     - Path=/api/cartoes/**
@@ -583,9 +583,9 @@ Insert before the Swagger UI route:
     - StripPrefix=0
 ```
 
-### Parent POM — already has `aureus-cartoes` module (line 49 in pom.xml). No change needed.
+### Parent POM — already has `aurix-cartoes` module (line 49 in pom.xml). No change needed.
 
-### OpenAPI spec — after implementation, add to `aureus-api-specs/aureus-core.yaml`:
+### OpenAPI spec — after implementation, add to `aurix-api-specs/aurix-core.yaml`:
 - Tag: `Cartoes` with description
 - Paths for all 21 endpoints from Section 4.3
 - Schemas for all entities and DTOs
@@ -619,7 +619,7 @@ Group D (depends on C):
 Group E (depends on D):
   Task 14 — Cross-cutting updates
 
-Gate: mvn clean install -DskipTests -pl aureus-cartoes -am (compilation check)
-Gate: mvn test -pl aureus-cartoes (all tests green)
-Gate: mvn pmd:check spotbugs:check checkstyle:check -pl aureus-cartoes (static analysis)
+Gate: mvn clean install -DskipTests -pl aurix-cartoes -am (compilation check)
+Gate: mvn test -pl aurix-cartoes (all tests green)
+Gate: mvn pmd:check spotbugs:check checkstyle:check -pl aurix-cartoes (static analysis)
 ```

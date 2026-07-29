@@ -1,18 +1,18 @@
-# aureus-investimento Implementation Plan
+# aurix-investimento Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Implement the `aureus-investimento` module — investment accounts with produtos (CDB, LCI, LCA, TESOURO, FUNDO, ACAO), aplicação/resgate orders, vinculado/standalone mode, ContaCorrenteClient integration.
+**Goal:** Implement the `aurix-investimento` module — investment accounts with produtos (CDB, LCI, LCA, TESOURO, FUNDO, ACAO), aplicação/resgate orders, vinculado/standalone mode, ContaCorrenteClient integration.
 
-**Architecture:** New Maven module following `aureus-poupanca` patterns. Uses `@HttpExchange` + `@ImportHttpServices` for ContaCorrenteClient, Kafka events for ContaInvestimentoCriada/OrdemExecutada/ResgateProcessado, `investimento.conta-independente` config property to toggle ContaCorrenteClient calls.
+**Architecture:** New Maven module following `aurix-poupanca` patterns. Uses `@HttpExchange` + `@ImportHttpServices` for ContaCorrenteClient, Kafka events for ContaInvestimentoCriada/OrdemExecutada/ResgateProcessado, `investimento.conta-independente` config property to toggle ContaCorrenteClient calls.
 
 **Tech Stack:** Spring Boot 4.1, Java 25, JPA/Hibernate, PostgreSQL, Redis, Kafka, `@Retryable`, `@HttpExchange`, Testcontainers.
 
 ## Global Constraints
 
 - Java source/target must be 25 (parent POM defaults are correct)
-- Maven packaging: `jar`, parent: `com.aureus.platform:aureus-platform:1.0.0`
-- Package root: `com.aureus.platform.investimento`
+- Maven packaging: `jar`, parent: `com.aurix.platform:aurix-platform:1.0.0`
+- Package root: `com.aurix.platform.investimento`
 - No Lombok — manual getters/setters/constructors
 - No `spring-retry` — use Spring Framework 7 native `@Retryable` from `org.springframework.resilience.annotation`
 - No Feign — use `@HttpExchange` + `@ImportHttpServices`
@@ -28,10 +28,10 @@
 ## File Structure Map
 
 ```
-backend/aureus-investimento/
+backend/aurix-investimento/
 ├── pom.xml
-├── src/main/java/com/aureus/platform/investimento/
-│   ├── AureusInvestimentoApplication.java
+├── src/main/java/com/aurix/platform/investimento/
+│   ├── AurixInvestimentoApplication.java
 │   ├── entity/
 │   │   ├── package-info.java
 │   │   ├── ContaInvestimento.java
@@ -82,7 +82,7 @@ backend/aureus-investimento/
 ├── src/main/resources/
 │   ├── application.yml
 │   └── application-prod.yml
-└── src/test/java/com/aureus/platform/investimento/
+└── src/test/java/com/aurix/platform/investimento/
     └── controller/
         ├── package-info.java
         ├── ContaInvestimentoControllerTest.java
@@ -95,10 +95,10 @@ backend/aureus-investimento/
 ### Task 1: Module Scaffold
 
 **Files:**
-- Create: `backend/aureus-investimento/pom.xml`
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/AureusInvestimentoApplication.java`
-- Create: `backend/aureus-investimento/src/main/resources/application.yml`
-- Create: `backend/aureus-investimento/src/main/resources/application-prod.yml`
+- Create: `backend/aurix-investimento/pom.xml`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/AurixInvestimentoApplication.java`
+- Create: `backend/aurix-investimento/src/main/resources/application.yml`
+- Create: `backend/aurix-investimento/src/main/resources/application-prod.yml`
 - Modify: `backend/pom.xml` (add module)
 
 **Interfaces:**
@@ -116,21 +116,21 @@ backend/aureus-investimento/
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.aureus.platform</groupId>
-        <artifactId>aureus-platform</artifactId>
+        <groupId>com.aurix.platform</groupId>
+        <artifactId>aurix-platform</artifactId>
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>aureus-investimento</artifactId>
+    <artifactId>aurix-investimento</artifactId>
     <packaging>jar</packaging>
 
-    <name>AUREUS Investimento</name>
-    <description>Modulo de conta investimento do AUREUS</description>
+    <name>AURIX Investimento</name>
+    <description>Modulo de conta investimento do AURIX</description>
 
     <dependencies>
         <dependency>
-            <groupId>com.aureus.platform</groupId>
-            <artifactId>aureus-shared</artifactId>
+            <groupId>com.aurix.platform</groupId>
+            <artifactId>aurix-shared</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -213,10 +213,10 @@ backend/aureus-investimento/
 </project>
 ```
 
-- [ ] **Step 2: Create AureusInvestimentoApplication.java**
+- [ ] **Step 2: Create AurixInvestimentoApplication.java**
 
 ```java
-package com.aureus.platform.investimento;
+package com.aurix.platform.investimento;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -224,10 +224,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-public class AureusInvestimentoApplication {
+public class AurixInvestimentoApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(AureusInvestimentoApplication.class, args);
+        SpringApplication.run(AurixInvestimentoApplication.class, args);
     }
 }
 ```
@@ -242,13 +242,13 @@ server:
 
 spring:
   application:
-    name: aureus-investimento
+    name: aurix-investimento
   profiles:
     active: dev
   datasource:
-    url: jdbc:postgresql://localhost:5432/aureus
-    username: aureus
-    password: aureus123
+    url: jdbc:postgresql://localhost:5432/aurix
+    username: aurix
+    password: aurix123
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
@@ -278,7 +278,7 @@ spring:
   kafka:
     bootstrap-servers: localhost:9092
     consumer:
-      group-id: aureus-investimento-group
+      group-id: aurix-investimento-group
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
@@ -290,7 +290,7 @@ spring:
 
 logging:
   level:
-    com.aureus.platform: DEBUG
+    com.aurix.platform: DEBUG
     org.springframework.web: DEBUG
     org.hibernate.SQL: DEBUG
 
@@ -310,10 +310,10 @@ management:
 investimento:
   conta-independente: false
 
-aureus:
+aurix:
   security:
     jwt:
-      secret: "aureus-jwt-secret-key-2024"
+      secret: "aurix-jwt-secret-key-2024"
       expiration: 86400000
 
 ---
@@ -327,7 +327,7 @@ spring:
     show-sql: true
 logging:
   level:
-    com.aureus.platform: DEBUG
+    com.aurix.platform: DEBUG
 
 ---
 spring:
@@ -344,7 +344,7 @@ spring:
       minimum-idle: 5
 logging:
   level:
-    com.aureus.platform: INFO
+    com.aurix.platform: INFO
 ```
 
 - [ ] **Step 4: Create application-prod.yml**
@@ -361,29 +361,29 @@ spring:
       minimum-idle: 5
 logging:
   level:
-    com.aureus.platform: INFO
+    com.aurix.platform: INFO
 ```
 
 - [ ] **Step 5: Add module to parent pom.xml**
 
-Edit `backend/pom.xml`, insert `<module>aureus-investimento</module>` after `<module>aureus-internet-banking</module>` (alphabetical order among the new modules):
+Edit `backend/pom.xml`, insert `<module>aurix-investimento</module>` after `<module>aurix-internet-banking</module>` (alphabetical order among the new modules):
 
 ```xml
-        <module>aureus-internet-banking</module>
-        <module>aureus-investimento</module>
-        <module>aureus-mobile-banking</module>
+        <module>aurix-internet-banking</module>
+        <module>aurix-investimento</module>
+        <module>aurix-mobile-banking</module>
 ```
 
 - [ ] **Step 6: Verify scaffold compiles**
 
-Run: `mvn compile -pl aureus-investimento -am`
+Run: `mvn compile -pl aurix-investimento -am`
 Expected: BUILD SUCCESS
 
 - [ ] **Step 7: Commit**
 
 ```bash
-git add backend/aureus-investimento/ backend/pom.xml
-git commit -m "feat: scaffold aureus-investimento module"
+git add backend/aurix-investimento/ backend/pom.xml
+git commit -m "feat: scaffold aurix-investimento module"
 ```
 
 ---
@@ -391,16 +391,16 @@ git commit -m "feat: scaffold aureus-investimento module"
 ### Task 2: Entities + Repositories
 
 **Files:**
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/entity/package-info.java`
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/entity/ContaInvestimento.java`
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/entity/ProdutoInvestimento.java`
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/entity/OrdemInvestimento.java`
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/entity/Carteira.java`
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/repository/package-info.java`
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/repository/ContaInvestimentoRepository.java`
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/repository/ProdutoInvestimentoRepository.java`
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/repository/OrdemInvestimentoRepository.java`
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/repository/CarteiraRepository.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/entity/package-info.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/entity/ContaInvestimento.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/entity/ProdutoInvestimento.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/entity/OrdemInvestimento.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/entity/Carteira.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/repository/package-info.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/repository/ContaInvestimentoRepository.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/repository/ProdutoInvestimentoRepository.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/repository/OrdemInvestimentoRepository.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/repository/CarteiraRepository.java`
 
 **Interfaces:**
 - Produces: `ContaInvestimento`, `ProdutoInvestimento`, `OrdemInvestimento`, `Carteira` JPA entities with repositories
@@ -409,7 +409,7 @@ git commit -m "feat: scaffold aureus-investimento module"
 
 ```java
 @NullMarked
-package com.aureus.platform.investimento.entity;
+package com.aurix.platform.investimento.entity;
 
 import org.jspecify.annotations.NullMarked;
 ```
@@ -417,7 +417,7 @@ import org.jspecify.annotations.NullMarked;
 - [ ] **Step 2: Create ContaInvestimento.java**
 
 ```java
-package com.aureus.platform.investimento.entity;
+package com.aurix.platform.investimento.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -533,7 +533,7 @@ public class ContaInvestimento {
 - [ ] **Step 3: Create ProdutoInvestimento.java**
 
 ```java
-package com.aureus.platform.investimento.entity;
+package com.aurix.platform.investimento.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -659,7 +659,7 @@ public class ProdutoInvestimento {
 - [ ] **Step 4: Create OrdemInvestimento.java**
 
 ```java
-package com.aureus.platform.investimento.entity;
+package com.aurix.platform.investimento.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -778,7 +778,7 @@ public class OrdemInvestimento {
 - [ ] **Step 5: Create Carteira.java**
 
 ```java
-package com.aureus.platform.investimento.entity;
+package com.aurix.platform.investimento.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -863,7 +863,7 @@ public class Carteira {
 
 ```java
 @NullMarked
-package com.aureus.platform.investimento.repository;
+package com.aurix.platform.investimento.repository;
 
 import org.jspecify.annotations.NullMarked;
 ```
@@ -871,9 +871,9 @@ import org.jspecify.annotations.NullMarked;
 - [ ] **Step 7: Create ContaInvestimentoRepository.java**
 
 ```java
-package com.aureus.platform.investimento.repository;
+package com.aurix.platform.investimento.repository;
 
-import com.aureus.platform.investimento.entity.ContaInvestimento;
+import com.aurix.platform.investimento.entity.ContaInvestimento;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -891,9 +891,9 @@ public interface ContaInvestimentoRepository extends JpaRepository<ContaInvestim
 - [ ] **Step 8: Create ProdutoInvestimentoRepository.java**
 
 ```java
-package com.aureus.platform.investimento.repository;
+package com.aurix.platform.investimento.repository;
 
-import com.aureus.platform.investimento.entity.ProdutoInvestimento;
+import com.aurix.platform.investimento.entity.ProdutoInvestimento;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -906,9 +906,9 @@ public interface ProdutoInvestimentoRepository extends JpaRepository<ProdutoInve
 - [ ] **Step 9: Create OrdemInvestimentoRepository.java**
 
 ```java
-package com.aureus.platform.investimento.repository;
+package com.aurix.platform.investimento.repository;
 
-import com.aureus.platform.investimento.entity.OrdemInvestimento;
+import com.aurix.platform.investimento.entity.OrdemInvestimento;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -921,9 +921,9 @@ public interface OrdemInvestimentoRepository extends JpaRepository<OrdemInvestim
 - [ ] **Step 10: Create CarteiraRepository.java**
 
 ```java
-package com.aureus.platform.investimento.repository;
+package com.aurix.platform.investimento.repository;
 
-import com.aureus.platform.investimento.entity.Carteira;
+import com.aurix.platform.investimento.entity.Carteira;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -938,14 +938,14 @@ public interface CarteiraRepository extends JpaRepository<Carteira, Long> {
 
 - [ ] **Step 11: Verify compilation**
 
-Run: `mvn compile -pl aureus-investimento -am`
+Run: `mvn compile -pl aurix-investimento -am`
 Expected: BUILD SUCCESS
 
 - [ ] **Step 12: Commit**
 
 ```bash
-git add backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/entity/
-git add backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/repository/
+git add backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/entity/
+git add backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/repository/
 git commit -m "feat: add investimento entities and repositories"
 ```
 
@@ -954,19 +954,19 @@ git commit -m "feat: add investimento entities and repositories"
 ### Task 3: DTOs
 
 **Files:**
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/dto/package-info.java`
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/dto/request/package-info.java`
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/dto/request/CriarContaInvestimentoRequest.java`
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/dto/request/CriarProdutoRequest.java`
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/dto/request/AtualizarProdutoRequest.java`
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/dto/request/AplicarOrdemRequest.java`
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/dto/request/ResgatarOrdemRequest.java`
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/dto/response/package-info.java`
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/dto/response/ContaInvestimentoResponse.java`
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/dto/response/ProdutoInvestimentoResponse.java`
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/dto/response/OrdemInvestimentoResponse.java`
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/dto/response/CarteiraResponse.java`
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/dto/response/ExtratoOrdemResponse.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/package-info.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/request/package-info.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/request/CriarContaInvestimentoRequest.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/request/CriarProdutoRequest.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/request/AtualizarProdutoRequest.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/request/AplicarOrdemRequest.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/request/ResgatarOrdemRequest.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/response/package-info.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/response/ContaInvestimentoResponse.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/response/ProdutoInvestimentoResponse.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/response/OrdemInvestimentoResponse.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/response/CarteiraResponse.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/response/ExtratoOrdemResponse.java`
 
 **Interfaces:**
 - Consumes: entity classes from Task 2
@@ -976,7 +976,7 @@ git commit -m "feat: add investimento entities and repositories"
 
 ```java
 @NullMarked
-package com.aureus.platform.investimento.dto;
+package com.aurix.platform.investimento.dto;
 
 import org.jspecify.annotations.NullMarked;
 ```
@@ -985,7 +985,7 @@ import org.jspecify.annotations.NullMarked;
 
 ```java
 @NullMarked
-package com.aureus.platform.investimento.dto.request;
+package com.aurix.platform.investimento.dto.request;
 
 import org.jspecify.annotations.NullMarked;
 ```
@@ -994,7 +994,7 @@ import org.jspecify.annotations.NullMarked;
 
 ```java
 @NullMarked
-package com.aureus.platform.investimento.dto.response;
+package com.aurix.platform.investimento.dto.response;
 
 import org.jspecify.annotations.NullMarked;
 ```
@@ -1002,7 +1002,7 @@ import org.jspecify.annotations.NullMarked;
 - [ ] **Step 4: Create CriarContaInvestimentoRequest.java**
 
 ```java
-package com.aureus.platform.investimento.dto.request;
+package com.aurix.platform.investimento.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -1029,7 +1029,7 @@ public class CriarContaInvestimentoRequest {
 - [ ] **Step 5: Create CriarProdutoRequest.java**
 
 ```java
-package com.aureus.platform.investimento.dto.request;
+package com.aurix.platform.investimento.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -1086,7 +1086,7 @@ public class CriarProdutoRequest {
 - [ ] **Step 6: Create AtualizarProdutoRequest.java**
 
 ```java
-package com.aureus.platform.investimento.dto.request;
+package com.aurix.platform.investimento.dto.request;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -1127,7 +1127,7 @@ public class AtualizarProdutoRequest {
 - [ ] **Step 7: Create AplicarOrdemRequest.java**
 
 ```java
-package com.aureus.platform.investimento.dto.request;
+package com.aurix.platform.investimento.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -1155,7 +1155,7 @@ public class AplicarOrdemRequest {
 - [ ] **Step 8: Create ResgatarOrdemRequest.java**
 
 ```java
-package com.aureus.platform.investimento.dto.request;
+package com.aurix.platform.investimento.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -1183,7 +1183,7 @@ public class ResgatarOrdemRequest {
 - [ ] **Step 9: Create ContaInvestimentoResponse.java**
 
 ```java
-package com.aureus.platform.investimento.dto.response;
+package com.aurix.platform.investimento.dto.response;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -1231,7 +1231,7 @@ public class ContaInvestimentoResponse {
 - [ ] **Step 10: Create ProdutoInvestimentoResponse.java**
 
 ```java
-package com.aureus.platform.investimento.dto.response;
+package com.aurix.platform.investimento.dto.response;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -1285,7 +1285,7 @@ public class ProdutoInvestimentoResponse {
 - [ ] **Step 11: Create OrdemInvestimentoResponse.java**
 
 ```java
-package com.aureus.platform.investimento.dto.response;
+package com.aurix.platform.investimento.dto.response;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -1336,7 +1336,7 @@ public class OrdemInvestimentoResponse {
 - [ ] **Step 12: Create CarteiraResponse.java**
 
 ```java
-package com.aureus.platform.investimento.dto.response;
+package com.aurix.platform.investimento.dto.response;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -1365,7 +1365,7 @@ public class CarteiraResponse {
 - [ ] **Step 13: Create ExtratoOrdemResponse.java**
 
 ```java
-package com.aureus.platform.investimento.dto.response;
+package com.aurix.platform.investimento.dto.response;
 
 import java.util.List;
 
@@ -1383,13 +1383,13 @@ public class ExtratoOrdemResponse {
 
 - [ ] **Step 14: Verify compilation**
 
-Run: `mvn compile -pl aureus-investimento -am`
+Run: `mvn compile -pl aurix-investimento -am`
 Expected: BUILD SUCCESS
 
 - [ ] **Step 15: Commit**
 
 ```bash
-git add backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/dto/
+git add backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/dto/
 git commit -m "feat: add investimento DTOs"
 ```
 
@@ -1398,13 +1398,13 @@ git commit -m "feat: add investimento DTOs"
 ### Task 4: Events + Config
 
 **Files:**
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/event/package-info.java`
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/event/ContaInvestimentoCriadaEvent.java`
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/event/OrdemExecutadaEvent.java`
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/event/ResgateProcessadoEvent.java`
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/config/package-info.java`
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/config/InvestimentoKafkaConfig.java`
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/config/InvestimentoSecurityConfig.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/event/package-info.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/event/ContaInvestimentoCriadaEvent.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/event/OrdemExecutadaEvent.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/event/ResgateProcessadoEvent.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/config/package-info.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/config/InvestimentoKafkaConfig.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/config/InvestimentoSecurityConfig.java`
 
 **Interfaces:**
 - Consumes: entity IDs, tenantId from Task 2
@@ -1414,7 +1414,7 @@ git commit -m "feat: add investimento DTOs"
 
 ```java
 @NullMarked
-package com.aureus.platform.investimento.event;
+package com.aurix.platform.investimento.event;
 
 import org.jspecify.annotations.NullMarked;
 ```
@@ -1422,7 +1422,7 @@ import org.jspecify.annotations.NullMarked;
 - [ ] **Step 2: Create ContaInvestimentoCriadaEvent.java**
 
 ```java
-package com.aureus.platform.investimento.event;
+package com.aurix.platform.investimento.event;
 
 import java.time.LocalDate;
 
@@ -1438,7 +1438,7 @@ public record ContaInvestimentoCriadaEvent(
 - [ ] **Step 3: Create OrdemExecutadaEvent.java**
 
 ```java
-package com.aureus.platform.investimento.event;
+package com.aurix.platform.investimento.event;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -1457,7 +1457,7 @@ public record OrdemExecutadaEvent(
 - [ ] **Step 4: Create ResgateProcessadoEvent.java**
 
 ```java
-package com.aureus.platform.investimento.event;
+package com.aurix.platform.investimento.event;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -1476,7 +1476,7 @@ public record ResgateProcessadoEvent(
 
 ```java
 @NullMarked
-package com.aureus.platform.investimento.config;
+package com.aurix.platform.investimento.config;
 
 import org.jspecify.annotations.NullMarked;
 ```
@@ -1484,7 +1484,7 @@ import org.jspecify.annotations.NullMarked;
 - [ ] **Step 6: Create InvestimentoKafkaConfig.java**
 
 ```java
-package com.aureus.platform.investimento.config;
+package com.aurix.platform.investimento.config;
 
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.context.annotation.Bean;
@@ -1518,7 +1518,7 @@ public class InvestimentoKafkaConfig {
 - [ ] **Step 7: Create InvestimentoSecurityConfig.java**
 
 ```java
-package com.aureus.platform.investimento.config;
+package com.aurix.platform.investimento.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -1544,14 +1544,14 @@ public class InvestimentoSecurityConfig {
 
 - [ ] **Step 8: Verify compilation**
 
-Run: `mvn compile -pl aureus-investimento -am`
+Run: `mvn compile -pl aurix-investimento -am`
 Expected: BUILD SUCCESS
 
 - [ ] **Step 9: Commit**
 
 ```bash
-git add backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/event/
-git add backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/config/
+git add backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/event/
+git add backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/config/
 git commit -m "feat: add investimento events and config"
 ```
 
@@ -1560,9 +1560,9 @@ git commit -m "feat: add investimento events and config"
 ### Task 5: ContaCorrenteClient + HTTP Config
 
 **Files:**
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/client/package-info.java`
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/client/ContaCorrenteClient.java`
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/config/InvestimentoHttpConfig.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/client/package-info.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/client/ContaCorrenteClient.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/config/InvestimentoHttpConfig.java`
 
 **Interfaces:**
 - Produces: `ContaCorrenteClient.debitar(id, request)` and `ContaCorrenteClient.creditar(id, request)` consumed by OrdemService in Task 6
@@ -1571,7 +1571,7 @@ git commit -m "feat: add investimento events and config"
 
 ```java
 @NullMarked
-package com.aureus.platform.investimento.client;
+package com.aurix.platform.investimento.client;
 
 import org.jspecify.annotations.NullMarked;
 ```
@@ -1579,7 +1579,7 @@ import org.jspecify.annotations.NullMarked;
 - [ ] **Step 2: Create ContaCorrenteClient.java**
 
 ```java
-package com.aureus.platform.investimento.client;
+package com.aurix.platform.investimento.client;
 
 import java.math.BigDecimal;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -1604,9 +1604,9 @@ public interface ContaCorrenteClient {
 - [ ] **Step 3: Create InvestimentoHttpConfig.java**
 
 ```java
-package com.aureus.platform.investimento.config;
+package com.aurix.platform.investimento.config;
 
-import com.aureus.platform.investimento.client.ContaCorrenteClient;
+import com.aurix.platform.investimento.client.ContaCorrenteClient;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.resilience.annotation.EnableResilientMethods;
 import org.springframework.web.service.registry.ImportHttpServices;
@@ -1620,14 +1620,14 @@ public class InvestimentoHttpConfig {
 
 - [ ] **Step 4: Verify compilation**
 
-Run: `mvn compile -pl aureus-investimento -am`
+Run: `mvn compile -pl aurix-investimento -am`
 Expected: BUILD SUCCESS
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/client/
-git add backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/config/InvestimentoHttpConfig.java
+git add backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/client/
+git add backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/config/InvestimentoHttpConfig.java
 git commit -m "feat: add ContaCorrenteClient and HTTP config"
 ```
 
@@ -1636,11 +1636,11 @@ git commit -m "feat: add ContaCorrenteClient and HTTP config"
 ### Task 6: Services
 
 **Files:**
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/service/package-info.java`
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/service/ContaInvestimentoService.java`
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/service/ProdutoInvestimentoService.java`
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/service/OrdemService.java`
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/service/CarteiraService.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/service/package-info.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/service/ContaInvestimentoService.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/service/ProdutoInvestimentoService.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/service/OrdemService.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/service/CarteiraService.java`
 
 **Interfaces:**
 - Consumes: entities/repos from Task 2, DTOs from Task 3, events from Task 4, ContaCorrenteClient from Task 5
@@ -1650,7 +1650,7 @@ git commit -m "feat: add ContaCorrenteClient and HTTP config"
 
 ```java
 @NullMarked
-package com.aureus.platform.investimento.service;
+package com.aurix.platform.investimento.service;
 
 import org.jspecify.annotations.NullMarked;
 ```
@@ -1658,19 +1658,19 @@ import org.jspecify.annotations.NullMarked;
 - [ ] **Step 2: Create ContaInvestimentoService.java**
 
 ```java
-package com.aureus.platform.investimento.service;
+package com.aurix.platform.investimento.service;
 
-import com.aureus.platform.investimento.client.ContaCorrenteClient;
-import com.aureus.platform.investimento.dto.request.CriarContaInvestimentoRequest;
-import com.aureus.platform.investimento.dto.response.ContaInvestimentoResponse;
-import com.aureus.platform.investimento.entity.ContaInvestimento;
-import com.aureus.platform.investimento.entity.ContaInvestimento.ModoContaInvestimento;
-import com.aureus.platform.investimento.entity.ContaInvestimento.StatusContaInvestimento;
-import com.aureus.platform.investimento.event.ContaInvestimentoCriadaEvent;
-import com.aureus.platform.investimento.repository.ContaInvestimentoRepository;
-import com.aureus.platform.investimento.repository.CarteiraRepository;
-import com.aureus.platform.shared.tenant.TenantContext;
-import com.aureus.platform.shared.util.TransacaoUtil;
+import com.aurix.platform.investimento.client.ContaCorrenteClient;
+import com.aurix.platform.investimento.dto.request.CriarContaInvestimentoRequest;
+import com.aurix.platform.investimento.dto.response.ContaInvestimentoResponse;
+import com.aurix.platform.investimento.entity.ContaInvestimento;
+import com.aurix.platform.investimento.entity.ContaInvestimento.ModoContaInvestimento;
+import com.aurix.platform.investimento.entity.ContaInvestimento.StatusContaInvestimento;
+import com.aurix.platform.investimento.event.ContaInvestimentoCriadaEvent;
+import com.aurix.platform.investimento.repository.ContaInvestimentoRepository;
+import com.aurix.platform.investimento.repository.CarteiraRepository;
+import com.aurix.platform.shared.tenant.TenantContext;
+import com.aurix.platform.shared.util.TransacaoUtil;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
@@ -1679,7 +1679,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import static com.aureus.platform.investimento.config.InvestimentoKafkaConfig.TOPICO_CONTA_CRIADA;
+import static com.aurix.platform.investimento.config.InvestimentoKafkaConfig.TOPICO_CONTA_CRIADA;
 
 @Service
 @Transactional
@@ -1769,16 +1769,16 @@ public class ContaInvestimentoService {
 - [ ] **Step 3: Create ProdutoInvestimentoService.java**
 
 ```java
-package com.aureus.platform.investimento.service;
+package com.aurix.platform.investimento.service;
 
-import com.aureus.platform.investimento.dto.request.AtualizarProdutoRequest;
-import com.aureus.platform.investimento.dto.request.CriarProdutoRequest;
-import com.aureus.platform.investimento.dto.response.ProdutoInvestimentoResponse;
-import com.aureus.platform.investimento.entity.ProdutoInvestimento;
-import com.aureus.platform.investimento.entity.ProdutoInvestimento.CategoriaProdutoInvestimento;
-import com.aureus.platform.investimento.entity.ProdutoInvestimento.TipoProdutoInvestimento;
-import com.aureus.platform.investimento.repository.ProdutoInvestimentoRepository;
-import com.aureus.platform.shared.tenant.TenantContext;
+import com.aurix.platform.investimento.dto.request.AtualizarProdutoRequest;
+import com.aurix.platform.investimento.dto.request.CriarProdutoRequest;
+import com.aurix.platform.investimento.dto.response.ProdutoInvestimentoResponse;
+import com.aurix.platform.investimento.entity.ProdutoInvestimento;
+import com.aurix.platform.investimento.entity.ProdutoInvestimento.CategoriaProdutoInvestimento;
+import com.aurix.platform.investimento.entity.ProdutoInvestimento.TipoProdutoInvestimento;
+import com.aurix.platform.investimento.repository.ProdutoInvestimentoRepository;
+import com.aurix.platform.shared.tenant.TenantContext;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -1861,11 +1861,11 @@ public class ProdutoInvestimentoService {
 - [ ] **Step 4: Create CarteiraService.java**
 
 ```java
-package com.aureus.platform.investimento.service;
+package com.aurix.platform.investimento.service;
 
-import com.aureus.platform.investimento.dto.response.CarteiraResponse;
-import com.aureus.platform.investimento.entity.Carteira;
-import com.aureus.platform.investimento.repository.CarteiraRepository;
+import com.aurix.platform.investimento.dto.response.CarteiraResponse;
+import com.aurix.platform.investimento.entity.Carteira;
+import com.aurix.platform.investimento.repository.CarteiraRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -1892,7 +1892,7 @@ public class CarteiraService {
                 Carteira nova = new Carteira();
                 nova.setContaId(contaId);
                 nova.setProdutoId(produtoId);
-                nova.setTenantId(com.aureus.platform.shared.tenant.TenantContext.getTenantId());
+                nova.setTenantId(com.aurix.platform.shared.tenant.TenantContext.getTenantId());
                 return nova;
             });
         carteira.setSaldo(carteira.getSaldo().add(valor));
@@ -1932,26 +1932,26 @@ public class CarteiraService {
 - [ ] **Step 5: Create OrdemService.java**
 
 ```java
-package com.aureus.platform.investimento.service;
+package com.aurix.platform.investimento.service;
 
-import com.aureus.platform.investimento.client.ContaCorrenteClient;
-import com.aureus.platform.investimento.dto.request.AplicarOrdemRequest;
-import com.aureus.platform.investimento.dto.request.ResgatarOrdemRequest;
-import com.aureus.platform.investimento.dto.response.ExtratoOrdemResponse;
-import com.aureus.platform.investimento.dto.response.OrdemInvestimentoResponse;
-import com.aureus.platform.investimento.entity.ContaInvestimento;
-import com.aureus.platform.investimento.entity.ContaInvestimento.ModoContaInvestimento;
-import com.aureus.platform.investimento.entity.ContaInvestimento.StatusContaInvestimento;
-import com.aureus.platform.investimento.entity.OrdemInvestimento;
-import com.aureus.platform.investimento.entity.OrdemInvestimento.StatusOrdemInvestimento;
-import com.aureus.platform.investimento.entity.OrdemInvestimento.TipoOrdemInvestimento;
-import com.aureus.platform.investimento.entity.ProdutoInvestimento;
-import com.aureus.platform.investimento.event.OrdemExecutadaEvent;
-import com.aureus.platform.investimento.event.ResgateProcessadoEvent;
-import com.aureus.platform.investimento.repository.ContaInvestimentoRepository;
-import com.aureus.platform.investimento.repository.OrdemInvestimentoRepository;
-import com.aureus.platform.investimento.repository.ProdutoInvestimentoRepository;
-import com.aureus.platform.shared.tenant.TenantContext;
+import com.aurix.platform.investimento.client.ContaCorrenteClient;
+import com.aurix.platform.investimento.dto.request.AplicarOrdemRequest;
+import com.aurix.platform.investimento.dto.request.ResgatarOrdemRequest;
+import com.aurix.platform.investimento.dto.response.ExtratoOrdemResponse;
+import com.aurix.platform.investimento.dto.response.OrdemInvestimentoResponse;
+import com.aurix.platform.investimento.entity.ContaInvestimento;
+import com.aurix.platform.investimento.entity.ContaInvestimento.ModoContaInvestimento;
+import com.aurix.platform.investimento.entity.ContaInvestimento.StatusContaInvestimento;
+import com.aurix.platform.investimento.entity.OrdemInvestimento;
+import com.aurix.platform.investimento.entity.OrdemInvestimento.StatusOrdemInvestimento;
+import com.aurix.platform.investimento.entity.OrdemInvestimento.TipoOrdemInvestimento;
+import com.aurix.platform.investimento.entity.ProdutoInvestimento;
+import com.aurix.platform.investimento.event.OrdemExecutadaEvent;
+import com.aurix.platform.investimento.event.ResgateProcessadoEvent;
+import com.aurix.platform.investimento.repository.ContaInvestimentoRepository;
+import com.aurix.platform.investimento.repository.OrdemInvestimentoRepository;
+import com.aurix.platform.investimento.repository.ProdutoInvestimentoRepository;
+import com.aurix.platform.shared.tenant.TenantContext;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -1959,8 +1959,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import static com.aureus.platform.investimento.config.InvestimentoKafkaConfig.TOPICO_ORDEM_EXECUTADA;
-import static com.aureus.platform.investimento.config.InvestimentoKafkaConfig.TOPICO_RESGATE_PROCESSADO;
+import static com.aurix.platform.investimento.config.InvestimentoKafkaConfig.TOPICO_ORDEM_EXECUTADA;
+import static com.aurix.platform.investimento.config.InvestimentoKafkaConfig.TOPICO_RESGATE_PROCESSADO;
 
 @Service
 @Transactional
@@ -2158,14 +2158,14 @@ public interface ContaInvestimentoRepository extends JpaRepository<ContaInvestim
 
 - [ ] **Step 7: Verify compilation**
 
-Run: `mvn compile -pl aureus-investimento -am`
+Run: `mvn compile -pl aurix-investimento -am`
 Expected: BUILD SUCCESS
 
 - [ ] **Step 8: Commit**
 
 ```bash
-git add backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/service/
-git add backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/repository/ContaInvestimentoRepository.java
+git add backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/service/
+git add backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/repository/ContaInvestimentoRepository.java
 git commit -m "feat: add investimento services"
 ```
 
@@ -2174,10 +2174,10 @@ git commit -m "feat: add investimento services"
 ### Task 7: Controllers
 
 **Files:**
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/controller/package-info.java`
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/controller/ContaInvestimentoController.java`
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/controller/ProdutoInvestimentoController.java`
-- Create: `backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/controller/OrdemController.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/controller/package-info.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/controller/ContaInvestimentoController.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/controller/ProdutoInvestimentoController.java`
+- Create: `backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/controller/OrdemController.java`
 
 **Interfaces:**
 - Consumes: service methods from Task 6
@@ -2187,7 +2187,7 @@ git commit -m "feat: add investimento services"
 
 ```java
 @NullMarked
-package com.aureus.platform.investimento.controller;
+package com.aurix.platform.investimento.controller;
 
 import org.jspecify.annotations.NullMarked;
 ```
@@ -2195,13 +2195,13 @@ import org.jspecify.annotations.NullMarked;
 - [ ] **Step 2: Create ContaInvestimentoController.java**
 
 ```java
-package com.aureus.platform.investimento.controller;
+package com.aurix.platform.investimento.controller;
 
-import com.aureus.platform.investimento.dto.request.CriarContaInvestimentoRequest;
-import com.aureus.platform.investimento.dto.response.CarteiraResponse;
-import com.aureus.platform.investimento.dto.response.ContaInvestimentoResponse;
-import com.aureus.platform.investimento.service.CarteiraService;
-import com.aureus.platform.investimento.service.ContaInvestimentoService;
+import com.aurix.platform.investimento.dto.request.CriarContaInvestimentoRequest;
+import com.aurix.platform.investimento.dto.response.CarteiraResponse;
+import com.aurix.platform.investimento.dto.response.ContaInvestimentoResponse;
+import com.aurix.platform.investimento.service.CarteiraService;
+import com.aurix.platform.investimento.service.ContaInvestimentoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -2269,12 +2269,12 @@ public class ContaInvestimentoController {
 - [ ] **Step 3: Create ProdutoInvestimentoController.java**
 
 ```java
-package com.aureus.platform.investimento.controller;
+package com.aurix.platform.investimento.controller;
 
-import com.aureus.platform.investimento.dto.request.AtualizarProdutoRequest;
-import com.aureus.platform.investimento.dto.request.CriarProdutoRequest;
-import com.aureus.platform.investimento.dto.response.ProdutoInvestimentoResponse;
-import com.aureus.platform.investimento.service.ProdutoInvestimentoService;
+import com.aurix.platform.investimento.dto.request.AtualizarProdutoRequest;
+import com.aurix.platform.investimento.dto.request.CriarProdutoRequest;
+import com.aurix.platform.investimento.dto.response.ProdutoInvestimentoResponse;
+import com.aurix.platform.investimento.service.ProdutoInvestimentoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -2331,13 +2331,13 @@ public class ProdutoInvestimentoController {
 - [ ] **Step 4: Create OrdemController.java**
 
 ```java
-package com.aureus.platform.investimento.controller;
+package com.aurix.platform.investimento.controller;
 
-import com.aureus.platform.investimento.dto.request.AplicarOrdemRequest;
-import com.aureus.platform.investimento.dto.request.ResgatarOrdemRequest;
-import com.aureus.platform.investimento.dto.response.ExtratoOrdemResponse;
-import com.aureus.platform.investimento.dto.response.OrdemInvestimentoResponse;
-import com.aureus.platform.investimento.service.OrdemService;
+import com.aurix.platform.investimento.dto.request.AplicarOrdemRequest;
+import com.aurix.platform.investimento.dto.request.ResgatarOrdemRequest;
+import com.aurix.platform.investimento.dto.response.ExtratoOrdemResponse;
+import com.aurix.platform.investimento.dto.response.OrdemInvestimentoResponse;
+import com.aurix.platform.investimento.service.OrdemService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -2385,13 +2385,13 @@ public class OrdemController {
 
 - [ ] **Step 5: Verify compilation**
 
-Run: `mvn compile -pl aureus-investimento -am`
+Run: `mvn compile -pl aurix-investimento -am`
 Expected: BUILD SUCCESS
 
 - [ ] **Step 6: Commit**
 
 ```bash
-git add backend/aureus-investimento/src/main/java/com/aureus/platform/investimento/controller/
+git add backend/aurix-investimento/src/main/java/com/aurix/platform/investimento/controller/
 git commit -m "feat: add investimento controllers"
 ```
 
@@ -2400,7 +2400,7 @@ git commit -m "feat: add investimento controllers"
 ### Task 8: Gateway Route + Parent POM
 
 **Files:**
-- Modify: `backend/aureus-gateway/src/main/resources/application.yml` (add gateway route)
+- Modify: `backend/aurix-gateway/src/main/resources/application.yml` (add gateway route)
 - Modify: `backend/pom.xml` (already done in Task 1, verify)
 
 **Interfaces:**
@@ -2409,11 +2409,11 @@ git commit -m "feat: add investimento controllers"
 
 - [ ] **Step 1: Add gateway route**
 
-Edit `backend/aureus-gateway/src/main/resources/application.yml`, insert after the AUREUS Internet Banking route:
+Edit `backend/aurix-gateway/src/main/resources/application.yml`, insert after the AURIX Internet Banking route:
 
 ```yaml
-        # AUREUS Investimento
-        - id: aureus-investimento
+        # AURIX Investimento
+        - id: aurix-investimento
           uri: http://localhost:8113
           predicates:
             - Path=/api/investimento/**
@@ -2423,19 +2423,19 @@ Edit `backend/aureus-gateway/src/main/resources/application.yml`, insert after t
 
 - [ ] **Step 2: Verify parent POM has module**
 
-Run: `grep -n 'aureus-investimento' backend/pom.xml`
-Expected: output showing `<module>aureus-investimento</module>` present
+Run: `grep -n 'aurix-investimento' backend/pom.xml`
+Expected: output showing `<module>aurix-investimento</module>` present
 
 - [ ] **Step 3: Verify full build compiles**
 
-Run: `mvn compile -pl aureus-investimento -am`
+Run: `mvn compile -pl aurix-investimento -am`
 Expected: BUILD SUCCESS
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add backend/aureus-gateway/src/main/resources/application.yml
-git commit -m "feat: add gateway route for aureus-investimento"
+git add backend/aurix-gateway/src/main/resources/application.yml
+git commit -m "feat: add gateway route for aurix-investimento"
 ```
 
 ---
@@ -2443,18 +2443,18 @@ git commit -m "feat: add gateway route for aureus-investimento"
 ### Task 9: Controller Tests
 
 **Files:**
-- Create: `backend/aureus-investimento/src/test/java/com/aureus/platform/investimento/controller/package-info.java`
-- Create: `backend/aureus-investimento/src/test/java/com/aureus/platform/investimento/controller/ContaInvestimentoControllerTest.java`
-- Create: `backend/aureus-investimento/src/test/java/com/aureus/platform/investimento/controller/ProdutoInvestimentoControllerTest.java`
-- Create: `backend/aureus-investimento/src/test/java/com/aureus/platform/investimento/controller/OrdemControllerTest.java`
-- Modify: `backend/aureus-investimento/src/main/resources/application.yml` (add test profile)
-- Create: `backend/aureus-investimento/src/test/resources/application-test.yml`
+- Create: `backend/aurix-investimento/src/test/java/com/aurix/platform/investimento/controller/package-info.java`
+- Create: `backend/aurix-investimento/src/test/java/com/aurix/platform/investimento/controller/ContaInvestimentoControllerTest.java`
+- Create: `backend/aurix-investimento/src/test/java/com/aurix/platform/investimento/controller/ProdutoInvestimentoControllerTest.java`
+- Create: `backend/aurix-investimento/src/test/java/com/aurix/platform/investimento/controller/OrdemControllerTest.java`
+- Modify: `backend/aurix-investimento/src/main/resources/application.yml` (add test profile)
+- Create: `backend/aurix-investimento/src/test/resources/application-test.yml`
 
 - [ ] **Step 1: Create test controller/package-info.java**
 
 ```java
 @NullMarked
-package com.aureus.platform.investimento.controller;
+package com.aurix.platform.investimento.controller;
 
 import org.jspecify.annotations.NullMarked;
 ```
@@ -2480,7 +2480,7 @@ spring:
       retries: 0
 logging:
   level:
-    com.aureus.platform: DEBUG
+    com.aurix.platform: DEBUG
 investimento:
   conta-independente: false
 ```
@@ -2488,13 +2488,13 @@ investimento:
 - [ ] **Step 3: Create ContaInvestimentoControllerTest.java**
 
 ```java
-package com.aureus.platform.investimento.controller;
+package com.aurix.platform.investimento.controller;
 
-import com.aureus.platform.investimento.AureusInvestimentoApplication;
-import com.aureus.platform.investimento.dto.request.CriarContaInvestimentoRequest;
-import com.aureus.platform.investimento.dto.response.ContaInvestimentoResponse;
-import com.aureus.platform.investimento.repository.ContaInvestimentoRepository;
-import com.aureus.platform.shared.tenant.TenantContext;
+import com.aurix.platform.investimento.AurixInvestimentoApplication;
+import com.aurix.platform.investimento.dto.request.CriarContaInvestimentoRequest;
+import com.aurix.platform.investimento.dto.response.ContaInvestimentoResponse;
+import com.aurix.platform.investimento.repository.ContaInvestimentoRepository;
+import com.aurix.platform.shared.tenant.TenantContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -2517,7 +2517,7 @@ import org.springframework.web.client.RestTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(classes = AureusInvestimentoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = AurixInvestimentoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @Import(ContaInvestimentoControllerTest.TestConfig.class)
 class ContaInvestimentoControllerTest {
@@ -2624,13 +2624,13 @@ class ContaInvestimentoControllerTest {
 - [ ] **Step 4: Create ProdutoInvestimentoControllerTest.java**
 
 ```java
-package com.aureus.platform.investimento.controller;
+package com.aurix.platform.investimento.controller;
 
-import com.aureus.platform.investimento.AureusInvestimentoApplication;
-import com.aureus.platform.investimento.dto.request.CriarProdutoRequest;
-import com.aureus.platform.investimento.dto.response.ProdutoInvestimentoResponse;
-import com.aureus.platform.investimento.repository.ProdutoInvestimentoRepository;
-import com.aureus.platform.shared.tenant.TenantContext;
+import com.aurix.platform.investimento.AurixInvestimentoApplication;
+import com.aurix.platform.investimento.dto.request.CriarProdutoRequest;
+import com.aurix.platform.investimento.dto.response.ProdutoInvestimentoResponse;
+import com.aurix.platform.investimento.repository.ProdutoInvestimentoRepository;
+import com.aurix.platform.shared.tenant.TenantContext;
 import java.math.BigDecimal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -2654,7 +2654,7 @@ import org.springframework.web.client.RestTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(classes = AureusInvestimentoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = AurixInvestimentoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @Import(ProdutoInvestimentoControllerTest.TestConfig.class)
 class ProdutoInvestimentoControllerTest {
@@ -2685,7 +2685,7 @@ class ProdutoInvestimentoControllerTest {
         request.setNome("CDB Prefixado 120% CDI");
         request.setTipo("CDB");
         request.setCategoria("RENDA_FIXA");
-        request.setEmissor("Banco AUREUS");
+        request.setEmissor("Banco AURIX");
         request.setValorMinimoAplicacao(new BigDecimal("1000.00"));
 
         ResponseEntity<ProdutoInvestimentoResponse> response = rest.postForEntity(
@@ -2707,7 +2707,7 @@ class ProdutoInvestimentoControllerTest {
         request.setNome("LCI 95% CDI");
         request.setTipo("LCI");
         request.setCategoria("RENDA_FIXA");
-        request.setEmissor("Banco AUREUS");
+        request.setEmissor("Banco AURIX");
         request.setValorMinimoAplicacao(new BigDecimal("5000.00"));
         rest.postForEntity(url("/produtos"), request, ProdutoInvestimentoResponse.class);
 
@@ -2743,20 +2743,20 @@ class ProdutoInvestimentoControllerTest {
 - [ ] **Step 5: Create OrdemControllerTest.java**
 
 ```java
-package com.aureus.platform.investimento.controller;
+package com.aurix.platform.investimento.controller;
 
-import com.aureus.platform.investimento.AureusInvestimentoApplication;
-import com.aureus.platform.investimento.dto.request.AplicarOrdemRequest;
-import com.aureus.platform.investimento.dto.request.CriarContaInvestimentoRequest;
-import com.aureus.platform.investimento.dto.request.CriarProdutoRequest;
-import com.aureus.platform.investimento.dto.response.ContaInvestimentoResponse;
-import com.aureus.platform.investimento.dto.response.ExtratoOrdemResponse;
-import com.aureus.platform.investimento.dto.response.OrdemInvestimentoResponse;
-import com.aureus.platform.investimento.dto.response.ProdutoInvestimentoResponse;
-import com.aureus.platform.investimento.repository.ContaInvestimentoRepository;
-import com.aureus.platform.investimento.repository.OrdemInvestimentoRepository;
-import com.aureus.platform.investimento.repository.ProdutoInvestimentoRepository;
-import com.aureus.platform.shared.tenant.TenantContext;
+import com.aurix.platform.investimento.AurixInvestimentoApplication;
+import com.aurix.platform.investimento.dto.request.AplicarOrdemRequest;
+import com.aurix.platform.investimento.dto.request.CriarContaInvestimentoRequest;
+import com.aurix.platform.investimento.dto.request.CriarProdutoRequest;
+import com.aurix.platform.investimento.dto.response.ContaInvestimentoResponse;
+import com.aurix.platform.investimento.dto.response.ExtratoOrdemResponse;
+import com.aurix.platform.investimento.dto.response.OrdemInvestimentoResponse;
+import com.aurix.platform.investimento.dto.response.ProdutoInvestimentoResponse;
+import com.aurix.platform.investimento.repository.ContaInvestimentoRepository;
+import com.aurix.platform.investimento.repository.OrdemInvestimentoRepository;
+import com.aurix.platform.investimento.repository.ProdutoInvestimentoRepository;
+import com.aurix.platform.shared.tenant.TenantContext;
 import java.math.BigDecimal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -2780,7 +2780,7 @@ import org.springframework.web.client.RestTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(classes = AureusInvestimentoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = AurixInvestimentoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @Import(OrdemControllerTest.TestConfig.class)
 class OrdemControllerTest {
@@ -2827,7 +2827,7 @@ class OrdemControllerTest {
         request.setNome("CDB Teste");
         request.setTipo("CDB");
         request.setCategoria("RENDA_FIXA");
-        request.setEmissor("Banco AUREUS");
+        request.setEmissor("Banco AURIX");
         request.setValorMinimoAplicacao(new BigDecimal("100.00"));
         return rest.postForEntity(url("/produtos"), request, ProdutoInvestimentoResponse.class)
             .getBody().getId();
@@ -2895,14 +2895,14 @@ class OrdemControllerTest {
 
 - [ ] **Step 6: Run tests**
 
-Run: `mvn test -pl aureus-investimento -am -Dtest=ContaInvestimentoControllerTest,ProdutoInvestimentoControllerTest,OrdemControllerTest`
+Run: `mvn test -pl aurix-investimento -am -Dtest=ContaInvestimentoControllerTest,ProdutoInvestimentoControllerTest,OrdemControllerTest`
 Expected: BUILD SUCCESS (all tests pass)
 
 - [ ] **Step 7: Commit**
 
 ```bash
-git add backend/aureus-investimento/src/test/
-git add backend/aureus-investimento/src/test/resources/
+git add backend/aurix-investimento/src/test/
+git add backend/aurix-investimento/src/test/resources/
 git commit -m "test: add investimento controller tests"
 ```
 
@@ -2926,7 +2926,7 @@ git commit -m "test: add investimento controller tests"
 
 **Type consistency:** `ContaInvestimento.ModoContaInvestimento.VINCULADA/STANDALONE` matches design spec. All method signatures across services and controllers are consistent.
 
-Plan complete and saved to `docs/superpowers/plans/2026-06-24-aureus-investimento.md`.
+Plan complete and saved to `docs/superpowers/plans/2026-06-24-aurix-investimento.md`.
 
 Two execution options:
 1. **Subagent-Driven (recommended)** — I dispatch a fresh subagent per task, review between tasks, fast iteration

@@ -4,7 +4,7 @@ Ambiente com dados de teste para desenvolvimento e integracao sem afetar produca
 
 ## Como subir o ambiente
 
-1. Banco: PostgreSQL rodando (ex.: Docker ou local) com schema `aureus` e usuario configurado nos `application.yml` de cada modulo.
+1. Banco: PostgreSQL rodando (ex.: Docker ou local) com schema `aurix` e usuario configurado nos `application.yml` de cada modulo.
 2. Subir os servicos na ordem: core (8081), pix (8082), onboarding (8095), gateway (8080). Ou use o Docker Compose da infraestrutura quando disponivel.
 3. Tenant padrao: envie `X-Tenant-Id: default` em todas as requisicoes.
 
@@ -19,17 +19,17 @@ Ambiente com dados de teste para desenvolvimento e integracao sem afetar produca
 O gateway suporta API Key e rate limit por plano. Para habilitar:
 
 - **Header**: `X-Api-Key: <chave>` em todas as requisicoes (quando `api-key.required: true`).
-- **Chave de sandbox** (pre-configurada no gateway): `sandbox-key-aureus-demo` — plano `sandbox`, tenant `default`, 30 req/min.
+- **Chave de sandbox** (pre-configurada no gateway): `sandbox-key-aurix-demo` — plano `sandbox`, tenant `default`, 30 req/min.
 
-Configuracao no gateway (`aureus-gateway/src/main/resources/application.yml`):
+Configuracao no gateway (`aurix-gateway/src/main/resources/application.yml`):
 ```yaml
-aureus:
+aurix:
   gateway:
     api-key:
       enabled: true
       required: false
       keys:
-        sandbox-key-aureus-demo:
+        sandbox-key-aurix-demo:
           plan: sandbox
           tenantId: default
       plan-limits:
@@ -44,7 +44,7 @@ Com `enabled: true`, o gateway valida a chave (se enviada) e aplica o plano; com
 
 ## OAuth2 (sandbox)
 
-Para fluxo Open Finance / OAuth2, use o modulo aureus-openfinance. Em sandbox, um cliente OAuth2 de teste pode ser configurado (client_id e client_secret) para obter token e chamar APIs em nome do usuario. Ver documentacao do modulo openfinance.
+Para fluxo Open Finance / OAuth2, use o modulo aurix-openfinance. Em sandbox, um cliente OAuth2 de teste pode ser configurado (client_id e client_secret) para obter token e chamar APIs em nome do usuario. Ver documentacao do modulo openfinance.
 
 ## Rate limit por plano
 
@@ -56,7 +56,7 @@ Para fluxo Open Finance / OAuth2, use o modulo aureus-openfinance. Em sandbox, u
 | growth     | 300                | Producao medio |
 | enterprise | 1000               | Producao alto (configuravel) |
 
-O plano e derivado da API Key (mapeamento em `aureus.gateway.api-key.keys`). Rate limit e aplicado por plano + chave em janela de 1 minuto; exceder retorna 429.
+O plano e derivado da API Key (mapeamento em `aurix.gateway.api-key.keys`). Rate limit e aplicado por plano + chave em janela de 1 minuto; exceder retorna 429.
 
 ## Resumo
 

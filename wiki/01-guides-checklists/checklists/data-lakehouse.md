@@ -1,13 +1,13 @@
 # Checklist – Data Lakehouse
 
-Verificação e passos para o Data Lakehouse AUREUS (Airflow, Trino, MinIO, dbt, DAGs). A stack já inclui os serviços no `infrastructure/data-stack/docker-compose.yml`; este checklist garante configuração e primeiro uso.
+Verificação e passos para o Data Lakehouse AURIX (Airflow, Trino, MinIO, dbt, DAGs). A stack já inclui os serviços no `infrastructure/data-stack/docker-compose.yml`; este checklist garante configuração e primeiro uso.
 
 ---
 
 ## Infraestrutura
 
 - [ ] **Airflow** no compose: serviços `airflow-init`, `airflow-webserver` (porta 8082), `airflow-scheduler`; banco Airflow no Postgres (script `init-scripts/07-create-airflow-db.sql` na primeira criação do volume).
-- [ ] **Buckets MinIO**: `aureus-bronze`, `aureus-silver`, `aureus-gold` criados (script `infrastructure/data-stack/scripts/create-minio-buckets.sh` ou manualmente no Console :9001).
+- [ ] **Buckets MinIO**: `aurix-bronze`, `aurix-silver`, `aurix-gold` criados (script `infrastructure/data-stack/scripts/create-minio-buckets.sh` ou manualmente no Console :9001).
 - [ ] **Iceberg REST Catalog**: serviço `iceberg-rest` na porta 8181 (compose).
 - [ ] **Trino**: serviço na porta 8090; config em `infrastructure/data-stack/trino/` (postgresql, clickhouse, iceberg).
 
@@ -52,7 +52,7 @@ ALTER DATABASE airflow OWNER TO airflow;
 ## Consulta (Trino)
 
 - [ ] Trino UI ou CLI: http://localhost:8090 (ou `trino --server http://localhost:8090`).
-- [ ] Catalogos disponíveis: `postgresql` (schema aureus), `clickhouse`, `iceberg` (quando warehouse e tabelas existirem).
+- [ ] Catalogos disponíveis: `postgresql` (schema aurix), `clickhouse`, `iceberg` (quando warehouse e tabelas existirem).
 
 ---
 

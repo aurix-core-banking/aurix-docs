@@ -1,6 +1,6 @@
-# Portal do Desenvolvedor AUREUS
+# Portal do Desenvolvedor AURIX
 
-Documentacao de APIs e guias para integracao com a plataforma AUREUS Core Banking.
+Documentacao de APIs e guias para integracao com a plataforma AURIX Core Banking.
 
 ## Base URL
 
@@ -13,7 +13,7 @@ Documentacao de APIs e guias para integracao com a plataforma AUREUS Core Bankin
 
 - **Tenant**: Enviar header `X-Tenant-Id` em todas as requisicoes (ex.: `default` ou identificador da instituicao).
 - **API Key** (quando habilitado): Header `X-Api-Key` com chave do parceiro.
-- **OAuth2**: Para integracoes Open Finance; ver modulo aureus-openfinance.
+- **OAuth2**: Para integracoes Open Finance; ver modulo aurix-openfinance.
 
 ## Documentacao por dominio
 

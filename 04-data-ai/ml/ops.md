@@ -1,6 +1,6 @@
-# AUREUS MLOps
+# AURIX MLOps
 
-Pipeline de Machine Learning Operations para treinamento, registro, serving e monitoramento dos modelos do AUREUS Core Banking.
+Pipeline de Machine Learning Operations para treinamento, registro, serving e monitoramento dos modelos do AURIX Core Banking.
 
 ## Estrutura
 
@@ -44,4 +44,4 @@ Deteccao de drift: `./scripts/run_drift_check.sh`
 
 ## Docker
 
-Build: `docker build -f ml/ops/serving/Dockerfile -t aureus-ml-serving .`
+Build: `docker build -f ml/ops/serving/Dockerfile -t aurix-ml-serving .`

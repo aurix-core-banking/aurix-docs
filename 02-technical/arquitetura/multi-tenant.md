@@ -1,4 +1,4 @@
-# Tenant no AUREUS (single por padrao, multi-tenant como alternativa)
+# Tenant no AURIX (single por padrao, multi-tenant como alternativa)
 
 O padrao de operacao e **um unico tenant** por instalacao: uma instituicao, um banco de dados, tenant `default`. O header `X-Tenant-Id` pode ser omitido ou enviado como `default`. **Multi-tenant** e uma **alternativa** para cenarios em que o mesmo deploy atende multiplas instituicoes (SaaS, BaaS, multi-filial); nesses casos o isolamento por tenant e obrigatorio.
 
@@ -17,16 +17,16 @@ Resumo: **self-hosted = um banco/SGBD; multi-tenant SaaS = banco totalmente sepa
 
 ## Componentes
 
-### TenantContext (aureus-shared)
+### TenantContext (aurix-shared)
 
 - `TenantContext.setTenantId(String)` / `getTenantId()` / `clear()`
 - Constantes: `HEADER_TENANT_ID = "X-Tenant-Id"`, `DEFAULT_TENANT_ID = "default"`
 - ThreadLocal; limpo apos cada request.
 
-### TenantFilter (aureus-shared)
+### TenantFilter (aurix-shared)
 
 - Filtro Servlet que le o header `X-Tenant-Id` e chama `TenantContext.setTenantId(...)` antes da cadeia; no `finally` chama `TenantContext.clear()`.
-- Registrado em **aureus-core** via `TenantConfig` (FilterRegistrationBean, ordem mais alta). Outros modulos que precisem de tenant devem registrar o mesmo filtro.
+- Registrado em **aurix-core** via `TenantConfig` (FilterRegistrationBean, ordem mais alta). Outros modulos que precisem de tenant devem registrar o mesmo filtro.
 
 ### Gateway
 
@@ -57,7 +57,7 @@ Resumo: **self-hosted = um banco/SGBD; multi-tenant SaaS = banco totalmente sepa
 
 ## Cenarios em que o multi-tenant e alternativa util
 
-- **AUREUS Cloud (SaaS)**: um unico operador (voces) oferece core banking como servico para varias instituicoes (bancos digitais, fintechs, cooperativas). Cada instituicao e um tenant; um mesmo deploy atende a todos, com banco separado por tenant. Custos de infra e desenvolvimento sao diluidos; time-to-market para novo cliente e baixo (provisioning + config).
+- **AURIX Cloud (SaaS)**: um unico operador (voces) oferece core banking como servico para varias instituicoes (bancos digitais, fintechs, cooperativas). Cada instituicao e um tenant; um mesmo deploy atende a todos, com banco separado por tenant. Custos de infra e desenvolvimento sao diluidos; time-to-market para novo cliente e baixo (provisioning + config).
 - **White label / BaaS**: parceiros (empresas que nao sao bancos) oferecem conta, PIX ou cartao usando a plataforma por baixo. Cada parceiro ou cada "marca" pode ser um tenant: isolamento de dados e de config (tarifas, limites, termos) sem deploy separado.
 - **Multi-filial ou multi-unidade de negocio**: uma unica instituicao com varias filiais ou unidades (ex.: cooperativa com varias cooperativas singulares). Um tenant por filial/unidade no mesmo banco (self-hosted) permite relatorios e operacao por unidade sem misturar dados.
 - **Ambientes por tenant**: em desenvolvimento ou homologacao, usar tenants como ambientes (ex.: `default`, `homolog`, `cliente-demo`) no mesmo banco para testar fluxos e integracoes sem criar multiplas instalacoes.

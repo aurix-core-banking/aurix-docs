@@ -25,10 +25,10 @@ Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
 
 | File | Action |
 |------|--------|
-| `backend/aureus-openfinance/src/main/java/.../client/CoreApiClient.java` | Modified — added 3 method signatures |
-| `backend/aureus-openfinance/src/main/java/.../client/CoreApiClientImpl.java` | Modified — added 3 stub implementations |
-| `backend/aureus-openfinance/src/main/java/.../service/OpenFinanceDataService.java` | Modified — added 2 new methods, imports |
-| `backend/aureus-openfinance/src/test/java/.../service/OpenFinanceDataServiceTest.java` | Created — 3 tests |
+| `backend/aurix-openfinance/src/main/java/.../client/CoreApiClient.java` | Modified — added 3 method signatures |
+| `backend/aurix-openfinance/src/main/java/.../client/CoreApiClientImpl.java` | Modified — added 3 stub implementations |
+| `backend/aurix-openfinance/src/main/java/.../service/OpenFinanceDataService.java` | Modified — added 2 new methods, imports |
+| `backend/aurix-openfinance/src/test/java/.../service/OpenFinanceDataServiceTest.java` | Created — 3 tests |
 
 ## Self-review findings
 

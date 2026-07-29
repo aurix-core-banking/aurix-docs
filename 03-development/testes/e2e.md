@@ -1,6 +1,6 @@
-# Testes End-to-End (E2E) - AUREUS
+# Testes End-to-End (E2E) - AURIX
 
-Este projeto contem os testes end-to-end para validar a plataforma AUREUS rodando completa em containers Docker (infraestrutura + servicos de backend).
+Este projeto contem os testes end-to-end para validar a plataforma AURIX rodando completa em containers Docker (infraestrutura + servicos de backend).
 
 ## Estrutura
 
@@ -29,4 +29,4 @@ cd infrastructure/scripts
 ./run-e2e-tests.sh
 ```
 
-O script vai: subir a infraestrutura e servicos AUREUS com `docker-compose.yml`, aguardar estabilizacao, executar `pytest` em `tests/e2e`, e derrubar os containers ao final.
+O script vai: subir a infraestrutura e servicos AURIX com `docker-compose.yml`, aguardar estabilizacao, executar `pytest` em `tests/e2e`, e derrubar os containers ao final.

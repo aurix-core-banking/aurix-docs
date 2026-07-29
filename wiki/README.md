@@ -1,6 +1,6 @@
-# Wiki AUREUS – Documentação completa
+# Wiki AURIX – Documentação completa
 
-Documentação em formato de livro: o que cada área precisa saber, guias de execução e referências para **setup**, **execução**, **manutenção** e **suporte** da plataforma AUREUS Core Banking.
+Documentação em formato de livro: o que cada área precisa saber, guias de execução e referências para **setup**, **execução**, **manutenção** e **suporte** da plataforma AURIX Core Banking.
 
 ---
 
@@ -91,7 +91,7 @@ Documentação em formato de livro: o que cada área precisa saber, guias de exe
 |------------|---------|
 | Subir a plataforma pela primeira vez | [02-lifecycle/ciclo-de-vida/setup.md](02-lifecycle/ciclo-de-vida/setup.md), [01-guides-checklists/checklists/plataforma-de-pe.md](01-guides-checklists/checklists/plataforma-de-pe.md) |
 | Preparar go live de um cliente | [01-guides-checklists/kit-implementacao/README.md](01-guides-checklists/kit-implementacao/README.md), [01-guides-checklists/checklists/go-live.md](01-guides-checklists/checklists/go-live.md), [04-audiences/por-audiencia/negocio.md](04-audiences/por-audiencia/negocio.md) |
-| Operar no dia a dia (deploy, alertas, incidente) | [02-lifecycle/ciclo-de-vida/run.md](02-lifecycle/ciclo-de-vida/run.md), [04-audiences/por-audiencia/sre-infra.md](04-audiences/por-audiencia/sre-infra.md), [Runbook](../05-infrastructure/infrastructure/aureus-cloud-runbook.md) |
+| Operar no dia a dia (deploy, alertas, incidente) | [02-lifecycle/ciclo-de-vida/run.md](02-lifecycle/ciclo-de-vida/run.md), [04-audiences/por-audiencia/sre-infra.md](04-audiences/por-audiencia/sre-infra.md), [Runbook](../05-infrastructure/infrastructure/aurix-cloud-runbook.md) |
 | Atualizar relatórios regulatórios | [01-guides-checklists/checklists/regulatorio.md](01-guides-checklists/checklists/regulatorio.md), [02-lifecycle/ciclo-de-vida/manutencao.md](02-lifecycle/ciclo-de-vida/manutencao.md) |
 | Desenvolver ou integrar via API | [04-audiences/por-audiencia/engenharia.md](04-audiences/por-audiencia/engenharia.md), [Portal desenvolvedor](../03-development/portal-desenvolvedor/README.md) |
 | Entender decisões e evolução | [04-audiences/por-audiencia/arquitetura.md](04-audiences/por-audiencia/arquitetura.md), [roadmap.md](../01-business/roadmap.md) |

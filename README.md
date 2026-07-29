@@ -1,6 +1,6 @@
-# Documentação Técnica AUREUS
+# Documentação Técnica AURIX
 
-Bem-vindo ao centro de documentação da **AUREUS Core Banking**. Aqui você encontrará tudo o que precisa para entender, operar e integrar com a nossa plataforma.
+Bem-vindo ao centro de documentação da **AURIX Core Banking**. Aqui você encontrará tudo o que precisa para entender, operar e integrar com a nossa plataforma.
 
 ---
 
@@ -32,7 +32,7 @@ Para guias passo a passo de implantação, consulte a **[Wiki](./wiki/)**.
 Para detalhes específicos de baixo nível, cada módulo possui seu próprio guia:
 
 *   **Backend**: Localizados em cada submódulo da pasta `backend/`.
-*   **Frontend**: [Portal Web](../frontend/aureus-web/README.md) e [Painel Administrativo](../frontend/aureus-admin/README.md).
+*   **Frontend**: [Portal Web](../frontend/aurix-web/README.md) e [Painel Administrativo](../frontend/aurix-admin/README.md).
 *   **Dados e ML**: [Pipelines de Dados](./04-data-ai/data-pipelines/README.md) e [Modelos de IA](./04-data-ai/ml/README.md).
 
 ---

@@ -1,6 +1,6 @@
 # Revenue Modules — Design Spec (Fase 2)
 
-> **Objetivo:** Implementar 3 módulos de receita para a plataforma AUREUS: Acquirer (Adquirência), Collections (Cobrança), Guarantee (Garantias).
+> **Objetivo:** Implementar 3 módulos de receita para a plataforma AURIX: Acquirer (Adquirência), Collections (Cobrança), Guarantee (Garantias).
 > **Prioridade:** Fase 2 — depende de Customer + Notification (Foundation, Fase 1).
 > **Arquitetura:** Microsserviços Spring Boot 4.1.0 + Kafka + PostgreSQL. Mesmo padrão dos 4 módulos Foundation.
 
@@ -21,13 +21,13 @@
 ### Padrão comum a todos os módulos
 
 - **Framework:** Spring Boot 4.1.0, Java 25
-- **Banco:** PostgreSQL, schema `aureus`, gerenciado por Flyway
+- **Banco:** PostgreSQL, schema `aurix`, gerenciado por Flyway
 - **Kafka:** `JsonSerializer`/`JsonDeserializer` (shared KafkaConfig), eventos tipados `BaseEvent`
 - **Infra:** Dockerfile (`eclipse-temurin:25-jdk-jammy`), entrypoint no `docker-compose.yml`, rota no `traefik/dynamic.yml`
 - **Portas:** 8127 (acquirer), 8128 (collections), 8129 (guarantee)
 - **Context paths:** `/api/acquirer`, `/api/collections`, `/api/guarantee`
 - **Security:** `permitAll` nas rotas (padrão dev), autenticação via gateway
-- **Package naming:** `com.aureus.platform.acquirer`, `.collections`, `.guarantee`
+- **Package naming:** `com.aurix.platform.acquirer`, `.collections`, `.guarantee`
 
 ## 1. Módulo Acquirer (Porta 8127)
 
@@ -117,7 +117,7 @@ Captura, processamento e liquidação de transações de cartão de crédito/dé
 - `acquirer.transacao.liquidada.v1` — quando liquidação é processada
 - `acquirer.transacao.estornada.v1` — quando transação é estornada
 
-Eventos estendem `BaseEvent`, em `com.aureus.platform.shared.event`:
+Eventos estendem `BaseEvent`, em `com.aurix.platform.shared.event`:
 - `TransacaoAutorizadaEvent` — transacaoId, terminalId, valor, bandeira, autorizacao, nsu
 - `TransacaoCapturadaEvent` — transacaoId, valor, parcelas, bandeira
 - `TransacaoLiquidadaEvent` — liquidacaoId, transacaoId, valorLiquido, valorRepasse
@@ -222,7 +222,7 @@ Eventos no shared:
 
 ### Propósito
 
-Gestão centralizada de garantias: alienação fiduciária, penhor, hipoteca, fiança. Extraído do `aureus-financiamento` com expansão para suportar múltiplos tipos de contrato.
+Gestão centralizada de garantias: alienação fiduciária, penhor, hipoteca, fiança. Extraído do `aurix-financiamento` com expansão para suportar múltiplos tipos de contrato.
 
 ### Entidades
 
@@ -299,34 +299,34 @@ Eventos no shared:
 
 ## 4. Extração do Guarantee do Financiamento
 
-### O que extrair do `aureus-financiamento`
+### O que extrair do `aurix-financiamento`
 
 | Arquivo | Destino |
 |---------|---------|
-| `GarantiaService.java` | `aureus-guarantee/src/main/java/.../service/GarantiaService.java` |
-| `GarantiaRepository.java` | `aureus-guarantee/src/main/java/.../repository/GarantiaRepository.java` |
-| `Garantia.java` (entity) | `aureus-guarantee/src/main/java/.../entity/Garantia.java` |
-| `GarantiaRequest.java` (DTO) | `aureus-guarantee/src/main/java/.../dto/GarantiaRequest.java` |
-| `GarantiaControllerTest.java` | `aureus-guarantee/src/test/java/.../controller/GarantiaControllerTest.java` |
-| `GarantiaResponse.java` | `aureus-guarantee/src/main/java/.../dto/GarantiaResponse.java` |
-| `AtualizacaoGarantiasJob.java` | `aureus-guarantee/src/main/java/.../job/AtualizacaoGarantiasJob.java` |
+| `GarantiaService.java` | `aurix-guarantee/src/main/java/.../service/GarantiaService.java` |
+| `GarantiaRepository.java` | `aurix-guarantee/src/main/java/.../repository/GarantiaRepository.java` |
+| `Garantia.java` (entity) | `aurix-guarantee/src/main/java/.../entity/Garantia.java` |
+| `GarantiaRequest.java` (DTO) | `aurix-guarantee/src/main/java/.../dto/GarantiaRequest.java` |
+| `GarantiaControllerTest.java` | `aurix-guarantee/src/test/java/.../controller/GarantiaControllerTest.java` |
+| `GarantiaResponse.java` | `aurix-guarantee/src/main/java/.../dto/GarantiaResponse.java` |
+| `AtualizacaoGarantiasJob.java` | `aurix-guarantee/src/main/java/.../job/AtualizacaoGarantiasJob.java` |
 
 ### Ajustes pós-extração
 
-1. `aureus-guarantee` adiciona um `GarantiaClient` (Feign) que expõe os mesmos endpoints do GarantiaService para consumo interno
-2. `aureus-financiamento` substitui injeção direta de `GarantiaRepository` por `GarantiaClient`
-3. Schema da tabela `garantias` permanece em `aureus` (mesmo schema dos demais módulos)
-4. `aureus-financiamento/pom.xml` adiciona dependência `aureus-guarantee`
-5. `aureus-guarantee` usa as mesmas entidades compartilhadas (`BaseEvent` do shared)
+1. `aurix-guarantee` adiciona um `GarantiaClient` (Feign) que expõe os mesmos endpoints do GarantiaService para consumo interno
+2. `aurix-financiamento` substitui injeção direta de `GarantiaRepository` por `GarantiaClient`
+3. Schema da tabela `garantias` permanece em `aurix` (mesmo schema dos demais módulos)
+4. `aurix-financiamento/pom.xml` adiciona dependência `aurix-guarantee`
+5. `aurix-guarantee` usa as mesmas entidades compartilhadas (`BaseEvent` do shared)
 6. Testes do financiamento que usam `GarantiaRepository` passam a usar mock de `GarantiaClient`
 
 ### Estratégia de migração
 
-1. Criar módulo `aureus-guarantee` com estrutura básica (pom.xml, application.yml)
+1. Criar módulo `aurix-guarantee` com estrutura básica (pom.xml, application.yml)
 2. Copiar arquivos, ajustar pacotes de `...financiamento...` → `...guarantee...`
-3. Criar `GarantiaClient` (Feign) no `aureus-guarantee`
-4. Atualizar `aureus-financiamento` para usar `GarantiaClient`
-5. Remover classes originais do `aureus-financiamento`
+3. Criar `GarantiaClient` (Feign) no `aurix-guarantee`
+4. Atualizar `aurix-financiamento` para usar `GarantiaClient`
+5. Remover classes originais do `aurix-financiamento`
 6. Compilar ++ testar ambos os módulos
 
 ## 5. Infraestrutura
@@ -334,27 +334,27 @@ Eventos no shared:
 ### Por módulo
 
 - `Dockerfile` — `eclipse-temurin:25-jdk-jammy`, EXPOSE 8127/8128/8129
-- `application.yml` — porta, context-path, datasource (`jdbc:postgresql://postgres:5432/aureus`), kafka (`localhost:9092`), redis
+- `application.yml` — porta, context-path, datasource (`jdbc:postgresql://postgres:5432/aurix`), kafka (`localhost:9092`), redis
 - `docker-compose.yml` — image, ports, environment, healthcheck, depends_on (postgres, kafka)
 - `infrastructure/traefik/dynamic.yml` — router + service para cada módulo
-- `aureus-tests/e2e/config.py` — health endpoint para cada módulo
-- `backend/pom.xml` — adicionar `<module>aureus-acquirer</module>`, `<module>aureus-collections</module>`, `<module>aureus-guarantee</module>`
+- `aurix-tests/e2e/config.py` — health endpoint para cada módulo
+- `backend/pom.xml` — adicionar `<module>aurix-acquirer</module>`, `<module>aurix-collections</module>`, `<module>aurix-guarantee</module>`
 
 ### Tabela de portas e context paths
 
 | Módulo | Porta | Context Path | Grupo Kafka |
 |--------|-------|-------------|-------------|
-| aureus-acquirer | 8127 | `/api/acquirer` | aureus-acquirer-group |
-| aureus-collections | 8128 | `/api/collections` | aureus-collections-group |
-| aureus-guarantee | 8129 | `/api/guarantee` | aureus-guarantee-group |
+| aurix-acquirer | 8127 | `/api/acquirer` | aurix-acquirer-group |
+| aurix-collections | 8128 | `/api/collections` | aurix-collections-group |
+| aurix-guarantee | 8129 | `/api/guarantee` | aurix-guarantee-group |
 
 ## 6. Dependências
 
 ```
-aureus-financiamento ──▶ aureus-guarantee (via GarantiaClient Feign)
-aureus-acquirer ──▶ aureus-shared (eventos tipados)
-aureus-collections ──▶ aureus-shared (eventos tipados)
-aureus-guarantee ──▶ aureus-shared (eventos tipados)
+aurix-financiamento ──▶ aurix-guarantee (via GarantiaClient Feign)
+aurix-acquirer ──▶ aurix-shared (eventos tipados)
+aurix-collections ──▶ aurix-shared (eventos tipados)
+aurix-guarantee ──▶ aurix-shared (eventos tipados)
 ```
 
 Nenhum módulo Fase 2 depende de outro módulo Fase 2 — são independentes entre si.
@@ -369,8 +369,8 @@ Nenhum módulo Fase 2 depende de outro módulo Fase 2 — são independentes ent
 
 - **Unitários:** JUnit 5 + Mockito, service tests com entidades mockadas
 - **Integração:** Testcontainers (PostgreSQL + Kafka) para fluxos completos
-- **Contrato:** OpenAPI spec para cada módulo em `aureus-api-specs/`
-- **E2E:** Health-check endpoints em `aureus-tests/e2e/`
+- **Contrato:** OpenAPI spec para cada módulo em `aurix-api-specs/`
+- **E2E:** Health-check endpoints em `aurix-tests/e2e/`
 
 ## 9. Eventos no shared
 
@@ -394,7 +394,7 @@ String GUARANTEE_GARANTIA_REGISTRADA = "guarantee.garantia.registrada.v1";
 String GUARANTEE_GARANTIA_LIBERADA = "guarantee.garantia.liberada.v1";
 ```
 
-Adicionar classes de evento tipado em `com.aureus.platform.shared.event`:
+Adicionar classes de evento tipado em `com.aurix.platform.shared.event`:
 - `TransacaoAutorizadaEvent`, `TransacaoCapturadaEvent`, `TransacaoLiquidadaEvent`, `TransacaoEstornadaEvent`
 - `BoletoEmitidoEvent`, `CobrancaPagaEvent`, `CobrancaNegativadaEvent`, `CobrancaCanceladaEvent`
 - `GarantiaRegistradaEvent`, `GarantiaLiberadaEvent`

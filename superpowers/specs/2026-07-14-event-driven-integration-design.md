@@ -1,6 +1,6 @@
 # Event-Driven Integration — Design Spec (Fase 2, Sub-projeto 1)
 
-> **Objetivo:** Conectar os 41 módulos da plataforma AUREUS via Kafka, eliminando tópicos fantasmas, padronizando nomenclatura ADR-0001, migrando foundation modules de JSON puro para `BaseEvent`, e criando consumers faltantes (Notification expandido, Audit universal).
+> **Objetivo:** Conectar os 41 módulos da plataforma AURIX via Kafka, eliminando tópicos fantasmas, padronizando nomenclatura ADR-0001, migrando foundation modules de JSON puro para `BaseEvent`, e criando consumers faltantes (Notification expandido, Audit universal).
 > **Arquitetura:** Kafka como espinha dorsal de eventos. Foundation modules migram de `ObjectMapper.writeValueAsString()` para `JsonSerializer` com tipos concretos.
 
 ## Diagrama Alvo
@@ -67,7 +67,7 @@ ClienteCriadoEvent event = ClienteCriadoEvent.criado(clienteId, documento, nome,
 kafkaTemplate.send(Topics.CUSTOMER_CLIENTE_CRIADO, event);
 ```
 
-### Eventos novos no shared (`com.aureus.platform.shared.event`)
+### Eventos novos no shared (`com.aurix.platform.shared.event`)
 
 Cada evento estende `BaseEvent` e segue o padrão `ContaEvent` (com factory methods estáticos + getters):
 
@@ -98,9 +98,9 @@ FraudConsumer hoje escuta tópicos que não existem:
 
 | Consumer atual (inexistente) | Producer real | Novo tópico alvo |
 |---|---|---|
-| `pix.transferencia.criada` | `aureus-pix` → `core.transacao.realizada.v1` | `core.transacao.realizada.v1` |
-| `cartoes.transacao.autorizada` | `aureus-cartoes` → `aureus.cartao.transacao.autorizada` | `cartoes.transacao.autorizada.v1` (após migração) |
-| `credito.solicitacao.criada` | `aureus-credit` → (não produz) | `credit.solicitacao.criada.v1` (novo producer) |
+| `pix.transferencia.criada` | `aurix-pix` → `core.transacao.realizada.v1` | `core.transacao.realizada.v1` |
+| `cartoes.transacao.autorizada` | `aurix-cartoes` → `aurix.cartao.transacao.autorizada` | `cartoes.transacao.autorizada.v1` (após migração) |
+| `credito.solicitacao.criada` | `aurix-credit` → (não produz) | `credit.solicitacao.criada.v1` (novo producer) |
 
 FraudConsumer adapta `TransacaoBloqueadaEvent` para receber `TransacaoEvent` (shared) para PIX, `CartaoTransacaoAutorizadaEvent` para cartões, e `SolicitacaoCreditoCriadaEvent` para crédito.
 
@@ -108,11 +108,11 @@ FraudConsumer adapta `TransacaoBloqueadaEvent` para receber `TransacaoEvent` (sh
 
 | Atual | Novo |
 |---|---|
-| `aureus.cartao.emitido` | `cartoes.cartao.emitido.v1` |
-| `aureus.cartao.transacao.autorizada` | `cartoes.transacao.autorizada.v1` |
-| `aureus.cartao.transacao.estornada` | `cartoes.transacao.estornada.v1` |
-| `aureus.cartao.fatura.fechada` | `cartoes.fatura.fechada.v1` |
-| `aureus.cartao.fatura.paga` | `cartoes.fatura.paga.v1` |
+| `aurix.cartao.emitido` | `cartoes.cartao.emitido.v1` |
+| `aurix.cartao.transacao.autorizada` | `cartoes.transacao.autorizada.v1` |
+| `aurix.cartao.transacao.estornada` | `cartoes.transacao.estornada.v1` |
+| `aurix.cartao.fatura.fechada` | `cartoes.fatura.fechada.v1` |
+| `aurix.cartao.fatura.paga` | `cartoes.fatura.paga.v1` |
 
 ### Eventos migrados para shared
 
@@ -128,7 +128,7 @@ KafkaConfig do cartões usa constantes de `Topics.java` e template tipado.
 
 ## 5. Credit: Producer para `credit.solicitacao.criada.v1`
 
-`aureus-credit` hoje não produz Kafka. Adicionar:
+`aurix-credit` hoje não produz Kafka. Adicionar:
 
 - Dependência `spring-kafka` no `pom.xml`
 - `CreditKafkaConfig` — `KafkaTemplate<String, SolicitacaoCreditoCriadaEvent>`
@@ -142,11 +142,11 @@ Tópicos já definidos em `Topics.java` mas sem producer:
 
 | Tópico | Módulo | Onde produzir |
 |---|---|---|
-| `tax.imposto.calculado.v1` | `aureus-tax` | No serviço de cálculo de imposto, após `calcularImposto()` |
-| `billing.fatura.emitida.v1` | `aureus-billing` | Após emitir fatura |
-| `billing.fatura.paga.v1` | `aureus-billing` | Após registrar pagamento de fatura |
-| `bacen.relatorio.gerado.v1` | `aureus-bacen` | Após gerar relatório BACEN |
-| `bacen.relatorio.enviado.v1` | `aureus-bacen` | Após enviar relatório ao BACEN |
+| `tax.imposto.calculado.v1` | `aurix-tax` | No serviço de cálculo de imposto, após `calcularImposto()` |
+| `billing.fatura.emitida.v1` | `aurix-billing` | Após emitir fatura |
+| `billing.fatura.paga.v1` | `aurix-billing` | Após registrar pagamento de fatura |
+| `bacen.relatorio.gerado.v1` | `aurix-bacen` | Após gerar relatório BACEN |
+| `bacen.relatorio.enviado.v1` | `aurix-bacen` | Após enviar relatório ao BACEN |
 
 Cada módulo precisa: dependência `spring-kafka`, KafkaConfig, evento tipado no shared (ou usar `BaseEvent` genérico), producer no service.
 
@@ -169,7 +169,7 @@ Notification hoje consome 4 tópicos. Passa a consumir:
 
 ## 8. Audit: Consumer Universal
 
-`aureus-audit` não tem Kafka hoje. Adicionar `AuditEventConsumer` que escuta **todos** os tópicos e registra cada evento recebido como `LogAuditoria`:
+`aurix-audit` não tem Kafka hoje. Adicionar `AuditEventConsumer` que escuta **todos** os tópicos e registra cada evento recebido como `LogAuditoria`:
 
 ```java
 @Component
@@ -206,33 +206,33 @@ Requer: dependência `spring-kafka`, KafkaConfig, deserializador para `BaseEvent
 
 | Módulo | Atual | Novo |
 |---|---|---|
-| `aureus-cambio` | `cambio-cotacao-atualizada` | `cambio.cotacao.atualizada.v1` |
-| `aureus-cambio` | `cambio-contrato-fechado` | `cambio.contrato.fechado.v1` |
-| `aureus-cambio` | `cambio-contrato-liquidado` | `cambio.contrato.liquidado.v1` |
-| `aureus-cambio` | `cambio-remessa-processada` | `cambio.remessa.processada.v1` |
-| `aureus-consignado` | `consignado-contrato-assinado` | `consignado.contrato.assinado.v1` |
-| `aureus-consignado` | `consignado-parcela-debitada` | `consignado.parcela.debitada.v1` |
-| `aureus-consignado` | `consignado-margem-atualizada` | `consignado.margem.atualizada.v1` |
-| `aureus-consignado` | `consignado-contrato-liquidado` | `consignado.contrato.liquidado.v1` |
-| `aureus-financiamento` | `financiamento-simulacao-realizada` | `financiamento.simulacao.realizada.v1` |
-| `aureus-financiamento` | `financiamento-contrato-assinado` | `financiamento.contrato.assinado.v1` |
-| `aureus-financiamento` | `financiamento-parcela-paga` | `financiamento.parcela.paga.v1` |
-| `aureus-financiamento` | `financiamento-contrato-liquidado` | `financiamento.contrato.liquidado.v1` |
-| `aureus-financiamento` | `financiamento-garantia-registrada` | `financiamento.garantia.registrada.v1` |
-| `aureus-investimento` | `investimento-conta-criada` | `investimento.conta.criada.v1` |
-| `aureus-investimento` | `investimento-ordem-executada` | `investimento.ordem.executada.v1` |
-| `aureus-investimento` | `investimento-resgate-processado` | `investimento.resgate.processado.v1` |
-| `aureus-poupanca` | `poupanca-conta-criada` | `poupanca.conta.criada.v1` |
-| `aureus-poupanca` | `poupanca-deposito-realizado` | `poupanca.deposito.realizado.v1` |
-| `aureus-poupanca` | `poupanca-saque-realizado` | `poupanca.saque.realizado.v1` |
-| `aureus-poupanca` | `poupanca-rendimento-creditado` | `poupanca.rendimento.creditado.v1` |
-| `aureus-salario` | `salario-conta-criada` | `salario.conta.criada.v1` |
-| `aureus-salario` | `salario-creditado` | `salario.creditado.v1` |
-| `aureus-salario` | `salario-portabilidade-solicitada` | `salario.portabilidade.solicitada.v1` |
-| `aureus-seguros` | `seguros-apolice-emitida` | `seguros.apolice.emitida.v1` |
-| `aureus-seguros` | `seguros-premio-pago` | `seguros.premio.pago.v1` |
-| `aureus-seguros` | `seguros-sinistro-aberto` | `seguros.sinistro.aberto.v1` |
-| `aureus-seguros` | `seguros-sinistro-liquidado` | `seguros.sinistro.liquidado.v1` |
+| `aurix-cambio` | `cambio-cotacao-atualizada` | `cambio.cotacao.atualizada.v1` |
+| `aurix-cambio` | `cambio-contrato-fechado` | `cambio.contrato.fechado.v1` |
+| `aurix-cambio` | `cambio-contrato-liquidado` | `cambio.contrato.liquidado.v1` |
+| `aurix-cambio` | `cambio-remessa-processada` | `cambio.remessa.processada.v1` |
+| `aurix-consignado` | `consignado-contrato-assinado` | `consignado.contrato.assinado.v1` |
+| `aurix-consignado` | `consignado-parcela-debitada` | `consignado.parcela.debitada.v1` |
+| `aurix-consignado` | `consignado-margem-atualizada` | `consignado.margem.atualizada.v1` |
+| `aurix-consignado` | `consignado-contrato-liquidado` | `consignado.contrato.liquidado.v1` |
+| `aurix-financiamento` | `financiamento-simulacao-realizada` | `financiamento.simulacao.realizada.v1` |
+| `aurix-financiamento` | `financiamento-contrato-assinado` | `financiamento.contrato.assinado.v1` |
+| `aurix-financiamento` | `financiamento-parcela-paga` | `financiamento.parcela.paga.v1` |
+| `aurix-financiamento` | `financiamento-contrato-liquidado` | `financiamento.contrato.liquidado.v1` |
+| `aurix-financiamento` | `financiamento-garantia-registrada` | `financiamento.garantia.registrada.v1` |
+| `aurix-investimento` | `investimento-conta-criada` | `investimento.conta.criada.v1` |
+| `aurix-investimento` | `investimento-ordem-executada` | `investimento.ordem.executada.v1` |
+| `aurix-investimento` | `investimento-resgate-processado` | `investimento.resgate.processado.v1` |
+| `aurix-poupanca` | `poupanca-conta-criada` | `poupanca.conta.criada.v1` |
+| `aurix-poupanca` | `poupanca-deposito-realizado` | `poupanca.deposito.realizado.v1` |
+| `aurix-poupanca` | `poupanca-saque-realizado` | `poupanca.saque.realizado.v1` |
+| `aurix-poupanca` | `poupanca-rendimento-creditado` | `poupanca.rendimento.creditado.v1` |
+| `aurix-salario` | `salario-conta-criada` | `salario.conta.criada.v1` |
+| `aurix-salario` | `salario-creditado` | `salario.creditado.v1` |
+| `aurix-salario` | `salario-portabilidade-solicitada` | `salario.portabilidade.solicitada.v1` |
+| `aurix-seguros` | `seguros-apolice-emitida` | `seguros.apolice.emitida.v1` |
+| `aurix-seguros` | `seguros-premio-pago` | `seguros.premio.pago.v1` |
+| `aurix-seguros` | `seguros-sinistro-aberto` | `seguros.sinistro.aberto.v1` |
+| `aurix-seguros` | `seguros-sinistro-liquidado` | `seguros.sinistro.liquidado.v1` |
 
 Cada evento record local vira `BaseEvent` subclass no shared, adicionado em lote.
 
@@ -297,5 +297,5 @@ Ordem de execução:
 ## Riscos
 
 - **Mudança de nome de tópico**: producers e consumers devem ser alterados no mesmo deploy para evitar perda de mensagens. Usar tópico antigo + novo em paralelo durante transição (fase de dual-write) ou fazer deploy dos consumers primeiro.
-- **Quebra de consumer existente**: `aureus-core` consome seus próprios eventos — não alterar nome desses tópicos (já seguem ADR-0001).
-- **Eventos records → BaseEvent**: muda serialização. Garantir que `JsonDeserializer` confia no pacote `com.aureus.platform.shared.event` (já configurado).
+- **Quebra de consumer existente**: `aurix-core` consome seus próprios eventos — não alterar nome desses tópicos (já seguem ADR-0001).
+- **Eventos records → BaseEvent**: muda serialização. Garantir que `JsonDeserializer` confia no pacote `com.aurix.platform.shared.event` (já configurado).

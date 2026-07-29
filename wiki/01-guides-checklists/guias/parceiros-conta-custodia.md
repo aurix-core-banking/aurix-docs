@@ -1,6 +1,6 @@
 # BaaS – Contas sob custódia para parceiros
 
-Documentação para parceiros que integram com o AUREUS em modo BaaS (Banking as a Service): como usar as APIs de conta sob custódia, consentimento e movimentação.
+Documentação para parceiros que integram com o AURIX em modo BaaS (Banking as a Service): como usar as APIs de conta sob custódia, consentimento e movimentação.
 
 ---
 
@@ -79,7 +79,7 @@ A instituição configura branding (logo, cores) e **termos de uso** no módulo 
 
 ## Referências
 
-- [Portal do desenvolvedor](../../03-development/portal-desenvolvedor/README.md): APIs gerais do AUREUS.
+- [Portal do desenvolvedor](../../03-development/portal-desenvolvedor/README.md): APIs gerais do AURIX.
 - [Templates (termos, privacidade)](../kit-implementacao/templates.md)
 
 [Voltar a Guias](README.md) | [Índice da wiki](../../README.md)

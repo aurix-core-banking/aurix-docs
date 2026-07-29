@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Rewrite `aureus-web` Onboarding page with integrated PF/PJ selector, multi-step PJ wizard, and post-creation tracking.
+**Goal:** Rewrite `aurix-web` Onboarding page with integrated PF/PJ selector, multi-step PJ wizard, and post-creation tracking.
 
 **Architecture:** Container component (`Onboarding.js`) with 3-mode state machine (`select → form → tracking`). PF gets a simple single-page form; PJ gets a 4-step MUI Stepper wizard that creates the solicitation in Step 1 and augments it with socios/documentos in subsequent steps. API calls through `apiService` (axios), no raw fetch.
 
@@ -182,14 +182,14 @@ describe('Onboarding API', () => {
 
 - [ ] **Step 3: Run tests to verify they pass**
 
-Run: `cd frontend/aureus-web && npx react-scripts test --watchAll=false --testPathPattern=apiService`
+Run: `cd frontend/aurix-web && npx react-scripts test --watchAll=false --testPathPattern=apiService`
 Expected: all 8 new tests pass
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add frontend/aureus-web/src/services/apiService.js frontend/aureus-web/src/services/apiService.test.js
-git commit -m "feat(aureus-web): add onboarding API methods to apiService"
+git add frontend/aurix-web/src/services/apiService.js frontend/aurix-web/src/services/apiService.test.js
+git commit -m "feat(aurix-web): add onboarding API methods to apiService"
 ```
 
 ---
@@ -389,14 +389,14 @@ test('shows error on missing required fields', () => {
 
 - [ ] **Step 5: Run tests to verify they pass**
 
-Run: `cd frontend/aureus-web && npx react-scripts test --watchAll=false --testPathPattern="TipoSelector|FormPF"`
+Run: `cd frontend/aurix-web && npx react-scripts test --watchAll=false --testPathPattern="TipoSelector|FormPF"`
 Expected: all 6 tests pass
 
 - [ ] **Step 6: Commit**
 
 ```bash
-git add frontend/aureus-web/src/components/Onboarding/
-git commit -m "feat(aureus-web): add TipoSelector and FormPF components"
+git add frontend/aurix-web/src/components/Onboarding/
+git commit -m "feat(aurix-web): add TipoSelector and FormPF components"
 ```
 
 ---
@@ -580,7 +580,7 @@ function StepDocumentos({ solicitacaoId, onDocumentoChange }) {
 
   const handleUpload = async (tipoDocumento) => {
     const nomeArquivo = `${tipoDocumento}_${Date.now()}.pdf`;
-    const urlStorage = `https://storage.aureus.com/documents/${solicitacaoId}/${nomeArquivo}`;
+    const urlStorage = `https://storage.aurix.com/documents/${solicitacaoId}/${nomeArquivo}`;
     setLoading(true);
     setError('');
     try {
@@ -837,14 +837,14 @@ test('full wizard flow to completion', async () => {
 
 - [ ] **Step 7: Run tests to verify they pass**
 
-Run: `cd frontend/aureus-web && npx react-scripts test --watchAll=false --testPathPattern="WizardPJ"`
+Run: `cd frontend/aurix-web && npx react-scripts test --watchAll=false --testPathPattern="WizardPJ"`
 Expected: all 3 tests pass
 
 - [ ] **Step 8: Commit**
 
 ```bash
-git add frontend/aureus-web/src/components/Onboarding/FormPJ/
-git commit -m "feat(aureus-web): add PJ onboarding wizard with 4 steps"
+git add frontend/aurix-web/src/components/Onboarding/FormPJ/
+git commit -m "feat(aurix-web): add PJ onboarding wizard with 4 steps"
 ```
 
 ---
@@ -1050,14 +1050,14 @@ test('shows error on API failure', async () => {
 
 - [ ] **Step 3: Run tests to verify they pass**
 
-Run: `cd frontend/aureus-web && npx react-scripts test --watchAll=false --testPathPattern="TrackingPJ"`
+Run: `cd frontend/aurix-web && npx react-scripts test --watchAll=false --testPathPattern="TrackingPJ"`
 Expected: all 3 tests pass
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add frontend/aureus-web/src/components/Onboarding/TrackingPJ.js frontend/aureus-web/src/components/Onboarding/TrackingPJ.test.js
-git commit -m "feat(aureus-web): add TrackingPJ post-creation component"
+git add frontend/aurix-web/src/components/Onboarding/TrackingPJ.js frontend/aurix-web/src/components/Onboarding/TrackingPJ.test.js
+git commit -m "feat(aurix-web): add TrackingPJ post-creation component"
 ```
 
 ---
@@ -1211,17 +1211,17 @@ test('back button returns to selector from form', () => {
 
 - [ ] **Step 3: Run all tests to verify they pass**
 
-Run: `cd frontend/aureus-web && npx react-scripts test --watchAll=false --testPathPattern="Onboarding"`
+Run: `cd frontend/aurix-web && npx react-scripts test --watchAll=false --testPathPattern="Onboarding"`
 Expected: all tests pass (TipoSelector: 3, FormPF: 3, WizardPJ: 3, TrackingPJ: 3, Onboarding: 5 = 17 total)
 
 - [ ] **Step 4: Run lint check**
 
-Run: `cd frontend/aureus-web && npx eslint src/pages/Onboarding.js src/components/Onboarding/ --ext .js`
+Run: `cd frontend/aurix-web && npx eslint src/pages/Onboarding.js src/components/Onboarding/ --ext .js`
 Expected: 0 errors, pre-existing warnings only (no new ones)
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add frontend/aureus-web/src/pages/Onboarding.js frontend/aureus-web/src/pages/Onboarding.test.js
-git commit -m "feat(aureus-web): rewrite onboarding page with PF/PJ flow"
+git add frontend/aurix-web/src/pages/Onboarding.js frontend/aurix-web/src/pages/Onboarding.test.js
+git commit -m "feat(aurix-web): rewrite onboarding page with PF/PJ flow"
 ```

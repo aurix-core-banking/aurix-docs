@@ -2,28 +2,28 @@
 
 ## Goal
 
-Consolidate the two parallel `Cliente` entities (shared PF-only + financial PF/PJ) into a single `Cliente` in `aureus-shared` that supports both **Pessoa Física** and **Pessoa Jurídica**, with financial-specific attributes moved to a separate profile entity.
+Consolidate the two parallel `Cliente` entities (shared PF-only + financial PF/PJ) into a single `Cliente` in `aurix-shared` that supports both **Pessoa Física** and **Pessoa Jurídica**, with financial-specific attributes moved to a separate profile entity.
 
 ## Architecture
 
 ### Before
 
 ```
-aureus-shared/entity/Cliente         ← PF only (cpf, nome, email...)
-aureus-financial/entity/Cliente      ← PF/PJ (TipoPessoa, cpf, cnpj, razaoSocial, limiteCredito...)
+aurix-shared/entity/Cliente         ← PF only (cpf, nome, email...)
+aurix-financial/entity/Cliente      ← PF/PJ (TipoPessoa, cpf, cnpj, razaoSocial, limiteCredito...)
 ```
 
 ### After
 
 ```
-aureus-shared/entity/Cliente         ← PF + PJ (tipoPessoa, cpf OR cnpj)
-aureus-financial/entity/PerfilFinanceiroCliente  ← finance-specific attrs, FK → shared Cliente
+aurix-shared/entity/Cliente         ← PF + PJ (tipoPessoa, cpf OR cnpj)
+aurix-financial/entity/PerfilFinanceiroCliente  ← finance-specific attrs, FK → shared Cliente
 ```
 
-## 1. Consolidated Cliente Entity (aureus-shared)
+## 1. Consolidated Cliente Entity (aurix-shared)
 
-Package: `com.aureus.platform.shared.entity`
-Table: `aureus.clientes`
+Package: `com.aurix.platform.shared.entity`
+Table: `aurix.clientes`
 
 ```
 Cliente extends BaseEntity (id, tenantId, dataCriacao, dataAtualizacao, versao)
@@ -58,13 +58,13 @@ Cliente extends BaseEntity (id, tenantId, dataCriacao, dataAtualizacao, versao)
 - CPF validation: `CPFUtil.isValid()` (existing)
 - CNPJ validation: `CNPJUtil.isValid()` (new, same pattern as CPFUtil)
 
-## 2. ClienteDTO (aureus-shared)
+## 2. ClienteDTO (aurix-shared)
 
 Updated to mirror the new entity fields. Replaces `cpf`-only with both `cpf` and `cnpj`, adds `tipoPessoa`.
 
-## 3. PerfilFinanceiroCliente (aureus-financial)
+## 3. PerfilFinanceiroCliente (aurix-financial)
 
-Package: `com.aureus.platform.financial.entity`
+Package: `com.aurix.platform.financial.entity`
 Table: `perfis_financeiros_clientes`
 
 ```
@@ -80,44 +80,44 @@ PerfilFinanceiroCliente
 
 ## 4. Module Changes
 
-### aureus-shared
+### aurix-shared
 - Replace `Cliente.java` entity with consolidated version
 - Update `ClienteDTO.java` with PF/PJ fields
 - Add `CNPJUtil.java` (mirrors CPFUtil pattern)
 - Add `ClienteNaoEncontradoException` overload by CNPJ
 - Update `IntegrationController`, `IntegrationService`, `SharedCacheService` to handle PF/PJ
 
-### aureus-core
+### aurix-core
 - `ClienteService`: validate CPF or CNPJ based on `tipoPessoa`
 - `ClienteRepository`: add `findByCnpj`, `existsByCnpj`, `findByTenantIdAndCnpj`
 - `ClienteController`: add `GET /clientes/cnpj/{cnpj}`, expand `POST /` to accept `tipoPessoa`
 - `ContaService`: handle PJ client in account creation
 
-### aureus-pix
+### aurix-pix
 - `ClienteRepository`: update queries (PIX chave can be PF or PJ)
 
-### aureus-credit
+### aurix-credit
 - `ClienteRepository`: already generic (no PF-specific queries)
 - `SolicitacaoCreditoService`: adapt `clienteNome` to show nome or razaoSocial
 
-### aureus-security
+### aurix-security
 - `AuthService`: `clienteCpf` → `clienteDocumento` (CPF or CNPJ)
 - `UsuarioDTO`: add `clienteDocumento`, `clienteTipoPessoa`; keep `clienteCpf` as deprecated alias
 
-### aureus-financial
+### aurix-financial
 - Remove own `Cliente` entity, repository, service, controller
 - Create `PerfilFinanceiroCliente` entity, repository, service, controller
 - `POST /api/financial/perfil/{clienteId}` — create financial profile
 - `GET /api/financial/perfil/{clienteId}` — get financial profile
 - `PUT /api/financial/perfil/{clienteId}` — update financial attributes
 
-### aureus-onboarding
+### aurix-onboarding
 - Expand `ReceitaFederalStub` to validate CNPJ (already stubbed)
 
-### aureus-organization
+### aurix-organization
 - Add `clienteId` FK to `Empresa` for PJ → Cliente relationship (optional, for future)
 
-### aureus-cambio
+### aurix-cambio
 - `ClienteCambio` already references `clienteId` (Long) — compatible as-is
 
 ### DTOs across system

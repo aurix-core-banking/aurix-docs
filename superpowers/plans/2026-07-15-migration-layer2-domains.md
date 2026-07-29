@@ -10,10 +10,10 @@
 
 ## Global Constraints
 
-- Nenhum módulo fonte (`aureus-*`) é deletado durante a migração — apenas copiado/movido
+- Nenhum módulo fonte (`aurix-*`) é deletado durante a migração — apenas copiado/movido
 - Código copiado para `backend/svc-{domain}/` mantém a funcionalidade original
 - Entidades duplicadas são resolvidas conforme seção 2 do spec (versão canônica)
-- Shared library `aureus-shared` permanece como dependência Maven
+- Shared library `aurix-shared` permanece como dependência Maven
 - Cada fase termina com `mvn clean compile -pl svc-{domain}` passando
 - `mvn test -pl svc-{domain}` deve passar (ou estar esverdeado nos testes existentes)
 
@@ -25,7 +25,7 @@
 backend/svc-{domain}/
   pom.xml                                      ← já existe (F0), adicionar dependências dos módulos fonte
   Dockerfile                                   ← já existe (F0)
-  src/main/java/com/aureus/platform/{domain}/
+  src/main/java/com/aurix/platform/{domain}/
     entity/                                    ← entidades movidas dos módulos fonte
     service/                                   ← serviços movidos
     controller/                                ← controllers movidos
@@ -45,48 +45,48 @@ backend/svc-{domain}/
 
 ### Task 1: F1 — customer-identity (pilot)
 
-**Merge destes módulos:** `aureus-customer` + `aureus-kyc` + `aureus-onboarding` + `aureus-security`
+**Merge destes módulos:** `aurix-customer` + `aurix-kyc` + `aurix-onboarding` + `aurix-security`
 
 **Para cada módulo fonte, mover:**
 
 | Módulo fonte | Pacote alvo | Entidades | Serviços | Controllers |
 |---|---|---|---|---|
-| `aureus-customer` | `customer` | `Cliente`, `Contato`, `Endereco` | `ClienteService` | `ClienteController` |
-| `aureus-kyc` | `customer.kyc` | `DocumentoKYC`, `ScoreKYC`, `SolicitacaoKYC` | `SolicitacaoKycService` | `SolicitacaoKycController` |
-| `aureus-onboarding` | `customer.onboarding` | `SolicitacaoOnboarding`, `DocumentoOnboarding`, `SolicitacaoPF`, `SolicitacaoPJ`, `Empresa`, `Participante`, `Pep`, `HistoricoAprovacao` | `OnboardingPFService`, `OnboardingPJService` | `ControllerPF`, `ControllerPJ`, `IntegracaoTerceirosController` |
-| `aureus-security` | `customer.security` | `MfaConfig`, `MfaToken`, `PasswordResetToken`, `RefreshToken` | `AuthService`, `JwtService`, `MfaService`, `PermissaoGranularService` | `AuthController`, `CriptografiaController`, `MfaController`, `PermissaoGranularController` |
+| `aurix-customer` | `customer` | `Cliente`, `Contato`, `Endereco` | `ClienteService` | `ClienteController` |
+| `aurix-kyc` | `customer.kyc` | `DocumentoKYC`, `ScoreKYC`, `SolicitacaoKYC` | `SolicitacaoKycService` | `SolicitacaoKycController` |
+| `aurix-onboarding` | `customer.onboarding` | `SolicitacaoOnboarding`, `DocumentoOnboarding`, `SolicitacaoPF`, `SolicitacaoPJ`, `Empresa`, `Participante`, `Pep`, `HistoricoAprovacao` | `OnboardingPFService`, `OnboardingPJService` | `ControllerPF`, `ControllerPJ`, `IntegracaoTerceirosController` |
+| `aurix-security` | `customer.security` | `MfaConfig`, `MfaToken`, `PasswordResetToken`, `RefreshToken` | `AuthService`, `JwtService`, `MfaService`, `PermissaoGranularService` | `AuthController`, `CriptografiaController`, `MfaController`, `PermissaoGranularController` |
 
 - [ ] **Step 1: Criar subpacotes no svc-customer**
 
 ```bash
-mkdir -p backend/svc-customer/src/main/java/com/aureus/platform/customer/kyc
-mkdir -p backend/svc-customer/src/main/java/com/aureus/platform/customer/onboarding
-mkdir -p backend/svc-customer/src/main/java/com/aureus/platform/customer/security
-mkdir -p backend/svc-customer/src/main/java/com/aureus/platform/customer/repository
-mkdir -p backend/svc-customer/src/main/java/com/aureus/platform/customer/config
-mkdir -p backend/svc-customer/src/main/java/com/aureus/platform/customer/client
-mkdir -p backend/svc-customer/src/main/java/com/aureus/platform/customer/dto
-mkdir -p backend/svc-customer/src/main/java/com/aureus/platform/customer/event
-mkdir -p backend/svc-customer/src/main/java/com/aureus/platform/customer/job
-mkdir -p backend/svc-customer/src/test/java/com/aureus/platform/customer
+mkdir -p backend/svc-customer/src/main/java/com/aurix/platform/customer/kyc
+mkdir -p backend/svc-customer/src/main/java/com/aurix/platform/customer/onboarding
+mkdir -p backend/svc-customer/src/main/java/com/aurix/platform/customer/security
+mkdir -p backend/svc-customer/src/main/java/com/aurix/platform/customer/repository
+mkdir -p backend/svc-customer/src/main/java/com/aurix/platform/customer/config
+mkdir -p backend/svc-customer/src/main/java/com/aurix/platform/customer/client
+mkdir -p backend/svc-customer/src/main/java/com/aurix/platform/customer/dto
+mkdir -p backend/svc-customer/src/main/java/com/aurix/platform/customer/event
+mkdir -p backend/svc-customer/src/main/java/com/aurix/platform/customer/job
+mkdir -p backend/svc-customer/src/test/java/com/aurix/platform/customer
 mkdir -p backend/svc-customer/src/test/resources
 ```
 
-- [ ] **Step 2: Copiar entidades de aureus-customer**
+- [ ] **Step 2: Copiar entidades de aurix-customer**
 
-Copiar cada arquivo `.java` de `backend/aureus-customer/src/main/java/.../entity/` para `backend/svc-customer/src/main/java/com/aureus/platform/customer/entity/`, atualizando o `package` declaration de `com.aureus.platform.customer.entity` para `com.aureus.platform.customer.entity`.
+Copiar cada arquivo `.java` de `backend/aurix-customer/src/main/java/.../entity/` para `backend/svc-customer/src/main/java/com/aurix/platform/customer/entity/`, atualizando o `package` declaration de `com.aurix.platform.customer.entity` para `com.aurix.platform.customer.entity`.
 
-- [ ] **Step 3: Copiar entidades de aureus-kyc**
+- [ ] **Step 3: Copiar entidades de aurix-kyc**
 
-Copiar de `backend/aureus-kyc/src/main/java/.../entity/` para `backend/svc-customer/src/main/java/com/aureus/platform/customer/kyc/entity/`, atualizando package.
+Copiar de `backend/aurix-kyc/src/main/java/.../entity/` para `backend/svc-customer/src/main/java/com/aurix/platform/customer/kyc/entity/`, atualizando package.
 
-- [ ] **Step 4: Copiar entidades de aureus-onboarding**
+- [ ] **Step 4: Copiar entidades de aurix-onboarding**
 
-Copiar de `backend/aureus-onboarding/src/main/java/.../entity/` para `backend/svc-customer/src/main/java/com/aureus/platform/customer/onboarding/entity/`, atualizando package.
+Copiar de `backend/aurix-onboarding/src/main/java/.../entity/` para `backend/svc-customer/src/main/java/com/aurix/platform/customer/onboarding/entity/`, atualizando package.
 
-- [ ] **Step 5: Copiar entidades de aureus-security**
+- [ ] **Step 5: Copiar entidades de aurix-security**
 
-Copiar de `backend/aureus-security/src/main/java/.../entity/` para `backend/svc-customer/src/main/java/com/aureus/platform/customer/security/entity/`, atualizando package.
+Copiar de `backend/aurix-security/src/main/java/.../entity/` para `backend/svc-customer/src/main/java/com/aurix/platform/customer/security/entity/`, atualizando package.
 
 - [ ] **Step 6: Copiar repositórios**
 
@@ -109,7 +109,7 @@ Copiar `SecurityConfig.java` de cada módulo fonte. Fazer merge em um único `Se
 - [ ] **Step 10: Atualizar pom.xml do svc-customer**
 
 Adicionar dependências necessárias para os 4 módulos fonte:
-- `aureus-shared` (já deve estar)
+- `aurix-shared` (já deve estar)
 - `spring-boot-starter-data-jpa`
 - `spring-boot-starter-security`
 - `spring-boot-starter-validation`
@@ -131,9 +131,9 @@ spring:
       ddl-auto: none
     show-sql: false
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/aureus_db}
-    username: ${SPRING_DATASOURCE_USERNAME:aureus_user}
-    password: ${SPRING_DATASOURCE_PASSWORD:aureus_dev_password}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/aurix_db}
+    username: ${SPRING_DATASOURCE_USERNAME:aurix_user}
+    password: ${SPRING_DATASOURCE_PASSWORD:aurix_dev_password}
   kafka:
     bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
 
@@ -193,7 +193,7 @@ git commit -m "feat(domain): merge customer, kyc, onboarding, security into svc-
 
 ### Task 2: F2 — banking-core
 
-**Merge destes módulos:** `aureus-core` + `aureus-poupanca` + `aureus-salario` + `aureus-pricing` + `aureus-settlement`
+**Merge destes módulos:** `aurix-core` + `aurix-poupanca` + `aurix-salario` + `aurix-pricing` + `aurix-settlement`
 
 **Subpacotes alvo:** `banking.core`, `banking.poupanca`, `banking.salario`, `banking.pricing`, `banking.settlement`
 
@@ -210,39 +210,39 @@ git commit -m "feat(domain): merge customer, kyc, onboarding, security into svc-
 
 ### Task 3: F3 — payments
 
-**Merge destes módulos:** `aureus-pix` + `aureus-bacen` (parte SPI/STR)
+**Merge destes módulos:** `aurix-pix` + `aurix-bacen` (parte SPI/STR)
 
 - [ ] **Steps 1–15:** Seguir padrão da Task 1
 
-**Boleto é movido de aureus-core (via aureus-core fica em banking-core? Não — boleto é pagamento).** Na Task 2, `Boleto` e `BoletoService` NÃO entram em banking-core. Entram aqui em payments.
+**Boleto é movido de aurix-core (via aurix-core fica em banking-core? Não — boleto é pagamento).** Na Task 2, `Boleto` e `BoletoService` NÃO entram em banking-core. Entram aqui em payments.
 
-**Atenção:** `aureus-bacen` tem duas partes — SPI/STR (entra em payments) e relatórios/Cosif (entra em compliance). Separar os dois.
+**Atenção:** `aurix-bacen` tem duas partes — SPI/STR (entra em payments) e relatórios/Cosif (entra em compliance). Separar os dois.
 
 ---
 
 ### Task 4: F4 — credit
 
-**Merge destes módulos:** `aureus-credit` + `aureus-consignado` + `aureus-financiamento`
+**Merge destes módulos:** `aurix-credit` + `aurix-consignado` + `aurix-financiamento`
 
 - [ ] **Steps 1–15:** Seguir padrão da Task 1
 
-**Garantia (`aureus-guarantee`):** Garantia é parte de financiamento. Entra em `credit.financiamento`. Não separar para products.
+**Garantia (`aurix-guarantee`):** Garantia é parte de financiamento. Entra em `credit.financiamento`. Não separar para products.
 
 ---
 
 ### Task 5: F5 — products
 
-**Merge destes módulos:** `aureus-investimento` + `aureus-cambio` + `aureus-seguros` + `aureus-cartoes` + `aureus-treasury` + `aureus-guarantee` (se não entrou em credit)
+**Merge destes módulos:** `aurix-investimento` + `aurix-cambio` + `aurix-seguros` + `aurix-cartoes` + `aurix-treasury` + `aurix-guarantee` (se não entrou em credit)
 
 - [ ] **Steps 1–15:** Seguir padrão da Task 1
 
-**Atenção:** `aureus-treasury` tem `InvestimentoService` que duplica o de `aureus-investimento`. Manter a versão de investimento, descartar a de treasury.
+**Atenção:** `aurix-treasury` tem `InvestimentoService` que duplica o de `aurix-investimento`. Manter a versão de investimento, descartar a de treasury.
 
 ---
 
 ### Task 6: F6 — fraud-risk
 
-**Merge destes módulos:** `aureus-fraud` + `MlFraudService` + `CreditScoreService` (de `aureus-analytics`)
+**Merge destes módulos:** `aurix-fraud` + `MlFraudService` + `CreditScoreService` (de `aurix-analytics`)
 
 - [ ] **Steps 1–15:** Seguir padrão da Task 1
 
@@ -250,7 +250,7 @@ git commit -m "feat(domain): merge customer, kyc, onboarding, security into svc-
 
 ### Task 7: F7 — compliance
 
-**Merge destes módulos:** `aureus-compliance` + `aureus-audit` + `aureus-tax` + `aureus-accounting` + `aureus-bacen` (relatórios Cosif)
+**Merge destes módulos:** `aurix-compliance` + `aurix-audit` + `aurix-tax` + `aurix-accounting` + `aurix-bacen` (relatórios Cosif)
 
 - [ ] **Steps 1–15:** Seguir padrão da Task 1
 
@@ -263,7 +263,7 @@ git commit -m "feat(domain): merge customer, kyc, onboarding, security into svc-
 
 ### Task 8: F8 — finance-mgmt
 
-**Merge destes módulos:** `aureus-controller` + `aureus-budget` + `aureus-cost` + `aureus-financial`
+**Merge destes módulos:** `aurix-controller` + `aurix-budget` + `aurix-cost` + `aurix-financial`
 
 - [ ] **Steps 1–15:** Seguir padrão da Task 1
 
@@ -276,7 +276,7 @@ git commit -m "feat(domain): merge customer, kyc, onboarding, security into svc-
 
 ### Task 9: F9 — platform
 
-**Merge destes módulos:** `aureus-provisioning` + `aureus-billing` + `aureus-webhooks` + `aureus-notification` + `aureus-catalog` + `aureus-baas` + `aureus-organization`
+**Merge destes módulos:** `aurix-provisioning` + `aurix-billing` + `aurix-webhooks` + `aurix-notification` + `aurix-catalog` + `aurix-baas` + `aurix-organization`
 
 - [ ] **Steps 1–15:** Seguir padrão da Task 1
 
@@ -286,7 +286,7 @@ git commit -m "feat(domain): merge customer, kyc, onboarding, security into svc-
 
 ### Task 10: F10 — intelligence
 
-**Merge destes módulos:** `aureus-analytics` + `aureus-ai` + `aureus-openfinance` + `aureus-internet-banking` + `aureus-mobile-banking`
+**Merge destes módulos:** `aurix-analytics` + `aurix-ai` + `aurix-openfinance` + `aurix-internet-banking` + `aurix-mobile-banking`
 
 - [ ] **Steps 1–15:** Seguir padrão da Task 1
 
@@ -297,12 +297,12 @@ git commit -m "feat(domain): merge customer, kyc, onboarding, security into svc-
 Após todas as fases F1-F10 estarem verdes, remover módulos fonte:
 
 - [ ] **Step 1:** Remover módulos de `backend/pom.xml` (um por um, validando build)
-- [ ] **Step 2:** Remover diretórios `backend/aureus-*` (exceto `aureus-shared`)
+- [ ] **Step 2:** Remover diretórios `backend/aurix-*` (exceto `aurix-shared`)
 - [ ] **Step 3:** Remover entradas legadas de `infrastructure/docker-compose.yml`
 - [ ] **Step 4:** Remover entradas legadas de `infrastructure/traefik/dynamic.yml`
 - [ ] **Step 5:** Remover jobs CI legados de `.github/workflows/`
 - [ ] **Step 6:** Renomear `docker-compose.v2.yml` → `docker-compose.yml` e `dynamic.v2.yml` → `dynamic.yml`
-- [ ] **Step 7:** Remover `aureus-gateway` módulo Maven (Traefik é o gateway real)
+- [ ] **Step 7:** Remover `aurix-gateway` módulo Maven (Traefik é o gateway real)
 - [ ] **Step 8:** Commit final
 
 ```bash

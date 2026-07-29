@@ -2,17 +2,17 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Implement the `aureus-poupanca` module — savings account with birthday TR credit, IOF on early withdrawal, PDF statement, PIX integration.
+**Goal:** Implement the `aurix-poupanca` module — savings account with birthday TR credit, IOF on early withdrawal, PDF statement, PIX integration.
 
-**Architecture:** New Maven module (`aureus-poupanca`) following patterns from `aureus-pix`/`aureus-credit`. Uses Spring Boot 4.1 / Spring Framework 7 native annotations (`@HttpExchange`, `@Retryable`, `@ConcurrencyLimit`, `@Observed`, `@NullMarked`). Communicates with `aureus-core` (conta corrente), `aureus-tax` (IOF), `aureus-bacen` (TR) via `@HttpExchange` clients. Events via Kafka. No Feign.
+**Architecture:** New Maven module (`aurix-poupanca`) following patterns from `aurix-pix`/`aurix-credit`. Uses Spring Boot 4.1 / Spring Framework 7 native annotations (`@HttpExchange`, `@Retryable`, `@ConcurrencyLimit`, `@Observed`, `@NullMarked`). Communicates with `aurix-core` (conta corrente), `aurix-tax` (IOF), `aurix-bacen` (TR) via `@HttpExchange` clients. Events via Kafka. No Feign.
 
 **Tech Stack:** Spring Boot 4.1, Java 25, JPA/Hibernate 6, PostgreSQL, Redis, Kafka, Spring 7 native `@Retryable`, `@HttpExchange`, `RestTestClient`, Testcontainers.
 
 ## Global Constraints
 
 - Java source/target must be 25 (parent POM defaults are correct)
-- Maven packaging: `jar`, parent: `com.aureus.platform:aureus-platform:1.0.0`
-- Package root: `com.aureus.platform.poupanca`
+- Maven packaging: `jar`, parent: `com.aurix.platform:aurix-platform:1.0.0`
+- Package root: `com.aurix.platform.poupanca`
 - All Spring properties use `spring.data.redis.*` (not `spring.redis.*`)
 - No `spring-retry` dependency — use Spring Framework 7 native `@Retryable`
 - No `javax.annotation` — use `jakarta.annotation`
@@ -26,9 +26,9 @@
 ### Task 1: Module Scaffold
 
 **Files:**
-- Create: `backend/aureus-poupanca/pom.xml`
-- Create: `backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/AureusPoupancaApplication.java`
-- Create: `backend/aureus-poupanca/src/main/resources/application.yml`
+- Create: `backend/aurix-poupanca/pom.xml`
+- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/AurixPoupancaApplication.java`
+- Create: `backend/aurix-poupanca/src/main/resources/application.yml`
 - Modify: `backend/pom.xml` (add module)
 
 **Interfaces:**
@@ -46,21 +46,21 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.aureus.platform</groupId>
-        <artifactId>aureus-platform</artifactId>
+        <groupId>com.aurix.platform</groupId>
+        <artifactId>aurix-platform</artifactId>
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>aureus-poupanca</artifactId>
+    <artifactId>aurix-poupanca</artifactId>
     <packaging>jar</packaging>
 
-    <name>AUREUS Poupanca</name>
-    <description>Modulo de conta de deposito de poupanca do AUREUS</description>
+    <name>AURIX Poupanca</name>
+    <description>Modulo de conta de deposito de poupanca do AURIX</description>
 
     <dependencies>
         <dependency>
-            <groupId>com.aureus.platform</groupId>
-            <artifactId>aureus-shared</artifactId>
+            <groupId>com.aurix.platform</groupId>
+            <artifactId>aurix-shared</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -138,28 +138,28 @@
 </project>
 ```
 
-- [ ] **Step 2: Create AureusPoupancaApplication.java**
+- [ ] **Step 2: Create AurixPoupancaApplication.java**
 
-`backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/AureusPoupancaApplication.java`
+`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/AurixPoupancaApplication.java`
 
 ```java
-package com.aureus.platform.poupanca;
+package com.aurix.platform.poupanca;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class AureusPoupancaApplication {
+public class AurixPoupancaApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(AureusPoupancaApplication.class, args);
+        SpringApplication.run(AurixPoupancaApplication.class, args);
     }
 }
 ```
 
 - [ ] **Step 3: Create application.yml**
 
-`backend/aureus-poupanca/src/main/resources/application.yml`
+`backend/aurix-poupanca/src/main/resources/application.yml`
 
 ```yaml
 server:
@@ -169,13 +169,13 @@ server:
 
 spring:
   application:
-    name: aureus-poupanca
+    name: aurix-poupanca
   profiles:
     active: dev
   datasource:
-    url: jdbc:postgresql://localhost:5432/aureus
-    username: aureus
-    password: aureus123
+    url: jdbc:postgresql://localhost:5432/aurix
+    username: aurix
+    password: aurix123
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
@@ -205,7 +205,7 @@ spring:
   kafka:
     bootstrap-servers: localhost:9092
     consumer:
-      group-id: aureus-poupanca-group
+      group-id: aurix-poupanca-group
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
@@ -217,7 +217,7 @@ spring:
 
 logging:
   level:
-    com.aureus.platform: DEBUG
+    com.aurix.platform: DEBUG
     org.springframework.web: DEBUG
     org.hibernate.SQL: DEBUG
 
@@ -234,7 +234,7 @@ management:
       prometheus:
         enabled: true
 
-aureus:
+aurix:
   poupanca:
     iof:
       alquota-geral: 0.0046
@@ -248,7 +248,7 @@ aureus:
       max-saque: 50000.00
   security:
     jwt:
-      secret: "aureus-jwt-secret-key-2024"
+      secret: "aurix-jwt-secret-key-2024"
       expiration: 86400000
 
 ---
@@ -262,7 +262,7 @@ spring:
     show-sql: true
 logging:
   level:
-    com.aureus.platform: DEBUG
+    com.aurix.platform: DEBUG
 
 ---
 spring:
@@ -279,22 +279,22 @@ spring:
       minimum-idle: 5
 logging:
   level:
-    com.aureus.platform: INFO
+    com.aurix.platform: INFO
 ```
 
 - [ ] **Step 4: Add module to parent pom.xml**
 
-In `backend/pom.xml`, add `<module>aureus-poupanca</module>` to the `<modules>` list (after `aureus-pix`).
+In `backend/pom.xml`, add `<module>aurix-poupanca</module>` to the `<modules>` list (after `aurix-pix`).
 
 - [ ] **Step 5: Verify scaffold compiles**
 
-Run: `mvn compile -pl aureus-poupanca -am -DskipTests -q`
+Run: `mvn compile -pl aurix-poupanca -am -DskipTests -q`
 Expected: BUILD SUCCESS
 
 - [ ] **Step 6: Commit**
 
 ```
-git add backend/aureus-poupanca/pom.xml backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/AureusPoupancaApplication.java backend/aureus-poupanca/src/main/resources/application.yml backend/pom.xml
+git add backend/aurix-poupanca/pom.xml backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/AurixPoupancaApplication.java backend/aurix-poupanca/src/main/resources/application.yml backend/pom.xml
 git commit -m "feat(poupanca): scaffold module with pom, app, config"
 ```
 
@@ -303,29 +303,29 @@ git commit -m "feat(poupanca): scaffold module with pom, app, config"
 ### Task 2: Domain Layer — Entities, Repositories, DTOs, Events
 
 **Files:**
-- Create: `backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/entity/ContaPoupanca.java`
-- Create: `backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/entity/MovimentacaoPoupanca.java`
-- Create: `backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/repository/ContaPoupancaRepository.java`
-- Create: `backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/repository/MovimentacaoPoupancaRepository.java`
-- Create: `backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/dto/CriarContaRequest.java`
-- Create: `backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/dto/DepositoRequest.java`
-- Create: `backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/dto/SaqueRequest.java`
-- Create: `backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/dto/ContaPoupancaResponse.java`
-- Create: `backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/dto/ExtratoResponse.java`
-- Create: `backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/event/ContaPoupancaEvent.java`
-- Create: `backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/event/MovimentacaoEvent.java`
-- Create: `backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/event/RendimentoEvent.java`
-- Create: `backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/package-info.java` (x4 dirs)
+- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/entity/ContaPoupanca.java`
+- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/entity/MovimentacaoPoupanca.java`
+- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/repository/ContaPoupancaRepository.java`
+- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/repository/MovimentacaoPoupancaRepository.java`
+- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/dto/CriarContaRequest.java`
+- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/dto/DepositoRequest.java`
+- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/dto/SaqueRequest.java`
+- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/dto/ContaPoupancaResponse.java`
+- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/dto/ExtratoResponse.java`
+- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/event/ContaPoupancaEvent.java`
+- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/event/MovimentacaoEvent.java`
+- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/event/RendimentoEvent.java`
+- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/package-info.java` (x4 dirs)
 
 **Interfaces:**
 - Produces: `ContaPoupanca` entity, `MovimentacaoPoupanca` entity, repositories with finder methods, DTOs, event records
 
 - [ ] **Step 1: Create ContaPoupanca entity**
 
-`backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/entity/ContaPoupanca.java`
+`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/entity/ContaPoupanca.java`
 
 ```java
-package com.aureus.platform.poupanca.entity;
+package com.aurix.platform.poupanca.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -434,10 +434,10 @@ public class ContaPoupanca {
 
 - [ ] **Step 2: Create MovimentacaoPoupanca entity**
 
-`backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/entity/MovimentacaoPoupanca.java`
+`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/entity/MovimentacaoPoupanca.java`
 
 ```java
-package com.aureus.platform.poupanca.entity;
+package com.aurix.platform.poupanca.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -528,12 +528,12 @@ public class MovimentacaoPoupanca {
 
 - [ ] **Step 3: Create repositories**
 
-`backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/repository/ContaPoupancaRepository.java`
+`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/repository/ContaPoupancaRepository.java`
 
 ```java
-package com.aureus.platform.poupanca.repository;
+package com.aurix.platform.poupanca.repository;
 
-import com.aureus.platform.poupanca.entity.ContaPoupanca;
+import com.aurix.platform.poupanca.entity.ContaPoupanca;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -551,12 +551,12 @@ public interface ContaPoupancaRepository extends JpaRepository<ContaPoupanca, Lo
 }
 ```
 
-`backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/repository/MovimentacaoPoupancaRepository.java`
+`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/repository/MovimentacaoPoupancaRepository.java`
 
 ```java
-package com.aureus.platform.poupanca.repository;
+package com.aurix.platform.poupanca.repository;
 
-import com.aureus.platform.poupanca.entity.MovimentacaoPoupanca;
+import com.aurix.platform.poupanca.entity.MovimentacaoPoupanca;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -574,10 +574,10 @@ public interface MovimentacaoPoupancaRepository extends JpaRepository<Movimentac
 
 - [ ] **Step 4: Create DTOs**
 
-`backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/dto/CriarContaRequest.java`
+`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/dto/CriarContaRequest.java`
 
 ```java
-package com.aureus.platform.poupanca.dto;
+package com.aurix.platform.poupanca.dto;
 
 import jakarta.validation.constraints.NotNull;
 
@@ -600,10 +600,10 @@ public class CriarContaRequest {
 }
 ```
 
-`backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/dto/DepositoRequest.java`
+`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/dto/DepositoRequest.java`
 
 ```java
-package com.aureus.platform.poupanca.dto;
+package com.aurix.platform.poupanca.dto;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
@@ -625,10 +625,10 @@ public class DepositoRequest {
 }
 ```
 
-`backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/dto/SaqueRequest.java`
+`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/dto/SaqueRequest.java`
 
 ```java
-package com.aureus.platform.poupanca.dto;
+package com.aurix.platform.poupanca.dto;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
@@ -650,10 +650,10 @@ public class SaqueRequest {
 }
 ```
 
-`backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/dto/ContaPoupancaResponse.java`
+`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/dto/ContaPoupancaResponse.java`
 
 ```java
-package com.aureus.platform.poupanca.dto;
+package com.aurix.platform.poupanca.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -695,10 +695,10 @@ public class ContaPoupancaResponse {
 }
 ```
 
-`backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/dto/ExtratoResponse.java`
+`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/dto/ExtratoResponse.java`
 
 ```java
-package com.aureus.platform.poupanca.dto;
+package com.aurix.platform.poupanca.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -749,10 +749,10 @@ public class ExtratoResponse {
 
 - [ ] **Step 5: Create event records**
 
-`backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/event/ContaPoupancaEvent.java`
+`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/event/ContaPoupancaEvent.java`
 
 ```java
-package com.aureus.platform.poupanca.event;
+package com.aurix.platform.poupanca.event;
 
 import java.time.LocalDate;
 
@@ -765,10 +765,10 @@ public record ContaPoupancaEvent(
 ) {}
 ```
 
-`backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/event/MovimentacaoEvent.java`
+`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/event/MovimentacaoEvent.java`
 
 ```java
-package com.aureus.platform.poupanca.event;
+package com.aurix.platform.poupanca.event;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -784,10 +784,10 @@ public record MovimentacaoEvent(
 ) {}
 ```
 
-`backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/event/RendimentoEvent.java`
+`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/event/RendimentoEvent.java`
 
 ```java
-package com.aureus.platform.poupanca.event;
+package com.aurix.platform.poupanca.event;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -804,64 +804,64 @@ public record RendimentoEvent(
 
 - [ ] **Step 6: Create package-info.java files for @NullMarked**
 
-`backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/package-info.java`
+`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/package-info.java`
 
 ```java
 @NullMarked
-package com.aureus.platform.poupanca;
+package com.aurix.platform.poupanca;
 
 import org.jspecify.annotations.NullMarked;
 ```
 
-`backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/entity/package-info.java`
+`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/entity/package-info.java`
 
 ```java
 @NullMarked
-package com.aureus.platform.poupanca.entity;
+package com.aurix.platform.poupanca.entity;
 
 import org.jspecify.annotations.NullMarked;
 ```
 
-`backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/repository/package-info.java`
+`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/repository/package-info.java`
 
 ```java
 @NullMarked
-package com.aureus.platform.poupanca.repository;
+package com.aurix.platform.poupanca.repository;
 
 import org.jspecify.annotations.NullMarked;
 ```
 
-`backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/dto/package-info.java`
+`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/dto/package-info.java`
 
 ```java
 @NullMarked
-package com.aureus.platform.poupanca.dto;
+package com.aurix.platform.poupanca.dto;
 
 import org.jspecify.annotations.NullMarked;
 ```
 
-`backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/event/package-info.java`
+`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/event/package-info.java`
 
 ```java
 @NullMarked
-package com.aureus.platform.poupanca.event;
+package com.aurix.platform.poupanca.event;
 
 import org.jspecify.annotations.NullMarked;
 ```
 
 - [ ] **Step 7: Verify compilation**
 
-Run: `mvn compile -pl aureus-poupanca -am -DskipTests -q`
+Run: `mvn compile -pl aurix-poupanca -am -DskipTests -q`
 Expected: BUILD SUCCESS
 
 - [ ] **Step 8: Commit**
 
 ```
-git add backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/entity/
-git add backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/repository/
-git add backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/dto/
-git add backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/event/
-git add backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/package-info.java
+git add backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/entity/
+git add backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/repository/
+git add backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/dto/
+git add backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/event/
+git add backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/package-info.java
 git commit -m "feat(poupanca): add domain layer - entities, repos, DTOs, events"
 ```
 
@@ -870,12 +870,12 @@ git commit -m "feat(poupanca): add domain layer - entities, repos, DTOs, events"
 ### Task 3: HTTP Clients with @HttpExchange + Config
 
 **Files:**
-- Create: `backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/client/ContaCorrenteClient.java`
-- Create: `backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/client/TaxClient.java`
-- Create: `backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/client/BacenClient.java`
-- Create: `backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/client/package-info.java`
-- Create: `backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/config/PoupancaHttpConfig.java`
-- Create: `backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/config/package-info.java`
+- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/client/ContaCorrenteClient.java`
+- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/client/TaxClient.java`
+- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/client/BacenClient.java`
+- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/client/package-info.java`
+- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/config/PoupancaHttpConfig.java`
+- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/config/package-info.java`
 
 **Interfaces:**
 - Produces: `@HttpExchange` interfaces for ContaCorrenteClient (debitar/creditar), TaxClient (calcularIOF), BacenClient (buscarTR)
@@ -884,10 +884,10 @@ git commit -m "feat(poupanca): add domain layer - entities, repos, DTOs, events"
 
 - [ ] **Step 1: Create ContaCorrenteClient**
 
-`backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/client/ContaCorrenteClient.java`
+`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/client/ContaCorrenteClient.java`
 
 ```java
-package com.aureus.platform.poupanca.client;
+package com.aurix.platform.poupanca.client;
 
 import java.math.BigDecimal;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -911,10 +911,10 @@ public interface ContaCorrenteClient {
 
 - [ ] **Step 2: Create TaxClient**
 
-`backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/client/TaxClient.java`
+`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/client/TaxClient.java`
 
 ```java
-package com.aureus.platform.poupanca.client;
+package com.aurix.platform.poupanca.client;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -935,10 +935,10 @@ public interface TaxClient {
 
 - [ ] **Step 3: Create BacenClient**
 
-`backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/client/BacenClient.java`
+`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/client/BacenClient.java`
 
 ```java
-package com.aureus.platform.poupanca.client;
+package com.aurix.platform.poupanca.client;
 
 import java.math.BigDecimal;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -955,25 +955,25 @@ public interface BacenClient {
 
 - [ ] **Step 4: Create client package-info**
 
-`backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/client/package-info.java`
+`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/client/package-info.java`
 
 ```java
 @NullMarked
-package com.aureus.platform.poupanca.client;
+package com.aurix.platform.poupanca.client;
 
 import org.jspecify.annotations.NullMarked;
 ```
 
 - [ ] **Step 5: Create PoupancaHttpConfig**
 
-`backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/config/PoupancaHttpConfig.java`
+`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/config/PoupancaHttpConfig.java`
 
 ```java
-package com.aureus.platform.poupanca.config;
+package com.aurix.platform.poupanca.config;
 
-import com.aureus.platform.poupanca.client.BacenClient;
-import com.aureus.platform.poupanca.client.ContaCorrenteClient;
-import com.aureus.platform.poupanca.client.TaxClient;
+import com.aurix.platform.poupanca.client.BacenClient;
+import com.aurix.platform.poupanca.client.ContaCorrenteClient;
+import com.aurix.platform.poupanca.client.TaxClient;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Controller;
@@ -989,25 +989,25 @@ public class PoupancaHttpConfig {
 
 - [ ] **Step 6: Create config package-info**
 
-`backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/config/package-info.java`
+`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/config/package-info.java`
 
 ```java
 @NullMarked
-package com.aureus.platform.poupanca.config;
+package com.aurix.platform.poupanca.config;
 
 import org.jspecify.annotations.NullMarked;
 ```
 
 - [ ] **Step 7: Verify compilation**
 
-Run: `mvn compile -pl aureus-poupanca -am -DskipTests -q`
+Run: `mvn compile -pl aurix-poupanca -am -DskipTests -q`
 Expected: BUILD SUCCESS
 
 - [ ] **Step 8: Commit**
 
 ```
-git add backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/client/
-git add backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/config/
+git add backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/client/
+git add backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/config/
 git commit -m "feat(poupanca): add @HttpExchange clients and resilient config"
 ```
 
@@ -1016,8 +1016,8 @@ git commit -m "feat(poupanca): add @HttpExchange clients and resilient config"
 ### Task 4: Kafka + Security Config
 
 **Files:**
-- Create: `backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/config/PoupancaKafkaConfig.java`
-- Create: `backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/config/PoupancaSecurityConfig.java`
+- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/config/PoupancaKafkaConfig.java`
+- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/config/PoupancaSecurityConfig.java`
 
 **Interfaces:**
 - Consumes: Event records from Task 2
@@ -1025,14 +1025,14 @@ git commit -m "feat(poupanca): add @HttpExchange clients and resilient config"
 
 - [ ] **Step 1: Create PoupancaKafkaConfig**
 
-`backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/config/PoupancaKafkaConfig.java`
+`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/config/PoupancaKafkaConfig.java`
 
 ```java
-package com.aureus.platform.poupanca.config;
+package com.aurix.platform.poupanca.config;
 
-import com.aureus.platform.poupanca.event.ContaPoupancaEvent;
-import com.aureus.platform.poupanca.event.MovimentacaoEvent;
-import com.aureus.platform.poupanca.event.RendimentoEvent;
+import com.aurix.platform.poupanca.event.ContaPoupancaEvent;
+import com.aurix.platform.poupanca.event.MovimentacaoEvent;
+import com.aurix.platform.poupanca.event.RendimentoEvent;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -1071,10 +1071,10 @@ public class PoupancaKafkaConfig {
 
 - [ ] **Step 2: Create PoupancaSecurityConfig**
 
-`backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/config/PoupancaSecurityConfig.java`
+`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/config/PoupancaSecurityConfig.java`
 
 ```java
-package com.aureus.platform.poupanca.config;
+package com.aurix.platform.poupanca.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -1111,13 +1111,13 @@ public class PoupancaSecurityConfig {
 
 - [ ] **Step 3: Verify compilation**
 
-Run: `mvn compile -pl aureus-poupanca -am -DskipTests -q`
+Run: `mvn compile -pl aurix-poupanca -am -DskipTests -q`
 Expected: BUILD SUCCESS
 
 - [ ] **Step 4: Commit**
 
 ```
-git add backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/config/
+git add backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/config/
 git commit -m "feat(poupanca): add Kafka and security config"
 ```
 
@@ -1126,12 +1126,12 @@ git commit -m "feat(poupanca): add Kafka and security config"
 ### Task 5: ContaPoupancaService + Controller + Tests
 
 **Files:**
-- Create: `backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/service/ContaPoupancaService.java`
-- Create: `backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/service/package-info.java`
-- Create: `backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/controller/ContaPoupancaController.java`
-- Create: `backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/controller/package-info.java`
-- Create: `backend/aureus-poupanca/src/test/java/com/aureus/platform/poupanca/controller/ContaPoupancaControllerTest.java`
-- Create: `backend/aureus-poupanca/src/test/resources/application-test.yml`
+- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/ContaPoupancaService.java`
+- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/package-info.java`
+- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/ContaPoupancaController.java`
+- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/package-info.java`
+- Create: `backend/aurix-poupanca/src/test/java/com/aurix/platform/poupanca/controller/ContaPoupancaControllerTest.java`
+- Create: `backend/aurix-poupanca/src/test/resources/application-test.yml`
 
 **Interfaces:**
 - Consumes: `ContaPoupancaRepository`, `KafkaTemplate`
@@ -1140,42 +1140,42 @@ git commit -m "feat(poupanca): add Kafka and security config"
 
 - [ ] **Step 1: Create service package-info**
 
-`backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/service/package-info.java`
+`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/package-info.java`
 
 ```java
 @NullMarked
-package com.aureus.platform.poupanca.service;
+package com.aurix.platform.poupanca.service;
 
 import org.jspecify.annotations.NullMarked;
 ```
 
 - [ ] **Step 2: Create controller package-info**
 
-`backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/controller/package-info.java`
+`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/package-info.java`
 
 ```java
 @NullMarked
-package com.aureus.platform.poupanca.controller;
+package com.aurix.platform.poupanca.controller;
 
 import org.jspecify.annotations.NullMarked;
 ```
 
 - [ ] **Step 3: Create ContaPoupancaService**
 
-`backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/service/ContaPoupancaService.java`
+`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/ContaPoupancaService.java`
 
 ```java
-package com.aureus.platform.poupanca.service;
+package com.aurix.platform.poupanca.service;
 
-import com.aureus.platform.poupanca.dto.ContaPoupancaResponse;
-import com.aureus.platform.poupanca.dto.CriarContaRequest;
-import com.aureus.platform.poupanca.entity.ContaPoupanca;
-import com.aureus.platform.poupanca.entity.ContaPoupanca.StatusConta;
-import com.aureus.platform.poupanca.event.ContaPoupancaEvent;
-import com.aureus.platform.poupanca.repository.ContaPoupancaRepository;
-import com.aureus.platform.poupanca.config.PoupancaKafkaConfig;
-import com.aureus.platform.shared.tenant.TenantContext;
-import com.aureus.platform.shared.util.TransacaoUtil;
+import com.aurix.platform.poupanca.dto.ContaPoupancaResponse;
+import com.aurix.platform.poupanca.dto.CriarContaRequest;
+import com.aurix.platform.poupanca.entity.ContaPoupanca;
+import com.aurix.platform.poupanca.entity.ContaPoupanca.StatusConta;
+import com.aurix.platform.poupanca.event.ContaPoupancaEvent;
+import com.aurix.platform.poupanca.repository.ContaPoupancaRepository;
+import com.aurix.platform.poupanca.config.PoupancaKafkaConfig;
+import com.aurix.platform.shared.tenant.TenantContext;
+import com.aurix.platform.shared.util.TransacaoUtil;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -1264,14 +1264,14 @@ public class ContaPoupancaService {
 
 - [ ] **Step 4: Create ContaPoupancaController**
 
-`backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/controller/ContaPoupancaController.java`
+`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/ContaPoupancaController.java`
 
 ```java
-package com.aureus.platform.poupanca.controller;
+package com.aurix.platform.poupanca.controller;
 
-import com.aureus.platform.poupanca.dto.ContaPoupancaResponse;
-import com.aureus.platform.poupanca.dto.CriarContaRequest;
-import com.aureus.platform.poupanca.service.ContaPoupancaService;
+import com.aurix.platform.poupanca.dto.ContaPoupancaResponse;
+import com.aurix.platform.poupanca.dto.CriarContaRequest;
+import com.aurix.platform.poupanca.service.ContaPoupancaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -1334,7 +1334,7 @@ public class ContaPoupancaController {
 
 - [ ] **Step 5: Create application-test.yml**
 
-`backend/aureus-poupanca/src/test/resources/application-test.yml`
+`backend/aurix-poupanca/src/test/resources/application-test.yml`
 
 ```yaml
 spring:
@@ -1367,17 +1367,17 @@ spring:
 
 - [ ] **Step 6: Create ContaPoupancaControllerTest**
 
-`backend/aureus-poupanca/src/test/java/com/aureus/platform/poupanca/controller/ContaPoupancaControllerTest.java`
+`backend/aurix-poupanca/src/test/java/com/aurix/platform/poupanca/controller/ContaPoupancaControllerTest.java`
 
 ```java
-package com.aureus.platform.poupanca.controller;
+package com.aurix.platform.poupanca.controller;
 
-import com.aureus.platform.poupanca.AureusPoupancaApplication;
-import com.aureus.platform.poupanca.dto.ContaPoupancaResponse;
-import com.aureus.platform.poupanca.dto.CriarContaRequest;
-import com.aureus.platform.poupanca.entity.ContaPoupanca;
-import com.aureus.platform.poupanca.repository.ContaPoupancaRepository;
-import com.aureus.platform.shared.tenant.TenantContext;
+import com.aurix.platform.poupanca.AurixPoupancaApplication;
+import com.aurix.platform.poupanca.dto.ContaPoupancaResponse;
+import com.aurix.platform.poupanca.dto.CriarContaRequest;
+import com.aurix.platform.poupanca.entity.ContaPoupanca;
+import com.aurix.platform.poupanca.repository.ContaPoupancaRepository;
+import com.aurix.platform.shared.tenant.TenantContext;
 import java.math.BigDecimal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -1390,7 +1390,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(classes = AureusPoupancaApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = AurixPoupancaApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 class ContaPoupancaControllerTest {
 
@@ -1443,15 +1443,15 @@ class ContaPoupancaControllerTest {
 
 - [ ] **Step 7: Run tests**
 
-Run: `mvn test -pl aureus-poupanca -am -Dtest=ContaPoupancaControllerTest -q`
+Run: `mvn test -pl aurix-poupanca -am -Dtest=ContaPoupancaControllerTest -q`
 Expected: BUILD SUCCESS (tests pass)
 
 - [ ] **Step 8: Commit**
 
 ```
-git add backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/service/
-git add backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/controller/
-git add backend/aureus-poupanca/src/test/
+git add backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/
+git add backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/
+git add backend/aurix-poupanca/src/test/
 git commit -m "feat(poupanca): add ContaPoupancaService, controller, and tests"
 ```
 
@@ -1460,8 +1460,8 @@ git commit -m "feat(poupanca): add ContaPoupancaService, controller, and tests"
 ### Task 6: MovimentacaoService + Controller + Tests
 
 **Files:**
-- Create: `backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/service/MovimentacaoService.java`
-- Create: `backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/controller/MovimentacaoController.java`
+- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/MovimentacaoService.java`
+- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/MovimentacaoController.java`
 
 **Interfaces:**
 - Consumes: `ContaPoupancaRepository`, `MovimentacaoPoupancaRepository`, `ContaCorrenteClient`, `TaxClient`, `KafkaTemplate`
@@ -1470,26 +1470,26 @@ git commit -m "feat(poupanca): add ContaPoupancaService, controller, and tests"
 
 - [ ] **Step 1: Create MovimentacaoService**
 
-`backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/service/MovimentacaoService.java`
+`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/MovimentacaoService.java`
 
 ```java
-package com.aureus.platform.poupanca.service;
+package com.aurix.platform.poupanca.service;
 
-import com.aureus.platform.poupanca.client.ContaCorrenteClient;
-import com.aureus.platform.poupanca.client.TaxClient;
-import com.aureus.platform.poupanca.config.PoupancaKafkaConfig;
-import com.aureus.platform.poupanca.dto.DepositoRequest;
-import com.aureus.platform.poupanca.dto.ExtratoResponse;
-import com.aureus.platform.poupanca.dto.ExtratoResponse.MovimentacaoItem;
-import com.aureus.platform.poupanca.dto.SaqueRequest;
-import com.aureus.platform.poupanca.entity.ContaPoupanca;
-import com.aureus.platform.poupanca.entity.ContaPoupanca.StatusConta;
-import com.aureus.platform.poupanca.entity.MovimentacaoPoupanca;
-import com.aureus.platform.poupanca.entity.MovimentacaoPoupanca.TipoMovimentacao;
-import com.aureus.platform.poupanca.event.MovimentacaoEvent;
-import com.aureus.platform.poupanca.repository.ContaPoupancaRepository;
-import com.aureus.platform.poupanca.repository.MovimentacaoPoupancaRepository;
-import com.aureus.platform.shared.tenant.TenantContext;
+import com.aurix.platform.poupanca.client.ContaCorrenteClient;
+import com.aurix.platform.poupanca.client.TaxClient;
+import com.aurix.platform.poupanca.config.PoupancaKafkaConfig;
+import com.aurix.platform.poupanca.dto.DepositoRequest;
+import com.aurix.platform.poupanca.dto.ExtratoResponse;
+import com.aurix.platform.poupanca.dto.ExtratoResponse.MovimentacaoItem;
+import com.aurix.platform.poupanca.dto.SaqueRequest;
+import com.aurix.platform.poupanca.entity.ContaPoupanca;
+import com.aurix.platform.poupanca.entity.ContaPoupanca.StatusConta;
+import com.aurix.platform.poupanca.entity.MovimentacaoPoupanca;
+import com.aurix.platform.poupanca.entity.MovimentacaoPoupanca.TipoMovimentacao;
+import com.aurix.platform.poupanca.event.MovimentacaoEvent;
+import com.aurix.platform.poupanca.repository.ContaPoupancaRepository;
+import com.aurix.platform.poupanca.repository.MovimentacaoPoupancaRepository;
+import com.aurix.platform.shared.tenant.TenantContext;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -1643,15 +1643,15 @@ public class MovimentacaoService {
 
 - [ ] **Step 2: Create MovimentacaoController**
 
-`backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/controller/MovimentacaoController.java`
+`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/MovimentacaoController.java`
 
 ```java
-package com.aureus.platform.poupanca.controller;
+package com.aurix.platform.poupanca.controller;
 
-import com.aureus.platform.poupanca.dto.DepositoRequest;
-import com.aureus.platform.poupanca.dto.ExtratoResponse;
-import com.aureus.platform.poupanca.dto.SaqueRequest;
-import com.aureus.platform.poupanca.service.MovimentacaoService;
+import com.aurix.platform.poupanca.dto.DepositoRequest;
+import com.aurix.platform.poupanca.dto.ExtratoResponse;
+import com.aurix.platform.poupanca.dto.SaqueRequest;
+import com.aurix.platform.poupanca.service.MovimentacaoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -1712,14 +1712,14 @@ public class MovimentacaoController {
 
 - [ ] **Step 3: Verify compilation**
 
-Run: `mvn compile -pl aureus-poupanca -am -DskipTests -q`
+Run: `mvn compile -pl aurix-poupanca -am -DskipTests -q`
 Expected: BUILD SUCCESS
 
 - [ ] **Step 4: Commit**
 
 ```
-git add backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/service/MovimentacaoService.java
-git add backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/controller/MovimentacaoController.java
+git add backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/MovimentacaoService.java
+git add backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/MovimentacaoController.java
 git commit -m "feat(poupanca): add MovimentacaoService and controller"
 ```
 
@@ -1728,8 +1728,8 @@ git commit -m "feat(poupanca): add MovimentacaoService and controller"
 ### Task 7: AniversarioService + Controller + Tests
 
 **Files:**
-- Create: `backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/service/AniversarioService.java`
-- Create: `backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/controller/AniversarioController.java`
+- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/AniversarioService.java`
+- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/AniversarioController.java`
 
 **Interfaces:**
 - Consumes: `ContaPoupancaRepository`, `MovimentacaoPoupancaRepository`, `BacenClient`, `KafkaTemplate`
@@ -1738,21 +1738,21 @@ git commit -m "feat(poupanca): add MovimentacaoService and controller"
 
 - [ ] **Step 1: Create AniversarioService**
 
-`backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/service/AniversarioService.java`
+`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/AniversarioService.java`
 
 ```java
-package com.aureus.platform.poupanca.service;
+package com.aurix.platform.poupanca.service;
 
-import com.aureus.platform.poupanca.client.BacenClient;
-import com.aureus.platform.poupanca.config.PoupancaKafkaConfig;
-import com.aureus.platform.poupanca.entity.ContaPoupanca;
-import com.aureus.platform.poupanca.entity.ContaPoupanca.StatusConta;
-import com.aureus.platform.poupanca.entity.MovimentacaoPoupanca;
-import com.aureus.platform.poupanca.entity.MovimentacaoPoupanca.TipoMovimentacao;
-import com.aureus.platform.poupanca.event.RendimentoEvent;
-import com.aureus.platform.poupanca.repository.ContaPoupancaRepository;
-import com.aureus.platform.poupanca.repository.MovimentacaoPoupancaRepository;
-import com.aureus.platform.shared.tenant.TenantContext;
+import com.aurix.platform.poupanca.client.BacenClient;
+import com.aurix.platform.poupanca.config.PoupancaKafkaConfig;
+import com.aurix.platform.poupanca.entity.ContaPoupanca;
+import com.aurix.platform.poupanca.entity.ContaPoupanca.StatusConta;
+import com.aurix.platform.poupanca.entity.MovimentacaoPoupanca;
+import com.aurix.platform.poupanca.entity.MovimentacaoPoupanca.TipoMovimentacao;
+import com.aurix.platform.poupanca.event.RendimentoEvent;
+import com.aurix.platform.poupanca.repository.ContaPoupancaRepository;
+import com.aurix.platform.poupanca.repository.MovimentacaoPoupancaRepository;
+import com.aurix.platform.shared.tenant.TenantContext;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -1837,12 +1837,12 @@ public class AniversarioService {
 
 - [ ] **Step 2: Create AniversarioController**
 
-`backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/controller/AniversarioController.java`
+`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/AniversarioController.java`
 
 ```java
-package com.aureus.platform.poupanca.controller;
+package com.aurix.platform.poupanca.controller;
 
-import com.aureus.platform.poupanca.service.AniversarioService;
+import com.aurix.platform.poupanca.service.AniversarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.math.BigDecimal;
@@ -1882,14 +1882,14 @@ public class AniversarioController {
 
 - [ ] **Step 3: Verify compilation**
 
-Run: `mvn compile -pl aureus-poupanca -am -DskipTests -q`
+Run: `mvn compile -pl aurix-poupanca -am -DskipTests -q`
 Expected: BUILD SUCCESS
 
 - [ ] **Step 4: Commit**
 
 ```
-git add backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/service/AniversarioService.java
-git add backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/controller/AniversarioController.java
+git add backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/AniversarioService.java
+git add backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/AniversarioController.java
 git commit -m "feat(poupanca): add AniversarioService and controller"
 ```
 
@@ -1898,9 +1898,9 @@ git commit -m "feat(poupanca): add AniversarioService and controller"
 ### Task 8: ExtratoPdfService + Controller + Gateway Route
 
 **Files:**
-- Create: `backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/service/ExtratoPdfService.java`
-- Create: `backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/controller/ExtratoController.java`
-- Modify: `backend/aureus-gateway/src/main/resources/application.yml` (route)
+- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/ExtratoPdfService.java`
+- Create: `backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/ExtratoController.java`
+- Modify: `backend/aurix-gateway/src/main/resources/application.yml` (route)
 
 **Interfaces:**
 - Consumes: `MovimentacaoService`, Redis cache
@@ -1908,13 +1908,13 @@ git commit -m "feat(poupanca): add AniversarioService and controller"
 
 - [ ] **Step 1: Create ExtratoPdfService**
 
-`backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/service/ExtratoPdfService.java`
+`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/ExtratoPdfService.java`
 
 ```java
-package com.aureus.platform.poupanca.service;
+package com.aurix.platform.poupanca.service;
 
-import com.aureus.platform.poupanca.dto.ExtratoResponse;
-import com.aureus.platform.poupanca.dto.ExtratoResponse.MovimentacaoItem;
+import com.aurix.platform.poupanca.dto.ExtratoResponse;
+import com.aurix.platform.poupanca.dto.ExtratoResponse.MovimentacaoItem;
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -1966,12 +1966,12 @@ public class ExtratoPdfService {
 
 - [ ] **Step 2: Create ExtratoController**
 
-`backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/controller/ExtratoController.java`
+`backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/ExtratoController.java`
 
 ```java
-package com.aureus.platform.poupanca.controller;
+package com.aurix.platform.poupanca.controller;
 
-import com.aureus.platform.poupanca.service.ExtratoPdfService;
+import com.aurix.platform.poupanca.service.ExtratoPdfService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDateTime;
@@ -2011,10 +2011,10 @@ public class ExtratoController {
 
 - [ ] **Step 3: Add gateway route**
 
-In `backend/aureus-gateway/src/main/resources/application.yml`, add a route for poupanca:
+In `backend/aurix-gateway/src/main/resources/application.yml`, add a route for poupanca:
 
 ```yaml
-      - id: aureus-poupanca
+      - id: aurix-poupanca
         uri: http://localhost:8111
         predicates:
           - Path=/api/poupanca/**
@@ -2024,15 +2024,15 @@ In `backend/aureus-gateway/src/main/resources/application.yml`, add a route for 
 
 - [ ] **Step 4: Verify compilation**
 
-Run: `mvn compile -pl aureus-poupanca,aureus-gateway -am -DskipTests -q`
+Run: `mvn compile -pl aurix-poupanca,aurix-gateway -am -DskipTests -q`
 Expected: BUILD SUCCESS
 
 - [ ] **Step 5: Commit**
 
 ```
-git add backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/service/ExtratoPdfService.java
-git add backend/aureus-poupanca/src/main/java/com/aureus/platform/poupanca/controller/ExtratoController.java
-git add backend/aureus-gateway/src/main/resources/application.yml
+git add backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/service/ExtratoPdfService.java
+git add backend/aurix-poupanca/src/main/java/com/aurix/platform/poupanca/controller/ExtratoController.java
+git add backend/aurix-gateway/src/main/resources/application.yml
 git commit -m "feat(poupanca): add ExtratoPdfService, controller, and gateway route"
 ```
 
@@ -2047,12 +2047,12 @@ Expected: BUILD SUCCESS (31+ modules)
 
 - [ ] **Step 2: Run poupanca tests**
 
-Run: `mvn test -pl aureus-poupanca -am -q`
+Run: `mvn test -pl aurix-poupanca -am -q`
 Expected: BUILD SUCCESS
 
 - [ ] **Step 3: Static analysis (PMD/Checkstyle)**
 
-Run: `mvn pmd:check checkstyle:check -pl aureus-poupanca -am -DskipTests -q`
+Run: `mvn pmd:check checkstyle:check -pl aurix-poupanca -am -DskipTests -q`
 Expected: BUILD SUCCESS (no violations)
 
 - [ ] **Step 4: Final commit**

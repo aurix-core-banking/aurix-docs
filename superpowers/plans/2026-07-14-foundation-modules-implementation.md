@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Implement 4 foundation microservices (Customer, KYC, Fraud, Notification) for the AUREUS banking platform.
+**Goal:** Implement 4 foundation microservices (Customer, KYC, Fraud, Notification) for the AURIX banking platform.
 
 **Architecture:** Each module is an independent Spring Boot 4.1.0 microservice with PostgreSQL, Redis, Kafka. Communication via REST (synchronous) and Kafka events (asynchronous). Same conventions as existing 37 modules: `permitAll` security, `/api/<name>` context path, health endpoints, Docker images.
 
@@ -12,18 +12,18 @@
 
 - Java 25 (`maven.compiler.source/target = 25`)
 - Spring Boot 4.1.0, Spring Cloud 2025.1.2
-- Parent POM: `com.aureus.platform:aureus-platform:1.0.0`
-- Shared lib: `com.aureus.platform:aureus-shared`
+- Parent POM: `com.aurix.platform:aurix-platform:1.0.0`
+- Shared lib: `com.aurix.platform:aurix-shared`
 - Base image: `eclipse-temurin:25-jdk-jammy`
-- All entities extend `com.aureus.platform.shared.entity.BaseEntity`
-- All entities use `@Table(schema = "aureus")`
+- All entities extend `com.aurix.platform.shared.entity.BaseEntity`
+- All entities use `@Table(schema = "aurix")`
 - All repositories extend `JpaRepository<Entity, Long>` with `@Repository`
 - Services use `@Service` + `@Transactional`, constructor injection (no Lombok annotations — use delombok-style `@java.lang.SuppressWarnings("all")`)
 - Controllers use `@RestController`, explicit constructors, Swagger annotations (`@Tag`, `@Operation`)
 - Security: `@EnableWebSecurity` + `SecurityFilterChain` with `.anyRequest().permitAll()` + `csrf.disable()`
-- Application class: `@SpringBootApplication(scanBasePackages = { "com.aureus.platform.<name>", "com.aureus.platform.shared" })`
+- Application class: `@SpringBootApplication(scanBasePackages = { "com.aurix.platform.<name>", "com.aurix.platform.shared" })`
 - Kafka events are plain Strings (JSON payload), deserialized manually
-- Docker image name: `infrastructure-aureus-<name>` (matches existing convention)
+- Docker image name: `infrastructure-aurix-<name>` (matches existing convention)
 - Ports: 8123 (customer), 8124 (kyc), 8125 (fraud), 8126 (notification)
 
 ---
@@ -34,11 +34,11 @@
 
 Each module follows this structure:
 ```
-backend/aureus-<name>/
+backend/aurix-<name>/
   pom.xml
   Dockerfile
-  src/main/java/com/aureus/platform/<name>/
-    Aureus<Name>Application.java
+  src/main/java/com/aurix/platform/<name>/
+    Aurix<Name>Application.java
     config/SecurityConfig.java
     controller/HealthController.java
     controller/<Entity>Controller.java       (1-3 per module)
@@ -48,7 +48,7 @@ backend/aureus-<name>/
     config/KafkaConfig.java                  (if module has Kafka)
     consumer/<Event>Consumer.java            (if module consumes Kafka)
   src/main/resources/application.yml
-  src/test/java/com/aureus/platform/<name>/
+  src/test/java/com/aurix/platform/<name>/
     <Module>IntegrationTest.java
     service/<Entity>ServiceTest.java         (1 per service)
 ```
@@ -58,7 +58,7 @@ backend/aureus-<name>/
 - `backend/pom.xml` — add 4 `<module>` entries
 - `infrastructure/docker-compose.yml` — add 4 services
 - `infrastructure/traefik/dynamic.yml` — add 4 routers + services
-- `aureus-tests/e2e/config.py` — add 4 health endpoints
+- `aurix-tests/e2e/config.py` — add 4 health endpoints
 
 ---
 
@@ -68,7 +68,7 @@ backend/aureus-<name>/
 - Modify: `backend/pom.xml` (add 4 module entries)
 - Modify: `infrastructure/docker-compose.yml` (add 4 services with ports, env, healthcheck, depends_on)
 - Modify: `infrastructure/traefik/dynamic.yml` (add 4 routers + services)
-- Modify: `aureus-tests/e2e/config.py` (add 4 health endpoints)
+- Modify: `aurix-tests/e2e/config.py` (add 4 health endpoints)
 
 **Interfaces:**
 - Consumes: nothing
@@ -78,10 +78,10 @@ backend/aureus-<name>/
 
 Open `backend/pom.xml`. Add these `<module>` entries in alphabetical order (before `</modules>`):
 ```xml
-        <module>aureus-customer</module>
-        <module>aureus-fraud</module>
-        <module>aureus-kyc</module>
-        <module>aureus-notification</module>
+        <module>aurix-customer</module>
+        <module>aurix-fraud</module>
+        <module>aurix-kyc</module>
+        <module>aurix-notification</module>
 ```
 
 - [ ] **Step 2: Add Traefik routes**
@@ -115,39 +115,39 @@ Under `http.services:` add:
     customer:
       loadBalancer:
         servers:
-          - url: "http://aureus-customer:8123"
+          - url: "http://aurix-customer:8123"
     kyc:
       loadBalancer:
         servers:
-          - url: "http://aureus-kyc:8124"
+          - url: "http://aurix-kyc:8124"
     fraud:
       loadBalancer:
         servers:
-          - url: "http://aureus-fraud:8125"
+          - url: "http://aurix-fraud:8125"
     notification:
       loadBalancer:
         servers:
-          - url: "http://aureus-notification:8126"
+          - url: "http://aurix-notification:8126"
 ```
 
 - [ ] **Step 3: Add docker-compose services**
 
-Open `infrastructure/docker-compose.yml`. Find the last `aureus-*` service (e.g., `aureus-cambio`). After its closing `networks:` line (or last key), insert 4 new service definitions:
+Open `infrastructure/docker-compose.yml`. Find the last `aurix-*` service (e.g., `aurix-cambio`). After its closing `networks:` line (or last key), insert 4 new service definitions:
 
 ```yaml
-  aureus-customer:
+  aurix-customer:
     build:
-      context: ../backend/aureus-customer
+      context: ../backend/aurix-customer
       dockerfile: Dockerfile
-    container_name: aureus-customer
+    container_name: aurix-customer
     ports:
       - "8123:8123"
     environment:
       SPRING_PROFILES_ACTIVE: docker
       SERVER_PORT: 8123
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/aureus_db
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-aureus_user}
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-aureus_dev_password}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/aurix_db
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-aurix_user}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-aurix_dev_password}
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       SPRING_REDIS_HOST: redis
     depends_on:
@@ -164,21 +164,21 @@ Open `infrastructure/docker-compose.yml`. Find the last `aureus-*` service (e.g.
       retries: 5
       start_period: 40s
     networks:
-      - aureus-network
+      - aurix-network
 
-  aureus-kyc:
+  aurix-kyc:
     build:
-      context: ../backend/aureus-kyc
+      context: ../backend/aurix-kyc
       dockerfile: Dockerfile
-    container_name: aureus-kyc
+    container_name: aurix-kyc
     ports:
       - "8124:8124"
     environment:
       SPRING_PROFILES_ACTIVE: docker
       SERVER_PORT: 8124
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/aureus_db
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-aureus_user}
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-aureus_dev_password}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/aurix_db
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-aurix_user}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-aurix_dev_password}
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       SPRING_REDIS_HOST: redis
     depends_on:
@@ -195,21 +195,21 @@ Open `infrastructure/docker-compose.yml`. Find the last `aureus-*` service (e.g.
       retries: 5
       start_period: 40s
     networks:
-      - aureus-network
+      - aurix-network
 
-  aureus-fraud:
+  aurix-fraud:
     build:
-      context: ../backend/aureus-fraud
+      context: ../backend/aurix-fraud
       dockerfile: Dockerfile
-    container_name: aureus-fraud
+    container_name: aurix-fraud
     ports:
       - "8125:8125"
     environment:
       SPRING_PROFILES_ACTIVE: docker
       SERVER_PORT: 8125
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/aureus_db
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-aureus_user}
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-aureus_dev_password}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/aurix_db
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-aurix_user}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-aurix_dev_password}
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       SPRING_REDIS_HOST: redis
     depends_on:
@@ -226,21 +226,21 @@ Open `infrastructure/docker-compose.yml`. Find the last `aureus-*` service (e.g.
       retries: 5
       start_period: 40s
     networks:
-      - aureus-network
+      - aurix-network
 
-  aureus-notification:
+  aurix-notification:
     build:
-      context: ../backend/aureus-notification
+      context: ../backend/aurix-notification
       dockerfile: Dockerfile
-    container_name: aureus-notification
+    container_name: aurix-notification
     ports:
       - "8126:8126"
     environment:
       SPRING_PROFILES_ACTIVE: docker
       SERVER_PORT: 8126
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/aureus_db
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-aureus_user}
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-aureus_dev_password}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/aurix_db
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-aurix_user}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-aurix_dev_password}
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       SPRING_REDIS_HOST: redis
     depends_on:
@@ -257,45 +257,45 @@ Open `infrastructure/docker-compose.yml`. Find the last `aureus-*` service (e.g.
       retries: 5
       start_period: 40s
     networks:
-      - aureus-network
+      - aurix-network
 ```
 
 - [ ] **Step 4: Add E2E health endpoints**
 
-Open `aureus-tests/e2e/config.py`. Add inside `SERVICE_HEALTH_ENDPOINTS` dict (before closing `}`):
+Open `aurix-tests/e2e/config.py`. Add inside `SERVICE_HEALTH_ENDPOINTS` dict (before closing `}`):
 ```python
-    "aureus-customer": "http://localhost:8123/api/customer/health",
-    "aureus-kyc": "http://localhost:8124/api/kyc/health",
-    "aureus-fraud": "http://localhost:8125/api/fraud/health",
-    "aureus-notification": "http://localhost:8126/api/notification/health",
+    "aurix-customer": "http://localhost:8123/api/customer/health",
+    "aurix-kyc": "http://localhost:8124/api/kyc/health",
+    "aurix-fraud": "http://localhost:8125/api/fraud/health",
+    "aurix-notification": "http://localhost:8126/api/notification/health",
 ```
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add backend/pom.xml infrastructure/docker-compose.yml infrastructure/traefik/dynamic.yml aureus-tests/e2e/config.py
+git add backend/pom.xml infrastructure/docker-compose.yml infrastructure/traefik/dynamic.yml aurix-tests/e2e/config.py
 git commit -m "feat: register Foundation modules (customer, kyc, fraud, notification) in infra"
 ```
 
 ---
 
-### Task 1: aureus-customer — Scaffold + Entities + Repository
+### Task 1: aurix-customer — Scaffold + Entities + Repository
 
 **Files:**
-- Create: `backend/aureus-customer/pom.xml`
-- Create: `backend/aureus-customer/Dockerfile`
-- Create: `backend/aureus-customer/src/main/java/com/aureus/platform/customer/AureusCustomerApplication.java`
-- Create: `backend/aureus-customer/src/main/java/com/aureus/platform/customer/config/SecurityConfig.java`
-- Create: `backend/aureus-customer/src/main/java/com/aureus/platform/customer/controller/HealthController.java`
-- Create: `backend/aureus-customer/src/main/resources/application.yml`
-- Create: `backend/aureus-customer/src/main/java/com/aureus/platform/customer/entity/Cliente.java`
-- Create: `backend/aureus-customer/src/main/java/com/aureus/platform/customer/entity/ClientePF.java`
-- Create: `backend/aureus-customer/src/main/java/com/aureus/platform/customer/entity/ClientePJ.java`
-- Create: `backend/aureus-customer/src/main/java/com/aureus/platform/customer/entity/Endereco.java`
-- Create: `backend/aureus-customer/src/main/java/com/aureus/platform/customer/entity/Contato.java`
-- Create: `backend/aureus-customer/src/main/java/com/aureus/platform/customer/repository/ClienteRepository.java`
-- Create: `backend/aureus-customer/src/main/java/com/aureus/platform/customer/repository/EnderecoRepository.java`
-- Create: `backend/aureus-customer/src/main/java/com/aureus/platform/customer/repository/ContatoRepository.java`
+- Create: `backend/aurix-customer/pom.xml`
+- Create: `backend/aurix-customer/Dockerfile`
+- Create: `backend/aurix-customer/src/main/java/com/aurix/platform/customer/AurixCustomerApplication.java`
+- Create: `backend/aurix-customer/src/main/java/com/aurix/platform/customer/config/SecurityConfig.java`
+- Create: `backend/aurix-customer/src/main/java/com/aurix/platform/customer/controller/HealthController.java`
+- Create: `backend/aurix-customer/src/main/resources/application.yml`
+- Create: `backend/aurix-customer/src/main/java/com/aurix/platform/customer/entity/Cliente.java`
+- Create: `backend/aurix-customer/src/main/java/com/aurix/platform/customer/entity/ClientePF.java`
+- Create: `backend/aurix-customer/src/main/java/com/aurix/platform/customer/entity/ClientePJ.java`
+- Create: `backend/aurix-customer/src/main/java/com/aurix/platform/customer/entity/Endereco.java`
+- Create: `backend/aurix-customer/src/main/java/com/aurix/platform/customer/entity/Contato.java`
+- Create: `backend/aurix-customer/src/main/java/com/aurix/platform/customer/repository/ClienteRepository.java`
+- Create: `backend/aurix-customer/src/main/java/com/aurix/platform/customer/repository/EnderecoRepository.java`
+- Create: `backend/aurix-customer/src/main/java/com/aurix/platform/customer/repository/ContatoRepository.java`
 
 **Interfaces:**
 - Consumes: nothing
@@ -304,9 +304,9 @@ git commit -m "feat: register Foundation modules (customer, kyc, fraud, notifica
 - [ ] **Step 1: Create module directory**
 
 ```bash
-mkdir -p backend/aureus-customer/src/main/java/com/aureus/platform/customer/{config,controller,entity,repository,service}
-mkdir -p backend/aureus-customer/src/main/resources
-mkdir -p backend/aureus-customer/src/test/java/com/aureus/platform/customer
+mkdir -p backend/aurix-customer/src/main/java/com/aurix/platform/customer/{config,controller,entity,repository,service}
+mkdir -p backend/aurix-customer/src/main/resources
+mkdir -p backend/aurix-customer/src/test/java/com/aurix/platform/customer
 ```
 
 - [ ] **Step 2: Create pom.xml**
@@ -316,18 +316,18 @@ mkdir -p backend/aureus-customer/src/test/java/com/aureus/platform/customer
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.aureus.platform</groupId>
-        <artifactId>aureus-platform</artifactId>
+        <groupId>com.aurix.platform</groupId>
+        <artifactId>aurix-platform</artifactId>
         <version>1.0.0</version>
     </parent>
-    <artifactId>aureus-customer</artifactId>
+    <artifactId>aurix-customer</artifactId>
     <packaging>jar</packaging>
-    <name>AUREUS Customer</name>
+    <name>AURIX Customer</name>
     <description>Cadastro e CRM de clientes</description>
     <dependencies>
         <dependency>
-            <groupId>com.aureus.platform</groupId>
-            <artifactId>aureus-shared</artifactId>
+            <groupId>com.aurix.platform</groupId>
+            <artifactId>aurix-shared</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -393,14 +393,14 @@ mkdir -p backend/aureus-customer/src/test/java/com/aureus/platform/customer
 
 ```dockerfile
 FROM eclipse-temurin:25-jdk-jammy
-LABEL maintainer="AUREUS Platform Team <dev@aureus.platform>"
-LABEL description="AUREUS Customer - Cadastro e CRM de clientes"
+LABEL maintainer="AURIX Platform Team <dev@aurix.platform>"
+LABEL description="AURIX Customer - Cadastro e CRM de clientes"
 LABEL version="1.0.0"
-RUN groupadd -r aureus && useradd -r -g aureus aureus
+RUN groupadd -r aurix && useradd -r -g aurix aurix
 WORKDIR /app
-COPY target/aureus-customer-1.0.0.jar app.jar
-RUN chown aureus:aureus app.jar
-USER aureus
+COPY target/aurix-customer-1.0.0.jar app.jar
+RUN chown aurix:aurix app.jar
+USER aurix
 EXPOSE 8123
 ENV JAVA_OPTS="-Xmx512m -Xms256m -XX:+UseG1GC -XX:+UseContainerSupport"
 ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
@@ -409,7 +409,7 @@ ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
 - [ ] **Step 4: Create Application class**
 
 ```java
-package com.aureus.platform.customer;
+package com.aurix.platform.customer;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -418,14 +418,14 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-@SpringBootApplication(scanBasePackages = { "com.aureus.platform.customer", "com.aureus.platform.shared" })
-@EntityScan(basePackages = { "com.aureus.platform.customer.entity", "com.aureus.platform.shared.entity" })
-@EnableJpaRepositories(basePackages = { "com.aureus.platform.customer.repository" })
+@SpringBootApplication(scanBasePackages = { "com.aurix.platform.customer", "com.aurix.platform.shared" })
+@EntityScan(basePackages = { "com.aurix.platform.customer.entity", "com.aurix.platform.shared.entity" })
+@EnableJpaRepositories(basePackages = { "com.aurix.platform.customer.repository" })
 @EnableCaching
 @EnableScheduling
-public class AureusCustomerApplication {
+public class AurixCustomerApplication {
     public static void main(String[] args) {
-        SpringApplication.run(AureusCustomerApplication.class, args);
+        SpringApplication.run(AurixCustomerApplication.class, args);
     }
 }
 ```
@@ -433,7 +433,7 @@ public class AureusCustomerApplication {
 - [ ] **Step 5: Create SecurityConfig**
 
 ```java
-package com.aureus.platform.customer.config;
+package com.aurix.platform.customer.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -457,7 +457,7 @@ public class SecurityConfig {
 - [ ] **Step 6: Create HealthController**
 
 ```java
-package com.aureus.platform.customer.controller;
+package com.aurix.platform.customer.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -477,7 +477,7 @@ public class HealthController {
     public ResponseEntity<Map<String, Object>> health() {
         return ResponseEntity.ok(Map.of(
             "status", "UP",
-            "service", "aureus-customer",
+            "service", "aurix-customer",
             "timestamp", LocalDateTime.now().toString(),
             "version", "1.0.0"
         ));
@@ -495,13 +495,13 @@ server:
 
 spring:
   application:
-    name: aureus-customer
+    name: aurix-customer
   profiles:
     active: dev
   datasource:
-    url: jdbc:postgresql://localhost:5432/aureus_db
-    username: aureus_user
-    password: aureus_dev_password
+    url: jdbc:postgresql://localhost:5432/aurix_db
+    username: aurix_user
+    password: aurix_dev_password
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 20
@@ -528,7 +528,7 @@ spring:
   kafka:
     bootstrap-servers: localhost:9092
     consumer:
-      group-id: aureus-customer-group
+      group-id: aurix-customer-group
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
@@ -538,7 +538,7 @@ spring:
 
 logging:
   level:
-    com.aureus.platform: DEBUG
+    com.aurix.platform: DEBUG
 
 management:
   endpoints:
@@ -549,12 +549,12 @@ management:
     health:
       show-details: always
 
-aureus:
+aurix:
   customer:
     version: "1.0.0"
   security:
     jwt:
-      secret: "aureus-jwt-secret-key-2024"
+      secret: "aurix-jwt-secret-key-2024"
       expiration: 86400000
 
 ---
@@ -581,14 +581,14 @@ spring:
 
 Cliente.java:
 ```java
-package com.aureus.platform.customer.entity;
+package com.aurix.platform.customer.entity;
 
-import com.aureus.platform.shared.entity.BaseEntity;
+import com.aurix.platform.shared.entity.BaseEntity;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "clientes", schema = "aureus")
+@Table(name = "clientes", schema = "aurix")
 public class Cliente extends BaseEntity {
     @Column(nullable = false, length = 20)
     private String tipoPessoa;
@@ -684,13 +684,13 @@ public class Cliente extends BaseEntity {
 
 Endereco.java:
 ```java
-package com.aureus.platform.customer.entity;
+package com.aurix.platform.customer.entity;
 
-import com.aureus.platform.shared.entity.BaseEntity;
+import com.aurix.platform.shared.entity.BaseEntity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "enderecos", schema = "aureus")
+@Table(name = "enderecos", schema = "aurix")
 public class Endereco extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cliente_id", nullable = false)
@@ -748,13 +748,13 @@ public class Endereco extends BaseEntity {
 
 Contato.java:
 ```java
-package com.aureus.platform.customer.entity;
+package com.aurix.platform.customer.entity;
 
-import com.aureus.platform.shared.entity.BaseEntity;
+import com.aurix.platform.shared.entity.BaseEntity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "contatos", schema = "aureus")
+@Table(name = "contatos", schema = "aurix")
 public class Contato extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cliente_id", nullable = false)
@@ -783,9 +783,9 @@ public class Contato extends BaseEntity {
 - [ ] **Step 9: Create repositories**
 
 ```java
-package com.aureus.platform.customer.repository;
+package com.aurix.platform.customer.repository;
 
-import com.aureus.platform.customer.entity.Cliente;
+import com.aurix.platform.customer.entity.Cliente;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
@@ -801,9 +801,9 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 ```
 
 ```java
-package com.aureus.platform.customer.repository;
+package com.aurix.platform.customer.repository;
 
-import com.aureus.platform.customer.entity.Endereco;
+import com.aurix.platform.customer.entity.Endereco;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
@@ -815,9 +815,9 @@ public interface EnderecoRepository extends JpaRepository<Endereco, Long> {
 ```
 
 ```java
-package com.aureus.platform.customer.repository;
+package com.aurix.platform.customer.repository;
 
-import com.aureus.platform.customer.entity.Contato;
+import com.aurix.platform.customer.entity.Contato;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
@@ -831,28 +831,28 @@ public interface ContatoRepository extends JpaRepository<Contato, Long> {
 - [ ] **Step 10: Compile to verify**
 
 ```bash
-mvn clean compile -pl aureus-customer -am -q
+mvn clean compile -pl aurix-customer -am -q
 ```
 Expected: BUILD SUCCESS (no errors)
 
 - [ ] **Step 11: Commit**
 
 ```bash
-git add backend/aureus-customer/
+git add backend/aurix-customer/
 git commit -m "feat(customer): scaffold, entities, and repositories"
 ```
 
 ---
 
-### Task 2: aureus-customer — Service + Controllers + Tests
+### Task 2: aurix-customer — Service + Controllers + Tests
 
 **Files:**
-- Create: `backend/aureus-customer/src/main/java/com/aureus/platform/customer/service/ClienteService.java`
-- Create: `backend/aureus-customer/src/main/java/com/aureus/platform/customer/service/ClienteProducer.java`
-- Create: `backend/aureus-customer/src/main/java/com/aureus/platform/customer/controller/ClienteController.java`
-- Create: `backend/aureus-customer/src/test/java/com/aureus/platform/customer/service/ClienteServiceTest.java`
-- Create: `backend/aureus-customer/src/test/java/com/aureus/platform/customer/AureusCustomerApplicationTest.java`
-- Create: `backend/aureus-customer/src/main/java/com/aureus/platform/customer/config/KafkaConfig.java`
+- Create: `backend/aurix-customer/src/main/java/com/aurix/platform/customer/service/ClienteService.java`
+- Create: `backend/aurix-customer/src/main/java/com/aurix/platform/customer/service/ClienteProducer.java`
+- Create: `backend/aurix-customer/src/main/java/com/aurix/platform/customer/controller/ClienteController.java`
+- Create: `backend/aurix-customer/src/test/java/com/aurix/platform/customer/service/ClienteServiceTest.java`
+- Create: `backend/aurix-customer/src/test/java/com/aurix/platform/customer/AurixCustomerApplicationTest.java`
+- Create: `backend/aurix-customer/src/main/java/com/aurix/platform/customer/config/KafkaConfig.java`
 
 **Interfaces:**
 - Consumes: `ClienteRepository`, `EnderecoRepository`, `ContatoRepository`
@@ -861,7 +861,7 @@ git commit -m "feat(customer): scaffold, entities, and repositories"
 - [ ] **Step 1: Create KafkaConfig**
 
 ```java
-package com.aureus.platform.customer.config;
+package com.aurix.platform.customer.config;
 
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.context.annotation.Bean;
@@ -890,9 +890,9 @@ public class KafkaConfig {
 - [ ] **Step 2: Create ClienteProducer**
 
 ```java
-package com.aureus.platform.customer.service;
+package com.aurix.platform.customer.service;
 
-import com.aureus.platform.customer.entity.Cliente;
+import com.aurix.platform.customer.entity.Cliente;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -934,14 +934,14 @@ public class ClienteProducer {
 - [ ] **Step 3: Create ClienteService**
 
 ```java
-package com.aureus.platform.customer.service;
+package com.aurix.platform.customer.service;
 
-import com.aureus.platform.customer.entity.Cliente;
-import com.aureus.platform.customer.entity.Endereco;
-import com.aureus.platform.customer.entity.Contato;
-import com.aureus.platform.customer.repository.ClienteRepository;
-import com.aureus.platform.customer.repository.EnderecoRepository;
-import com.aureus.platform.customer.repository.ContatoRepository;
+import com.aurix.platform.customer.entity.Cliente;
+import com.aurix.platform.customer.entity.Endereco;
+import com.aurix.platform.customer.entity.Contato;
+import com.aurix.platform.customer.repository.ClienteRepository;
+import com.aurix.platform.customer.repository.EnderecoRepository;
+import com.aurix.platform.customer.repository.ContatoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -1032,12 +1032,12 @@ public class ClienteService {
 - [ ] **Step 4: Create ClienteController**
 
 ```java
-package com.aureus.platform.customer.controller;
+package com.aurix.platform.customer.controller;
 
-import com.aureus.platform.customer.entity.Cliente;
-import com.aureus.platform.customer.entity.Contato;
-import com.aureus.platform.customer.entity.Endereco;
-import com.aureus.platform.customer.service.ClienteService;
+import com.aurix.platform.customer.entity.Cliente;
+import com.aurix.platform.customer.entity.Contato;
+import com.aurix.platform.customer.entity.Endereco;
+import com.aurix.platform.customer.service.ClienteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -1117,10 +1117,10 @@ public class ClienteController {
 - [ ] **Step 5: Create unit test for ClienteService**
 
 ```java
-package com.aureus.platform.customer.service;
+package com.aurix.platform.customer.service;
 
-import com.aureus.platform.customer.entity.Cliente;
-import com.aureus.platform.customer.repository.ClienteRepository;
+import com.aurix.platform.customer.entity.Cliente;
+import com.aurix.platform.customer.repository.ClienteRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -1134,8 +1134,8 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class ClienteServiceTest {
     @Mock private ClienteRepository clienteRepository;
-    @Mock private com.aureus.platform.customer.repository.EnderecoRepository enderecoRepository;
-    @Mock private com.aureus.platform.customer.repository.ContatoRepository contatoRepository;
+    @Mock private com.aurix.platform.customer.repository.EnderecoRepository enderecoRepository;
+    @Mock private com.aurix.platform.customer.repository.ContatoRepository contatoRepository;
     @Mock private ClienteProducer clienteProducer;
     @InjectMocks private ClienteService clienteService;
 
@@ -1171,7 +1171,7 @@ class ClienteServiceTest {
 - [ ] **Step 6: Create integration test**
 
 ```java
-package com.aureus.platform.customer;
+package com.aurix.platform.customer;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -1179,7 +1179,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
 @ActiveProfiles("test")
-class AureusCustomerApplicationTest {
+class AurixCustomerApplicationTest {
     @Test
     void contextLoads() {
     }
@@ -1189,41 +1189,41 @@ class AureusCustomerApplicationTest {
 - [ ] **Step 7: Build and run tests**
 
 ```bash
-mvn clean test -pl aureus-customer -am
+mvn clean test -pl aurix-customer -am
 ```
 Expected: BUILD SUCCESS, tests pass
 
 - [ ] **Step 8: Commit**
 
 ```bash
-git add backend/aureus-customer/
+git add backend/aurix-customer/
 git commit -m "feat(customer): service, controller, Kafka producer, and tests"
 ```
 
 ---
 
-### Task 3: aureus-kyc — Full module
+### Task 3: aurix-kyc — Full module
 
 **Files:** (same structure as Task 1+2, but for KYC)
-- Create: `backend/aureus-kyc/pom.xml`
-- Create: `backend/aureus-kyc/Dockerfile`
-- Create: `backend/aureus-kyc/src/main/java/com/aureus/platform/kyc/AureusKycApplication.java`
-- Create: `backend/aureus-kyc/src/main/java/com/aureus/platform/kyc/config/SecurityConfig.java`
-- Create: `backend/aureus-kyc/src/main/java/com/aureus/platform/kyc/config/KafkaConfig.java`
-- Create: `backend/aureus-kyc/src/main/java/com/aureus/platform/kyc/controller/HealthController.java`
-- Create: `backend/aureus-kyc/src/main/java/com/aureus/platform/kyc/controller/SolicitacaoKycController.java`
-- Create: `backend/aureus-kyc/src/main/java/com/aureus/platform/kyc/service/SolicitacaoKycService.java`
-- Create: `backend/aureus-kyc/src/main/java/com/aureus/platform/kyc/service/KycConsumer.java`
-- Create: `backend/aureus-kyc/src/main/java/com/aureus/platform/kyc/service/KycProducer.java`
-- Create: `backend/aureus-kyc/src/main/java/com/aureus/platform/kyc/entity/SolicitacaoKYC.java`
-- Create: `backend/aureus-kyc/src/main/java/com/aureus/platform/kyc/entity/DocumentoKYC.java`
-- Create: `backend/aureus-kyc/src/main/java/com/aureus/platform/kyc/entity/ScoreKYC.java`
-- Create: `backend/aureus-kyc/src/main/java/com/aureus/platform/kyc/repository/SolicitacaoKycRepository.java`
-- Create: `backend/aureus-kyc/src/main/java/com/aureus/platform/kyc/repository/DocumentoKycRepository.java`
-- Create: `backend/aureus-kyc/src/main/java/com/aureus/platform/kyc/repository/ScoreKycRepository.java`
-- Create: `backend/aureus-kyc/src/main/resources/application.yml`
-- Create: `backend/aureus-kyc/src/test/java/com/aureus/platform/kyc/AureusKycApplicationTest.java`
-- Create: `backend/aureus-kyc/src/test/java/com/aureus/platform/kyc/service/SolicitacaoKycServiceTest.java`
+- Create: `backend/aurix-kyc/pom.xml`
+- Create: `backend/aurix-kyc/Dockerfile`
+- Create: `backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/AurixKycApplication.java`
+- Create: `backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/config/SecurityConfig.java`
+- Create: `backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/config/KafkaConfig.java`
+- Create: `backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/controller/HealthController.java`
+- Create: `backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/controller/SolicitacaoKycController.java`
+- Create: `backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/service/SolicitacaoKycService.java`
+- Create: `backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/service/KycConsumer.java`
+- Create: `backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/service/KycProducer.java`
+- Create: `backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/entity/SolicitacaoKYC.java`
+- Create: `backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/entity/DocumentoKYC.java`
+- Create: `backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/entity/ScoreKYC.java`
+- Create: `backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/repository/SolicitacaoKycRepository.java`
+- Create: `backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/repository/DocumentoKycRepository.java`
+- Create: `backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/repository/ScoreKycRepository.java`
+- Create: `backend/aurix-kyc/src/main/resources/application.yml`
+- Create: `backend/aurix-kyc/src/test/java/com/aurix/platform/kyc/AurixKycApplicationTest.java`
+- Create: `backend/aurix-kyc/src/test/java/com/aurix/platform/kyc/service/SolicitacaoKycServiceTest.java`
 
 **Interfaces:**
 - Consumes: Kafka `cliente.criado` event
@@ -1233,28 +1233,28 @@ git commit -m "feat(customer): service, controller, Kafka producer, and tests"
 - [ ] **Step 1: Create directory structure**
 
 ```bash
-mkdir -p backend/aureus-kyc/src/main/java/com/aureus/platform/kyc/{config,controller,entity,repository,service}
-mkdir -p backend/aureus-kyc/src/main/resources
-mkdir -p backend/aureus-kyc/src/test/java/com/aureus/platform/kyc
+mkdir -p backend/aurix-kyc/src/main/java/com/aurix/platform/kyc/{config,controller,entity,repository,service}
+mkdir -p backend/aurix-kyc/src/main/resources
+mkdir -p backend/aurix-kyc/src/test/java/com/aurix/platform/kyc
 ```
 
 - [ ] **Step 2: Create scaffold files (pom.xml, Dockerfile, Application, SecurityConfig, HealthController, application.yml)**
 
 Follow the exact same patterns as Task 1 but substitute:
-- `aureus-customer` → `aureus-kyc`
+- `aurix-customer` → `aurix-kyc`
 - `customer` → `kyc`
 - `Customer` → `Kyc`
 - `8123` → `8124`
 - `/api/customer` → `/api/kyc`
-- `aureus-customer-group` → `aureus-kyc-group`
+- `aurix-customer-group` → `aurix-kyc-group`
 
-pom.xml: same as customer but with `artifactId: aureus-kyc`, `name: AUREUS KYC`, `description: Validacao documental e compliance`
+pom.xml: same as customer but with `artifactId: aurix-kyc`, `name: AURIX KYC`, `description: Validacao documental e compliance`
 
 Dockerfile: same as customer but `EXPOSE 8124`
 
 Application class:
 ```java
-package com.aureus.platform.kyc;
+package com.aurix.platform.kyc;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -1263,32 +1263,32 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-@SpringBootApplication(scanBasePackages = { "com.aureus.platform.kyc", "com.aureus.platform.shared" })
-@EntityScan(basePackages = { "com.aureus.platform.kyc.entity", "com.aureus.platform.shared.entity" })
-@EnableJpaRepositories(basePackages = { "com.aureus.platform.kyc.repository" })
+@SpringBootApplication(scanBasePackages = { "com.aurix.platform.kyc", "com.aurix.platform.shared" })
+@EntityScan(basePackages = { "com.aurix.platform.kyc.entity", "com.aurix.platform.shared.entity" })
+@EnableJpaRepositories(basePackages = { "com.aurix.platform.kyc.repository" })
 @EnableCaching
 @EnableScheduling
-public class AureusKycApplication {
+public class AurixKycApplication {
     public static void main(String[] args) {
-        SpringApplication.run(AureusKycApplication.class, args);
+        SpringApplication.run(AurixKycApplication.class, args);
     }
 }
 ```
 
-application.yml: same structure as customer, with `server.port: 8124`, `context-path: /api/kyc`, `group-id: aureus-kyc-group`
+application.yml: same structure as customer, with `server.port: 8124`, `context-path: /api/kyc`, `group-id: aurix-kyc-group`
 
 - [ ] **Step 3: Create entities**
 
 SolicitacaoKYC.java:
 ```java
-package com.aureus.platform.kyc.entity;
+package com.aurix.platform.kyc.entity;
 
-import com.aureus.platform.shared.entity.BaseEntity;
+import com.aurix.platform.shared.entity.BaseEntity;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "solicitacoes_kyc", schema = "aureus")
+@Table(name = "solicitacoes_kyc", schema = "aurix")
 public class SolicitacaoKYC extends BaseEntity {
     @Column(name = "cliente_id", nullable = false)
     private Long clienteId;
@@ -1325,13 +1325,13 @@ public class SolicitacaoKYC extends BaseEntity {
 
 DocumentoKYC.java:
 ```java
-package com.aureus.platform.kyc.entity;
+package com.aurix.platform.kyc.entity;
 
-import com.aureus.platform.shared.entity.BaseEntity;
+import com.aurix.platform.shared.entity.BaseEntity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "documentos_kyc", schema = "aureus")
+@Table(name = "documentos_kyc", schema = "aurix")
 public class DocumentoKYC extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "solicitacao_id", nullable = false)
@@ -1364,13 +1364,13 @@ public class DocumentoKYC extends BaseEntity {
 
 ScoreKYC.java:
 ```java
-package com.aureus.platform.kyc.entity;
+package com.aurix.platform.kyc.entity;
 
-import com.aureus.platform.shared.entity.BaseEntity;
+import com.aurix.platform.shared.entity.BaseEntity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "scores_kyc", schema = "aureus")
+@Table(name = "scores_kyc", schema = "aurix")
 public class ScoreKYC extends BaseEntity {
     @Column(name = "cliente_id", nullable = false)
     private Long clienteId;
@@ -1408,9 +1408,9 @@ public class ScoreKYC extends BaseEntity {
 - [ ] **Step 4: Create repositories**
 
 ```java
-package com.aureus.platform.kyc.repository;
+package com.aurix.platform.kyc.repository;
 
-import com.aureus.platform.kyc.entity.SolicitacaoKYC;
+import com.aurix.platform.kyc.entity.SolicitacaoKYC;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
@@ -1425,9 +1425,9 @@ public interface SolicitacaoKycRepository extends JpaRepository<SolicitacaoKYC, 
 ```
 
 ```java
-package com.aureus.platform.kyc.repository;
+package com.aurix.platform.kyc.repository;
 
-import com.aureus.platform.kyc.entity.DocumentoKYC;
+import com.aurix.platform.kyc.entity.DocumentoKYC;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;
@@ -1439,9 +1439,9 @@ public interface DocumentoKycRepository extends JpaRepository<DocumentoKYC, Long
 ```
 
 ```java
-package com.aureus.platform.kyc.repository;
+package com.aurix.platform.kyc.repository;
 
-import com.aureus.platform.kyc.entity.ScoreKYC;
+import com.aurix.platform.kyc.entity.ScoreKYC;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.Optional;
@@ -1456,7 +1456,7 @@ public interface ScoreKycRepository extends JpaRepository<ScoreKYC, Long> {
 
 KafkaConfig.java:
 ```java
-package com.aureus.platform.kyc.config;
+package com.aurix.platform.kyc.config;
 
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.context.annotation.Bean;
@@ -1478,10 +1478,10 @@ public class KafkaConfig {
 
 KycConsumer.java:
 ```java
-package com.aureus.platform.kyc.service;
+package com.aurix.platform.kyc.service;
 
-import com.aureus.platform.kyc.entity.SolicitacaoKYC;
-import com.aureus.platform.kyc.repository.SolicitacaoKycRepository;
+import com.aurix.platform.kyc.entity.SolicitacaoKYC;
+import com.aurix.platform.kyc.repository.SolicitacaoKycRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -1499,7 +1499,7 @@ public class KycConsumer {
         this.objectMapper = objectMapper;
     }
 
-    @KafkaListener(topics = "cliente.criado", groupId = "aureus-kyc-group")
+    @KafkaListener(topics = "cliente.criado", groupId = "aurix-kyc-group")
     public void onClienteCriado(String message) {
         try {
             JsonNode json = objectMapper.readTree(message);
@@ -1519,9 +1519,9 @@ public class KycConsumer {
 
 KycProducer.java:
 ```java
-package com.aureus.platform.kyc.service;
+package com.aurix.platform.kyc.service;
 
-import com.aureus.platform.kyc.entity.SolicitacaoKYC;
+import com.aurix.platform.kyc.entity.SolicitacaoKYC;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -1555,14 +1555,14 @@ public class KycProducer {
 
 SolicitacaoKycService.java:
 ```java
-package com.aureus.platform.kyc.service;
+package com.aurix.platform.kyc.service;
 
-import com.aureus.platform.kyc.entity.DocumentoKYC;
-import com.aureus.platform.kyc.entity.ScoreKYC;
-import com.aureus.platform.kyc.entity.SolicitacaoKYC;
-import com.aureus.platform.kyc.repository.DocumentoKycRepository;
-import com.aureus.platform.kyc.repository.ScoreKycRepository;
-import com.aureus.platform.kyc.repository.SolicitacaoKycRepository;
+import com.aurix.platform.kyc.entity.DocumentoKYC;
+import com.aurix.platform.kyc.entity.ScoreKYC;
+import com.aurix.platform.kyc.entity.SolicitacaoKYC;
+import com.aurix.platform.kyc.repository.DocumentoKycRepository;
+import com.aurix.platform.kyc.repository.ScoreKycRepository;
+import com.aurix.platform.kyc.repository.SolicitacaoKycRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
@@ -1659,12 +1659,12 @@ public class SolicitacaoKycService {
 
 SolicitacaoKycController.java:
 ```java
-package com.aureus.platform.kyc.controller;
+package com.aurix.platform.kyc.controller;
 
-import com.aureus.platform.kyc.entity.DocumentoKYC;
-import com.aureus.platform.kyc.entity.ScoreKYC;
-import com.aureus.platform.kyc.entity.SolicitacaoKYC;
-import com.aureus.platform.kyc.service.SolicitacaoKycService;
+import com.aurix.platform.kyc.entity.DocumentoKYC;
+import com.aurix.platform.kyc.entity.ScoreKYC;
+import com.aurix.platform.kyc.entity.SolicitacaoKYC;
+import com.aurix.platform.kyc.service.SolicitacaoKycService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -1731,23 +1731,23 @@ public class SolicitacaoKycController {
 - [ ] **Step 8: Build and run tests**
 
 ```bash
-mvn clean test -pl aureus-kyc -am
+mvn clean test -pl aurix-kyc -am
 ```
 Expected: BUILD SUCCESS
 
 - [ ] **Step 9: Commit**
 
 ```bash
-git add backend/aureus-kyc/
+git add backend/aurix-kyc/
 git commit -m "feat(kyc): full module with Kafka consumer/producer, entities, service, controller"
 ```
 
 ---
 
-### Task 4: aureus-fraud — Full module
+### Task 4: aurix-fraud — Full module
 
 **Files:** (follow same pattern as Task 3)
-- Create `backend/aureus-fraud/` with full scaffold (pom.xml, Dockerfile, Application, SecurityConfig, HealthController, application.yml)
+- Create `backend/aurix-fraud/` with full scaffold (pom.xml, Dockerfile, Application, SecurityConfig, HealthController, application.yml)
 - Create entities: `RegraFraude`, `ScoreTransacao`, `OcorrenciaFraude`, `BloqueioPreventivo`
 - Create repositories for each entity
 - Create Kafka topics: `fraude.transacao.bloqueada`, `fraude.ocorrencia.criada`, `fraude.score.alterado`
@@ -1758,17 +1758,17 @@ git commit -m "feat(kyc): full module with Kafka consumer/producer, entities, se
 
 **Port:** 8125
 **Context path:** `/api/fraud`
-**Kafka group:** `aureus-fraud-group`
+**Kafka group:** `aurix-fraud-group`
 
 - [ ] **Step 1: Create directory structure**
 
 ```bash
-mkdir -p backend/aureus-fraud/src/main/java/com/aureus/platform/fraud/{config,controller,entity,repository,service}
-mkdir -p backend/aureus-fraud/src/main/resources
-mkdir -p backend/aureus-fraud/src/test/java/com/aureus/platform/fraud
+mkdir -p backend/aurix-fraud/src/main/java/com/aurix/platform/fraud/{config,controller,entity,repository,service}
+mkdir -p backend/aurix-fraud/src/main/resources
+mkdir -p backend/aurix-fraud/src/test/java/com/aurix/platform/fraud
 ```
 
-- [ ] **Step 2: Create scaffold files** (same pattern as Task 1/3, substitute: `fraud`, `8125`, `/api/fraud`, `aureus-fraud-group`)
+- [ ] **Step 2: Create scaffold files** (same pattern as Task 1/3, substitute: `fraud`, `8125`, `/api/fraud`, `aurix-fraud-group`)
 
 - [ ] **Step 3: Create entities + repositories** (RegraFraude, ScoreTransacao, OcorrenciaFraude, BloqueioPreventivo)
 
@@ -1777,22 +1777,22 @@ mkdir -p backend/aureus-fraud/src/test/java/com/aureus/platform/fraud
 - [ ] **Step 5: Create tests + build**
 
 ```bash
-mvn clean test -pl aureus-fraud -am
+mvn clean test -pl aurix-fraud -am
 ```
 
 - [ ] **Step 6: Commit**
 
 ```bash
-git add backend/aureus-fraud/
+git add backend/aurix-fraud/
 git commit -m "feat(fraud): full module with rule engine, scoring, Kafka integration"
 ```
 
 ---
 
-### Task 5: aureus-notification — Full module
+### Task 5: aurix-notification — Full module
 
 **Files:** (follow same pattern)
-- Create `backend/aureus-notification/` with full scaffold
+- Create `backend/aurix-notification/` with full scaffold
 - Create entities: `TemplateNotificacao`, `FilaNotificacao`, `ConfirmacaoRecebimento`, `PreferenciaCliente`
 - Create repositories
 - Create Kafka topics: `notificacao.enviada`, `notificacao.falhou`
@@ -1803,17 +1803,17 @@ git commit -m "feat(fraud): full module with rule engine, scoring, Kafka integra
 
 **Port:** 8126
 **Context path:** `/api/notification`
-**Kafka group:** `aureus-notification-group`
+**Kafka group:** `aurix-notification-group`
 
 - [ ] **Step 1: Create directory structure**
 
 ```bash
-mkdir -p backend/aureus-notification/src/main/java/com/aureus/platform/notification/{config,controller,entity,repository,service}
-mkdir -p backend/aureus-notification/src/main/resources
-mkdir -p backend/aureus-notification/src/test/java/com/aureus/platform/notification
+mkdir -p backend/aurix-notification/src/main/java/com/aurix/platform/notification/{config,controller,entity,repository,service}
+mkdir -p backend/aurix-notification/src/main/resources
+mkdir -p backend/aurix-notification/src/test/java/com/aurix/platform/notification
 ```
 
-- [ ] **Step 2: Create scaffold files** (substitute: `notification`, `8126`, `/api/notification`, `aureus-notification-group`)
+- [ ] **Step 2: Create scaffold files** (substitute: `notification`, `8126`, `/api/notification`, `aurix-notification-group`)
 
 - [ ] **Step 3: Create entities + repositories**
 
@@ -1822,13 +1822,13 @@ mkdir -p backend/aureus-notification/src/test/java/com/aureus/platform/notificat
 - [ ] **Step 5: Create tests + build**
 
 ```bash
-mvn clean test -pl aureus-notification -am
+mvn clean test -pl aurix-notification -am
 ```
 
 - [ ] **Step 6: Commit**
 
 ```bash
-git add backend/aureus-notification/
+git add backend/aurix-notification/
 git commit -m "feat(notification): full module with multi-channel notification and Kafka integration"
 ```
 
@@ -1841,16 +1841,16 @@ git commit -m "feat(notification): full module with multi-channel notification a
 - [ ] **Step 1: Build all 4 new modules together**
 
 ```bash
-mvn clean package -DskipTests -pl aureus-customer,aureus-kyc,aureus-fraud,aureus-notification -am
+mvn clean package -DskipTests -pl aurix-customer,aurix-kyc,aurix-fraud,aurix-notification -am
 ```
 Expected: BUILD SUCCESS, 4 JARs in target/
 
 - [ ] **Step 2: Build Docker images**
 
 ```bash
-docker compose build aureus-customer aureus-kyc aureus-fraud aureus-notification
+docker compose build aurix-customer aurix-kyc aurix-fraud aurix-notification
 ```
-Expected: 4 images created: `infrastructure-aureus-customer`, `infrastructure-aureus-kyc`, etc.
+Expected: 4 images created: `infrastructure-aurix-customer`, `infrastructure-aurix-kyc`, etc.
 
 - [ ] **Step 3: Verify Traefik config**
 
@@ -1861,7 +1861,7 @@ python3 -c "import yaml; yaml.safe_load(open('infrastructure/traefik/dynamic.yml
 - [ ] **Step 4: Commit final infra**
 
 ```bash
-git add infrastructure/docker-compose.yml infrastructure/traefik/dynamic.yml aureus-tests/e2e/config.py
+git add infrastructure/docker-compose.yml infrastructure/traefik/dynamic.yml aurix-tests/e2e/config.py
 git commit -m "feat: add customer, kyc, fraud, notification to docker-compose, traefik, and e2e"
 ```
 
@@ -1884,6 +1884,6 @@ git push origin main
 - [ ] Task 6 covers final build + Docker images
 - [ ] All ports (8123-8126) are unique and don't conflict
 - [ ] All context paths follow `/api/<name>` pattern
-- [ ] All Kafka group IDs follow `aureus-<name>-group` pattern
+- [ ] All Kafka group IDs follow `aurix-<name>-group` pattern
 - [ ] Spec endpoints match plan endpoints (POST `/api/clientes`, GET `/api/kyc/solicitacoes/{id}`, etc.)
 - [ ] No TODOs, placeholders, or vague steps

@@ -1,12 +1,12 @@
-# AUREUS - Big Picture
+# AURIX - Big Picture
 
-A AUREUS é uma plataforma de Core Banking completa e moderna, desenvolvida para o mercado brasileiro. Este documento fornece uma visão de alto nível sobre o propósito da plataforma, sua arquitetura e diferenciais competitivos.
+A AURIX é uma plataforma de Core Banking completa e moderna, desenvolvida para o mercado brasileiro. Este documento fornece uma visão de alto nível sobre o propósito da plataforma, sua arquitetura e diferenciais competitivos.
 
 ---
 
 ## 🏛️ Identidade e Missão
 
-O nome **AUREUS** remete à moeda de ouro do Império Romano, simbolizando os pilares da nossa plataforma: **Estabilidade, Valor, Confiança e Padrão**.
+O nome **AURIX** remete à moeda de ouro do Império Romano, simbolizando os pilares da nossa plataforma: **Estabilidade, Valor, Confiança e Padrão**.
 
 **Slogan**: *"O padrão de excelência financeira."*
 
@@ -14,7 +14,7 @@ Nossa missão é fornecer uma infraestrutura financeira de classe mundial que co
 
 ## 🚀 Diferenciais Competitivos
 
-A AUREUS foi desenhada para superar as limitações das soluções tradicionais:
+A AURIX foi desenhada para superar as limitações das soluções tradicionais:
 - **Performance Superior**: Arquitetura otimizada para processamento de transações em massa com baixa latência.
 - **APIs Modernas**: Abordagem *API-First*, facilitando a integração e reduzindo o *time-to-market*.
 - **Conformidade Nativa**: Módulos dedicados para atender a todas as exigências do BACEN e normas regulatórias brasileiras desde o primeiro dia.
@@ -34,9 +34,9 @@ A AUREUS foi desenhada para superar as limitações das soluções tradicionais:
 ```mermaid
 flowchart TB
   subgraph Canais["Canais / UI"]
-    Web[aureus-web]
-    Admin[aureus-admin]
-    Mobile[aureus-mobile]
+    Web[aurix-web]
+    Admin[aurix-admin]
+    Mobile[aurix-mobile]
   end
 
   subgraph Gateway["API Gateway"]
@@ -110,4 +110,4 @@ flowchart TB
 
 ---
 
-**AUREUS Core Banking Platform** - *O padrão de excelência financeira*
+**AURIX Core Banking Platform** - *O padrão de excelência financeira*

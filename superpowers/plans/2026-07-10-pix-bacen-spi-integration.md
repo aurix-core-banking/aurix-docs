@@ -4,13 +4,13 @@
 
 **Goal:** Wire PIX transfer flow to BACEN SPI/STR engine via synchronous REST calls, replacing simulation/log-only pattern.
 
-**Architecture:** `PixBacenClient` in aureus-pix calls `SpiStrIntegrationService` in aureus-bacen (REST). aureus-bacen uses `SpiStrApiClientImpl` configured per-profile (mock URL in dev/sandbox, mTLS + real BCB URL in prod). WireMock container (`bacen-mock`) runs in Docker Compose for local development. On SPI failure, debit is compensated via atomic credit.
+**Architecture:** `PixBacenClient` in aurix-pix calls `SpiStrIntegrationService` in aurix-bacen (REST). aurix-bacen uses `SpiStrApiClientImpl` configured per-profile (mock URL in dev/sandbox, mTLS + real BCB URL in prod). WireMock container (`bacen-mock`) runs in Docker Compose for local development. On SPI failure, debit is compensated via atomic credit.
 
 **Tech Stack:** Spring Boot 4.1, Java 25, WireMock, RestClient, Docker Compose, JUnit 5, Mockito
 
 ## Global Constraints
 
-- All new files follow existing package conventions (`com.aureus.platform.pix.*`, `com.aureus.platform.bacen.*`)
+- All new files follow existing package conventions (`com.aurix.platform.pix.*`, `com.aurix.platform.bacen.*`)
 - WireMock container on port 8095, service name `bacen-mock`
 - mTLS must be skipped when URL contains `localhost` or `bacen-mock`
 - Production profile (`prod`) must NOT enable SPI/STR mock URLs
@@ -86,14 +86,14 @@ EXPOSE 8095
 ```yaml
   bacen-mock:
     image: wiremock/wiremock:latest
-    container_name: aureus-bacen-mock
+    container_name: aurix-bacen-mock
     ports:
       - "8095:8095"
     volumes:
       - ./bacen-mock/mappings:/home/wiremock/mappings
     command: ["--port", "8095", "--verbose"]
     networks:
-      - aureus-network
+      - aurix-network
 ```
 
 Find the existing docker-compose.yml and add the service after the last service definition, before `networks:`.
@@ -132,10 +132,10 @@ git commit -m "feat(pix): add BACEN mock WireMock container"
 ### Task 2: SpiStrApiClientImpl — mock URL guard + dev profile
 
 **Files:**
-- Modify: `backend/aureus-bacen/src/main/java/com/aureus/platform/bacen/client/SpiStrApiClientImpl.java`
-- Create: `backend/aureus-bacen/src/main/resources/application-dev.yml`
-- Modify: `backend/aureus-bacen/src/main/resources/application.yml` (verify current SPI config)
-- Test: `backend/aureus-bacen/src/test/java/com/aureus/platform/bacen/client/SpiStrApiClientImplTest.java`
+- Modify: `backend/aurix-bacen/src/main/java/com/aurix/platform/bacen/client/SpiStrApiClientImpl.java`
+- Create: `backend/aurix-bacen/src/main/resources/application-dev.yml`
+- Modify: `backend/aurix-bacen/src/main/resources/application.yml` (verify current SPI config)
+- Test: `backend/aurix-bacen/src/test/java/com/aurix/platform/bacen/client/SpiStrApiClientImplTest.java`
 
 **Interfaces:**
 - Consumes: existing `SpiProperties`, `SpiStrProperties`
@@ -144,16 +144,16 @@ git commit -m "feat(pix): add BACEN mock WireMock container"
 - [ ] **Step 1: Read current SpiStrApiClientImpl.java to find mTLS setup and enviarPixSpi method**
 
 ```bash
-cat backend/aureus-bacen/src/main/java/com/aureus/platform/bacen/client/SpiStrApiClientImpl.java
+cat backend/aurix-bacen/src/main/java/com/aurix/platform/bacen/client/SpiStrApiClientImpl.java
 ```
 Identify the method `enviarPixSpi` and where mTLS `SslContext` is configured.
 
 - [ ] **Step 2: Write test for mock URL detection**
 
 ```java
-package com.aureus.platform.bacen.client;
+package com.aurix.platform.bacen.client;
 
-import com.aureus.platform.bacen.config.SpiStrProperties;
+import com.aurix.platform.bacen.config.SpiStrProperties;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -194,7 +194,7 @@ class SpiStrApiClientImplTest {
 - [ ] **Step 3: Run the test to verify it fails**
 
 ```bash
-mvn -pl aureus-bacen test -Dtest=SpiStrApiClientImplTest -DfailIfNoTests=false
+mvn -pl aurix-bacen test -Dtest=SpiStrApiClientImplTest -DfailIfNoTests=false
 ```
 Expected: compilation error — `isMockUrl()` not found.
 
@@ -235,14 +235,14 @@ if (isMockUrl()) {
 - [ ] **Step 5: Run tests to verify they pass**
 
 ```bash
-mvn -pl aureus-bacen test -Dtest=SpiStrApiClientImplTest
+mvn -pl aurix-bacen test -Dtest=SpiStrApiClientImplTest
 ```
 Expected: 3/3 passed.
 
 - [ ] **Step 6: Create application-dev.yml**
 
 ```yaml
-aureus:
+aurix:
   bacen:
     spi:
       enabled: true
@@ -258,29 +258,29 @@ aureus:
 - [ ] **Step 7: Read current application.yml SPI config to confirm no conflicts**
 
 ```bash
-cat backend/aureus-bacen/src/main/resources/application.yml
+cat backend/aurix-bacen/src/main/resources/application.yml
 ```
 Verify SPI/STR are listed as `enabled: false` in default profile — dev profile overrides via application-dev.yml are correct.
 
 - [ ] **Step 8: Commit**
 
 ```bash
-git add backend/aureus-bacen/src/main/java/com/aureus/platform/bacen/client/SpiStrApiClientImpl.java \
-       backend/aureus-bacen/src/main/resources/application-dev.yml \
-       backend/aureus-bacen/src/test/java/com/aureus/platform/bacen/client/SpiStrApiClientImplTest.java
+git add backend/aurix-bacen/src/main/java/com/aurix/platform/bacen/client/SpiStrApiClientImpl.java \
+       backend/aurix-bacen/src/main/resources/application-dev.yml \
+       backend/aurix-bacen/src/test/java/com/aurix/platform/bacen/client/SpiStrApiClientImplTest.java
 git commit -m "feat(bacen): mock URL guard in SpiStrApiClientImpl + dev profile"
 ```
 
 ---
 
-### Task 3: PixBacenClient — REST client in aureus-pix
+### Task 3: PixBacenClient — REST client in aurix-pix
 
 **Files:**
-- Create: `backend/aureus-pix/src/main/java/com/aureus/platform/pix/client/PixBacenClient.java`
-- Create: `backend/aureus-pix/src/main/java/com/aureus/platform/pix/client/dto/TransacaoSPI.java`
-- Create: `backend/aureus-pix/src/main/java/com/aureus/platform/pix/client/dto/SpiResult.java`
-- Create: `backend/aureus-pix/src/test/java/com/aureus/platform/pix/client/PixBacenClientTest.java`
-- Modify: `backend/aureus-pix/src/main/resources/application.yml` (add `aureus.pix.bacen.spi-url`)
+- Create: `backend/aurix-pix/src/main/java/com/aurix/platform/pix/client/PixBacenClient.java`
+- Create: `backend/aurix-pix/src/main/java/com/aurix/platform/pix/client/dto/TransacaoSPI.java`
+- Create: `backend/aurix-pix/src/main/java/com/aurix/platform/pix/client/dto/SpiResult.java`
+- Create: `backend/aurix-pix/src/test/java/com/aurix/platform/pix/client/PixBacenClientTest.java`
+- Modify: `backend/aurix-pix/src/main/resources/application.yml` (add `aurix.pix.bacen.spi-url`)
 
 **Interfaces:**
 - Consumes: nothing (standalone client)
@@ -289,10 +289,10 @@ git commit -m "feat(bacen): mock URL guard in SpiStrApiClientImpl + dev profile"
 - [ ] **Step 1: Write failing test**
 
 ```java
-package com.aureus.platform.pix.client;
+package com.aurix.platform.pix.client;
 
-import com.aureus.platform.pix.client.dto.SpiResult;
-import com.aureus.platform.pix.client.dto.TransacaoSPI;
+import com.aurix.platform.pix.client.dto.SpiResult;
+import com.aurix.platform.pix.client.dto.TransacaoSPI;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.client.RestClient;
 import java.math.BigDecimal;
@@ -322,7 +322,7 @@ class PixBacenClientTest {
 - [ ] **Step 2: Run the failing test**
 
 ```bash
-mvn -pl aureus-pix test -Dtest=PixBacenClientTest
+mvn -pl aurix-pix test -Dtest=PixBacenClientTest
 ```
 Expected: compilation error — classes not found.
 
@@ -330,7 +330,7 @@ Expected: compilation error — classes not found.
 
 **TransacaoSPI.java:**
 ```java
-package com.aureus.platform.pix.client.dto;
+package com.aurix.platform.pix.client.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -349,7 +349,7 @@ public class TransacaoSPI {
 
 **SpiResult.java:**
 ```java
-package com.aureus.platform.pix.client.dto;
+package com.aurix.platform.pix.client.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -368,10 +368,10 @@ public class SpiResult {
 
 **PixBacenClient.java:**
 ```java
-package com.aureus.platform.pix.client;
+package com.aurix.platform.pix.client;
 
-import com.aureus.platform.pix.client.dto.SpiResult;
-import com.aureus.platform.pix.client.dto.TransacaoSPI;
+import com.aurix.platform.pix.client.dto.SpiResult;
+import com.aurix.platform.pix.client.dto.TransacaoSPI;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
@@ -382,7 +382,7 @@ public class PixBacenClient {
     private final RestClient restClient;
 
     public PixBacenClient(RestClient.Builder builder,
-                          @Value("${aureus.pix.bacen.spi-url}") String spiUrl) {
+                          @Value("${aurix.pix.bacen.spi-url}") String spiUrl) {
         this.restClient = builder.baseUrl(spiUrl).build();
     }
 
@@ -396,9 +396,9 @@ public class PixBacenClient {
 }
 ```
 
-**application.yml addition (aureus-pix):**
+**application.yml addition (aurix-pix):**
 ```yaml
-aureus:
+aurix:
   pix:
     bacen:
       spi-url: ${PIX_BACEN_SPI_URL:http://localhost:8094}
@@ -407,17 +407,17 @@ aureus:
 - [ ] **Step 4: Run test — should pass (returns null since no server running)**
 
 ```bash
-mvn -pl aureus-pix test -Dtest=PixBacenClientTest -Dspring.profiles.active=test
+mvn -pl aurix-pix test -Dtest=PixBacenClientTest -Dspring.profiles.active=test
 ```
 Expected: pass (NPE-safe test, just checks compilation and instantiation).
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add backend/aureus-pix/src/main/java/com/aureus/platform/pix/client/ \
-       backend/aureus-pix/src/main/java/com/aureus/platform/pix/client/dto/ \
-       backend/aureus-pix/src/main/resources/application.yml \
-       backend/aureus-pix/src/test/java/com/aureus/platform/pix/client/PixBacenClientTest.java
+git add backend/aurix-pix/src/main/java/com/aurix/platform/pix/client/ \
+       backend/aurix-pix/src/main/java/com/aurix/platform/pix/client/dto/ \
+       backend/aurix-pix/src/main/resources/application.yml \
+       backend/aurix-pix/src/test/java/com/aurix/platform/pix/client/PixBacenClientTest.java
 git commit -m "feat(pix): PixBacenClient SPI client"
 ```
 
@@ -426,9 +426,9 @@ git commit -m "feat(pix): PixBacenClient SPI client"
 ### Task 4: PixTransferenciaService — wire SPI call + compensation
 
 **Files:**
-- Read: `backend/aureus-pix/src/main/java/com/aureus/platform/pix/service/PixTransferenciaService.java` (read current logic)
-- Modify: `backend/aureus-pix/src/main/java/com/aureus/platform/pix/service/PixTransferenciaService.java`
-- Test: `backend/aureus-pix/src/test/java/com/aureus/platform/pix/service/PixTransferenciaServiceTest.java`
+- Read: `backend/aurix-pix/src/main/java/com/aurix/platform/pix/service/PixTransferenciaService.java` (read current logic)
+- Modify: `backend/aurix-pix/src/main/java/com/aurix/platform/pix/service/PixTransferenciaService.java`
+- Test: `backend/aurix-pix/src/test/java/com/aurix/platform/pix/service/PixTransferenciaServiceTest.java`
 
 **Interfaces:**
 - Consumes: `PixBacenClient.enviarPix(TransacaoSPI) → SpiResult`
@@ -437,13 +437,13 @@ git commit -m "feat(pix): PixBacenClient SPI client"
 - [ ] **Step 1: Read current PixTransferenciaService**
 
 ```bash
-cat backend/aureus-pix/src/main/java/com/aureus/platform/pix/service/PixTransferenciaService.java
+cat backend/aurix-pix/src/main/java/com/aurix/platform/pix/service/PixTransferenciaService.java
 ```
 
 - [ ] **Step 2: Read existing test to understand mocking pattern**
 
 ```bash
-cat backend/aureus-pix/src/test/java/com/aureus/platform/pix/service/PixTransferenciaServiceTest.java
+cat backend/aurix-pix/src/test/java/com/aurix/platform/pix/service/PixTransferenciaServiceTest.java
 ```
 
 - [ ] **Step 3: Update test — mock PixBacenClient, test SPI success/failure/compensation**
@@ -531,7 +531,7 @@ private PixTransferencia createTransferenciaPendente() {
 - [ ] **Step 4: Run tests — should fail since service not wired yet**
 
 ```bash
-mvn -pl aureus-pix test -Dtest=PixTransferenciaServiceTest
+mvn -pl aurix-pix test -Dtest=PixTransferenciaServiceTest
 ```
 Expected: compilation errors on `pixBacenClient` usage or behavior changes.
 
@@ -610,15 +610,15 @@ private String gerarEndToEndId() {
 - [ ] **Step 6: Run tests to verify they pass**
 
 ```bash
-mvn -pl aureus-pix test -Dtest=PixTransferenciaServiceTest
+mvn -pl aurix-pix test -Dtest=PixTransferenciaServiceTest
 ```
 Expected: 3 new tests passing.
 
 - [ ] **Step 7: Commit**
 
 ```bash
-git add backend/aureus-pix/src/main/java/com/aureus/platform/pix/service/PixTransferenciaService.java \
-       backend/aureus-pix/src/test/java/com/aureus/platform/pix/service/PixTransferenciaServiceTest.java
+git add backend/aurix-pix/src/main/java/com/aurix/platform/pix/service/PixTransferenciaService.java \
+       backend/aurix-pix/src/test/java/com/aurix/platform/pix/service/PixTransferenciaServiceTest.java
 git commit -m "feat(pix): wire SPI call + compensation in PixTransferenciaService"
 ```
 
@@ -627,7 +627,7 @@ git commit -m "feat(pix): wire SPI call + compensation in PixTransferenciaServic
 ### Task 5: Integration test — PIX full flow with BACEN mock
 
 **Files:**
-- Modify: `backend/aureus-pix/src/test/java/com/aureus/platform/pix/integration/PixFlowIntegrationTest.java` (update existing test)
+- Modify: `backend/aurix-pix/src/test/java/com/aurix/platform/pix/integration/PixFlowIntegrationTest.java` (update existing test)
 - Ensure: `bacen-mock` is available in testcontainers config or test relies on mocked client
 
 **Interfaces:**
@@ -637,7 +637,7 @@ git commit -m "feat(pix): wire SPI call + compensation in PixTransferenciaServic
 - [ ] **Step 1: Read existing PixFlowIntegrationTest**
 
 ```bash
-cat backend/aureus-pix/src/test/java/com/aureus/platform/pix/integration/PixFlowIntegrationTest.java
+cat backend/aurix-pix/src/test/java/com/aurix/platform/pix/integration/PixFlowIntegrationTest.java
 ```
 Determine if it uses Testcontainers or mocked services.
 
@@ -652,21 +652,21 @@ If Testcontainers with WireMock is feasible, add:
 ```java
 @DynamicPropertySource
 static void configureProperties(DynamicPropertyRegistry registry) {
-    registry.add("aureus.pix.bacen.spi-url", () -> "http://localhost:" + wireMockPort);
+    registry.add("aurix.pix.bacen.spi-url", () -> "http://localhost:" + wireMockPort);
 }
 ```
 
 - [ ] **Step 3: Run integration test**
 
 ```bash
-mvn -pl aureus-pix test -Dtest=PixFlowIntegrationTest
+mvn -pl aurix-pix test -Dtest=PixFlowIntegrationTest
 ```
 Expected: pass.
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add backend/aureus-pix/src/test/java/com/aureus/platform/pix/integration/PixFlowIntegrationTest.java
+git add backend/aurix-pix/src/test/java/com/aurix/platform/pix/integration/PixFlowIntegrationTest.java
 git commit -m "test(pix): update integration test for SPI flow"
 ```
 
@@ -674,31 +674,31 @@ git commit -m "test(pix): update integration test for SPI flow"
 
 ### Task 6: Full build verification
 
-- [ ] **Step 1: Build aureus-bacen module**
+- [ ] **Step 1: Build aurix-bacen module**
 
 ```bash
-mvn -pl aureus-bacen clean compile -DskipTests
+mvn -pl aurix-bacen clean compile -DskipTests
 ```
 Expected: BUILD SUCCESS.
 
-- [ ] **Step 2: Build aureus-pix module**
+- [ ] **Step 2: Build aurix-pix module**
 
 ```bash
-mvn -pl aureus-pix clean compile -DskipTests
+mvn -pl aurix-pix clean compile -DskipTests
 ```
 Expected: BUILD SUCCESS.
 
-- [ ] **Step 3: Run all aureus-bacen tests**
+- [ ] **Step 3: Run all aurix-bacen tests**
 
 ```bash
-mvn -pl aureus-bacen test
+mvn -pl aurix-bacen test
 ```
 Expected: all existing + new tests passing.
 
-- [ ] **Step 4: Run all aureus-pix tests**
+- [ ] **Step 4: Run all aurix-pix tests**
 
 ```bash
-mvn -pl aureus-pix test
+mvn -pl aurix-pix test
 ```
 Expected: all existing + new tests passing.
 

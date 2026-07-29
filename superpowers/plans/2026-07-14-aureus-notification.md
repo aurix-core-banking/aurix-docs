@@ -1,10 +1,10 @@
-# aureus-notification Implementation Plan
+# aurix-notification Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Build the aureus-notification microservice — multi-channel notification system with template rendering, Kafka event consumption (cliente.criado, kyc.aprovado, kyc.rejeitado, fraude.transacao.bloqueada), preference management, and REST API.
+**Goal:** Build the aurix-notification microservice — multi-channel notification system with template rendering, Kafka event consumption (cliente.criado, kyc.aprovado, kyc.rejeitado, fraude.transacao.bloqueada), preference management, and REST API.
 
-**Architecture:** Spring Boot microservice on port 8126 with context path `/api/notification`. Consumes domain events from Kafka, renders notification templates with `{{var}}` replacement, dispatches via channel interface (log-only initially), and persists all notification history. Follows same patterns as aureus-fraud and aureus-customer modules.
+**Architecture:** Spring Boot microservice on port 8126 with context path `/api/notification`. Consumes domain events from Kafka, renders notification templates with `{{var}}` replacement, dispatches via channel interface (log-only initially), and persists all notification history. Follows same patterns as aurix-fraud and aurix-customer modules.
 
 **Tech Stack:** Java 25, Spring Boot 4.1.0, Spring Data JPA, Spring Kafka, H2 (test), PostgreSQL (prod), Mockito, JUnit 5.
 
@@ -12,8 +12,8 @@
 
 - Java 25 (`maven.compiler.source/target = 25`)
 - Spring Boot 4.1.0, Spring Cloud 2025.1.2
-- Extend `com.aureus.platform.shared.entity.BaseEntity` for all entities
-- Schema: `aureus` in JPA `@Table` annotations
+- Extend `com.aurix.platform.shared.entity.BaseEntity` for all entities
+- Schema: `aurix` in JPA `@Table` annotations
 - Checkstyle: max line length 120, suppressed rules (Javadoc, MagicNumber, HiddenField)
 - SpotBugs: excludes `EI_EXPOSE_REP` / `EI_EXPOSE_REP2`
 - No Redis dependency (unlike fraud module)
@@ -23,10 +23,10 @@
 ## File Structure
 
 ```
-backend/aureus-notification/
+backend/aurix-notification/
 ├── pom.xml                                          (replace stub)
-├── src/main/java/com/aureus/platform/notification/
-│   ├── AureusNotificationApplication.java
+├── src/main/java/com/aurix/platform/notification/
+│   ├── AurixNotificationApplication.java
 │   ├── config/
 │   │   ├── KafkaConfig.java                         (topics: notificacao.enviada, notificacao.falhou)
 │   │   └── SecurityConfig.java
@@ -52,8 +52,8 @@ backend/aureus-notification/
 │       └── HealthController.java
 ├── src/main/resources/
 │   └── application.yml
-└── src/test/java/com/aureus/platform/notification/
-    ├── AureusNotificationApplicationTest.java
+└── src/test/java/com/aurix/platform/notification/
+    ├── AurixNotificationApplicationTest.java
     ├── service/
     │   ├── NotificacaoServiceTest.java
     │   ├── NotificacaoConsumerTest.java
@@ -67,13 +67,13 @@ backend/aureus-notification/
 ### Task 1: Scaffold — pom.xml, application classes, config
 
 **Files:**
-- Modify: `backend/aureus-notification/pom.xml` (replace stub)
-- Create: `backend/aureus-notification/src/main/java/com/aureus/platform/notification/AureusNotificationApplication.java`
-- Create: `backend/aureus-notification/src/main/java/com/aureus/platform/notification/config/KafkaConfig.java`
-- Create: `backend/aureus-notification/src/main/java/com/aureus/platform/notification/config/SecurityConfig.java`
-- Create: `backend/aureus-notification/src/main/resources/application.yml`
-- Create: `backend/aureus-notification/src/test/resources/application-test.yml`
-- Create: `backend/aureus-notification/src/test/java/com/aureus/platform/notification/AureusNotificationApplicationTest.java`
+- Modify: `backend/aurix-notification/pom.xml` (replace stub)
+- Create: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/AurixNotificationApplication.java`
+- Create: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/config/KafkaConfig.java`
+- Create: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/config/SecurityConfig.java`
+- Create: `backend/aurix-notification/src/main/resources/application.yml`
+- Create: `backend/aurix-notification/src/test/resources/application-test.yml`
+- Create: `backend/aurix-notification/src/test/java/com/aurix/platform/notification/AurixNotificationApplicationTest.java`
 
 **Interfaces:**
 - Produces: application entry point, Kafka topic beans, security config, test context load
@@ -81,10 +81,10 @@ backend/aureus-notification/
 - [ ] **Step 1: Create directory structure**
 
 ```bash
-mkdir -p backend/aureus-notification/src/main/java/com/aureus/platform/notification/{config,controller,entity,repository,service/channel}
-mkdir -p backend/aureus-notification/src/main/resources
-mkdir -p backend/aureus-notification/src/test/java/com/aureus/platform/notification/{service/channel,controller}
-mkdir -p backend/aureus-notification/src/test/resources
+mkdir -p backend/aurix-notification/src/main/java/com/aurix/platform/notification/{config,controller,entity,repository,service/channel}
+mkdir -p backend/aurix-notification/src/main/resources
+mkdir -p backend/aurix-notification/src/test/java/com/aurix/platform/notification/{service/channel,controller}
+mkdir -p backend/aurix-notification/src/test/resources
 ```
 
 - [ ] **Step 2: Replace pom.xml**
@@ -94,18 +94,18 @@ mkdir -p backend/aureus-notification/src/test/resources
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.aureus.platform</groupId>
-        <artifactId>aureus-platform</artifactId>
+        <groupId>com.aurix.platform</groupId>
+        <artifactId>aurix-platform</artifactId>
         <version>1.0.0</version>
     </parent>
-    <artifactId>aureus-notification</artifactId>
+    <artifactId>aurix-notification</artifactId>
     <packaging>jar</packaging>
-    <name>AUREUS Notification</name>
+    <name>AURIX Notification</name>
     <description>Multi-channel notification service with template rendering and Kafka integration</description>
     <dependencies>
         <dependency>
-            <groupId>com.aureus.platform</groupId>
-            <artifactId>aureus-shared</artifactId>
+            <groupId>com.aurix.platform</groupId>
+            <artifactId>aurix-shared</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -168,10 +168,10 @@ mkdir -p backend/aureus-notification/src/test/resources
 </project>
 ```
 
-- [ ] **Step 3: Create AureusNotificationApplication.java**
+- [ ] **Step 3: Create AurixNotificationApplication.java**
 
 ```java
-package com.aureus.platform.notification;
+package com.aurix.platform.notification;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -179,13 +179,13 @@ import org.springframework.boot.persistence.autoconfigure.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-@SpringBootApplication(scanBasePackages = { "com.aureus.platform.notification", "com.aureus.platform.shared" })
-@EntityScan(basePackages = { "com.aureus.platform.notification.entity" })
-@EnableJpaRepositories(basePackages = { "com.aureus.platform.notification.repository" })
+@SpringBootApplication(scanBasePackages = { "com.aurix.platform.notification", "com.aurix.platform.shared" })
+@EntityScan(basePackages = { "com.aurix.platform.notification.entity" })
+@EnableJpaRepositories(basePackages = { "com.aurix.platform.notification.repository" })
 @EnableScheduling
-public class AureusNotificationApplication {
+public class AurixNotificationApplication {
     public static void main(String[] args) {
-        SpringApplication.run(AureusNotificationApplication.class, args);
+        SpringApplication.run(AurixNotificationApplication.class, args);
     }
 }
 ```
@@ -193,7 +193,7 @@ public class AureusNotificationApplication {
 - [ ] **Step 4: Create KafkaConfig.java**
 
 ```java
-package com.aureus.platform.notification.config;
+package com.aurix.platform.notification.config;
 
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.context.annotation.Bean;
@@ -217,7 +217,7 @@ public class KafkaConfig {
 - [ ] **Step 5: Create SecurityConfig.java**
 
 ```java
-package com.aureus.platform.notification.config;
+package com.aurix.platform.notification.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -248,13 +248,13 @@ server:
 
 spring:
   application:
-    name: aureus-notification
+    name: aurix-notification
   profiles:
     active: dev
   datasource:
-    url: jdbc:postgresql://localhost:5432/aureus_db
-    username: aureus_user
-    password: aureus_dev_password
+    url: jdbc:postgresql://localhost:5432/aurix_db
+    username: aurix_user
+    password: aurix_dev_password
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 20
@@ -276,7 +276,7 @@ spring:
   kafka:
     bootstrap-servers: localhost:9092
     consumer:
-      group-id: aureus-notification-group
+      group-id: aurix-notification-group
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
@@ -286,7 +286,7 @@ spring:
 
 logging:
   level:
-    com.aureus.platform: DEBUG
+    com.aurix.platform: DEBUG
 
 management:
   endpoints:
@@ -297,12 +297,12 @@ management:
     health:
       show-details: always
 
-aureus:
+aurix:
   notification:
     version: "1.0.0"
   security:
     jwt:
-      secret: "aureus-jwt-secret-key-2024"
+      secret: "aurix-jwt-secret-key-2024"
       expiration: 86400000
 
 ---
@@ -335,7 +335,7 @@ spring:
     exclude:
       - org.springframework.boot.kafka.autoconfigure.KafkaAutoConfiguration
   datasource:
-    url: jdbc:h2:mem:aureus;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;INIT=CREATE SCHEMA IF NOT EXISTS aureus
+    url: jdbc:h2:mem:aurix;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;INIT=CREATE SCHEMA IF NOT EXISTS aurix
     driver-class-name: org.h2.Driver
     username: sa
     password:
@@ -360,10 +360,10 @@ management:
       enabled: false
 ```
 
-- [ ] **Step 8: Create AureusNotificationApplicationTest.java**
+- [ ] **Step 8: Create AurixNotificationApplicationTest.java**
 
 ```java
-package com.aureus.platform.notification;
+package com.aurix.platform.notification;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -373,7 +373,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @SpringBootTest
 @ActiveProfiles("test")
-class AureusNotificationApplicationTest {
+class AurixNotificationApplicationTest {
 
     @MockitoBean
     private KafkaTemplate<String, String> kafkaTemplate;
@@ -386,7 +386,7 @@ class AureusNotificationApplicationTest {
 
 - [ ] **Step 9: Run test to verify context loads**
 
-Run: `mvn clean test -pl aureus-notification -am -Dtest=AureusNotificationApplicationTest -DfailIfNoTests=false`
+Run: `mvn clean test -pl aurix-notification -am -Dtest=AurixNotificationApplicationTest -DfailIfNoTests=false`
 Expected: PASS (context loads with mocked KafkaTemplate)
 
 ---
@@ -394,14 +394,14 @@ Expected: PASS (context loads with mocked KafkaTemplate)
 ### Task 2: Entities and Repositories
 
 **Files:**
-- Create: `backend/aureus-notification/src/main/java/com/aureus/platform/notification/entity/TemplateNotificacao.java`
-- Create: `backend/aureus-notification/src/main/java/com/aureus/platform/notification/entity/FilaNotificacao.java`
-- Create: `backend/aureus-notification/src/main/java/com/aureus/platform/notification/entity/ConfirmacaoRecebimento.java`
-- Create: `backend/aureus-notification/src/main/java/com/aureus/platform/notification/entity/PreferenciaCliente.java`
-- Create: `backend/aureus-notification/src/main/java/com/aureus/platform/notification/repository/TemplateNotificacaoRepository.java`
-- Create: `backend/aureus-notification/src/main/java/com/aureus/platform/notification/repository/FilaNotificacaoRepository.java`
-- Create: `backend/aureus-notification/src/main/java/com/aureus/platform/notification/repository/ConfirmacaoRecebimentoRepository.java`
-- Create: `backend/aureus-notification/src/main/java/com/aureus/platform/notification/repository/PreferenciaClienteRepository.java`
+- Create: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/entity/TemplateNotificacao.java`
+- Create: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/entity/FilaNotificacao.java`
+- Create: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/entity/ConfirmacaoRecebimento.java`
+- Create: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/entity/PreferenciaCliente.java`
+- Create: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/repository/TemplateNotificacaoRepository.java`
+- Create: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/repository/FilaNotificacaoRepository.java`
+- Create: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/repository/ConfirmacaoRecebimentoRepository.java`
+- Create: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/repository/PreferenciaClienteRepository.java`
 
 **Interfaces:**
 - Produces: entity classes and repository interfaces consumed by service layer
@@ -409,15 +409,15 @@ Expected: PASS (context loads with mocked KafkaTemplate)
 - [ ] **Step 1: Create TemplateNotificacao.java**
 
 ```java
-package com.aureus.platform.notification.entity;
+package com.aurix.platform.notification.entity;
 
-import com.aureus.platform.shared.entity.BaseEntity;
+import com.aurix.platform.shared.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "templates_notificacao", schema = "aureus")
+@Table(name = "templates_notificacao", schema = "aurix")
 public class TemplateNotificacao extends BaseEntity {
     @Column(name = "codigo", nullable = false, unique = true, length = 100)
     private String codigo;
@@ -460,16 +460,16 @@ public class TemplateNotificacao extends BaseEntity {
 - [ ] **Step 2: Create FilaNotificacao.java**
 
 ```java
-package com.aureus.platform.notification.entity;
+package com.aurix.platform.notification.entity;
 
-import com.aureus.platform.shared.entity.BaseEntity;
+import com.aurix.platform.shared.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "fila_notificacoes", schema = "aureus")
+@Table(name = "fila_notificacoes", schema = "aurix")
 public class FilaNotificacao extends BaseEntity {
     @Column(name = "cliente_id", nullable = false)
     private Long clienteId;
@@ -537,16 +537,16 @@ public class FilaNotificacao extends BaseEntity {
 - [ ] **Step 3: Create ConfirmacaoRecebimento.java**
 
 ```java
-package com.aureus.platform.notification.entity;
+package com.aurix.platform.notification.entity;
 
-import com.aureus.platform.shared.entity.BaseEntity;
+import com.aurix.platform.shared.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "confirmacoes_recebimento", schema = "aureus")
+@Table(name = "confirmacoes_recebimento", schema = "aurix")
 public class ConfirmacaoRecebimento extends BaseEntity {
     @Column(name = "fila_notificacao_id", nullable = false)
     private Long filaNotificacaoId;
@@ -584,15 +584,15 @@ public class ConfirmacaoRecebimento extends BaseEntity {
 - [ ] **Step 4: Create PreferenciaCliente.java**
 
 ```java
-package com.aureus.platform.notification.entity;
+package com.aurix.platform.notification.entity;
 
-import com.aureus.platform.shared.entity.BaseEntity;
+import com.aurix.platform.shared.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "preferencias_cliente", schema = "aureus")
+@Table(name = "preferencias_cliente", schema = "aurix")
 public class PreferenciaCliente extends BaseEntity {
     @Column(name = "cliente_id", nullable = false, unique = true)
     private Long clienteId;
@@ -640,9 +640,9 @@ public class PreferenciaCliente extends BaseEntity {
 - [ ] **Step 5: Create TemplateNotificacaoRepository.java**
 
 ```java
-package com.aureus.platform.notification.repository;
+package com.aurix.platform.notification.repository;
 
-import com.aureus.platform.notification.entity.TemplateNotificacao;
+import com.aurix.platform.notification.entity.TemplateNotificacao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
@@ -654,9 +654,9 @@ public interface TemplateNotificacaoRepository extends JpaRepository<TemplateNot
 - [ ] **Step 6: Create FilaNotificacaoRepository.java**
 
 ```java
-package com.aureus.platform.notification.repository;
+package com.aurix.platform.notification.repository;
 
-import com.aureus.platform.notification.entity.FilaNotificacao;
+import com.aurix.platform.notification.entity.FilaNotificacao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
@@ -669,9 +669,9 @@ public interface FilaNotificacaoRepository extends JpaRepository<FilaNotificacao
 - [ ] **Step 7: Create ConfirmacaoRecebimentoRepository.java**
 
 ```java
-package com.aureus.platform.notification.repository;
+package com.aurix.platform.notification.repository;
 
-import com.aureus.platform.notification.entity.ConfirmacaoRecebimento;
+import com.aurix.platform.notification.entity.ConfirmacaoRecebimento;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
@@ -684,9 +684,9 @@ public interface ConfirmacaoRecebimentoRepository extends JpaRepository<Confirma
 - [ ] **Step 8: Create PreferenciaClienteRepository.java**
 
 ```java
-package com.aureus.platform.notification.repository;
+package com.aurix.platform.notification.repository;
 
-import com.aureus.platform.notification.entity.PreferenciaCliente;
+import com.aurix.platform.notification.entity.PreferenciaCliente;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
@@ -697,7 +697,7 @@ public interface PreferenciaClienteRepository extends JpaRepository<PreferenciaC
 
 - [ ] **Step 9: Run tests to verify compilation**
 
-Run: `mvn clean compile -pl aureus-notification -am`
+Run: `mvn clean compile -pl aurix-notification -am`
 Expected: PASS
 
 ---
@@ -705,12 +705,12 @@ Expected: PASS
 ### Task 3: Channel interface, LogChannel, NotificacaoService
 
 **Files:**
-- Create: `backend/aureus-notification/src/main/java/com/aureus/platform/notification/service/channel/NotificacaoChannel.java`
-- Create: `backend/aureus-notification/src/main/java/com/aureus/platform/notification/service/channel/LogChannel.java`
-- Create: `backend/aureus-notification/src/main/java/com/aureus/platform/notification/service/NotificacaoService.java`
-- Create: `backend/aureus-notification/src/main/java/com/aureus/platform/notification/service/NotificacaoProducer.java`
-- Create: `backend/aureus-notification/src/test/java/com/aureus/platform/notification/service/NotificacaoServiceTest.java`
-- Create: `backend/aureus-notification/src/test/java/com/aureus/platform/notification/service/channel/LogChannelTest.java`
+- Create: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/service/channel/NotificacaoChannel.java`
+- Create: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/service/channel/LogChannel.java`
+- Create: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/service/NotificacaoService.java`
+- Create: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/service/NotificacaoProducer.java`
+- Create: `backend/aurix-notification/src/test/java/com/aurix/platform/notification/service/NotificacaoServiceTest.java`
+- Create: `backend/aurix-notification/src/test/java/com/aurix/platform/notification/service/channel/LogChannelTest.java`
 
 **Interfaces:**
 - Consumes: `TemplateNotificacao`, `FilaNotificacao`, `PreferenciaCliente`, `ConfirmacaoRecebimento` entities, all repositories
@@ -719,9 +719,9 @@ Expected: PASS
 - [ ] **Step 1: Create NotificacaoChannel.java**
 
 ```java
-package com.aureus.platform.notification.service.channel;
+package com.aurix.platform.notification.service.channel;
 
-import com.aureus.platform.notification.entity.FilaNotificacao;
+import com.aurix.platform.notification.entity.FilaNotificacao;
 
 public interface NotificacaoChannel {
     void send(FilaNotificacao notificacao);
@@ -732,9 +732,9 @@ public interface NotificacaoChannel {
 - [ ] **Step 2: Create LogChannel.java**
 
 ```java
-package com.aureus.platform.notification.service.channel;
+package com.aurix.platform.notification.service.channel;
 
-import com.aureus.platform.notification.entity.FilaNotificacao;
+import com.aurix.platform.notification.entity.FilaNotificacao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -760,9 +760,9 @@ public class LogChannel implements NotificacaoChannel {
 - [ ] **Step 3: Create NotificacaoProducer.java**
 
 ```java
-package com.aureus.platform.notification.service;
+package com.aurix.platform.notification.service;
 
-import com.aureus.platform.notification.entity.FilaNotificacao;
+import com.aurix.platform.notification.entity.FilaNotificacao;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.slf4j.Logger;
@@ -815,18 +815,18 @@ public class NotificacaoProducer {
 - [ ] **Step 4: Create NotificacaoService.java**
 
 ```java
-package com.aureus.platform.notification.service;
+package com.aurix.platform.notification.service;
 
-import com.aureus.platform.notification.entity.ConfirmacaoRecebimento;
-import com.aureus.platform.notification.entity.FilaNotificacao;
-import com.aureus.platform.notification.entity.PreferenciaCliente;
-import com.aureus.platform.notification.entity.TemplateNotificacao;
-import com.aureus.platform.notification.repository.ConfirmacaoRecebimentoRepository;
-import com.aureus.platform.notification.repository.FilaNotificacaoRepository;
-import com.aureus.platform.notification.repository.PreferenciaClienteRepository;
-import com.aureus.platform.notification.repository.TemplateNotificacaoRepository;
-import com.aureus.platform.notification.service.channel.LogChannel;
-import com.aureus.platform.notification.service.channel.NotificacaoChannel;
+import com.aurix.platform.notification.entity.ConfirmacaoRecebimento;
+import com.aurix.platform.notification.entity.FilaNotificacao;
+import com.aurix.platform.notification.entity.PreferenciaCliente;
+import com.aurix.platform.notification.entity.TemplateNotificacao;
+import com.aurix.platform.notification.repository.ConfirmacaoRecebimentoRepository;
+import com.aurix.platform.notification.repository.FilaNotificacaoRepository;
+import com.aurix.platform.notification.repository.PreferenciaClienteRepository;
+import com.aurix.platform.notification.repository.TemplateNotificacaoRepository;
+import com.aurix.platform.notification.service.channel.LogChannel;
+import com.aurix.platform.notification.service.channel.NotificacaoChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -980,16 +980,16 @@ public class NotificacaoService {
 - [ ] **Step 5: Create NotificacaoServiceTest.java**
 
 ```java
-package com.aureus.platform.notification.service;
+package com.aurix.platform.notification.service;
 
-import com.aureus.platform.notification.entity.FilaNotificacao;
-import com.aureus.platform.notification.entity.PreferenciaCliente;
-import com.aureus.platform.notification.entity.TemplateNotificacao;
-import com.aureus.platform.notification.repository.ConfirmacaoRecebimentoRepository;
-import com.aureus.platform.notification.repository.FilaNotificacaoRepository;
-import com.aureus.platform.notification.repository.PreferenciaClienteRepository;
-import com.aureus.platform.notification.repository.TemplateNotificacaoRepository;
-import com.aureus.platform.notification.service.channel.LogChannel;
+import com.aurix.platform.notification.entity.FilaNotificacao;
+import com.aurix.platform.notification.entity.PreferenciaCliente;
+import com.aurix.platform.notification.entity.TemplateNotificacao;
+import com.aurix.platform.notification.repository.ConfirmacaoRecebimentoRepository;
+import com.aurix.platform.notification.repository.FilaNotificacaoRepository;
+import com.aurix.platform.notification.repository.PreferenciaClienteRepository;
+import com.aurix.platform.notification.repository.TemplateNotificacaoRepository;
+import com.aurix.platform.notification.service.channel.LogChannel;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -1014,9 +1014,9 @@ class NotificacaoServiceTest {
     @Test
     void deveRenderizarTemplateComVariaveis() {
         String template = "Ola {{nome}}, bem-vindo ao {{plataforma}}!";
-        Map<String, String> vars = Map.of("nome", "Joao", "plataforma", "AUREUS");
+        Map<String, String> vars = Map.of("nome", "Joao", "plataforma", "AURIX");
         String resultado = service.renderizar(template, vars);
-        assertEquals("Ola Joao, bem-vindo ao AUREUS!", resultado);
+        assertEquals("Ola Joao, bem-vindo ao AURIX!", resultado);
     }
 
     @Test
@@ -1141,9 +1141,9 @@ class NotificacaoServiceTest {
 - [ ] **Step 6: Create LogChannelTest.java**
 
 ```java
-package com.aureus.platform.notification.service.channel;
+package com.aurix.platform.notification.service.channel;
 
-import com.aureus.platform.notification.entity.FilaNotificacao;
+import com.aurix.platform.notification.entity.FilaNotificacao;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -1169,7 +1169,7 @@ class LogChannelTest {
 
 - [ ] **Step 7: Run all tests**
 
-Run: `mvn clean test -pl aureus-notification -am`
+Run: `mvn clean test -pl aurix-notification -am`
 Expected: All tests PASS
 
 ---
@@ -1177,8 +1177,8 @@ Expected: All tests PASS
 ### Task 4: NotificacaoConsumer (Kafka listeners)
 
 **Files:**
-- Create: `backend/aureus-notification/src/main/java/com/aureus/platform/notification/service/NotificacaoConsumer.java`
-- Create: `backend/aureus-notification/src/test/java/com/aureus/platform/notification/service/NotificacaoConsumerTest.java`
+- Create: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/service/NotificacaoConsumer.java`
+- Create: `backend/aurix-notification/src/test/java/com/aurix/platform/notification/service/NotificacaoConsumerTest.java`
 
 **Interfaces:**
 - Consumes: `NotificacaoService.enviar()` from Task 3
@@ -1187,7 +1187,7 @@ Expected: All tests PASS
 - [ ] **Step 1: Create NotificacaoConsumer.java**
 
 ```java
-package com.aureus.platform.notification.service;
+package com.aurix.platform.notification.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -1210,22 +1210,22 @@ public class NotificacaoConsumer {
         this.objectMapper = objectMapper;
     }
 
-    @KafkaListener(topics = "cliente.criado", groupId = "aureus-notification-group")
+    @KafkaListener(topics = "cliente.criado", groupId = "aurix-notification-group")
     public void onClienteCriado(String message) {
         processEvent(message, "cliente.criado", "cliente_criado");
     }
 
-    @KafkaListener(topics = "kyc.aprovado", groupId = "aureus-notification-group")
+    @KafkaListener(topics = "kyc.aprovado", groupId = "aurix-notification-group")
     public void onKycAprovado(String message) {
         processEvent(message, "kyc.aprovado", "kyc_aprovado");
     }
 
-    @KafkaListener(topics = "kyc.rejeitado", groupId = "aureus-notification-group")
+    @KafkaListener(topics = "kyc.rejeitado", groupId = "aurix-notification-group")
     public void onKycRejeitado(String message) {
         processEvent(message, "kyc.rejeitado", "kyc_rejeitado");
     }
 
-    @KafkaListener(topics = "fraude.transacao.bloqueada", groupId = "aureus-notification-group")
+    @KafkaListener(topics = "fraude.transacao.bloqueada", groupId = "aurix-notification-group")
     public void onFraudeTransacaoBloqueada(String message) {
         processEvent(message, "fraude.transacao.bloqueada", "fraude_transacao_bloqueada");
     }
@@ -1270,15 +1270,15 @@ public class NotificacaoConsumer {
 - [ ] **Step 2: Create NotificacaoConsumerTest.java**
 
 ```java
-package com.aureus.platform.notification.service;
+package com.aurix.platform.notification.service;
 
-import com.aureus.platform.notification.entity.FilaNotificacao;
-import com.aureus.platform.notification.entity.TemplateNotificacao;
-import com.aureus.platform.notification.repository.ConfirmacaoRecebimentoRepository;
-import com.aureus.platform.notification.repository.FilaNotificacaoRepository;
-import com.aureus.platform.notification.repository.PreferenciaClienteRepository;
-import com.aureus.platform.notification.repository.TemplateNotificacaoRepository;
-import com.aureus.platform.notification.service.channel.LogChannel;
+import com.aurix.platform.notification.entity.FilaNotificacao;
+import com.aurix.platform.notification.entity.TemplateNotificacao;
+import com.aurix.platform.notification.repository.ConfirmacaoRecebimentoRepository;
+import com.aurix.platform.notification.repository.FilaNotificacaoRepository;
+import com.aurix.platform.notification.repository.PreferenciaClienteRepository;
+import com.aurix.platform.notification.repository.TemplateNotificacaoRepository;
+import com.aurix.platform.notification.service.channel.LogChannel;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -1310,7 +1310,7 @@ class NotificacaoConsumerTest {
     @Test
     void deveProcessarEventoClienteCriado() {
         when(templateRepository.findByCodigoAndAtivoTrue("cliente_criado")).thenReturn(Optional.of(
-                buildTemplate("cliente_criado", "EMAIL", "Bem-vindo ao AUREUS, {{nome}}!")));
+                buildTemplate("cliente_criado", "EMAIL", "Bem-vindo ao AURIX, {{nome}}!")));
         when(preferenciaRepository.findByClienteId(1L)).thenReturn(Optional.empty());
         when(filaRepository.save(any())).thenAnswer(inv -> {
             FilaNotificacao saved = inv.getArgument(0);
@@ -1400,7 +1400,7 @@ class NotificacaoConsumerTest {
 
 - [ ] **Step 3: Run tests**
 
-Run: `mvn clean test -pl aureus-notification -am`
+Run: `mvn clean test -pl aurix-notification -am`
 Expected: All tests PASS
 
 ---
@@ -1408,9 +1408,9 @@ Expected: All tests PASS
 ### Task 5: NotificacaoController + HealthController
 
 **Files:**
-- Create: `backend/aureus-notification/src/main/java/com/aureus/platform/notification/controller/NotificacaoController.java`
-- Create: `backend/aureus-notification/src/main/java/com/aureus/platform/notification/controller/HealthController.java`
-- Create: `backend/aureus-notification/src/test/java/com/aureus/platform/notification/controller/NotificacaoControllerTest.java`
+- Create: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/controller/NotificacaoController.java`
+- Create: `backend/aurix-notification/src/main/java/com/aurix/platform/notification/controller/HealthController.java`
+- Create: `backend/aurix-notification/src/test/java/com/aurix/platform/notification/controller/NotificacaoControllerTest.java`
 
 **Interfaces:**
 - Consumes: `NotificacaoService` (all public methods from Task 3)
@@ -1419,12 +1419,12 @@ Expected: All tests PASS
 - [ ] **Step 1: Create NotificacaoController.java**
 
 ```java
-package com.aureus.platform.notification.controller;
+package com.aurix.platform.notification.controller;
 
-import com.aureus.platform.notification.entity.FilaNotificacao;
-import com.aureus.platform.notification.entity.PreferenciaCliente;
-import com.aureus.platform.notification.entity.TemplateNotificacao;
-import com.aureus.platform.notification.service.NotificacaoService;
+import com.aurix.platform.notification.entity.FilaNotificacao;
+import com.aurix.platform.notification.entity.PreferenciaCliente;
+import com.aurix.platform.notification.entity.TemplateNotificacao;
+import com.aurix.platform.notification.service.NotificacaoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
@@ -1503,7 +1503,7 @@ public class NotificacaoController {
 - [ ] **Step 2: Create HealthController.java**
 
 ```java
-package com.aureus.platform.notification.controller;
+package com.aurix.platform.notification.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -1523,7 +1523,7 @@ public class HealthController {
     public ResponseEntity<Map<String, Object>> health() {
         return ResponseEntity.ok(Map.of(
             "status", "UP",
-            "service", "aureus-notification",
+            "service", "aurix-notification",
             "timestamp", LocalDateTime.now().toString(),
             "version", "1.0.0"
         ));
@@ -1534,12 +1534,12 @@ public class HealthController {
 - [ ] **Step 3: Create NotificacaoControllerTest.java**
 
 ```java
-package com.aureus.platform.notification.controller;
+package com.aurix.platform.notification.controller;
 
-import com.aureus.platform.notification.entity.FilaNotificacao;
-import com.aureus.platform.notification.entity.PreferenciaCliente;
-import com.aureus.platform.notification.entity.TemplateNotificacao;
-import com.aureus.platform.notification.service.NotificacaoService;
+import com.aurix.platform.notification.entity.FilaNotificacao;
+import com.aurix.platform.notification.entity.PreferenciaCliente;
+import com.aurix.platform.notification.entity.TemplateNotificacao;
+import com.aurix.platform.notification.service.NotificacaoService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -1654,7 +1654,7 @@ class NotificacaoControllerTest {
 
 - [ ] **Step 4: Run all tests**
 
-Run: `mvn clean test -pl aureus-notification -am`
+Run: `mvn clean test -pl aurix-notification -am`
 Expected: All tests PASS
 
 ---
@@ -1666,22 +1666,22 @@ Expected: All tests PASS
 
 - [ ] **Step 1: Run full test suite**
 
-Run: `mvn clean test -pl aureus-notification -am`
+Run: `mvn clean test -pl aurix-notification -am`
 Expected: All tests PASS, 0 failures
 
 - [ ] **Step 2: Verify static analysis**
 
-Run: `mvn pmd:check -pl aureus-notification -am`
+Run: `mvn pmd:check -pl aurix-notification -am`
 Expected: PASS
 
 - [ ] **Step 3: Verify checkstyle**
 
-Run: `mvn checkstyle:check -pl aureus-notification -am`
+Run: `mvn checkstyle:check -pl aurix-notification -am`
 Expected: PASS
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add backend/aureus-notification/
+git add backend/aurix-notification/
 git commit -m "feat(notification): full module with template rendering, Kafka consumers, and channel dispatch"
 ```

@@ -1,8 +1,8 @@
-# 🏢 AUREUS Organization - Módulo de Estrutura Organizacional
+# 🏢 AURIX Organization - Módulo de Estrutura Organizacional
 
 ## 📋 **Visão Geral**
 
-O **AUREUS Organization** é um módulo completo de gestão organizacional que implementa estrutura hierárquica, controle de alçada e integrações com serviços externos para o AUREUS Core Banking.
+O **AURIX Organization** é um módulo completo de gestão organizacional que implementa estrutura hierárquica, controle de alçada e integrações com serviços externos para o AURIX Core Banking.
 
 **Status**: ✅ **Implementado**  
 **Versão**: 1.0.0  
@@ -15,8 +15,8 @@ O **AUREUS Organization** é um módulo completo de gestão organizacional que i
 
 ### **Estrutura de Diretórios**
 ```
-aureus-organization/
-├── src/main/java/com/aureus/platform/organization/
+aurix-organization/
+├── src/main/java/com/aurix/platform/organization/
 │   ├── controller/          # APIs REST
 │   ├── service/            # Lógica de negócio
 │   ├── repository/         # Acesso a dados
@@ -204,9 +204,9 @@ WEBHOOK_API_KEY=your_webhook_api_key
 ```yaml
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/aureus_db
-    username: aureus_user
-    password: aureus_pass
+    url: jdbc:postgresql://localhost:5432/aurix_db
+    username: aurix_user
+    password: aurix_pass
   jpa:
     hibernate:
       ddl-auto: update
@@ -218,8 +218,8 @@ spring:
 
 ### **Health Checks**
 ```
-GET /aureus-organization/api/health      - Status do serviço
-GET /aureus-organization/api/health/ready - Readiness check
+GET /aurix-organization/api/health      - Status do serviço
+GET /aurix-organization/api/health/ready - Readiness check
 ```
 
 ### **Métricas Disponíveis**
@@ -235,12 +235,12 @@ GET /aureus-organization/api/health/ready - Readiness check
 
 ### **Docker Compose**
 ```yaml
-aureus-organization:
-  build: ./aureus-organization
+aurix-organization:
+  build: ./aurix-organization
   ports:
     - "8087:8087"
   environment:
-    SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/aureus_db
+    SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/aurix_db
     RH_API_KEY: ${RH_API_KEY}
   depends_on:
     - postgres
@@ -248,7 +248,7 @@ aureus-organization:
 
 ### **Execução Local**
 ```bash
-cd aureus-organization
+cd aurix-organization
 mvn spring-boot:run
 ```
 
@@ -327,7 +327,7 @@ mvn spring-boot:run
 ## 📚 **Documentação Técnica**
 
 ### **Swagger/OpenAPI**
-- URL: `http://localhost:8087/aureus-organization/swagger-ui.html`
+- URL: `http://localhost:8087/aurix-organization/swagger-ui.html`
 - Documentação interativa das APIs
 - Testes de integração
 
@@ -335,7 +335,7 @@ mvn spring-boot:run
 ```yaml
 logging:
   level:
-    com.aureus.platform.organization: DEBUG
+    com.aurix.platform.organization: DEBUG
     org.springframework.security: DEBUG
     org.hibernate.SQL: DEBUG
 ```
@@ -365,7 +365,7 @@ logging:
 
 ---
 
-**Desenvolvido por**: Equipe AUREUS  
+**Desenvolvido por**: Equipe AURIX  
 **Última Atualização**: Janeiro 2025  
 **Status**: ✅ Produção  
 **Versão**: 1.0.0

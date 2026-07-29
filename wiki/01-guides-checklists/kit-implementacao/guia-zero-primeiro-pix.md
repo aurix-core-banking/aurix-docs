@@ -1,14 +1,14 @@
 # Do zero ao primeiro PIX em poucos dias
 
-Passo a passo para novo cliente colocar o primeiro PIX no ar com o AUREUS. Item 13.4 do roadmap.
+Passo a passo para novo cliente colocar o primeiro PIX no ar com o AURIX. Item 13.4 do roadmap.
 
 ---
 
 ## Dia 1 – Conta e ambiente
 
-1. **Contrato e acesso**: fechar contrato (AUREUS Cloud ou self-hosted); receber credenciais de acesso (portal, API Key ou OAuth) e o `tenant_id`.
+1. **Contrato e acesso**: fechar contrato (AURIX Cloud ou self-hosted); receber credenciais de acesso (portal, API Key ou OAuth) e o `tenant_id`.
 2. **Checklist de config**: preencher o [checklist go-live](../checklists/go-live.md) (BACEN, SPI/STR, KYC, domínios). Em sandbox/homolog, pode-se usar modo simulado para PIX.
-3. **Provisioning**: se AUREUS Cloud, a instituição já estará cadastrada e provisionada; conferir config do tenant (branding, limites) no painel ou via API de provisioning.
+3. **Provisioning**: se AURIX Cloud, a instituição já estará cadastrada e provisionada; conferir config do tenant (branding, limites) no painel ou via API de provisioning.
 4. **Primeira conta**: seguir o guia [Primeira conta](../../03-development/portal-desenvolvedor/guias/primeira-conta.md) para criar cliente e conta de teste; anotar o ID da conta e o número da conta.
 
 ---
@@ -24,7 +24,7 @@ Passo a passo para novo cliente colocar o primeiro PIX no ar com o AUREUS. Item 
 
 ## Dia 3 – Integração e webhook
 
-1. **Integrar no seu sistema**: usar a API Key ou OAuth para chamar as APIs do AUREUS a partir do seu backend (criar conta, consultar saldo, enviar PIX). Ver [Portal do desenvolvedor](../../03-development/portal-desenvolvedor/README.md) e documentação de cada API.
+1. **Integrar no seu sistema**: usar a API Key ou OAuth para chamar as APIs do AURIX a partir do seu backend (criar conta, consultar saldo, enviar PIX). Ver [Portal do desenvolvedor](../../03-development/portal-desenvolvedor/README.md) e documentação de cada API.
 2. **Webhook**: configurar a URL de webhook no módulo webhooks (`PUT /api/webhooks/config/{tenantId}`) para receber eventos como `pix.transferencia_concluida` e atualizar seu sistema quando um PIX for liquidado.
 3. **Teste end-to-end**: simular fluxo completo: abrir conta, cadastrar chave, receber um PIX (ou enviar) e verificar o webhook e o saldo.
 

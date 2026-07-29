@@ -9,7 +9,7 @@ Checklist para novo cliente (instituição) antes do go live. Corresponde ao ite
 - [ ] **Adesão SPI/STR**: processo de adesão ao Sistema de Pagamentos Instantâneos e ao Sistema de Transferência de Reservas concluído com o BACEN; ISPB da instituição definido.
 - [ ] **Certificado digital**: certificado (cliente) para homologação e produção obtido e exportado para keystore (PKCS12 ou JKS).
 - [ ] **Truststore**: CAs do BACEN (e raiz) configuradas no truststore para validação TLS.
-- [ ] **Config no módulo bacen**: `aureus.bacen.ispb`, `certificados.keystore-path`, `certificados.truststore-path`, senhas em variáveis de ambiente ou secret manager; `spi.enabled` / `str.enabled` e URLs conforme ambiente.
+- [ ] **Config no módulo bacen**: `aurix.bacen.ispb`, `certificados.keystore-path`, `certificados.truststore-path`, senhas em variáveis de ambiente ou secret manager; `spi.enabled` / `str.enabled` e URLs conforme ambiente.
 - [ ] **Teste de conectividade**: em homologação, validar chamadas SPI/STR (ou modo simulado se certificado ainda não disponível).
 
 Referência: [SPI/STR certificados](../../03-compliance/conformidade/spi-str-certificados.md).
@@ -19,7 +19,7 @@ Referência: [SPI/STR certificados](../../03-compliance/conformidade/spi-str-cer
 ## 2. SPI/STR (produção)
 
 - [ ] **Ambiente homologação**: testes com certificado de homologação; validação de mensagens e retry/circuit breaker.
-- [ ] **Ambiente produção**: troca para URLs e certificado de produção; `aureus.bacen.environment: producao`.
+- [ ] **Ambiente produção**: troca para URLs e certificado de produção; `aurix.bacen.environment: producao`.
 - [ ] **Monitoramento**: logs e métricas de sucesso/falha das chamadas SPI/STR; alertas para falhas consecutivas.
 
 ---
@@ -42,7 +42,7 @@ Referência: [SPI/STR certificados](../../03-compliance/conformidade/spi-str-cer
 
 ---
 
-## 5. Provisioning e tenant (AUREUS Cloud)
+## 5. Provisioning e tenant (AURIX Cloud)
 
 - [ ] **Instituição cadastrada**: registro no módulo provisioning (tenant_id, nome, CNPJ, contato, plano).
 - [ ] **Perfil de implantação**: tenancy (single por padrão; multi-tenant se SaaS), cloud (AWS/Azure/GCP/etc.), topologia definidos.

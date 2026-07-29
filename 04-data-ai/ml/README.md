@@ -1,6 +1,6 @@
-# AUREUS ML
+# AURIX ML
 
-Diretorio unificado de Machine Learning: modelos e MLOps do AUREUS Core Banking.
+Diretorio unificado de Machine Learning: modelos e MLOps do AURIX Core Banking.
 
 ## Estrutura
 

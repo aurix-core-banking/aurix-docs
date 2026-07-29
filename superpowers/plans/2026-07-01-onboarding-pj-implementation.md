@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Expand `aureus-onboarding` module with PJ onboarding flow — separate entity/controller/service, reusing shared core (Documento, HistoricoAprovacao, PEP, integrações stub).
+**Goal:** Expand `aurix-onboarding` module with PJ onboarding flow — separate entity/controller/service, reusing shared core (Documento, HistoricoAprovacao, PEP, integrações stub).
 
 **Architecture:** Three-layer split: SolicitacaoOnboarding (protocolo comum) + SolicitacaoPF (refatorado do existente) + SolicitacaoPJ (novo com Empresa + Participantes). Núcleo compartilhado: DocumentoService, WorkflowEngine, CoreApiClient.
 
@@ -12,7 +12,7 @@
 
 - No Lombok — existing code uses builder pattern via delombok (`SolicitacaoConta.builder()`)
 - Follow existing patterns: `@CreationTimestamp`/`@UpdateTimestamp` on entities, builder pattern, `SolicitacaoContaResponse.from(entity)` for DTO conversion
-- Schema: `aureus`
+- Schema: `aurix`
 - New tables: `solicitacoes_pj`, `empresas`, `participantes`, `solicitacoes_pf`
 - Existing `solicitacoes_conta` → rename to `solicitacoes_onboarding`
 - Test pattern: `@SpringBootTest(webEnvironment = RANDOM_PORT)` + `@MockitoBean` for `CoreApiClient`
@@ -38,7 +38,7 @@
 **Entity: SolicitacaoOnboarding.java**
 ```java
 @Entity
-@Table(name = "solicitacoes_onboarding", schema = "aureus")
+@Table(name = "solicitacoes_onboarding", schema = "aurix")
 public class SolicitacaoOnboarding {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -69,7 +69,7 @@ public class SolicitacaoOnboarding {
 **Entity: SolicitacaoPF.java**
 ```java
 @Entity
-@Table(name = "solicitacoes_pf", schema = "aureus")
+@Table(name = "solicitacoes_pf", schema = "aurix")
 public class SolicitacaoPF {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -109,7 +109,7 @@ public enum TipoPessoa { FISICA, JURIDICA }
 
 **Migration DTO:** `SolicitacaoContaRequest` keeps PF fields + adds `tipoPessoa` (default FISICA).
 
-**Compile verify:** `mvn compile -pl aureus-onboarding -am`
+**Compile verify:** `mvn compile -pl aurix-onboarding -am`
 
 **Commit:** `feat(onboarding): split SolicitacaoConta into shared SolicitacaoOnboarding + SolicitacaoPF`
 
@@ -268,7 +268,7 @@ All entities use builder pattern (delombok) and `@CreationTimestamp`/`@UpdateTim
 **Regression:** Update existing PF integration test to use new endpoints path `/onboarding/contas/pf`.
 
 ```bash
-mvn test -pl aureus-onboarding -am -DfailIfNoTests=false
+mvn test -pl aurix-onboarding -am -DfailIfNoTests=false
 ```
 
 **Commit:** `test(onboarding): add PJ flow integration test + regression`

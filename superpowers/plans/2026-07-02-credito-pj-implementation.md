@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Extend `aureus-credit` module with PJ credit support (CNPJ bureau, PJ decision rules, PJ eligibility rules, Limite Rotativo).
+**Goal:** Extend `aurix-credit` module with PJ credit support (CNPJ bureau, PJ decision rules, PJ eligibility rules, Limite Rotativo).
 
 **Architecture:** Reuse `SolicitacaoCredito` entity + workflow for loan products; add `consultarScoreCNPJ()` to `CreditBureauService`; extend `DecisaoCreditoService` with PJ rules; add PJ field extractors to catalog's `ElegibilidadeService`; add PJ financial fields to `Cliente` entity; Limite Rotativo via `Conta.limiteCredito`.
 
@@ -14,18 +14,18 @@
 - Follow delombok pattern: manual getters/setters with `@java.lang.SuppressWarnings("all")`, `canEqual()`, PRIME=59
 - No Lombok annotations anywhere
 - Tests use `@SpringBootTest(webEnvironment = RANDOM_PORT)` + RestTemplate + `@MockitoBean`
-- Schema `aureus` for all tables
-- `Cliente` entity in `aureus-shared`, `SolicitacaoCredito` in `aureus-credit`
+- Schema `aurix` for all tables
+- `Cliente` entity in `aurix-shared`, `SolicitacaoCredito` in `aurix-credit`
 
 ---
 
 ### Task 1: ProdutoCredito + Cliente — add LIMITE_ROTATIVO and PJ financial fields
 
 **Files:**
-- Modify: `backend/aureus-shared/src/main/java/com/aureus/platform/shared/entity/Cliente.java` (add PJ financial fields)
-- Modify: `backend/aureus-credit/src/main/java/com/aureus/platform/credit/entity/ProdutoCredito.java` (add LIMITE_ROTATIVO to TipoCredito)
-- Create/test: `backend/aureus-credit/src/test/java/com/aureus/platform/credit/entity/ProdutoCreditoTest.java`
-- Create/test: `backend/aureus-shared/src/test/java/com/aureus/platform/shared/entity/ClientePJFieldsTest.java`
+- Modify: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/entity/Cliente.java` (add PJ financial fields)
+- Modify: `backend/aurix-credit/src/main/java/com/aurix/platform/credit/entity/ProdutoCredito.java` (add LIMITE_ROTATIVO to TipoCredito)
+- Create/test: `backend/aurix-credit/src/test/java/com/aurix/platform/credit/entity/ProdutoCreditoTest.java`
+- Create/test: `backend/aurix-shared/src/test/java/com/aurix/platform/shared/entity/ClientePJFieldsTest.java`
 
 - [ ] **Step 1: Add LIMITE_ROTATIVO to ProdutoCredito.TipoCredito**
 
@@ -54,7 +54,7 @@ And add corresponding getters, setters, equals/hashCode/toString updates followi
 - [ ] **Step 3: Create ClientePJFieldsTest**
 
 ```java
-package com.aureus.platform.shared.entity;
+package com.aurix.platform.shared.entity;
 
 import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
@@ -87,8 +87,8 @@ class ClientePJFieldsTest {
 - [ ] **Step 4: Build and commit**
 
 ```bash
-mvn compile -pl aureus-shared,aureus-credit -am
-mvn test -pl aureus-shared -Dtest=ClientePJFieldsTest -Dsurefire.failIfNoSpecifiedTests=false
+mvn compile -pl aurix-shared,aurix-credit -am
+mvn test -pl aurix-shared -Dtest=ClientePJFieldsTest -Dsurefire.failIfNoSpecifiedTests=false
 git add -A && git commit -m "feat(credit): add LIMITE_ROTATIVO + PJ financial fields on Cliente"
 ```
 
@@ -97,10 +97,10 @@ git add -A && git commit -m "feat(credit): add LIMITE_ROTATIVO + PJ financial fi
 ### Task 2: CNPJ bureau scoring + PJ decision rules
 
 **Files:**
-- Modify: `backend/aureus-credit/src/main/java/com/aureus/platform/credit/service/CreditBureauService.java` (add `consultarScoreCNPJ`)
-- Modify: `backend/aureus-credit/src/main/java/com/aureus/platform/credit/service/CreditBureauStub.java` (implement stub)
-- Modify: `backend/aureus-credit/src/main/java/com/aureus/platform/credit/service/DecisaoCreditoService.java` (PJ decision rules)
-- Create/test: `backend/aureus-credit/src/test/java/com/aureus/platform/credit/service/DecisaoCreditoPJTest.java`
+- Modify: `backend/aurix-credit/src/main/java/com/aurix/platform/credit/service/CreditBureauService.java` (add `consultarScoreCNPJ`)
+- Modify: `backend/aurix-credit/src/main/java/com/aurix/platform/credit/service/CreditBureauStub.java` (implement stub)
+- Modify: `backend/aurix-credit/src/main/java/com/aurix/platform/credit/service/DecisaoCreditoService.java` (PJ decision rules)
+- Create/test: `backend/aurix-credit/src/test/java/com/aurix/platform/credit/service/DecisaoCreditoPJTest.java`
 
 - [ ] **Step 1: Add consultarScoreCNPJ to CreditBureauService**
 
@@ -176,7 +176,7 @@ Create a `record ResultadoDecisao(String status, String motivo, Integer score)` 
 - [ ] **Step 4: Build and commit**
 
 ```bash
-mvn compile -pl aureus-credit -am && mvn test -pl aureus-credit -am
+mvn compile -pl aurix-credit -am && mvn test -pl aurix-credit -am
 git add -A && git commit -m "feat(credit): add CNPJ bureau scoring + PJ decision rules"
 ```
 
@@ -185,10 +185,10 @@ git add -A && git commit -m "feat(credit): add CNPJ bureau scoring + PJ decision
 ### Task 3: PJ eligibility rules in catalog module
 
 **Files:**
-- Modify: `backend/aureus-catalog/src/main/java/com/aureus/platform/catalog/service/ElegibilidadeService.java` (add PJ field extractors)
-- Modify: `backend/aureus-catalog/src/main/java/com/aureus/platform/catalog/entity/config/ConfigCredito.java` (add PJ fields)
-- Modify: `backend/aureus-catalog/src/main/java/com/aureus/platform/catalog/service/ConfigService.java` (handle new fields)
-- Create/test: `backend/aureus-catalog/src/test/java/com/aureus/platform/catalog/service/ElegibilidadePJTest.java`
+- Modify: `backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/service/ElegibilidadeService.java` (add PJ field extractors)
+- Modify: `backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/entity/config/ConfigCredito.java` (add PJ fields)
+- Modify: `backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/service/ConfigService.java` (handle new fields)
+- Create/test: `backend/aurix-catalog/src/test/java/com/aurix/platform/catalog/service/ElegibilidadePJTest.java`
 
 - [ ] **Step 1: Add PJ field extractors to ElegibilidadeService**
 
@@ -226,7 +226,7 @@ In `ConfigService`, when saving/loading `ConfigCredito`, include the new PJ fiel
 - [ ] **Step 4: Build and commit**
 
 ```bash
-mvn compile -pl aureus-catalog -am && mvn test -pl aureus-catalog -am
+mvn compile -pl aurix-catalog -am && mvn test -pl aurix-catalog -am
 git add -A && git commit -m "feat(catalog): add PJ eligibility rules + ConfigCredito PJ fields"
 ```
 
@@ -235,11 +235,11 @@ git add -A && git commit -m "feat(catalog): add PJ eligibility rules + ConfigCre
 ### Task 4: Core API — accept PJ financial data on cliente creation
 
 **Files:**
-- Modify: `backend/aureus-core/src/main/java/com/aureus/platform/core/service/ClienteService.java` (accept new fields)
-- Modify: `backend/aureus-core/src/main/java/com/aureus/platform/core/controller/ClienteController.java` (accept new fields in request body)
-- Modify: `backend/aureus-onboarding/src/main/java/com/aureus/platform/onboarding/client/CoreApiClient.java` (send new fields)
-- Modify: `backend/aureus-onboarding/src/main/java/com/aureus/platform/onboarding/service/OnboardingPJService.java` (populate from onboarding data)
-- Create/test: `backend/aureus-core/src/test/java/com/aureus/platform/core/integration/ClientePJFinancialFieldsTest.java`
+- Modify: `backend/aurix-core/src/main/java/com/aurix/platform/core/service/ClienteService.java` (accept new fields)
+- Modify: `backend/aurix-core/src/main/java/com/aurix/platform/core/controller/ClienteController.java` (accept new fields in request body)
+- Modify: `backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/client/CoreApiClient.java` (send new fields)
+- Modify: `backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/OnboardingPJService.java` (populate from onboarding data)
+- Create/test: `backend/aurix-core/src/test/java/com/aurix/platform/core/integration/ClientePJFinancialFieldsTest.java`
 
 - [ ] **Step 1: Update ClienteController to accept new fields**
 
@@ -292,7 +292,7 @@ SolicitacaoPJ pjData = solicitacaoPJRepository.findBySolicitacaoId(solicitacaoId
 - [ ] **Step 5: Build and commit**
 
 ```bash
-mvn compile -pl aureus-core,aureus-onboarding -am && mvn test -pl aureus-core,aureus-onboarding -am 2>&1 | tail -15
+mvn compile -pl aurix-core,aurix-onboarding -am && mvn test -pl aurix-core,aurix-onboarding -am 2>&1 | tail -15
 git add -A && git commit -m "feat(core): accept PJ financial fields on cliente creation + sync from onboarding"
 ```
 
@@ -301,16 +301,16 @@ git add -A && git commit -m "feat(core): accept PJ financial fields on cliente c
 ### Task 5: Limite Rotativo endpoint
 
 **Files:**
-- Modify: `backend/aureus-credit/src/main/java/com/aureus/platform/credit/controller/SolicitacaoCreditoController.java`
-- Modify: `backend/aureus-credit/src/main/java/com/aureus/platform/credit/service/SolicitacaoCreditoService.java`
-- Create/test: `backend/aureus-credit/src/test/java/com/aureus/platform/credit/service/LimiteRotativoServiceTest.java`
+- Modify: `backend/aurix-credit/src/main/java/com/aurix/platform/credit/controller/SolicitacaoCreditoController.java`
+- Modify: `backend/aurix-credit/src/main/java/com/aurix/platform/credit/service/SolicitacaoCreditoService.java`
+- Create/test: `backend/aurix-credit/src/test/java/com/aurix/platform/credit/service/LimiteRotativoServiceTest.java`
 
-- [ ] **Step 1: Create ContaServiceClient in aureus-credit**
+- [ ] **Step 1: Create ContaServiceClient in aurix-credit**
 
-Create `backend/aureus-credit/src/main/java/com/aureus/platform/credit/client/ContaServiceClient.java`:
+Create `backend/aurix-credit/src/main/java/com/aurix/platform/credit/client/ContaServiceClient.java`:
 
 ```java
-package com.aureus.platform.credit.client;
+package com.aurix.platform.credit.client;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -322,7 +322,7 @@ import java.util.Map;
 @Component
 public class ContaServiceClient {
     private final RestTemplate restTemplate;
-    @Value("${aureus.credit.core-api-url:http://localhost:8081/api/core}")
+    @Value("${aurix.credit.core-api-url:http://localhost:8081/api/core}")
     private String coreApiUrl;
 
     public boolean atualizarLimiteCredito(Long contaId, BigDecimal novoLimite) {
@@ -395,7 +395,7 @@ public ResponseEntity<SolicitacaoCreditoDTO> liberarLimite(@PathVariable Long id
 - [ ] **Step 3: Build and commit**
 
 ```bash
-mvn compile -pl aureus-credit -am && mvn test -pl aureus-credit -am
+mvn compile -pl aurix-credit -am && mvn test -pl aurix-credit -am
 git add -A && git commit -m "feat(credit): add liberar-limite-rotativo endpoint"
 ```
 
@@ -404,20 +404,20 @@ git add -A && git commit -m "feat(credit): add liberar-limite-rotativo endpoint"
 ### Task 6: Integration tests
 
 **Files:**
-- Create: `backend/aureus-credit/src/test/java/com/aureus/platform/credit/integration/CreditoPJFlowIntegrationTest.java`
+- Create: `backend/aurix-credit/src/test/java/com/aurix/platform/credit/integration/CreditoPJFlowIntegrationTest.java`
 
 - [ ] **Step 1: Create CreditoPJFlowIntegrationTest**
 
 ```java
-package com.aureus.platform.credit.integration;
+package com.aurix.platform.credit.integration;
 
-import com.aureus.platform.credit.AureusCreditApplication;
-import com.aureus.platform.credit.client.ContaServiceClient;
-import com.aureus.platform.credit.entity.ProdutoCredito;
-import com.aureus.platform.credit.service.CreditBureauService;
-import com.aureus.platform.shared.dto.SolicitacaoCreditoDTO;
-import com.aureus.platform.shared.entity.*;
-import com.aureus.platform.shared.tenant.TenantContext;
+import com.aurix.platform.credit.AurixCreditApplication;
+import com.aurix.platform.credit.client.ContaServiceClient;
+import com.aurix.platform.credit.entity.ProdutoCredito;
+import com.aurix.platform.credit.service.CreditBureauService;
+import com.aurix.platform.shared.dto.SolicitacaoCreditoDTO;
+import com.aurix.platform.shared.entity.*;
+import com.aurix.platform.shared.tenant.TenantContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -438,7 +438,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(
-    classes = AureusCreditApplication.class,
+    classes = AurixCreditApplication.class,
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
     properties = "spring.security.enabled=false")
 @ActiveProfiles("test")
@@ -482,8 +482,8 @@ class CreditoPJFlowIntegrationTest {
 
     private void limparBanco() {
         jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
-        for (String table : List.of("aureus.solicitacoes_credito",
-            "aureus.contas", "aureus.clientes")) {
+        for (String table : List.of("aurix.solicitacoes_credito",
+            "aurix.contas", "aurix.clientes")) {
             jdbcTemplate.execute("DELETE FROM " + table);
         }
         jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
@@ -506,7 +506,7 @@ class CreditoPJFlowIntegrationTest {
         cliente.setPorte("EPP");
         cliente.setDataConstituicao(java.time.LocalDate.of(2018, 1, 1));
         return jdbcTemplate.queryForObject(
-            "INSERT INTO aureus.clientes (tenant_id, tipo_pessoa, cnpj, nome_razao_social, email, faturamento_mensal, capital_social, cnae_principal, porte, data_constituicao) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id",
+            "INSERT INTO aurix.clientes (tenant_id, tipo_pessoa, cnpj, nome_razao_social, email, faturamento_mensal, capital_social, cnae_principal, porte, data_constituicao) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id",
             Long.class, TenantContext.DEFAULT_TENANT_ID, "JURIDICA",
             "12345678000190", "Empresa Ltda", "contato@empresa.com",
             BigDecimal.valueOf(500_000), BigDecimal.valueOf(200_000),
@@ -564,13 +564,13 @@ class CreditoPJFlowIntegrationTest {
 - [ ] **Step 2: Build and verify**
 
 ```bash
-mvn test -pl aureus-credit -am 2>&1 | tail -15
+mvn test -pl aurix-credit -am 2>&1 | tail -15
 ```
 
 - [ ] **Step 3: Verify full regression**
 
 ```bash
-mvn test -pl aureus-core,aureus-credit,aureus-catalog,aureus-onboarding -am 2>&1 | tail -15
+mvn test -pl aurix-core,aurix-credit,aurix-catalog,aurix-onboarding -am 2>&1 | tail -15
 ```
 
 - [ ] **Step 4: Commit**

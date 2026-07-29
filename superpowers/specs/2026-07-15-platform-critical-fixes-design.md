@@ -10,13 +10,13 @@
 
 | # | Gap | Prioridade | Tipo |
 |---|-----|-----------|------|
-| 1 | Conflito de porta 8090 (`aureus-ai`, `aureus-catalog`, `aureus-controller`) | 🔴 P0 | Infra |
-| 2 | `aureus-fraud`, `aureus-kyc`, `aureus-customer`, `aureus-notification` fora do Maven parent | 🔴 P0 | Build |
-| 3 | `aureus-fraud` não integrado com PIX, Cartões e Financial | 🔴 P0 | Integração |
-| 4 | `aureus-financiamento` sem implementação real | 🟠 P1 | Backend |
+| 1 | Conflito de porta 8090 (`aurix-ai`, `aurix-catalog`, `aurix-controller`) | 🔴 P0 | Infra |
+| 2 | `aurix-fraud`, `aurix-kyc`, `aurix-customer`, `aurix-notification` fora do Maven parent | 🔴 P0 | Build |
+| 3 | `aurix-fraud` não integrado com PIX, Cartões e Financial | 🔴 P0 | Integração |
+| 4 | `aurix-financiamento` sem implementação real | 🟠 P1 | Backend |
 | 5 | Frontend web sem páginas para Câmbio, Seguros, Consignado | 🟠 P1 | Frontend |
 | 6 | `TIPOS_CONTA` no admin tem `INVESTIMENTO`; backend tem `SALARIO` | 🔴 P0 | Frontend/Backend |
-| 7 | `aureus-ai` sem nenhum controller exposto | 🟠 P1 | Backend |
+| 7 | `aurix-ai` sem nenhum controller exposto | 🟠 P1 | Backend |
 
 ---
 
@@ -25,11 +25,11 @@
 ### Problema
 
 Três serviços apontam para a porta 8090 no `README.md` e em `traefik/dynamic.yml`:
-- `aureus-ai` → 8090
-- `aureus-catalog` → 8090
-- `aureus-controller` → 8090
+- `aurix-ai` → 8090
+- `aurix-catalog` → 8090
+- `aurix-controller` → 8090
 
-O `aureus-controller` é o correto na porta 8090 (já declarado no `docker-compose.yml`).
+O `aurix-controller` é o correto na porta 8090 (já declarado no `docker-compose.yml`).
 
 ### Correção
 
@@ -37,9 +37,9 @@ O `aureus-controller` é o correto na porta 8090 (já declarado no `docker-compo
 
 | Módulo | Porta correta |
 |--------|--------------|
-| `aureus-ai` | **8116** (próxima disponível após 8115/cartões) |
-| `aureus-catalog` | **8120** (após 8119/câmbio) |
-| `aureus-controller` | **8090** (mantido) |
+| `aurix-ai` | **8116** (próxima disponível após 8115/cartões) |
+| `aurix-catalog` | **8120** (após 8119/câmbio) |
+| `aurix-controller` | **8090** (mantido) |
 
 #### `infrastructure/traefik/dynamic.yml`
 
@@ -48,19 +48,19 @@ O `aureus-controller` é o correto na porta 8090 (já declarado no `docker-compo
 ai:
   loadBalancer:
     servers:
-      - url: "http://aureus-ai:8116"   # era 8090
+      - url: "http://aurix-ai:8116"   # era 8090
 
 catalog:
   loadBalancer:
     servers:
-      - url: "http://aureus-catalog:8120"  # era 8090
+      - url: "http://aurix-catalog:8120"  # era 8090
 ```
 
 #### `infrastructure/docker-compose.yml` — atualizar portas
 
-**aureus-ai:**
+**aurix-ai:**
 ```yaml
-aureus-ai:
+aurix-ai:
   ports:
     - "8116:8116"    # era 8090:8090
   environment:
@@ -69,9 +69,9 @@ aureus-ai:
     test: ["CMD", "curl", "-f", "http://localhost:8116/api/ai/health"]
 ```
 
-**aureus-catalog:**
+**aurix-catalog:**
 ```yaml
-aureus-catalog:
+aurix-catalog:
   ports:
     - "8120:8120"    # era 8090:8090
   environment:
@@ -80,27 +80,27 @@ aureus-catalog:
     test: ["CMD", "curl", "-f", "http://localhost:8120/api/catalog/health"]
 ```
 
-#### `backend/aureus-ai/src/main/resources/application.yml`
+#### `backend/aurix-ai/src/main/resources/application.yml`
 
 ```yaml
 server:
   port: 8116
 ```
 
-#### `backend/aureus-catalog/src/main/resources/application.yml`
+#### `backend/aurix-catalog/src/main/resources/application.yml`
 
 ```yaml
 server:
   port: 8120
 ```
 
-#### `aureus-tests/e2e/config.py`
+#### `aurix-tests/e2e/config.py`
 
 ```python
 SERVICES = {
     # ...
-    "aureus-ai":      "http://localhost:8116/api/ai/health",
-    "aureus-catalog": "http://localhost:8120/api/catalog/health",
+    "aurix-ai":      "http://localhost:8116/api/ai/health",
+    "aurix-catalog": "http://localhost:8120/api/catalog/health",
 }
 ```
 
@@ -112,10 +112,10 @@ SERVICES = {
 
 Os seguintes módulos existem no filesystem e no Docker Compose mas **não constam no `backend/pom.xml`** como módulos Maven:
 
-- `aureus-customer`
-- `aureus-kyc`
-- `aureus-fraud`
-- `aureus-notification`
+- `aurix-customer`
+- `aurix-kyc`
+- `aurix-fraud`
+- `aurix-notification`
 
 Consequência: `mvn clean install` ignora esses módulos. CI não os compila nem testa.
 
@@ -125,52 +125,52 @@ Localizar a seção `<modules>` e adicionar os 4 módulos em ordem alfabética:
 
 ```xml
 <modules>
-    <module>aureus-accounting</module>
-    <module>aureus-ai</module>
-    <module>aureus-analytics</module>
-    <module>aureus-audit</module>
-    <module>aureus-baas</module>
-    <module>aureus-bacen</module>
-    <module>aureus-billing</module>
-    <module>aureus-budget</module>
-    <module>aureus-cambio</module>
-    <module>aureus-cartoes</module>
-    <module>aureus-catalog</module>
-    <module>aureus-compliance</module>
-    <module>aureus-consignado</module>
-    <module>aureus-controller</module>
-    <module>aureus-core</module>
-    <module>aureus-cost</module>
-    <module>aureus-credit</module>
+    <module>aurix-accounting</module>
+    <module>aurix-ai</module>
+    <module>aurix-analytics</module>
+    <module>aurix-audit</module>
+    <module>aurix-baas</module>
+    <module>aurix-bacen</module>
+    <module>aurix-billing</module>
+    <module>aurix-budget</module>
+    <module>aurix-cambio</module>
+    <module>aurix-cartoes</module>
+    <module>aurix-catalog</module>
+    <module>aurix-compliance</module>
+    <module>aurix-consignado</module>
+    <module>aurix-controller</module>
+    <module>aurix-core</module>
+    <module>aurix-cost</module>
+    <module>aurix-credit</module>
     <!-- NOVOS: Foundation modules -->
-    <module>aureus-customer</module>
-    <module>aureus-financial</module>
-    <module>aureus-financiamento</module>
+    <module>aurix-customer</module>
+    <module>aurix-financial</module>
+    <module>aurix-financiamento</module>
     <!-- NOVO -->
-    <module>aureus-fraud</module>
-    <module>aureus-gateway</module>
-    <module>aureus-internet-banking</module>
-    <module>aureus-investimento</module>
+    <module>aurix-fraud</module>
+    <module>aurix-gateway</module>
+    <module>aurix-internet-banking</module>
+    <module>aurix-investimento</module>
     <!-- NOVO -->
-    <module>aureus-kyc</module>
-    <module>aureus-mobile-banking</module>
+    <module>aurix-kyc</module>
+    <module>aurix-mobile-banking</module>
     <!-- NOVO -->
-    <module>aureus-notification</module>
-    <module>aureus-onboarding</module>
-    <module>aureus-openfinance</module>
-    <module>aureus-organization</module>
-    <module>aureus-pix</module>
-    <module>aureus-poupanca</module>
-    <module>aureus-pricing</module>
-    <module>aureus-provisioning</module>
-    <module>aureus-salario</module>
-    <module>aureus-security</module>
-    <module>aureus-seguros</module>
-    <module>aureus-settlement</module>
-    <module>aureus-shared</module>
-    <module>aureus-tax</module>
-    <module>aureus-treasury</module>
-    <module>aureus-webhooks</module>
+    <module>aurix-notification</module>
+    <module>aurix-onboarding</module>
+    <module>aurix-openfinance</module>
+    <module>aurix-organization</module>
+    <module>aurix-pix</module>
+    <module>aurix-poupanca</module>
+    <module>aurix-pricing</module>
+    <module>aurix-provisioning</module>
+    <module>aurix-salario</module>
+    <module>aurix-security</module>
+    <module>aurix-seguros</module>
+    <module>aurix-settlement</module>
+    <module>aurix-shared</module>
+    <module>aurix-tax</module>
+    <module>aurix-treasury</module>
+    <module>aurix-webhooks</module>
 </modules>
 ```
 
@@ -180,8 +180,8 @@ Cada módulo novo deve ter no seu `pom.xml`:
 
 ```xml
 <parent>
-    <groupId>com.aureus.platform</groupId>
-    <artifactId>aureus-platform-parent</artifactId>
+    <groupId>com.aurix.platform</groupId>
+    <artifactId>aurix-platform-parent</artifactId>
     <version>1.2.0</version>
     <relativePath>../pom.xml</relativePath>
 </parent>
@@ -195,9 +195,9 @@ Verificar e corrigir nos 4 módulos. Se estiver ausente, adicionar herdando do p
 
 ### Problema
 
-`aureus-fraud` tem `FraudConsumer.java` e `FraudScoringService.java`, mas os módulos `aureus-pix`, `aureus-cartoes` e `aureus-financial` **não publicam eventos para os tópicos que o Fraud consome**.
+`aurix-fraud` tem `FraudConsumer.java` e `FraudScoringService.java`, mas os módulos `aurix-pix`, `aurix-cartoes` e `aurix-financial` **não publicam eventos para os tópicos que o Fraud consome**.
 
-### Tópicos a adicionar em `aureus-shared` — `Topics.java`
+### Tópicos a adicionar em `aurix-shared` — `Topics.java`
 
 ```java
 // ===== fraud integration =====
@@ -211,7 +211,7 @@ String FRAUD_OCORRENCIA_CRIADA         = "fraude.ocorrencia.criada.v1";
 String FRAUD_SCORE_ALTERADO            = "fraude.score.alterado.v1";
 ```
 
-### Eventos tipados a criar em `com.aureus.platform.shared.event`
+### Eventos tipados a criar em `com.aurix.platform.shared.event`
 
 **`PixTransferenciaIniciadaEvent`**
 ```java
@@ -250,9 +250,9 @@ public class FinancialMovimentacaoCriadaEvent extends BaseEvent {
 }
 ```
 
-### Produtor em `aureus-pix`
+### Produtor em `aurix-pix`
 
-Criar `PagamentoPixProducer.java` em `com.aureus.platform.pix.event`:
+Criar `PagamentoPixProducer.java` em `com.aurix.platform.pix.event`:
 
 ```java
 @Component
@@ -278,9 +278,9 @@ public class PagamentoPixProducer {
 
 Injetar `PagamentoPixProducer` em `PagamentoPixService` e chamar após persistir a transação.
 
-### Produtor em `aureus-cartoes`
+### Produtor em `aurix-cartoes`
 
-Criar `CartaoTransacaoProducer.java` em `com.aureus.platform.cartoes.event`:
+Criar `CartaoTransacaoProducer.java` em `com.aurix.platform.cartoes.event`:
 
 ```java
 @Component
@@ -303,7 +303,7 @@ public class CartaoTransacaoProducer {
 }
 ```
 
-### Consumer em `aureus-fraud`
+### Consumer em `aurix-fraud`
 
 Atualizar `FraudConsumer.java` para consumir os tópicos reais:
 
@@ -312,7 +312,7 @@ Atualizar `FraudConsumer.java` para consumir os tópicos reais:
     Topics.PIX_TRANSFERENCIA_INICIADA,
     Topics.CARTOES_TRANSACAO_AUTORIZADA,
     Topics.FINANCIAL_MOVIMENTACAO_CRIADA
-}, groupId = "aureus-fraud-group")
+}, groupId = "aurix-fraud-group")
 public void onTransacao(BaseEvent event, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
     log.info("Fraude recebeu evento do tópico: {}", topic);
     fraudScoringService.avaliarRisco(event);
@@ -365,11 +365,11 @@ Se decisão = `BLOQUEAR`, publicar `fraude.transacao.bloqueada.v1` e registrar `
 
 ---
 
-## Gap 4 — `aureus-financiamento` Implementation
+## Gap 4 — `aurix-financiamento` Implementation
 
 ### Problema
 
-O módulo `aureus-financiamento` tem Dockerfile, Docker Compose e spec OpenAPI, mas o `src/main/java` está vazio — sem entidades, serviços ou controllers.
+O módulo `aurix-financiamento` tem Dockerfile, Docker Compose e spec OpenAPI, mas o `src/main/java` está vazio — sem entidades, serviços ou controllers.
 
 ### Entidades
 
@@ -517,7 +517,7 @@ Seguir exatamente o padrão de `Cartoes.js` e `Investimentos.js`:
 
 ### Nova página: `Cambio.js`
 
-**Path:** `frontend/aureus-web/src/pages/Cambio.js`
+**Path:** `frontend/aurix-web/src/pages/Cambio.js`
 
 **Seções da página:**
 1. **Cotação ao vivo** — Card com USD, EUR, GBP em tempo real (polling a cada 30s)
@@ -546,7 +546,7 @@ const mockCotacoes = [
 
 ### Nova página: `Seguros.js`
 
-**Path:** `frontend/aureus-web/src/pages/Seguros.js`
+**Path:** `frontend/aurix-web/src/pages/Seguros.js`
 
 **Seções da página:**
 1. **Meus Seguros** — Cards com apólices ativas (nome, tipo, prêmio mensal, vencimento, status)
@@ -568,7 +568,7 @@ apiService.getSinistros(clienteId)             // GET /api/seguros/sinistros
 
 ### Nova página: `Consignado.js`
 
-**Path:** `frontend/aureus-web/src/pages/Consignado.js`
+**Path:** `frontend/aurix-web/src/pages/Consignado.js`
 
 **Seções da página:**
 1. **Margem Consignável** — Card com margem disponível, margem utilizada, limite por lei (35% da renda)
@@ -620,7 +620,7 @@ import Consignado from './pages/Consignado';
 
 ### Problema
 
-`frontend/aureus-admin/src/constants/index.js` define:
+`frontend/aurix-admin/src/constants/index.js` define:
 ```javascript
 export const TIPOS_CONTA = [
   { id: 'CORRENTE', name: 'Corrente' },
@@ -629,9 +629,9 @@ export const TIPOS_CONTA = [
 ];
 ```
 
-O backend (`aureus-core`) aceita: `CORRENTE`, `POUPANCA`, `SALARIO`.
+O backend (`aurix-core`) aceita: `CORRENTE`, `POUPANCA`, `SALARIO`.
 
-O tipo `INVESTIMENTO` está em `aureus-investimento` como entidade separada (`ContaInvestimento`), não como tipo de conta no core.
+O tipo `INVESTIMENTO` está em `aurix-investimento` como entidade separada (`ContaInvestimento`), não como tipo de conta no core.
 
 ### Correção — `constants/index.js`
 
@@ -640,7 +640,7 @@ export const TIPOS_CONTA = [
   { id: 'CORRENTE',    name: 'Corrente' },
   { id: 'POUPANCA',   name: 'Poupança' },
   { id: 'SALARIO',    name: 'Salário' },         // adicionar
-  // INVESTIMENTO removido — gerenciado pelo módulo aureus-investimento
+  // INVESTIMENTO removido — gerenciado pelo módulo aurix-investimento
 ];
 ```
 
@@ -689,15 +689,15 @@ export const TIPOS_ALERTA_COMPLIANCE = [
 
 ---
 
-## Gap 7 — `aureus-ai`: Expor Endpoints Mínimos
+## Gap 7 — `aurix-ai`: Expor Endpoints Mínimos
 
 ### Problema
 
-`aureus-ai` tem Spring AI 1.0.0 e LangChain4j mas **zero controllers**. A rota `/api/ai` existe no Traefik, mas não retorna nada.
+`aurix-ai` tem Spring AI 1.0.0 e LangChain4j mas **zero controllers**. A rota `/api/ai` existe no Traefik, mas não retorna nada.
 
 ### Solução: Controller mínimo com capacidades reais
 
-Criar `AiController.java` em `com.aureus.platform.ai.controller`:
+Criar `AiController.java` em `com.aurix.platform.ai.controller`:
 
 #### Endpoint 1: Análise de extrato (ML + LLM)
 
@@ -717,7 +717,7 @@ public ResponseEntity<AnaliseExtratoResponse> analisarExtrato(
 ```java
 @PostMapping("/chat")
 public ResponseEntity<ChatResponse> chat(@RequestBody ChatRequest request) {
-    // Stateless Q&A sobre produtos AUREUS e finanças pessoais
+    // Stateless Q&A sobre produtos AURIX e finanças pessoais
     // Spring AI ChatClient com system prompt pré-definido
 }
 ```
@@ -747,7 +747,7 @@ public class AiController {
 
     @GetMapping("/health")
     public ResponseEntity<Map<String, String>> health() {
-        return ResponseEntity.ok(Map.of("status", "UP", "service", "aureus-ai"));
+        return ResponseEntity.ok(Map.of("status", "UP", "service", "aurix-ai"));
     }
 
     @PostMapping("/analise/extrato")
@@ -804,7 +804,7 @@ public class AiService {
 
     public ChatResponse chat(String mensagem, Long clienteId) {
         // Stub inicial — integrar com Spring AI ChatClient
-        return ChatResponse.of("Olá! Sou o assistente AUREUS. Em breve estarei totalmente integrado.");
+        return ChatResponse.of("Olá! Sou o assistente AURIX. Em breve estarei totalmente integrado.");
     }
 }
 ```
@@ -816,17 +816,17 @@ public class AiService {
 | Arquivo | Alterações |
 |---------|-----------|
 | `backend/pom.xml` | Adicionar 4 módulos: customer, kyc, fraud, notification |
-| `infrastructure/docker-compose.yml` | Corrigir porta aureus-ai para 8116, aureus-catalog para 8120 |
-| `infrastructure/traefik/dynamic.yml` | Corrigir URLs aureus-ai e aureus-catalog |
-| `aureus-shared/Topics.java` | Adicionar 8 novos tópicos de fraude + financial |
-| `aureus-shared/event/` | Adicionar 3 novos eventos tipados |
-| `aureus-pix` | Criar `PagamentoPixProducer.java` |
-| `aureus-cartoes` | Criar `CartaoTransacaoProducer.java` |
-| `aureus-fraud` | Atualizar `FraudConsumer.java` com tópicos reais |
-| `aureus-financiamento` | Implementar entities, services e controllers |
-| `aureus-ai` | Criar `AiController.java` + `AiService.java` |
-| `frontend/aureus-web/src/pages/` | Criar `Cambio.js`, `Seguros.js`, `Consignado.js` + testes |
-| `frontend/aureus-admin/src/constants/index.js` | Alinhar `TIPOS_CONTA`, `TIPOS_TRANSACAO`, `STATUS_COMPLIANCE` |
+| `infrastructure/docker-compose.yml` | Corrigir porta aurix-ai para 8116, aurix-catalog para 8120 |
+| `infrastructure/traefik/dynamic.yml` | Corrigir URLs aurix-ai e aurix-catalog |
+| `aurix-shared/Topics.java` | Adicionar 8 novos tópicos de fraude + financial |
+| `aurix-shared/event/` | Adicionar 3 novos eventos tipados |
+| `aurix-pix` | Criar `PagamentoPixProducer.java` |
+| `aurix-cartoes` | Criar `CartaoTransacaoProducer.java` |
+| `aurix-fraud` | Atualizar `FraudConsumer.java` com tópicos reais |
+| `aurix-financiamento` | Implementar entities, services e controllers |
+| `aurix-ai` | Criar `AiController.java` + `AiService.java` |
+| `frontend/aurix-web/src/pages/` | Criar `Cambio.js`, `Seguros.js`, `Consignado.js` + testes |
+| `frontend/aurix-admin/src/constants/index.js` | Alinhar `TIPOS_CONTA`, `TIPOS_TRANSACAO`, `STATUS_COMPLIANCE` |
 
 ---
 
@@ -834,16 +834,16 @@ public class AiService {
 
 | Módulo | Porta | Status |
 |--------|-------|--------|
-| aureus-controller | 8090 | ✅ Correto |
-| aureus-ai | **8116** | 🔧 Corrigido (era 8090) |
-| aureus-catalog | **8120** | 🔧 Corrigido (era 8090) |
-| aureus-customer | 8123 | ✅ OK |
-| aureus-kyc | 8124 | ✅ OK |
-| aureus-fraud | 8125 | ✅ OK |
-| aureus-notification | 8126 | ✅ OK |
-| aureus-acquirer | 8127 | 📋 Fase 2 |
-| aureus-collections | 8128 | 📋 Fase 2 |
-| aureus-guarantee | 8129 | 📋 Fase 2 |
+| aurix-controller | 8090 | ✅ Correto |
+| aurix-ai | **8116** | 🔧 Corrigido (era 8090) |
+| aurix-catalog | **8120** | 🔧 Corrigido (era 8090) |
+| aurix-customer | 8123 | ✅ OK |
+| aurix-kyc | 8124 | ✅ OK |
+| aurix-fraud | 8125 | ✅ OK |
+| aurix-notification | 8126 | ✅ OK |
+| aurix-acquirer | 8127 | 📋 Fase 2 |
+| aurix-collections | 8128 | 📋 Fase 2 |
+| aurix-guarantee | 8129 | 📋 Fase 2 |
 
 ---
 
@@ -855,7 +855,7 @@ public class AiService {
 4. **Gap 3** (Fraud → PIX/Cartões) — adicionar produtores aos módulos existentes
 5. **Gap 4** (Financiamento) — novo backend, mais trabalho
 6. **Gap 5** (Frontend web) — 3 novas páginas, paralelizável com Gap 4
-7. **Gap 7** (aureus-ai controller) — baixo risco, entrega valor imediato de produto
+7. **Gap 7** (aurix-ai controller) — baixo risco, entrega valor imediato de produto
 
 ---
 

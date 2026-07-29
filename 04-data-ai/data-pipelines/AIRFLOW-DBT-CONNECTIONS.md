@@ -8,17 +8,17 @@ Criar as seguintes connections no Airflow (UI em http://localhost:8082, usuario/
 
 | Connection Id   | Type    | Host     | Schema/Extra | Login        | Password            | Port |
 |----------------|---------|----------|--------------|--------------|---------------------|------|
-| postgres_default | Postgres | postgres | aureus       | aureus_user  | aureus_secure_password | 5432 |
-| minio_s3       | Generic | http://minio:9000 | -   | aureus_admin | aureus_secure_password | -    |
-| clickhouse_default | HTTP  | clickhouse | -        | aureus_analytics | aureus_analytics_password | 8123 |
+| postgres_default | Postgres | postgres | aurix       | aurix_user  | aurix_secure_password | 5432 |
+| minio_s3       | Generic | http://minio:9000 | -   | aurix_admin | aurix_secure_password | -    |
+| clickhouse_default | HTTP  | clickhouse | -        | aurix_analytics | aurix_analytics_password | 8123 |
 
 Para o DAG `ingest_postgres_to_bronze` nao e obrigatorio ter connection cadastrada; o codigo usa variaveis de ambiente. Opcionalmente defina:
 
-- **Variable** `PG_BRONZE_URL`: `postgresql+psycopg2://aureus_user:aureus_secure_password@postgres:5432/aureus`
+- **Variable** `PG_BRONZE_URL`: `postgresql+psycopg2://aurix_user:aurix_secure_password@postgres:5432/aurix`
 - **Variable** `MINIO_ENDPOINT`: `http://minio:9000`
-- **Variable** `MINIO_ACCESS_KEY`: `aureus_admin`
-- **Variable** `MINIO_SECRET_KEY`: `aureus_secure_password`
-- **Variable** `BRONZE_BUCKET`: `aureus-bronze`
+- **Variable** `MINIO_ACCESS_KEY`: `aurix_admin`
+- **Variable** `MINIO_SECRET_KEY`: `aurix_secure_password`
+- **Variable** `BRONZE_BUCKET`: `aurix-bronze`
 
 ## dbt (profiles.yml)
 
@@ -26,10 +26,10 @@ O projeto dbt em `data-pipelines/dbt/` usa `profiles.yml` com variaveis de ambie
 
 - `DBT_POSTGRES_HOST` (default: localhost)
 - `DBT_POSTGRES_PORT` (default: 5432)
-- `DBT_POSTGRES_USER` (default: aureus_user)
-- `DBT_POSTGRES_PASSWORD` (default: aureus_secure_password)
-- `DBT_POSTGRES_DB` (default: aureus)
-- `DBT_POSTGRES_SCHEMA` (default: aureus)
+- `DBT_POSTGRES_USER` (default: aurix_user)
+- `DBT_POSTGRES_PASSWORD` (default: aurix_secure_password)
+- `DBT_POSTGRES_DB` (default: aurix)
+- `DBT_POSTGRES_SCHEMA` (default: aurix)
 
 Em producao, defina essas variaveis no secret manager ou no ambiente do executor (Airflow, CI).
 
@@ -37,7 +37,7 @@ Para rodar dbt localmente:
 
 ```bash
 cd data-pipelines/dbt
-export DBT_POSTGRES_HOST=localhost DBT_POSTGRES_PASSWORD=aureus_secure_password
+export DBT_POSTGRES_HOST=localhost DBT_POSTGRES_PASSWORD=aurix_secure_password
 dbt run --target prod
 dbt test --target prod
 ```
@@ -51,7 +51,7 @@ cd infrastructure/data-stack/scripts
 ./create-minio-buckets.sh
 ```
 
-Ou manualmente: buckets `aureus-bronze`, `aureus-silver`, `aureus-gold`.
+Ou manualmente: buckets `aurix-bronze`, `aurix-silver`, `aurix-gold`.
 
 ## Banco Airflow
 

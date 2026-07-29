@@ -1,4 +1,4 @@
-# Funcionalidades Implementadas – Aureus Admin
+# Funcionalidades Implementadas – Aurix Admin
 
 ## Principais
 
@@ -12,4 +12,4 @@
 
 - Clientes, Contas, Transações, Investimentos, PIX, Compliance, Auditoria, Analytics
 
-[Voltar ao frontend](aureus-admin.md) | [Instalação (wiki)](../wiki/guias/instalacao-admin.md)
+[Voltar ao frontend](aurix-admin.md) | [Instalação (wiki)](../wiki/guias/instalacao-admin.md)

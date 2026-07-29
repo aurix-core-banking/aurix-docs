@@ -1,7 +1,7 @@
 # Mobile Onboarding — Design
 
 ## Goal
-Create PF and PJ onboarding screens for `aureus-mobile` (React Native 0.73), matching the existing web onboarding in API contract but with a mobile-optimized UX.
+Create PF and PJ onboarding screens for `aurix-mobile` (React Native 0.73), matching the existing web onboarding in API contract but with a mobile-optimized UX.
 
 ## Architecture
 

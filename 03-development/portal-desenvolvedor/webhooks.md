@@ -65,8 +65,8 @@ O cliente deve responder com **2xx** para sucesso. Qualquer outro codigo ou falh
 
 ## Retry e log
 
-- **Tentativas**: ate 5 (configuravel por `aureus.webhooks.max-retries`).
-- **Intervalo**: 5 minutos entre tentativas (configuravel por `aureus.webhooks.retry-interval-minutes`).
+- **Tentativas**: ate 5 (configuravel por `aurix.webhooks.max-retries`).
+- **Intervalo**: 5 minutos entre tentativas (configuravel por `aurix.webhooks.retry-interval-minutes`).
 - **Log**: cada envio e registrado em `webhook_log` (tenant, evento, status, tentativas, response_code). Após exceder as tentativas, o status fica EXCEDIDO.
 
 **GET** `/api/webhooks/config/{tenantId}/logs?limit=50` – lista os ultimos envios (sucesso e falha) para o tenant.

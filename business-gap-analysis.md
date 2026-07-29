@@ -1,4 +1,4 @@
-# Análise de Gaps de Negócio — AUREUS Platform
+# Análise de Gaps de Negócio — AURIX Platform
 
 > Data: 2026-06-24
 > Escopo: 32 módulos backend, 3 frontends, API specs, ML, data pipelines, infraestrutura
@@ -11,9 +11,9 @@ Produtos essenciais de um core banking que não existem ou estão incompletos.
 
 | Produto | Status | Impacto |
 |---------|--------|---------|
-| **Conta Investimento** | Frontend admin lista `INVESTIMENTO` como tipo de conta, mas backend não tem módulo. `aureus-treasury` é só posição de caixa, não investimento do cliente. Frontend admin lista `TIPOS_INVESTIMENTO = [CDB, LCI, LCA, TESOURO, FUNDO]` — nenhum tem backend. | Cliente não consegue investir |
-| **Cartões** | `aureus-cartoes` existe mas é minimalista: 1 controller, 1 service, 3 entidades (Cartao, Fatura, TransacaoCartao). Sem bandeira, sem adquirente, sem antifraude. | Produto incompleto |
-| **Crédito Consignado** | `aureus-credit` tem crédito geral mas sem produto consignado (desconto em folha para empréstimo). `aureus-salario` não implementa essa funcionalidade. | GAP comercial relevante no mercado BR |
+| **Conta Investimento** | Frontend admin lista `INVESTIMENTO` como tipo de conta, mas backend não tem módulo. `aurix-treasury` é só posição de caixa, não investimento do cliente. Frontend admin lista `TIPOS_INVESTIMENTO = [CDB, LCI, LCA, TESOURO, FUNDO]` — nenhum tem backend. | Cliente não consegue investir |
+| **Cartões** | `aurix-cartoes` existe mas é minimalista: 1 controller, 1 service, 3 entidades (Cartao, Fatura, TransacaoCartao). Sem bandeira, sem adquirente, sem antifraude. | Produto incompleto |
+| **Crédito Consignado** | `aurix-credit` tem crédito geral mas sem produto consignado (desconto em folha para empréstimo). `aurix-salario` não implementa essa funcionalidade. | GAP comercial relevante no mercado BR |
 | **Câmbio** | Zero. Sem módulo de câmbio, remessa internacional, ou operações cambiais. | Banco não opera moeda estrangeira |
 | **Seguros** | Zero. Sem módulo de seguros (prestamista, residencial, vida). | Cross-sell perdido |
 | **Financiamento** | Zero. Sem módulo de financiamento imobiliário ou veicular. | Produto básico ausente |
@@ -45,10 +45,10 @@ Obrigações regulatórias do sistema financeiro brasileiro não implementadas.
 | **Basileia** (capital regulatório — PR, TCR, Nível I/II) | Inexistente | Nenhum módulo calcula capital regulatório. |
 | **Recolhimento Compulsório** | Inexistente | Banco precisa calcular e recolher compulsório (encan­trado) no BACEN. |
 | **Tabela Price / SAC / SACRE** | Inexistente | Nenhum enforcement de sistemas de amortização regulados pelo CMN. |
-| **Registro de Crédito (SCR)** | Parcial | `aureus-bacen` gera relatório SCR, mas sem sincronia automática — é exportação manual, não integração em tempo real. |
-| **LGPD — DPO e Titulares** | Parcial | `aureus-compliance` tem entidades (ConsentimentoLGPD, DireitoEsquecimento) mas sem portal do titular, sem workflow de requisição do art. 18, sem prazos de resposta. |
+| **Registro de Crédito (SCR)** | Parcial | `aurix-bacen` gera relatório SCR, mas sem sincronia automática — é exportação manual, não integração em tempo real. |
+| **LGPD — DPO e Titulares** | Parcial | `aurix-compliance` tem entidades (ConsentimentoLGPD, DireitoEsquecimento) mas sem portal do titular, sem workflow de requisição do art. 18, sem prazos de resposta. |
 | **Ouvidoria (Res. BCB 160/2021)** | Inexistente | BACEN exige ouvidoria com prazos de resposta, relatórios semestrais, e registro de manifestações. |
-| **Open Finance** | Existe (`aureus-openfinance`) | Mas não integrado com dados reais de contas/transações — usa stubs. APIs de compartilhamento de dados (fase 2, 3) não conectadas ao core. |
+| **Open Finance** | Existe (`aurix-openfinance`) | Mas não integrado com dados reais de contas/transações — usa stubs. APIs de compartilhamento de dados (fase 2, 3) não conectadas ao core. |
 | **Juros e Encargos** | Inexistente | Nenhum enforcement de limites regulatórios de juros, mora, multa (CCB, resoluções CMN). |
 
 ---
@@ -64,8 +64,8 @@ Funcionalidades operacionais de um banco em produção.
 | **Chargeback / Disputa** | Mediação de transações (chargeback PIX, contestação de boleto, disputa de débito) não existe. |
 | **Central de notificações** | Mobile tem Firebase push mas não há orquestrador central de notificações (SMS, email, push). Cada módulo implementa do seu jeito. |
 | **Portabilidade bancária** | Só existe portabilidade de salário. Portabilidade de conta corrente (troca de banco mantendo número) não implementada. |
-| **Tarifas integradas** | `aureus-pricing` (Drools) é standalone — não integrado com débito automático de tarifas, faturamento, ou isenções. |
-| **Gateway — rotas faltantes** | `aureus-security:8085`, `aureus-cartoes:8103`, `aureus-tax:8091`, `aureus-cost:8092`, `aureus-budget:8093`, `aureus-financial:8089`, `aureus-ai:8090` **não têm rota no gateway**. Acessíveis direto ou inacessíveis em produção. |
+| **Tarifas integradas** | `aurix-pricing` (Drools) é standalone — não integrado com débito automático de tarifas, faturamento, ou isenções. |
+| **Gateway — rotas faltantes** | `aurix-security:8085`, `aurix-cartoes:8103`, `aurix-tax:8091`, `aurix-cost:8092`, `aurix-budget:8093`, `aurix-financial:8089`, `aurix-ai:8090` **não têm rota no gateway**. Acessíveis direto ou inacessíveis em produção. |
 | **Gateway — rate limit incompleto** | Gateway tem rate limit global (100 req/min, burst 200) mas as rotas de poupanca (8111), salario (8112) e outros módulos mais recentes **não herdam** as regras de plano (free=10, sandbox=30, starter=60, etc.). |
 
 ---
@@ -76,10 +76,10 @@ O projeto investiu pesado em ML/AI mas não conectou a produção.
 
 | Constatação | Impacto |
 |------------|---------|
-| `aureus-ai` tem Spring AI 1.0.0, LangChain4j 0.36.2, 5 adapters de framework (LangChain, LlamaIndex, CrewAI, AutoGen, Haystack) mas **zero controllers** — nenhuma API é servida. | IA não entrega valor de negócio. |
-| `aureus-ml` (Python) tem modelos de fraude, crédito, segmentação e drift detection — mas **não está deployado** em nenhum ambiente. Nenhum backend consome inferência. | Zero scoring em produção. |
+| `aurix-ai` tem Spring AI 1.0.0, LangChain4j 0.36.2, 5 adapters de framework (LangChain, LlamaIndex, CrewAI, AutoGen, Haystack) mas **zero controllers** — nenhuma API é servida. | IA não entrega valor de negócio. |
+| `aurix-ml` (Python) tem modelos de fraude, crédito, segmentação e drift detection — mas **não está deployado** em nenhum ambiente. Nenhum backend consome inferência. | Zero scoring em produção. |
 | Governança R1/R2/R3 é sofisticada (nonce criptográfico, I6Q, CEFL, ambiguity gate, entropia) mas **não conectada a nenhuma decisão real** no backend. | Framework sem caso de uso. |
-| `aureus-analytics` tem stubs de BI, Chatbot, ML. | Placeholders, não funcionais. |
+| `aurix-analytics` tem stubs de BI, Chatbot, ML. | Placeholders, não funcionais. |
 | Modelos de fraude (Isolation Forest + Random Forest) existem mas não são consumidos por PIX, transações, ou onboarding. | Risco operacional sem mitigação ML. |
 
 ---
@@ -108,7 +108,7 @@ Riscos de operação em produção.
 |-----|-----------|
 | **Testcontainers como dependência** | Todo teste backend requer Docker. CI sem Docker não roda nenhum teste. Pipeline de CI frágil. |
 | **E2E testa só health check** | Testes de ponta-a-ponta verificam apenas HTTP 200 em health endpoints. Zero teste de fluxo (abrir conta → depositar → transferir → sacar). |
-| **Resilience4j em 1 módulo** | Só `aureus-bacen` usa retry/circuit breaker. 31 módulos sem proteção contra falhas de dependências externas. |
+| **Resilience4j em 1 módulo** | Só `aurix-bacen` usa retry/circuit breaker. 31 módulos sem proteção contra falhas de dependências externas. |
 | **Observabilidade genérica** | Prometheus + Grafana existem mas sem dashboards customizados por módulo, sem SLIs/SLOs definidos, sem alertas configurados. |
 | **Health endpoints sem dependências** | Health checks retornam UP mesmo se PostgreSQL, Kafka ou Redis estiverem indisponíveis (não verificam dependências). |
 

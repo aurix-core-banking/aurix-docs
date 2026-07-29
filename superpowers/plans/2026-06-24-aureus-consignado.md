@@ -1,4 +1,4 @@
-# Plano de Implementação: `aureus-consignado` — Crédito Consignado
+# Plano de Implementação: `aurix-consignado` — Crédito Consignado
 
 > Base: [Spec `2026-06-24-products-design.md`](../specs/2026-06-24-products-design.md) §3
 > Porta: **8114** | Gateway: `/api/consignado/**` | Context-path: `/api/consignado`
@@ -11,10 +11,10 @@
 
 - [ ] **Criar diretórios**
   ```
-  backend/aureus-consignado/
+  backend/aurix-consignado/
   ├── pom.xml
-  ├── src/main/java/com/aureus/platform/consignado/
-  │   ├── AureusConsignadoApplication.java
+  ├── src/main/java/com/aurix/platform/consignado/
+  │   ├── AurixConsignadoApplication.java
   │   ├── package-info.java
   │   ├── entity/
   │   ├── repository/
@@ -28,13 +28,13 @@
   ├── src/main/resources/
   │   ├── application.yml
   │   └── application-prod.yml
-  └── src/test/java/com/aureus/platform/consignado/
+  └── src/test/java/com/aurix/platform/consignado/
       └── controller/
   ```
-- [ ] **`pom.xml`** — copiar estrutura de `aureus-poupanca/pom.xml`, alterar `artifactId` para `aureus-consignado`, `name`/`description`. Dependências: `aureus-shared`, `spring-boot-starter-web`, `spring-boot-starter-data-jpa`, `spring-boot-starter-validation`, `spring-boot-starter-security`, `spring-boot-starter-actuator`, `spring-kafka`, `spring-boot-starter-data-redis`, `postgresql` (runtime), `h2` (test), `springdoc-openapi-starter-webmvc-ui` (2.2.0), `spring-boot-starter-test`, `spring-security-test`, `spring-kafka-test`, `testcontainers-junit-jupiter`, `testcontainers-postgresql`.
-- [ ] **`AureusConsignadoApplication.java`** — `@SpringBootApplication`, `@EnableScheduling`, `@EnableResilientMethods` (ou colocar no config).
+- [ ] **`pom.xml`** — copiar estrutura de `aurix-poupanca/pom.xml`, alterar `artifactId` para `aurix-consignado`, `name`/`description`. Dependências: `aurix-shared`, `spring-boot-starter-web`, `spring-boot-starter-data-jpa`, `spring-boot-starter-validation`, `spring-boot-starter-security`, `spring-boot-starter-actuator`, `spring-kafka`, `spring-boot-starter-data-redis`, `postgresql` (runtime), `h2` (test), `springdoc-openapi-starter-webmvc-ui` (2.2.0), `spring-boot-starter-test`, `spring-security-test`, `spring-kafka-test`, `testcontainers-junit-jupiter`, `testcontainers-postgresql`.
+- [ ] **`AurixConsignadoApplication.java`** — `@SpringBootApplication`, `@EnableScheduling`, `@EnableResilientMethods` (ou colocar no config).
 - [ ] **`package-info.java`** (root + cada subpacote) — `@NullMarked` com `import org.jspecify.annotations.NullMarked`.
-- [ ] **`application.yml`** — `server.port: 8114`, `server.servlet.context-path: /api/consignado`, datasource PostgreSQL, JPA/Hibernate ddl-auto update, Redis, Kafka (`aureus-consignado-group`), Actuator, logging.
+- [ ] **`application.yml`** — `server.port: 8114`, `server.servlet.context-path: /api/consignado`, datasource PostgreSQL, JPA/Hibernate ddl-auto update, Redis, Kafka (`aurix-consignado-group`), Actuator, logging.
 - [ ] **`application-prod.yml`** — ddl-auto: validate, pool maior, logging INFO.
 
 ### 1.2 Entidades
@@ -172,7 +172,7 @@
 
 - [ ] **Gateway `application.yml`** — adicionar rota:
   ```yaml
-  - id: aureus-consignado
+  - id: aurix-consignado
     uri: http://localhost:8114
     predicates:
       - Path=/api/consignado/**
@@ -182,11 +182,11 @@
 
 ### 1.12 Parent POM
 
-- [ ] **`backend/pom.xml`** — adicionar `<module>aureus-consignado</module>` na lista de modules (ordenado alfabeticamente, após `aureus-compliance`).
+- [ ] **`backend/pom.xml`** — adicionar `<module>aurix-consignado</module>` na lista de modules (ordenado alfabeticamente, após `aurix-compliance`).
 
 ### 1.13 OpenAPI Spec
 
-- [ ] **`aureus-api-specs/aureus-core.yaml`** — adicionar tag `consignado`, paths do consignado ($ref para `aureus-consignado.yaml` futuro) e schemas correspondentes.
+- [ ] **`aurix-api-specs/aurix-core.yaml`** — adicionar tag `consignado`, paths do consignado ($ref para `aurix-consignado.yaml` futuro) e schemas correspondentes.
 
 ### 1.14 Testes
 
@@ -230,6 +230,6 @@
 | Kafka fire-and-forget com try-catch | `AniversarioService.java:92-97` |
 | `@Scheduled` em `@Component` | `ProcessamentoFolhaJob.java` |
 | Test: `@SpringBootTest(RANDOM_PORT)` + TestConfig | `ContaPoupancaControllerTest.java` |
-| `application-test.yml` com H2 | `aureus-poupanca/src/test/resources/application-test.yml` |
+| `application-test.yml` com H2 | `aurix-poupanca/src/test/resources/application-test.yml` |
 | Endpoint `GET /{id}/parcelas` aninhado | Spec §3.3 |
 | Validação de domínio na service (não no controller) | `ContaPoupancaService.java` |

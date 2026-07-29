@@ -1,4 +1,4 @@
-# Plano de Implementação: `aureus-seguros` — Seguros
+# Plano de Implementação: `aurix-seguros` — Seguros
 
 > Base: [Spec `2026-06-24-products-design.md`](../specs/2026-06-24-products-design.md) §6
 > Porta: **8117** | Gateway: `/api/seguros/**` | Context-path: `/api/seguros`
@@ -11,11 +11,11 @@
 
 - [ ] **Criar diretórios**
   ```
-  backend/aureus-seguros/
+  backend/aurix-seguros/
   ├── pom.xml
   ├── docker/
-  ├── src/main/java/com/aureus/platform/seguros/
-  │   ├── AureusSegurosApplication.java
+  ├── src/main/java/com/aurix/platform/seguros/
+  │   ├── AurixSegurosApplication.java
   │   ├── package-info.java
   │   ├── entity/
   │   │   ├── package-info.java
@@ -95,32 +95,32 @@
   ├── src/main/resources/
   │   ├── application.yml
   │   └── application-prod.yml
-  └── src/test/java/com/aureus/platform/seguros/
+  └── src/test/java/com/aurix/platform/seguros/
       ├── controller/
       │   ├── package-info.java
       │   ├── CotacaoControllerTest.java
       │   ├── ApoliceControllerTest.java
       │   ├── SinistroControllerTest.java
       │   └── ProdutoControllerTest.java
-      └── AureusSegurosApplicationTest.java
+      └── AurixSegurosApplicationTest.java
   ```
 
 - [ ] **`pom.xml`**
-  Copiar estrutura de `aureus-poupanca/pom.xml`, alterar:
-  - `artifactId` → `aureus-seguros`
-  - `name` → `AUREUS Seguros`
-  - `description` → `Modulo de seguros do AUREUS`
-  Dependências idênticas: `aureus-shared`, `spring-boot-starter-web`, `spring-boot-starter-data-jpa`, `spring-boot-starter-validation`, `spring-boot-starter-security`, `spring-boot-starter-actuator`, `spring-kafka`, `spring-boot-starter-data-redis`, `postgresql` (runtime), `h2` (test), `springdoc-openapi-starter-webmvc-ui` (2.2.0), `spring-boot-starter-test`, `spring-security-test`, `spring-kafka-test`, `testcontainers-junit-jupiter`, `testcontainers-postgresql`.
+  Copiar estrutura de `aurix-poupanca/pom.xml`, alterar:
+  - `artifactId` → `aurix-seguros`
+  - `name` → `AURIX Seguros`
+  - `description` → `Modulo de seguros do AURIX`
+  Dependências idênticas: `aurix-shared`, `spring-boot-starter-web`, `spring-boot-starter-data-jpa`, `spring-boot-starter-validation`, `spring-boot-starter-security`, `spring-boot-starter-actuator`, `spring-kafka`, `spring-boot-starter-data-redis`, `postgresql` (runtime), `h2` (test), `springdoc-openapi-starter-webmvc-ui` (2.2.0), `spring-boot-starter-test`, `spring-security-test`, `spring-kafka-test`, `testcontainers-junit-jupiter`, `testcontainers-postgresql`.
 
-- [ ] **`AureusSegurosApplication.java`** — `@SpringBootApplication`, `@EnableScheduling`
+- [ ] **`AurixSegurosApplication.java`** — `@SpringBootApplication`, `@EnableScheduling`
 
 - [ ] **`package-info.java` (root + cada subpacote)** — `@NullMarked` com `import org.jspecify.annotations.NullMarked`
 
 - [ ] **`application.yml`**
   - `server.port: 8117`
   - `server.servlet.context-path: /api/seguros`
-  - Datasource PostgreSQL, JPA/Hibernate ddl-auto update, Redis, Kafka (`aureus-seguros-group`), Actuator, logging
-  - Props específicas: `aureus.seguros.prazo-validade-cotacao: 30` (dias)
+  - Datasource PostgreSQL, JPA/Hibernate ddl-auto update, Redis, Kafka (`aurix-seguros-group`), Actuator, logging
+  - Props específicas: `aurix.seguros.prazo-validade-cotacao: 30` (dias)
 
 - [ ] **`application-prod.yml`** — ddl-auto: validate, pool maior, logging INFO
 
@@ -390,9 +390,9 @@
 
 ### 1.11 Gateway Route + Parent POM
 
-- [ ] **`backend/aureus-gateway/src/main/resources/application.yml`** — adicionar rota:
+- [ ] **`backend/aurix-gateway/src/main/resources/application.yml`** — adicionar rota:
   ```yaml
-  - id: aureus-seguros
+  - id: aurix-seguros
     uri: http://localhost:8117
     predicates:
       - Path=/api/seguros/**
@@ -400,7 +400,7 @@
       - StripPrefix=0
   ```
 
-- [ ] **`backend/pom.xml`** — adicionar `<module>aureus-seguros</module>` em `<modules>`
+- [ ] **`backend/pom.xml`** — adicionar `<module>aurix-seguros</module>` em `<modules>`
 
 ### 1.12 Testes
 
@@ -426,7 +426,7 @@
   - `deveCriarEListarProdutos()` → POST + GET, assert 200 com lista
   - `deveAtualizarProduto()` → criar → atualizar, assert campos alterados
 
-- [ ] **`AureusSegurosApplicationTest.java`** — smoke test: carrega contexto, verifica `applicationContext` não nulo
+- [ ] **`AurixSegurosApplicationTest.java`** — smoke test: carrega contexto, verifica `applicationContext` não nulo
 
 ## 2. Ordem de Execução Recomendada
 

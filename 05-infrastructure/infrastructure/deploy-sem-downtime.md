@@ -14,7 +14,7 @@ Estrategias blue/green e canary e migrations versionadas para deploy sem downtim
 - Apos validar a nova versao no ambiente “idle”, trocar o load balancer (ou ingress) para apontar para esse ambiente.
 - **Vantagem**: rollback imediato revertendo o ponteiro do LB. **Custo**: duplicar recursos durante o deploy.
 
-**Exemplo (Kubernetes):** dois deployments (aureus-core-blue, aureus-core-green) e um Service que aponta para um deles; apos deploy na “green”, alterar o selector do Service para “green”.
+**Exemplo (Kubernetes):** dois deployments (aurix-core-blue, aurix-core-green) e um Service que aponta para um deles; apos deploy na “green”, alterar o selector do Service para “green”.
 
 ## Canary
 
@@ -37,5 +37,5 @@ Estrategias blue/green e canary e migrations versionadas para deploy sem downtim
 ## Referencias
 
 - Roadmap e status: [../roadmap.md](../roadmap.md)
-- Runbook R1: [aureus-cloud-runbook.md](aureus-cloud-runbook.md) (servico nao sobe apos deploy)
-- Deploy centralizado: [aureus-cloud-runbook.md](aureus-cloud-runbook.md) (Pipeline, Migrations)
+- Runbook R1: [aurix-cloud-runbook.md](aurix-cloud-runbook.md) (servico nao sobe apos deploy)
+- Deploy centralizado: [aurix-cloud-runbook.md](aurix-cloud-runbook.md) (Pipeline, Migrations)

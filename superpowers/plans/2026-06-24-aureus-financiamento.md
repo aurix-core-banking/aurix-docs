@@ -1,37 +1,37 @@
-# Plano de Implementação: `aureus-financiamento`
+# Plano de Implementação: `aurix-financiamento`
 
 > Baseado no design aprovado em `docs/superpowers/specs/2026-06-24-products-design.md` (Seção 7, p.16-18)
-> Porta: **8118** | Gateway: `/api/financiamento/**` | Depende de `aureus-core` (contas)
+> Porta: **8118** | Gateway: `/api/financiamento/**` | Depende de `aurix-core` (contas)
 
 ---
 
 ## 1. Scaffold
 
-### 1.1 `backend/aureus-financiamento/pom.xml`
+### 1.1 `backend/aurix-financiamento/pom.xml`
 
-Archetype: copiar `aureus-poupanca/pom.xml`, alterar `artifactId` e `description`.
+Archetype: copiar `aurix-poupanca/pom.xml`, alterar `artifactId` e `description`.
 
 ```xml
 <parent>
-    <groupId>com.aureus.platform</groupId>
-    <artifactId>aureus-platform</artifactId>
+    <groupId>com.aurix.platform</groupId>
+    <artifactId>aurix-platform</artifactId>
     <version>1.0.0</version>
 </parent>
 
-<artifactId>aureus-financiamento</artifactId>
-<name>AUREUS Financiamento</name>
+<artifactId>aurix-financiamento</artifactId>
+<name>AURIX Financiamento</name>
 <description>Modulo de financiamento de bens (imobiliario, veicular, outros)</description>
 ```
 
-Dependências: `aureus-shared`, `spring-boot-starter-web`, `data-jpa`, `validation`, `security`, `actuator`, `kafka`, `data-redis`, `postgresql` (runtime), `h2` (test), `springdoc-openapi`, `spring-boot-starter-test`, `spring-security-test`, `spring-kafka-test`, `testcontainers-junit-jupiter`.
+Dependências: `aurix-shared`, `spring-boot-starter-web`, `data-jpa`, `validation`, `security`, `actuator`, `kafka`, `data-redis`, `postgresql` (runtime), `h2` (test), `springdoc-openapi`, `spring-boot-starter-test`, `spring-security-test`, `spring-kafka-test`, `testcontainers-junit-jupiter`.
 
-### 1.2 `AureusFinanciamentoApplication.java`
+### 1.2 `AurixFinanciamentoApplication.java`
 
-`com.aureus.platform.financiamento`, anotado com `@SpringBootApplication`, `@EnableScheduling`.
+`com.aurix.platform.financiamento`, anotado com `@SpringBootApplication`, `@EnableScheduling`.
 
 ### 1.3 `package-info.java`
 
-Um por pacote: `com.aureus.platform.financiamento`, `entity`, `repository`, `dto`, `event`, `client`, `config`, `service`, `controller`, `job`. Todos com `@NullMarked`.
+Um por pacote: `com.aurix.platform.financiamento`, `entity`, `repository`, `dto`, `event`, `client`, `config`, `service`, `controller`, `job`. Todos com `@NullMarked`.
 
 ### 1.4 `application.yml`
 
@@ -42,7 +42,7 @@ server:
     context-path: /api/financiamento
 spring:
   application:
-    name: aureus-financiamento
+    name: aurix-financiamento
   datasource: ... (mesmo padrao poupanca)
   jpa:
     hibernate:
@@ -52,7 +52,7 @@ spring:
   kafka:
     bootstrap-servers: localhost:9092
     consumer:
-      group-id: aureus-financiamento-group
+      group-id: aurix-financiamento-group
       auto-offset-reset: earliest
     producer:
       acks: all
@@ -62,7 +62,7 @@ management:
     web:
       exposure:
         include: health,info,metrics,prometheus
-aureus:
+aurix:
   financiamento:
     taxa-sac: 0.0099       # taxa padrao SAC (mensal)
     taxa-price: 0.0112     # taxa padrao Price (mensal)
@@ -72,7 +72,7 @@ aureus:
     iof-adicional: 0.0038
   security:
     jwt:
-      secret: "aureus-jwt-secret-key-2024"
+      secret: "aurix-jwt-secret-key-2024"
       expiration: 86400000
 ---
 spring:
@@ -103,7 +103,7 @@ spring:
       maximum-pool-size: 30
 logging:
   level:
-    com.aureus.platform: INFO
+    com.aurix.platform: INFO
 ```
 
 ---
@@ -352,7 +352,7 @@ public record GarantiaRegistradaEvent(
 
 ### 7.1 `ContaCorrenteClient`
 
-`@HttpExchange("/api/core/contas")` — mesmo padrao de `aureus-poupanca`:
+`@HttpExchange("/api/core/contas")` — mesmo padrao de `aurix-poupanca`:
 
 ```java
 @PostExchange("/{id}/debitar")
@@ -441,7 +441,7 @@ ContratoResponse renegociar(Long id, RenegociarRequest request)
 ```
 
 Fluxo do `contratar`:
-1. Valida dados do cliente (`aureus-core` via `ContaCorrenteClient`?)
+1. Valida dados do cliente (`aurix-core` via `ContaCorrenteClient`?)
 2. Cria `ContratoFinanciamento` com status `PROPOSTA`, `saldoDevedor = valorFinanciado`
 3. Gera `ParcelaFinanciamento`s (parcelas futuras) chamando `AmortizacaoCalculator`
 4. Cria `BemFinanciado` e `Garantia` com status `ATIVA`
@@ -570,7 +570,7 @@ Também `BemController` opcional em `/bens/{contratoId}`:
 ### 11.1 `SimulacaoControllerTest`
 
 ```java
-@SpringBootTest(classes = AureusFinanciamentoApplication.class, webEnvironment = RANDOM_PORT)
+@SpringBootTest(classes = AurixFinanciamentoApplication.class, webEnvironment = RANDOM_PORT)
 @ActiveProfiles("test")
 @Import(SimulacaoControllerTest.TestConfig.class)
 ```
@@ -669,7 +669,7 @@ static class TestConfig {
 ### 12.1 Gateway (`infrastructure/gateway/application.yml`)
 
 ```yaml
-- id: aureus-financiamento
+- id: aurix-financiamento
   uri: http://localhost:8118
   predicates:
     - Path=/api/financiamento/**
@@ -679,11 +679,11 @@ static class TestConfig {
 
 ### 12.2 Parent POM (`backend/pom.xml`)
 
-Adicionar `<module>aureus-financiamento</module>` na lista de módulos.
+Adicionar `<module>aurix-financiamento</module>` na lista de módulos.
 
 ### 12.3 OpenAPI Spec
 
-Após implementação, adicionar em `aureus-api-specs/aureus-core.yaml`:
+Após implementação, adicionar em `aurix-api-specs/aurix-core.yaml`:
 - Tag `Financiamento`
 - Paths `/api/financiamento/simulacoes`, `/api/financiamento/contratos`, `/api/financiamento/contratos/{contratoId}/parcelas`, `/api/financiamento/bens`, `/api/financiamento/garantias`, `/api/financiamento/taxas`
 - Schemas: `SimulacaoRequest`, `SimulacaoResponse`, `CriarContratoRequest`, `ContratoResponse`, `ParcelaResponse`, `BemResponse`, `GarantiaResponse`, `LinhaTabela`, `TaxasResponse`

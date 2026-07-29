@@ -18,7 +18,7 @@ Links para documentação técnica em `docs/`.
 | Portal desenvolvedor e APIs | [portal-desenvolvedor/](../../../03-development/portal-desenvolvedor/) |
 | Kit implementação | [01-guides-checklists/kit-implementacao/README.md](../../01-guides-checklists/kit-implementacao/README.md) |
 | Data pipelines | [data-pipelines/](../../../04-data-ai/data-pipelines/) |
-| Frontend (admin: instalação, desenvolvimento) | [instalacao-admin.md](../../01-guides-checklists/guias/instalacao-admin.md), [frontend/aureus-admin.md](../../../03-development/frontend/aureus-admin.md) |
+| Frontend (admin: instalação, desenvolvimento) | [instalacao-admin.md](../../01-guides-checklists/guias/instalacao-admin.md), [frontend/aurix-admin.md](../../../03-development/frontend/aurix-admin.md) |
 | Testes E2E | [testes/e2e.md](../../../03-development/testes/e2e.md) |
 | Candidatos à absorção (inventário) | [candidatos-absorcao.md](candidatos-absorcao.md) |
 

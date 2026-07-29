@@ -15,7 +15,7 @@ O que a engenharia precisa saber: ambiente de desenvolvimento, estrutura do cód
 ## Estrutura do código
 
 - **Backend**: módulos em `backend/` (gateway, core, credit, openfinance, etc.).
-- **Frontend**: `frontend/aureus-admin/`, `frontend/aureus-web/`.
+- **Frontend**: `frontend/aurix-admin/`, `frontend/aurix-web/`.
 - **Data pipelines**: [data-pipelines/](../../04-data-ai/data-pipelines/), Airflow, dbt, Trino.
 
 ---

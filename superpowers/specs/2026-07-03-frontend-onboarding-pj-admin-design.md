@@ -5,7 +5,7 @@
 
 ## Goal
 
-Add PJ onboarding management to aureus-admin (back office), reusing existing patterns and adding reusable workflow components.
+Add PJ onboarding management to aurix-admin (back office), reusing existing patterns and adding reusable workflow components.
 
 ## Architecture
 
@@ -163,11 +163,11 @@ Custom actions bypass react-admin's dataProvider and call the API directly via `
 ## Testing
 
 - Components are simple enough that visual verification in the browser suffices
-- No existing test framework for aureus-admin components (no Jest tests in admin)
+- No existing test framework for aurix-admin components (no Jest tests in admin)
 - Manual testing: list loads, show tabs render, actions trigger correct POSTs
 
 ## Out of Scope
 
-- Create/Edit pages (PJ onboarding is created by the client in aureus-web)
+- Create/Edit pages (PJ onboarding is created by the client in aurix-web)
 - PF onboarding enhancements (existing read-only List+Show stays as-is)
-- aureus-web or aureus-mobile changes
+- aurix-web or aurix-mobile changes

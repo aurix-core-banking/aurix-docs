@@ -17,7 +17,7 @@
 | `terraform validate` | Funciona |
 | `terraform plan` / `apply` | Executam; criam apenas `null_resource` (stubs) |
 | Deploy por cloud (`CLOUD_PROVIDER=aws`) | Aplica só módulos AWS com `-target` |
-| Deploy K8s após Terraform | Atualiza kubeconfig (aws/azure/gcp) e aplica `kubernetes/namespace.yaml` e `aureus-core-deployment.yaml` |
+| Deploy K8s após Terraform | Atualiza kubeconfig (aws/azure/gcp) e aplica `kubernetes/namespace.yaml` e `aurix-core-deployment.yaml` |
 | Frontend na automação | Build admin + web com apontamento configurável; deploy junto ao mesmo cloud ou separado (ver secao Deploy frontend abaixo) |
 
 ## Deploy frontend
@@ -37,8 +37,8 @@ Exemplos: `./deploy-terraform.sh --deploy-frontend --frontend-api-url https://ap
 2. **State remoto (recomendado para produção):** Em `main.tf`, dentro do bloco `terraform { ... }`, adicionar por exemplo:
    ```hcl
    backend "s3" {
-     bucket  = "aureus-terraform-state"
-     key     = "aureus-platform.tfstate"
+     bucket  = "aurix-terraform-state"
+     key     = "aurix-platform.tfstate"
      region  = "us-east-1"
      encrypt = true
    }

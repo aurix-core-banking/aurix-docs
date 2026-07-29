@@ -6,15 +6,15 @@
 
 **Architecture:** Gateway pattern with ordered fallback for bureau (Serasa → Quod → stub in dev); direct implementation for KYC (Unico in prod, stub otherwise); new FraudService for ClearSale. Circuit breaker via resilience4j.
 
-**Tech Stack:** Spring Boot 4.1, resilience4j-spring-boot3 (via aureus-bacen reference), RestTemplate, WireMock (test), JUnit 5.
+**Tech Stack:** Spring Boot 4.1, resilience4j-spring-boot3 (via aurix-bacen reference), RestTemplate, WireMock (test), JUnit 5.
 
 ## Global Constraints
 
 - Follow existing delombok pattern (explicit builder/getter/setter/constructor)
 - Use `@Profile("!producao")` for stubs (KycProviderStub); `@Profile("dev|test")` for BureauStub
-- New interfaces go in `com.aureus.platform.onboarding.service` (matching KycProviderService / BureauService location)
+- New interfaces go in `com.aurix.platform.onboarding.service` (matching KycProviderService / BureauService location)
 - Config goes in `application.yml` (default/stub) and `application-prod.yml` (real providers)
-- Dependency `io.github.resilience4j:resilience4j-spring-boot3` (already used by aureus-bacen, managed by spring-cloud BOM)
+- Dependency `io.github.resilience4j:resilience4j-spring-boot3` (already used by aurix-bacen, managed by spring-cloud BOM)
 - Tests use WireMock for HTTP provider simulation
 - All existing tests must pass after each task
 
@@ -22,9 +22,9 @@
 ### Task 0: Dependencies + application-prod.yml
 
 **Files:**
-- Modify: `backend/aureus-onboarding/pom.xml`
-- Create: `backend/aureus-onboarding/src/main/resources/application-prod.yml`
-- Modify: `backend/aureus-onboarding/src/main/resources/application.yml`
+- Modify: `backend/aurix-onboarding/pom.xml`
+- Create: `backend/aurix-onboarding/src/main/resources/application-prod.yml`
+- Modify: `backend/aurix-onboarding/src/main/resources/application.yml`
 
 **Interfaces:**
 - Produces: `resilience4j-spring-boot3` on classpath; application-prod.yml with provider configs; default (stub) config in application.yml
@@ -59,7 +59,7 @@ spring:
       maximum-pool-size: 30
       minimum-idle: 5
 
-aureus:
+aurix:
   onboarding:
     bureau:
       serasa:
@@ -81,7 +81,7 @@ aureus:
 
 logging:
   level:
-    com.aureus.platform: INFO
+    com.aurix.platform: INFO
 ```
 
 - [ ] **Step 3: Add default config to application.yml**
@@ -89,7 +89,7 @@ logging:
 Append before `management:` block:
 
 ```yaml
-aureus:
+aurix:
   onboarding:
     bureau:
       serasa:
@@ -110,12 +110,12 @@ aureus:
         api-key: stub-key
 ```
 
-Place these keys under the existing `aureus.onboarding` block (after `tenant-header`).
+Place these keys under the existing `aurix.onboarding` block (after `tenant-header`).
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add backend/aureus-onboarding/pom.xml backend/aureus-onboarding/src/main/resources/application.yml backend/aureus-onboarding/src/main/resources/application-prod.yml
+git add backend/aurix-onboarding/pom.xml backend/aurix-onboarding/src/main/resources/application.yml backend/aurix-onboarding/src/main/resources/application-prod.yml
 git commit -m "chore(onboarding): add resilience4j deps, prod config, default provider endpoints"
 ```
 
@@ -123,10 +123,10 @@ git commit -m "chore(onboarding): add resilience4j deps, prod config, default pr
 ### Task 1: BureauProvider interface + BureauGateway + BureauStub @Profile fix
 
 **Files:**
-- Create: `backend/aureus-onboarding/src/main/java/com/aureus/platform/onboarding/service/BureauProvider.java`
-- Create: `backend/aureus-onboarding/src/main/java/com/aureus/platform/onboarding/service/BureauGateway.java`
-- Create: `backend/aureus-onboarding/src/test/java/com/aureus/platform/onboarding/service/BureauGatewayTest.java`
-- Modify: `backend/aureus-onboarding/src/main/java/com/aureus/platform/onboarding/service/BureauStub.java`
+- Create: `backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/BureauProvider.java`
+- Create: `backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/BureauGateway.java`
+- Create: `backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/service/BureauGatewayTest.java`
+- Modify: `backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/BureauStub.java`
 
 **Interfaces:**
 - Produces: `BureauProvider` interface with method `ResultadoBureau consultar(String cpf)`
@@ -136,7 +136,7 @@ git commit -m "chore(onboarding): add resilience4j deps, prod config, default pr
 - [ ] **Step 1: Write BureauProvider interface**
 
 ```java
-package com.aureus.platform.onboarding.service;
+package com.aurix.platform.onboarding.service;
 
 public interface BureauProvider {
     BureauService.ResultadoBureau consultar(String cpf);
@@ -146,7 +146,7 @@ public interface BureauProvider {
 - [ ] **Step 2: Write BureauGateway**
 
 ```java
-package com.aureus.platform.onboarding.service;
+package com.aurix.platform.onboarding.service;
 
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -186,7 +186,7 @@ public class BureauGateway implements BureauService {
 Mudar para `implements BureauProvider` e adicionar `@Profile("dev|test")`. Isso evita conflito com `BureauGateway` (que implementa `BureauService`) e faz o stub ser o fallback final na lista do gateway.
 
 ```java
-package com.aureus.platform.onboarding.service;
+package com.aurix.platform.onboarding.service;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -208,7 +208,7 @@ public class BureauStub implements BureauProvider {
 - [ ] **Step 4: Write BureauGatewayTest**
 
 ```java
-package com.aureus.platform.onboarding.service;
+package com.aurix.platform.onboarding.service;
 
 import org.junit.jupiter.api.Test;
 import java.util.List;
@@ -268,14 +268,14 @@ class BureauGatewayTest {
 - [ ] **Step 5: Run test to verify it passes**
 
 ```bash
-mvn -pl aureus-onboarding test -Dtest=BureauGatewayTest -Dsurefire.failIfNoSpecifiedTests=false
+mvn -pl aurix-onboarding test -Dtest=BureauGatewayTest -Dsurefire.failIfNoSpecifiedTests=false
 ```
 Expected: BUILD SUCCESS, 3 tests pass
 
 - [ ] **Step 6: Commit**
 
 ```bash
-git add backend/aureus-onboarding/src/main/java/com/aureus/platform/onboarding/service/BureauProvider.java backend/aureus-onboarding/src/main/java/com/aureus/platform/onboarding/service/BureauGateway.java backend/aureus-onboarding/src/test/java/com/aureus/platform/onboarding/service/BureauGatewayTest.java backend/aureus-onboarding/src/main/java/com/aureus/platform/onboarding/service/BureauStub.java
+git add backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/BureauProvider.java backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/BureauGateway.java backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/service/BureauGatewayTest.java backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/BureauStub.java
 git commit -m "feat(onboarding): add BureauProvider + BureauGateway with fallback chain"
 ```
 
@@ -283,8 +283,8 @@ git commit -m "feat(onboarding): add BureauProvider + BureauGateway with fallbac
 ### Task 2: SerasaProvider + WireMock test
 
 **Files:**
-- Create: `backend/aureus-onboarding/src/main/java/com/aureus/platform/onboarding/service/SerasaProvider.java`
-- Create: `backend/aureus-onboarding/src/test/java/com/aureus/platform/onboarding/service/SerasaProviderTest.java`
+- Create: `backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/SerasaProvider.java`
+- Create: `backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/service/SerasaProviderTest.java`
 
 **Interfaces:**
 - Consumes: `BureauProvider` (from Task 1), RestTemplate
@@ -293,7 +293,7 @@ git commit -m "feat(onboarding): add BureauProvider + BureauGateway with fallbac
 - [ ] **Step 1: Write SerasaProvider**
 
 ```java
-package com.aureus.platform.onboarding.service;
+package com.aurix.platform.onboarding.service;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -313,8 +313,8 @@ public class SerasaProvider implements BureauProvider {
     private final String apiKey;
 
     public SerasaProvider(RestTemplate restTemplate,
-                          @Value("${aureus.onboarding.bureau.serasa.url}") String url,
-                          @Value("${aureus.onboarding.bureau.serasa.api-key}") String apiKey) {
+                          @Value("${aurix.onboarding.bureau.serasa.url}") String url,
+                          @Value("${aurix.onboarding.bureau.serasa.api-key}") String apiKey) {
         this.restTemplate = restTemplate;
         this.url = url;
         this.apiKey = apiKey;
@@ -350,7 +350,7 @@ public class SerasaProvider implements BureauProvider {
 - [ ] **Step 2: Write SerasaProviderTest (WireMock)**
 
 ```java
-package com.aureus.platform.onboarding.service;
+package com.aurix.platform.onboarding.service;
 
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import org.junit.jupiter.api.Test;
@@ -414,14 +414,14 @@ Add to `<dependencies>` (test scope):
 - [ ] **Step 4: Run tests**
 
 ```bash
-mvn -pl aureus-onboarding test -Dtest="SerasaProviderTest,BureauGatewayTest" -Dsurefire.failIfNoSpecifiedTests=false
+mvn -pl aurix-onboarding test -Dtest="SerasaProviderTest,BureauGatewayTest" -Dsurefire.failIfNoSpecifiedTests=false
 ```
 Expected: BUILD SUCCESS, 5 tests pass
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add backend/aureus-onboarding/pom.xml backend/aureus-onboarding/src/main/java/com/aureus/platform/onboarding/service/SerasaProvider.java backend/aureus-onboarding/src/test/java/com/aureus/platform/onboarding/service/SerasaProviderTest.java
+git add backend/aurix-onboarding/pom.xml backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/SerasaProvider.java backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/service/SerasaProviderTest.java
 git commit -m "feat(onboarding): add SerasaProvider with WireMock test"
 ```
 
@@ -429,13 +429,13 @@ git commit -m "feat(onboarding): add SerasaProvider with WireMock test"
 ### Task 3: QuodProvider + WireMock test
 
 **Files:**
-- Create: `backend/aureus-onboarding/src/main/java/com/aureus/platform/onboarding/service/QuodProvider.java`
-- Create: `backend/aureus-onboarding/src/test/java/com/aureus/platform/onboarding/service/QuodProviderTest.java`
+- Create: `backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/QuodProvider.java`
+- Create: `backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/service/QuodProviderTest.java`
 
 - [ ] **Step 1: Write QuodProvider**
 
 ```java
-package com.aureus.platform.onboarding.service;
+package com.aurix.platform.onboarding.service;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -455,8 +455,8 @@ public class QuodProvider implements BureauProvider {
     private final String apiKey;
 
     public QuodProvider(RestTemplate restTemplate,
-                        @Value("${aureus.onboarding.bureau.quod.url}") String url,
-                        @Value("${aureus.onboarding.bureau.quod.api-key}") String apiKey) {
+                        @Value("${aurix.onboarding.bureau.quod.url}") String url,
+                        @Value("${aurix.onboarding.bureau.quod.api-key}") String apiKey) {
         this.restTemplate = restTemplate;
         this.url = url;
         this.apiKey = apiKey;
@@ -492,7 +492,7 @@ public class QuodProvider implements BureauProvider {
 - [ ] **Step 2: Write QuodProviderTest**
 
 ```java
-package com.aureus.platform.onboarding.service;
+package com.aurix.platform.onboarding.service;
 
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import org.junit.jupiter.api.Test;
@@ -543,14 +543,14 @@ class QuodProviderTest {
 - [ ] **Step 3: Run tests**
 
 ```bash
-mvn -pl aureus-onboarding test -Dtest="QuodProviderTest,SerasaProviderTest,BureauGatewayTest" -Dsurefire.failIfNoSpecifiedTests=false
+mvn -pl aurix-onboarding test -Dtest="QuodProviderTest,SerasaProviderTest,BureauGatewayTest" -Dsurefire.failIfNoSpecifiedTests=false
 ```
 Expected: BUILD SUCCESS, 7 tests pass
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add backend/aureus-onboarding/src/main/java/com/aureus/platform/onboarding/service/QuodProvider.java backend/aureus-onboarding/src/test/java/com/aureus/platform/onboarding/service/QuodProviderTest.java
+git add backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/QuodProvider.java backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/service/QuodProviderTest.java
 git commit -m "feat(onboarding): add QuodProvider with WireMock test"
 ```
 
@@ -558,13 +558,13 @@ git commit -m "feat(onboarding): add QuodProvider with WireMock test"
 ### Task 4: FraudService + FraudStub + SolicitacaoOnboarding field + OnboardingPFService integration
 
 **Files:**
-- Create: `backend/aureus-onboarding/src/main/java/com/aureus/platform/onboarding/service/FraudService.java`
-- Create: `backend/aureus-onboarding/src/main/java/com/aureus/platform/onboarding/service/FraudStub.java`
-- Create: `backend/aureus-onboarding/src/test/java/com/aureus/platform/onboarding/service/FraudStubTest.java`
-- Modify: `backend/aureus-onboarding/src/main/java/com/aureus/platform/onboarding/entity/SolicitacaoOnboarding.java`
-- Modify: `backend/aureus-onboarding/src/main/java/com/aureus/platform/onboarding/service/OnboardingPFService.java`
-- Modify: `backend/aureus-onboarding/src/test/java/com/aureus/platform/onboarding/integration/OnboardingPFFlowIntegrationTest.java`
-- Modify: `backend/aureus-onboarding/src/main/java/com/aureus/platform/onboarding/dto/SolicitacaoContaResponse.java`
+- Create: `backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/FraudService.java`
+- Create: `backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/FraudStub.java`
+- Create: `backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/service/FraudStubTest.java`
+- Modify: `backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/entity/SolicitacaoOnboarding.java`
+- Modify: `backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/OnboardingPFService.java`
+- Modify: `backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/integration/OnboardingPFFlowIntegrationTest.java`
+- Modify: `backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/dto/SolicitacaoContaResponse.java`
 
 **Interfaces:**
 - Produces: `FraudService` with method `ResultadoFraude analisar(String cpf, String nome, String email, String telefone)`
@@ -574,7 +574,7 @@ git commit -m "feat(onboarding): add QuodProvider with WireMock test"
 - [ ] **Step 1: Write FraudService interface**
 
 ```java
-package com.aureus.platform.onboarding.service;
+package com.aurix.platform.onboarding.service;
 
 public interface FraudService {
 
@@ -587,7 +587,7 @@ public interface FraudService {
 - [ ] **Step 2: Write FraudStub**
 
 ```java
-package com.aureus.platform.onboarding.service;
+package com.aurix.platform.onboarding.service;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -609,7 +609,7 @@ public class FraudStub implements FraudService {
 - [ ] **Step 3: Write FraudStubTest**
 
 ```java
-package com.aureus.platform.onboarding.service;
+package com.aurix.platform.onboarding.service;
 
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -690,14 +690,14 @@ Also need to adjust `limparBanco()` if `risco_fraude` column was added (no chang
 - [ ] **Step 7: Run all onboarding tests**
 
 ```bash
-mvn -pl aureus-onboarding test -Dsurefire.failIfNoSpecifiedTests=false
+mvn -pl aurix-onboarding test -Dsurefire.failIfNoSpecifiedTests=false
 ```
 Expected: BUILD SUCCESS, all tests pass
 
 - [ ] **Step 8: Commit**
 
 ```bash
-git add backend/aureus-onboarding/src/main/java/com/aureus/platform/onboarding/service/FraudService.java backend/aureus-onboarding/src/main/java/com/aureus/platform/onboarding/service/FraudStub.java backend/aureus-onboarding/src/test/java/com/aureus/platform/onboarding/service/FraudStubTest.java backend/aureus-onboarding/src/main/java/com/aureus/platform/onboarding/entity/SolicitacaoOnboarding.java backend/aureus-onboarding/src/main/java/com/aureus/platform/onboarding/service/OnboardingPFService.java backend/aureus-onboarding/src/test/java/com/aureus/platform/onboarding/integration/OnboardingPFFlowIntegrationTest.java backend/aureus-onboarding/src/main/java/com/aureus/platform/onboarding/dto/SolicitacaoContaResponse.java
+git add backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/FraudService.java backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/FraudStub.java backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/service/FraudStubTest.java backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/entity/SolicitacaoOnboarding.java backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/OnboardingPFService.java backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/integration/OnboardingPFFlowIntegrationTest.java backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/dto/SolicitacaoContaResponse.java
 git commit -m "feat(onboarding): add FraudService + FraudStub + riscoFraude field, wire into OnboardingPFService"
 ```
 
@@ -705,13 +705,13 @@ git commit -m "feat(onboarding): add FraudService + FraudStub + riscoFraude fiel
 ### Task 5: ClearSaleProvider + WireMock test
 
 **Files:**
-- Create: `backend/aureus-onboarding/src/main/java/com/aureus/platform/onboarding/service/ClearSaleProvider.java`
-- Create: `backend/aureus-onboarding/src/test/java/com/aureus/platform/onboarding/service/ClearSaleProviderTest.java`
+- Create: `backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/ClearSaleProvider.java`
+- Create: `backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/service/ClearSaleProviderTest.java`
 
 - [ ] **Step 1: Write ClearSaleProvider**
 
 ```java
-package com.aureus.platform.onboarding.service;
+package com.aurix.platform.onboarding.service;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -732,8 +732,8 @@ public class ClearSaleProvider implements FraudService {
     private final String apiKey;
 
     public ClearSaleProvider(RestTemplate restTemplate,
-                              @Value("${aureus.onboarding.fraud.cleansale.url}") String url,
-                              @Value("${aureus.onboarding.fraud.cleansale.api-key}") String apiKey) {
+                              @Value("${aurix.onboarding.fraud.cleansale.url}") String url,
+                              @Value("${aurix.onboarding.fraud.cleansale.api-key}") String apiKey) {
         this.restTemplate = restTemplate;
         this.url = url;
         this.apiKey = apiKey;
@@ -772,7 +772,7 @@ Note: ClearSale returns `ResultadoFraude(true, ...)` on failure — this is inte
 - [ ] **Step 2: Write ClearSaleProviderTest**
 
 ```java
-package com.aureus.platform.onboarding.service;
+package com.aurix.platform.onboarding.service;
 
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import org.junit.jupiter.api.Test;
@@ -844,14 +844,14 @@ class ClearSaleProviderTest {
 - [ ] **Step 3: Run tests**
 
 ```bash
-mvn -pl aureus-onboarding test -Dtest="ClearSaleProviderTest,FraudStubTest" -Dsurefire.failIfNoSpecifiedTests=false
+mvn -pl aurix-onboarding test -Dtest="ClearSaleProviderTest,FraudStubTest" -Dsurefire.failIfNoSpecifiedTests=false
 ```
 Expected: BUILD SUCCESS, 4 tests pass
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add backend/aureus-onboarding/src/main/java/com/aureus/platform/onboarding/service/ClearSaleProvider.java backend/aureus-onboarding/src/test/java/com/aureus/platform/onboarding/service/ClearSaleProviderTest.java
+git add backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/ClearSaleProvider.java backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/service/ClearSaleProviderTest.java
 git commit -m "feat(onboarding): add ClearSaleProvider with WireMock test"
 ```
 
@@ -859,13 +859,13 @@ git commit -m "feat(onboarding): add ClearSaleProvider with WireMock test"
 ### Task 6: UnicoProvider + WireMock test
 
 **Files:**
-- Create: `backend/aureus-onboarding/src/main/java/com/aureus/platform/onboarding/service/UnicoProvider.java`
-- Create: `backend/aureus-onboarding/src/test/java/com/aureus/platform/onboarding/service/UnicoProviderTest.java`
+- Create: `backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/UnicoProvider.java`
+- Create: `backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/service/UnicoProviderTest.java`
 
 - [ ] **Step 1: Write UnicoProvider**
 
 ```java
-package com.aureus.platform.onboarding.service;
+package com.aurix.platform.onboarding.service;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -887,8 +887,8 @@ public class UnicoProvider implements KycProviderService {
     private final String apiKey;
 
     public UnicoProvider(RestTemplate restTemplate,
-                         @Value("${aureus.onboarding.kyc.unico.url}") String url,
-                         @Value("${aureus.onboarding.kyc.unico.api-key}") String apiKey) {
+                         @Value("${aurix.onboarding.kyc.unico.url}") String url,
+                         @Value("${aurix.onboarding.kyc.unico.api-key}") String apiKey) {
         this.restTemplate = restTemplate;
         this.url = url;
         this.apiKey = apiKey;
@@ -924,7 +924,7 @@ public class UnicoProvider implements KycProviderService {
 - [ ] **Step 2: Write UnicoProviderTest**
 
 ```java
-package com.aureus.platform.onboarding.service;
+package com.aurix.platform.onboarding.service;
 
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import org.junit.jupiter.api.Test;
@@ -985,14 +985,14 @@ class UnicoProviderTest {
 - [ ] **Step 3: Run tests**
 
 ```bash
-mvn -pl aureus-onboarding test -Dsurefire.failIfNoSpecifiedTests=false
+mvn -pl aurix-onboarding test -Dsurefire.failIfNoSpecifiedTests=false
 ```
 Expected: BUILD SUCCESS, all tests pass (including full suite)
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add backend/aureus-onboarding/src/main/java/com/aureus/platform/onboarding/service/UnicoProvider.java backend/aureus-onboarding/src/test/java/com/aureus/platform/onboarding/service/UnicoProviderTest.java
+git add backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/UnicoProvider.java backend/aurix-onboarding/src/test/java/com/aurix/platform/onboarding/service/UnicoProviderTest.java
 git commit -m "feat(onboarding): add UnicoProvider with WireMock test"
 ```
 

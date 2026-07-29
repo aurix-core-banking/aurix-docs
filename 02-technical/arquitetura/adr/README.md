@@ -1,6 +1,6 @@
 # Architecture Decision Records (ADR)
 
-Registro das decisões arquiteturais da plataforma AUREUS. Cada ADR documenta um contexto, a decisão tomada, as alternativas consideradas e as consequências — para não perder o "porquê" de uma escolha conforme o time muda.
+Registro das decisões arquiteturais da plataforma AURIX. Cada ADR documenta um contexto, a decisão tomada, as alternativas consideradas e as consequências — para não perder o "porquê" de uma escolha conforme o time muda.
 
 | ADR | Título | Status |
 |-----|--------|--------|

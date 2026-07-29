@@ -19,11 +19,11 @@
 ### Task 1: Backend — Document Validation Endpoint (PF + PJ)
 
 **Files:**
-- Modify: `backend/aureus-onboarding/src/main/java/com/aureus/platform/onboarding/controller/ControllerPF.java`
-- Modify: `backend/aureus-onboarding/src/main/java/com/aureus/platform/onboarding/controller/ControllerPJ.java`
-- Modify: `backend/aureus-onboarding/src/main/java/com/aureus/platform/onboarding/service/OnboardingPFService.java`
-- Modify: `backend/aureus-onboarding/src/main/java/com/aureus/platform/onboarding/service/OnboardingPJService.java`
-- Modify: `backend/aureus-onboarding/src/main/java/com/aureus/platform/onboarding/repository/DocumentoOnboardingRepository.java`
+- Modify: `backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/controller/ControllerPF.java`
+- Modify: `backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/controller/ControllerPJ.java`
+- Modify: `backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/OnboardingPFService.java`
+- Modify: `backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/OnboardingPJService.java`
+- Modify: `backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/repository/DocumentoOnboardingRepository.java`
 
 - [ ] **Step 1: Add `validarDocumento` method to OnboardingPFService**
 
@@ -95,13 +95,13 @@ public ResponseEntity<Void> validarDocumento(@PathVariable Long id, @PathVariabl
 
 - [ ] **Step 5: Verify compilation**
 
-Run: `mvn compile -pl aureus-onboarding -am -DskipTests` from `backend/`
+Run: `mvn compile -pl aurix-onboarding -am -DskipTests` from `backend/`
 Expected: BUILD SUCCESS
 
 - [ ] **Step 6: Commit**
 
 ```bash
-git add backend/aureus-onboarding/src/main/java/com/aureus/platform/onboarding/controller/ControllerPF.java backend/aureus-onboarding/src/main/java/com/aureus/platform/onboarding/controller/ControllerPJ.java backend/aureus-onboarding/src/main/java/com/aureus/platform/onboarding/service/OnboardingPFService.java backend/aureus-onboarding/src/main/java/com/aureus/platform/onboarding/service/OnboardingPJService.java
+git add backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/controller/ControllerPF.java backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/controller/ControllerPJ.java backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/OnboardingPFService.java backend/aurix-onboarding/src/main/java/com/aurix/platform/onboarding/service/OnboardingPJService.java
 git commit -m "feat(onboarding): add document validation endpoint (PF + PJ)"
 ```
 
@@ -110,7 +110,7 @@ git commit -m "feat(onboarding): add document validation endpoint (PF + PJ)"
 ### Task 2: Frontend — Document Validation Dialog
 
 **Files:**
-- Modify: `frontend/aureus-admin/src/components/DocumentList.js`
+- Modify: `frontend/aurix-admin/src/components/DocumentList.js`
 
 - [ ] **Step 1: Add validation dialog to DocumentList**
 
@@ -237,12 +237,12 @@ Add the dialog (after the table/empty state, before the closing `</Box>`):
 
 - [ ] **Step 2: Verify lint**
 
-Run: `npm run lint --workspace=aureus-admin` from `frontend/`
+Run: `npm run lint --workspace=aurix-admin` from `frontend/`
 Expected: 0 errors, only pre-existing warnings
 
 - [ ] **Step 3: Commit**
 
 ```bash
-git add frontend/aureus-admin/src/components/DocumentList.js
+git add frontend/aurix-admin/src/components/DocumentList.js
 git commit -m "feat(admin): add document validation dialog to DocumentList"
 ```

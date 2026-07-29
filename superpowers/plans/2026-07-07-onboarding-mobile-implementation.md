@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Build PF and PJ onboarding screens for aureus-mobile with form validation, API integration, and navigation.
+**Goal:** Build PF and PJ onboarding screens for aurix-mobile with form validation, API integration, and navigation.
 
 **Architecture:** Stack navigation (AuthNavigator) with OnboardingScreen orchestrator → TipoSelector → FormPF or StepEmpresa→StepSocios → SuccessScreen. Singleton axios service class. Screen-local `useState`. Shared validation utils.
 
@@ -17,7 +17,7 @@
 - OnboardingService uses `axios.create()` with base URL `http://localhost:8080/api`, timeout 15s
 - Validation utils in `src/utils/validation.js`: pure functions, exported individually
 - Jest preset `react-native`, tests with `@testing-library/react-native`, axios mocking via `axios-mock-adapter`
-- Base path for all file references: `frontend/aureus-mobile/`
+- Base path for all file references: `frontend/aurix-mobile/`
 
 ---
 
@@ -209,13 +209,13 @@ export function formatarMoeda(value) {
 
 - [ ] **Step 6: Verify tests pass**
 
-Run: `cd frontend/aureus-mobile && npx jest --passWithNoTests`
+Run: `cd frontend/aurix-mobile && npx jest --passWithNoTests`
 Expected: `Tests: 0 total` (no test files yet, but no errors)
 
 - [ ] **Step 7: Commit**
 
 ```bash
-git add frontend/aureus-mobile/package.json frontend/aureus-mobile/babel.config.js frontend/aureus-mobile/__mocks__/ frontend/aureus-mobile/src/utils/validation.js
+git add frontend/aurix-mobile/package.json frontend/aurix-mobile/babel.config.js frontend/aurix-mobile/__mocks__/ frontend/aurix-mobile/src/utils/validation.js
 git commit -m "feat(mobile): add deps, validation utils, test mocks for onboarding"
 ```
 
@@ -295,7 +295,7 @@ describe('onboardingService', () => {
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `cd frontend/aureus-mobile && npx jest src/__tests__/OnboardingService.test.js --no-cache`
+Run: `cd frontend/aurix-mobile && npx jest src/__tests__/OnboardingService.test.js --no-cache`
 Expected: FAIL — "Cannot find module '../services/onboardingService'"
 
 - [ ] **Step 3: Write minimal implementation**
@@ -339,13 +339,13 @@ export const onboardingService = new OnboardingService();
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `cd frontend/aureus-mobile && npx jest src/__tests__/OnboardingService.test.js --no-cache`
+Run: `cd frontend/aurix-mobile && npx jest src/__tests__/OnboardingService.test.js --no-cache`
 Expected: PASS (5 tests)
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add frontend/aureus-mobile/src/services/onboardingService.js frontend/aureus-mobile/src/__tests__/OnboardingService.test.js
+git add frontend/aurix-mobile/src/services/onboardingService.js frontend/aurix-mobile/src/__tests__/OnboardingService.test.js
 git commit -m "feat(mobile): add onboarding service with axios + tests"
 ```
 
@@ -385,7 +385,7 @@ describe('TipoSelector', () => {
 
   it('renders app title and subtitle', () => {
     const { getByText } = render(<TipoSelector {...props} />);
-    expect(getByText('AUREUS Banking')).toBeTruthy();
+    expect(getByText('AURIX Banking')).toBeTruthy();
     expect(getByText('Abra sua conta')).toBeTruthy();
   });
 
@@ -405,7 +405,7 @@ describe('TipoSelector', () => {
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `cd frontend/aureus-mobile && npx jest src/__tests__/TipoSelector.test.js --no-cache`
+Run: `cd frontend/aurix-mobile && npx jest src/__tests__/TipoSelector.test.js --no-cache`
 Expected: FAIL — "Cannot find module '../pages/onboarding/TipoSelector'"
 
 - [ ] **Step 3: Write minimal implementation**
@@ -436,7 +436,7 @@ const TipoSelector = ({ navigation }) => {
           <View style={styles.logoCircle}>
             <Text style={styles.logoText}>A</Text>
           </View>
-          <Text style={styles.title}>AUREUS Banking</Text>
+          <Text style={styles.title}>AURIX Banking</Text>
           <Text style={styles.subtitle}>Abra sua conta</Text>
         </View>
 
@@ -567,13 +567,13 @@ export default TipoSelector;
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `cd frontend/aureus-mobile && npx jest src/__tests__/TipoSelector.test.js --no-cache`
+Run: `cd frontend/aurix-mobile && npx jest src/__tests__/TipoSelector.test.js --no-cache`
 Expected: PASS (4 tests)
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add frontend/aureus-mobile/src/pages/onboarding/TipoSelector.js frontend/aureus-mobile/src/__tests__/TipoSelector.test.js
+git add frontend/aurix-mobile/src/pages/onboarding/TipoSelector.js frontend/aurix-mobile/src/__tests__/TipoSelector.test.js
 git commit -m "feat(mobile): add TipoSelector screen with PF/PJ cards + tests"
 ```
 
@@ -646,7 +646,7 @@ describe('FormPF', () => {
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `cd frontend/aureus-mobile && npx jest src/__tests__/FormPF.test.js --no-cache`
+Run: `cd frontend/aurix-mobile && npx jest src/__tests__/FormPF.test.js --no-cache`
 Expected: FAIL — "Cannot find module '../pages/onboarding/FormPF'"
 
 - [ ] **Step 3: Write minimal implementation**
@@ -1079,13 +1079,13 @@ export default FormPF;
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `cd frontend/aureus-mobile && npx jest src/__tests__/FormPF.test.js --no-cache`
+Run: `cd frontend/aurix-mobile && npx jest src/__tests__/FormPF.test.js --no-cache`
 Expected: PASS (5 tests)
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add frontend/aureus-mobile/src/pages/onboarding/FormPF.js frontend/aureus-mobile/src/__tests__/FormPF.test.js
+git add frontend/aurix-mobile/src/pages/onboarding/FormPF.js frontend/aurix-mobile/src/__tests__/FormPF.test.js
 git commit -m "feat(mobile): add FormPF screen with validation, masks, API integration + tests"
 ```
 
@@ -1142,7 +1142,7 @@ describe('StepEmpresa', () => {
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `cd frontend/aureus-mobile && npx jest src/__tests__/StepEmpresa.test.js --no-cache`
+Run: `cd frontend/aurix-mobile && npx jest src/__tests__/StepEmpresa.test.js --no-cache`
 Expected: FAIL
 
 - [ ] **Step 3: Write minimal implementation**
@@ -1500,13 +1500,13 @@ export default StepEmpresa;
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `cd frontend/aureus-mobile && npx jest src/__tests__/StepEmpresa.test.js --no-cache`
+Run: `cd frontend/aurix-mobile && npx jest src/__tests__/StepEmpresa.test.js --no-cache`
 Expected: PASS (3 tests)
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add frontend/aureus-mobile/src/pages/onboarding/StepEmpresa.js frontend/aureus-mobile/src/__tests__/StepEmpresa.test.js
+git add frontend/aurix-mobile/src/pages/onboarding/StepEmpresa.js frontend/aurix-mobile/src/__tests__/StepEmpresa.test.js
 git commit -m "feat(mobile): add StepEmpresa PJ screen with CNPJ validation + tests"
 ```
 
@@ -1555,7 +1555,7 @@ describe('StepSocios', () => {
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `cd frontend/aureus-mobile && npx jest src/__tests__/StepSocios.test.js --no-cache`
+Run: `cd frontend/aurix-mobile && npx jest src/__tests__/StepSocios.test.js --no-cache`
 Expected: FAIL
 
 - [ ] **Step 3: Write minimal implementation**
@@ -1889,13 +1889,13 @@ export default StepSocios;
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `cd frontend/aureus-mobile && npx jest src/__tests__/StepSocios.test.js --no-cache`
+Run: `cd frontend/aurix-mobile && npx jest src/__tests__/StepSocios.test.js --no-cache`
 Expected: PASS (2 tests)
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add frontend/aureus-mobile/src/pages/onboarding/StepSocios.js frontend/aureus-mobile/src/__tests__/StepSocios.test.js
+git add frontend/aurix-mobile/src/pages/onboarding/StepSocios.js frontend/aurix-mobile/src/__tests__/StepSocios.test.js
 git commit -m "feat(mobile): add StepSocios PJ screen with partner management + tests"
 ```
 
@@ -2007,13 +2007,13 @@ export default SuccessScreen;
 
 - [ ] **Step 2: Verify all tests still pass**
 
-Run: `cd frontend/aureus-mobile && npx jest --no-cache`
+Run: `cd frontend/aurix-mobile && npx jest --no-cache`
 Expected: PASS (14 tests total)
 
 - [ ] **Step 3: Commit**
 
 ```bash
-git add frontend/aureus-mobile/src/pages/onboarding/SuccessScreen.js
+git add frontend/aurix-mobile/src/pages/onboarding/SuccessScreen.js
 git commit -m "feat(mobile): add SuccessScreen with protocol display"
 ```
 
@@ -2194,13 +2194,13 @@ export default AuthNavigator;
 
 - [ ] **Step 3: Run all tests to verify everything passes**
 
-Run: `cd frontend/aureus-mobile && npx jest --no-cache`
+Run: `cd frontend/aurix-mobile && npx jest --no-cache`
 Expected: PASS (all tests)
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add frontend/aureus-mobile/src/pages/OnboardingScreen.js frontend/aureus-mobile/src/navigation/AuthNavigator.js
+git add frontend/aurix-mobile/src/pages/OnboardingScreen.js frontend/aurix-mobile/src/navigation/AuthNavigator.js
 git commit -m "feat(mobile): wire onboarding screens into AuthNavigator"
 ```
 

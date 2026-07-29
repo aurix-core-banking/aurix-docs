@@ -1,4 +1,4 @@
-# Módulo Poupança (aureus-poupanca)
+# Módulo Poupança (aurix-poupanca)
 
 Conta de depósito de poupança — aniversário, crédito automático de TR, IOF na quebra,
 extrato PDF, integração com PIX para saque/depósito.
@@ -27,17 +27,17 @@ extrato PDF, integração com PIX para saque/depósito.
 
 ```xml
 <parent>
-    <groupId>com.aureus.platform</groupId>
-    <artifactId>aureus-platform</artifactId>
+    <groupId>com.aurix.platform</groupId>
+    <artifactId>aurix-platform</artifactId>
     <version>1.0.0</version>
 </parent>
 
-<artifactId>aureus-poupanca</artifactId>
+<artifactId>aurix-poupanca</artifactId>
 
 <dependencies>
     <dependency>
-        <groupId>com.aureus.platform</groupId>
-        <artifactId>aureus-shared</artifactId>
+        <groupId>com.aurix.platform</groupId>
+        <artifactId>aurix-shared</artifactId>
     </dependency>
     <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -126,8 +126,8 @@ extrato PDF, integração com PIX para saque/depósito.
 | Campo | Tipo | Notas |
 |---|---|---|
 | `id` | `Long` (PK auto) | |
-| `clienteId` | `Long` | FK lógica para `aureus-core.cliente` |
-| `contaCorrenteId` | `Long` | FK lógica para `aureus-core.conta` (conta corrente atrelada) |
+| `clienteId` | `Long` | FK lógica para `aurix-core.cliente` |
+| `contaCorrenteId` | `Long` | FK lógica para `aurix-core.conta` (conta corrente atrelada) |
 | `numeroConta` | `String` (unique) | Gerado via `TransacaoUtil.gerarCodigoPix()` |
 | `saldo` | `BigDecimal` | |
 | `aniversarioDia` | `int` | Dia do mês para crédito de rendimento |
@@ -235,7 +235,7 @@ Para cada conta:
 
 ## Clientes HTTP (Spring 7 `@HttpExchange`)
 
-### `ContaCorrenteClient` (aureus-core)
+### `ContaCorrenteClient` (aurix-core)
 
 ```java
 @HttpExchange("/api/core/contas")
@@ -250,7 +250,7 @@ public interface ContaCorrenteClient {
 }
 ```
 
-### `TaxClient` (aureus-tax)
+### `TaxClient` (aurix-tax)
 
 ```java
 @HttpExchange("/api/tax")
@@ -260,7 +260,7 @@ public interface TaxClient {
 }
 ```
 
-### `BacenClient` (aureus-bacen)
+### `BacenClient` (aurix-bacen)
 
 ```java
 @HttpExchange("/api/bacen")
@@ -307,7 +307,7 @@ public class PoupancaService {
 
 ```java
 @NullMarked
-package com.aureus.platform.poupanca.service;
+package com.aurix.platform.poupanca.service;
 ```
 
 ## Eventos Kafka
@@ -322,7 +322,7 @@ package com.aureus.platform.poupanca.service;
 ## Estrutura de Pacotes
 
 ```
-com.aureus.platform.poupanca/
+com.aurix.platform.poupanca/
   config/
     PoupancaHttpConfig.java       (@EnableResilientMethods, @ImportHttpServices)
     PoupancaKafkaConfig.java
@@ -362,7 +362,7 @@ com.aureus.platform.poupanca/
 
 ## Extrato PDF
 
-- Gerado via `aureus-shared` (biblioteca de PDF compartilhada)
+- Gerado via `aurix-shared` (biblioteca de PDF compartilhada)
 - Últimos 12 meses de movimentações
 - Cabeçalho: banco, agência, conta, cliente, período
 - Tabela: data, descrição, valor, saldo
@@ -390,13 +390,13 @@ server:
 
 spring:
   application:
-    name: aureus-poupanca
+    name: aurix-poupanca
   profiles:
     active: dev
   datasource:
-    url: jdbc:postgresql://localhost:5432/aureus
-    username: aureus
-    password: aureus123
+    url: jdbc:postgresql://localhost:5432/aurix
+    username: aurix
+    password: aurix123
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -417,13 +417,13 @@ spring:
   kafka:
     bootstrap-servers: localhost:9092
     consumer:
-      group-id: aureus-poupanca-group
+      group-id: aurix-poupanca-group
       auto-offset-reset: earliest
     producer:
       acks: all
       retries: 3
 
-aureus:
+aurix:
   poupanca:
     iof:
       alquota-geral: 0.0046

@@ -2,7 +2,7 @@
 
 ## Summary
 
-Extend the existing `aureus-credit` module to support business credit (Crédito PJ) by adding CNPJ bureau scoring, PJ-specific decision rules, PJ eligibility rules in the catalog module, and Limite Rotativo via the business account's `limiteCredito`. Reuses the existing `SolicitacaoCredito` entity and workflow for loan-type products (Capital de Giro).
+Extend the existing `aurix-credit` module to support business credit (Crédito PJ) by adding CNPJ bureau scoring, PJ-specific decision rules, PJ eligibility rules in the catalog module, and Limite Rotativo via the business account's `limiteCredito`. Reuses the existing `SolicitacaoCredito` entity and workflow for loan-type products (Capital de Giro).
 
 ## Architecture
 
@@ -45,7 +45,7 @@ When `cliente.tipoPessoa == JURIDICA`:
 
 ### 3a. Cliente entity — add PJ financial fields
 
-The credit module needs access to PJ financial data during decision/eligibility. Rather than coupling the credit module to the onboarding module's entities, add key financial fields to `Cliente` in `aureus-shared`:
+The credit module needs access to PJ financial data during decision/eligibility. Rather than coupling the credit module to the onboarding module's entities, add key financial fields to `Cliente` in `aurix-shared`:
 
 - `faturamentoMensal` (BigDecimal)
 - `capitalSocial` (BigDecimal)
@@ -100,7 +100,7 @@ POST /api/core/clientes → {
 }
 ```
 
-Update `ClienteController` + `ClienteService.criarCliente()` in `aureus-core` to accept and persist these new fields.
+Update `ClienteController` + `ClienteService.criarCliente()` in `aurix-core` to accept and persist these new fields.
 
 ### 3c. OnboardingPJService update
 

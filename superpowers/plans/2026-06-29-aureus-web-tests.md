@@ -1,8 +1,8 @@
-# Aureus-web Test Coverage Implementation Plan
+# Aurix-web Test Coverage Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Full test coverage for aureus-web — infra, services, components, pages, and App routing.
+**Goal:** Full test coverage for aurix-web — infra, services, components, pages, and App routing.
 
 **Architecture:** Jest (CRA/react-scripts) + @testing-library/react. Mock services via `jest.mock()` + `__mocks__/` directory. Shared `renderWithProviders` wrapper.
 
@@ -10,23 +10,23 @@
 
 ## Global Constraints
 
-- All test files go in `aureus-web/src/` mirroring source structure
+- All test files go in `aurix-web/src/` mirroring source structure
 - No TypeScript — all files are `.js`
 - Use `renderWithProviders` for component/page tests (BrowserRouter + ThemeProvider wrapper)
 - Mock `apiService` and `authService` via `jest.mock()` in each test suite
 - Use `jest.mock('../../services/apiService', () => ({...}))` for page tests
 - Setup: `src/setupTests.js` mocks `window.matchMedia` + imports `@testing-library/jest-dom`
-- Run: `npm test` from `frontend/aureus-web/` (CRA watch mode) or `npx react-scripts test --watchAll=false`
+- Run: `npm test` from `frontend/aurix-web/` (CRA watch mode) or `npx react-scripts test --watchAll=false`
 - Commits target `develop` branch (or `main` per session context)
 
 ---
 ### Task 1: Test Infrastructure (setupTests + mocks + test-utils)
 
 **Files:**
-- Create: `frontend/aureus-web/src/setupTests.js`
-- Create: `frontend/aureus-web/src/test-utils.js`
-- Create: `frontend/aureus-web/src/services/__mocks__/apiService.js`
-- Create: `frontend/aureus-web/src/services/__mocks__/authService.js`
+- Create: `frontend/aurix-web/src/setupTests.js`
+- Create: `frontend/aurix-web/src/test-utils.js`
+- Create: `frontend/aurix-web/src/services/__mocks__/apiService.js`
+- Create: `frontend/aurix-web/src/services/__mocks__/authService.js`
 
 - [ ] **Step 1: Create `src/setupTests.js`**
 
@@ -162,7 +162,7 @@ export default authService;
 - [ ] **Step 5: Verify setup**
 
 ```bash
-cd /mnt/c/Users/wende/Projects/aureus-platform/frontend/aureus-web
+cd /mnt/c/Users/wende/Projects/aurix-platform/frontend/aurix-web
 npx react-scripts test --watchAll=false --noStackTrace 2>&1 | tail -20
 ```
 CRA may complain about no tests found (passWithNoTests). Expected: exits with 0.
@@ -170,7 +170,7 @@ CRA may complain about no tests found (passWithNoTests). Expected: exits with 0.
 - [ ] **Step 6: Commit**
 
 ```bash
-git add frontend/aureus-web/src/setupTests.js frontend/aureus-web/src/test-utils.js frontend/aureus-web/src/services/__mocks__/apiService.js frontend/aureus-web/src/services/__mocks__/authService.js
+git add frontend/aurix-web/src/setupTests.js frontend/aurix-web/src/test-utils.js frontend/aurix-web/src/services/__mocks__/apiService.js frontend/aurix-web/src/services/__mocks__/authService.js
 git commit -m "test(web): test infrastructure - setupTests, renderWithProviders, service mocks"
 ```
 
@@ -179,8 +179,8 @@ git commit -m "test(web): test infrastructure - setupTests, renderWithProviders,
 ### Task 2: Service Tests (apiService + authService)
 
 **Files:**
-- Create: `frontend/aureus-web/src/services/apiService.test.js`
-- Create: `frontend/aureus-web/src/services/authService.test.js`
+- Create: `frontend/aurix-web/src/services/apiService.test.js`
+- Create: `frontend/aurix-web/src/services/authService.test.js`
 
 - [ ] **Step 1: Create `apiService.test.js`**
 
@@ -190,7 +190,7 @@ import axios from 'axios';
 import api from './apiService';
 
 beforeEach(() => {
-  localStorage.setItem('aureus_token', 'test-token');
+  localStorage.setItem('aurix_token', 'test-token');
 });
 afterEach(() => {
   localStorage.clear();
@@ -240,7 +240,7 @@ test('interceptor redireciona ao receber 401', async () => {
   window.location = { href: '' };
   axios.get.mockRejectedValue({ response: { status: 401 } });
   await expect(api.getContas()).rejects.toThrow();
-  expect(localStorage.getItem('aureus_token')).toBeNull();
+  expect(localStorage.getItem('aurix_token')).toBeNull();
   expect(window.location.href).toBe('/login');
 });
 ```
@@ -253,7 +253,7 @@ import axios from 'axios';
 import auth from './authService';
 
 beforeEach(() => {
-  localStorage.setItem('aureus_token', 'test-token');
+  localStorage.setItem('aurix_token', 'test-token');
 });
 afterEach(() => {
   localStorage.clear();
@@ -276,7 +276,7 @@ test('getCurrentUser envia GET para /auth/me', async () => {
 
 test('logout limpa token do localStorage', () => {
   auth.logout();
-  expect(localStorage.getItem('aureus_token')).toBeNull();
+  expect(localStorage.getItem('aurix_token')).toBeNull();
 });
 
 test('register envia POST para /auth/register', async () => {
@@ -295,7 +295,7 @@ test('requestPasswordReset envia POST para /auth/password-reset', async () => {
 - [ ] **Step 3: Run tests**
 
 ```bash
-cd /mnt/c/Users/wende/Projects/aureus-platform/frontend/aureus-web
+cd /mnt/c/Users/wende/Projects/aurix-platform/frontend/aurix-web
 npx react-scripts test --watchAll=false --noStackTrace 2>&1 | tail -30
 ```
 Expected: 12 tests pass (7 apiService + 5 authService)
@@ -303,7 +303,7 @@ Expected: 12 tests pass (7 apiService + 5 authService)
 - [ ] **Step 4: Commit**
 
 ```bash
-git add frontend/aureus-web/src/services/apiService.test.js frontend/aureus-web/src/services/authService.test.js
+git add frontend/aurix-web/src/services/apiService.test.js frontend/aurix-web/src/services/authService.test.js
 git commit -m "test(web): apiService and authService unit tests"
 ```
 
@@ -312,9 +312,9 @@ git commit -m "test(web): apiService and authService unit tests"
 ### Task 3: Component Tests (Navbar + Sidebar + Dashboard)
 
 **Files:**
-- Create: `frontend/aureus-web/src/components/Navbar.test.js`
-- Create: `frontend/aureus-web/src/components/Sidebar.test.js`
-- Create: `frontend/aureus-web/src/components/Dashboard.test.js`
+- Create: `frontend/aurix-web/src/components/Navbar.test.js`
+- Create: `frontend/aurix-web/src/components/Sidebar.test.js`
+- Create: `frontend/aurix-web/src/components/Dashboard.test.js`
 
 - [ ] **Step 1: Create `Navbar.test.js`**
 
@@ -342,7 +342,7 @@ function renderNavbar(props = {}) {
 
 test('renderiza nome do banco', () => {
   renderNavbar();
-  expect(screen.getByText(/AUREUS Internet Banking/i)).toBeInTheDocument();
+  expect(screen.getByText(/AURIX Internet Banking/i)).toBeInTheDocument();
 });
 
 test('renderiza nome do usuario', () => {
@@ -481,7 +481,7 @@ test('abre dialog do PIX', async () => {
 - [ ] **Step 4: Run component tests**
 
 ```bash
-cd /mnt/c/Users/wende/Projects/aureus-platform/frontend/aureus-web
+cd /mnt/c/Users/wende/Projects/aurix-platform/frontend/aurix-web
 npx react-scripts test --watchAll=false --noStackTrace 2>&1 | tail -30
 ```
 Expected: ~17 tests pass (6 Navbar + 3 Sidebar + 6 Dashboard component)
@@ -489,7 +489,7 @@ Expected: ~17 tests pass (6 Navbar + 3 Sidebar + 6 Dashboard component)
 - [ ] **Step 5: Commit**
 
 ```bash
-git add frontend/aureus-web/src/components/Navbar.test.js frontend/aureus-web/src/components/Sidebar.test.js frontend/aureus-web/src/components/Dashboard.test.js
+git add frontend/aurix-web/src/components/Navbar.test.js frontend/aurix-web/src/components/Sidebar.test.js frontend/aurix-web/src/components/Dashboard.test.js
 git commit -m "test(web): Navbar, Sidebar, and Dashboard component tests"
 ```
 
@@ -498,10 +498,10 @@ git commit -m "test(web): Navbar, Sidebar, and Dashboard component tests"
 ### Task 4: Page Tests — Login + Dashboard + Contas + Transacoes
 
 **Files:**
-- Create: `frontend/aureus-web/src/pages/Login.test.js`
-- Create: `frontend/aureus-web/src/pages/Dashboard.test.js`
-- Create: `frontend/aureus-web/src/pages/Contas.test.js`
-- Create: `frontend/aureus-web/src/pages/Transacoes.test.js`
+- Create: `frontend/aurix-web/src/pages/Login.test.js`
+- Create: `frontend/aurix-web/src/pages/Dashboard.test.js`
+- Create: `frontend/aurix-web/src/pages/Contas.test.js`
+- Create: `frontend/aurix-web/src/pages/Transacoes.test.js`
 
 - [ ] **Step 1: Create `Login.test.js`**
 
@@ -646,7 +646,7 @@ test('renderiza transacoes carregadas', async () => {
 - [ ] **Step 5: Run tests**
 
 ```bash
-cd /mnt/c/Users/wende/Projects/aureus-platform/frontend/aureus-web
+cd /mnt/c/Users/wende/Projects/aurix-platform/frontend/aurix-web
 npx react-scripts test --watchAll=false --noStackTrace 2>&1 | tail -40
 ```
 Expected: ~13 tests pass (4 Login + 5 Dashboard page + 2 Contas + 3 Transacoes)
@@ -654,7 +654,7 @@ Expected: ~13 tests pass (4 Login + 5 Dashboard page + 2 Contas + 3 Transacoes)
 - [ ] **Step 6: Commit**
 
 ```bash
-git add frontend/aureus-web/src/pages/Login.test.js frontend/aureus-web/src/pages/Dashboard.test.js frontend/aureus-web/src/pages/Contas.test.js frontend/aureus-web/src/pages/Transacoes.test.js
+git add frontend/aurix-web/src/pages/Login.test.js frontend/aurix-web/src/pages/Dashboard.test.js frontend/aurix-web/src/pages/Contas.test.js frontend/aurix-web/src/pages/Transacoes.test.js
 git commit -m "test(web): Login, Dashboard, Contas, Transacoes page tests"
 ```
 
@@ -663,10 +663,10 @@ git commit -m "test(web): Login, Dashboard, Contas, Transacoes page tests"
 ### Task 5: Page Tests — PIX + Cartoes + Credito + Investimentos
 
 **Files:**
-- Create: `frontend/aureus-web/src/pages/PIX.test.js`
-- Create: `frontend/aureus-web/src/pages/Cartoes.test.js`
-- Create: `frontend/aureus-web/src/pages/Credito.test.js`
-- Create: `frontend/aureus-web/src/pages/Investimentos.test.js`
+- Create: `frontend/aurix-web/src/pages/PIX.test.js`
+- Create: `frontend/aurix-web/src/pages/Cartoes.test.js`
+- Create: `frontend/aurix-web/src/pages/Credito.test.js`
+- Create: `frontend/aurix-web/src/pages/Investimentos.test.js`
 
 - [ ] **Step 1: Create `PIX.test.js`**
 
@@ -820,7 +820,7 @@ test('abre dialog de simulacao', async () => {
 - [ ] **Step 5: Run tests**
 
 ```bash
-cd /mnt/c/Users/wende/Projects/aureus-platform/frontend/aureus-web
+cd /mnt/c/Users/wende/Projects/aurix-platform/frontend/aurix-web
 npx react-scripts test --watchAll=false --noStackTrace 2>&1 | tail -40
 ```
 Expected: ~13 tests pass (4 PIX + 3 Cartoes + 3 Credito + 3 Investimentos)
@@ -828,7 +828,7 @@ Expected: ~13 tests pass (4 PIX + 3 Cartoes + 3 Credito + 3 Investimentos)
 - [ ] **Step 6: Commit**
 
 ```bash
-git add frontend/aureus-web/src/pages/PIX.test.js frontend/aureus-web/src/pages/Cartoes.test.js frontend/aureus-web/src/pages/Credito.test.js frontend/aureus-web/src/pages/Investimentos.test.js
+git add frontend/aurix-web/src/pages/PIX.test.js frontend/aurix-web/src/pages/Cartoes.test.js frontend/aurix-web/src/pages/Credito.test.js frontend/aurix-web/src/pages/Investimentos.test.js
 git commit -m "test(web): PIX, Cartoes, Credito, Investimentos page tests"
 ```
 
@@ -837,9 +837,9 @@ git commit -m "test(web): PIX, Cartoes, Credito, Investimentos page tests"
 ### Task 6: Page Tests — Onboarding + Perfil + Configuracoes
 
 **Files:**
-- Create: `frontend/aureus-web/src/pages/Onboarding.test.js`
-- Create: `frontend/aureus-web/src/pages/Perfil.test.js`
-- Create: `frontend/aureus-web/src/pages/Configuracoes.test.js`
+- Create: `frontend/aurix-web/src/pages/Onboarding.test.js`
+- Create: `frontend/aurix-web/src/pages/Perfil.test.js`
+- Create: `frontend/aurix-web/src/pages/Configuracoes.test.js`
 
 - [ ] **Step 1: Create `Onboarding.test.js`**
 
@@ -939,7 +939,7 @@ test('altera idioma', () => {
 - [ ] **Step 5: Run tests**
 
 ```bash
-cd /mnt/c/Users/wende/Projects/aureus-platform/frontend/aureus-web
+cd /mnt/c/Users/wende/Projects/aurix-platform/frontend/aurix-web
 npx react-scripts test --watchAll=false --noStackTrace 2>&1 | tail -40
 ```
 Expected: ~9 tests pass (2 Onboarding + 3 Perfil + 3 Configuracoes)
@@ -947,7 +947,7 @@ Expected: ~9 tests pass (2 Onboarding + 3 Perfil + 3 Configuracoes)
 - [ ] **Step 7: Commit**
 
 ```bash
-git add frontend/aureus-web/src/pages/Onboarding.test.js frontend/aureus-web/src/pages/Perfil.test.js frontend/aureus-web/src/pages/Configuracoes.test.js
+git add frontend/aurix-web/src/pages/Onboarding.test.js frontend/aurix-web/src/pages/Perfil.test.js frontend/aurix-web/src/pages/Configuracoes.test.js
 git commit -m "test(web): Onboarding, Perfil, Configuracoes page tests"
 ```
 
@@ -956,7 +956,7 @@ git commit -m "test(web): Onboarding, Perfil, Configuracoes page tests"
 ### Task 7: App Integration Test (Auth + Routing)
 
 **Files:**
-- Modify: `frontend/aureus-web/src/App.test.js`
+- Modify: `frontend/aurix-web/src/App.test.js`
 
 - [ ] **Step 1: Write `App.test.js`**
 
@@ -1023,7 +1023,7 @@ test('logout redireciona para Login', async () => {
 - [ ] **Step 2: Run all tests**
 
 ```bash
-cd /mnt/c/Users/wende/Projects/aureus-platform/frontend/aureus-web
+cd /mnt/c/Users/wende/Projects/aurix-platform/frontend/aurix-web
 npx react-scripts test --watchAll=false --noStackTrace 2>&1 | tail -40
 ```
 Expected: All ~42 tests pass (12 service + 17 component + 13 page + 5 App)
@@ -1031,7 +1031,7 @@ Expected: All ~42 tests pass (12 service + 17 component + 13 page + 5 App)
 - [ ] **Step 3: Commit**
 
 ```bash
-git add frontend/aureus-web/src/App.test.js
+git add frontend/aurix-web/src/App.test.js
 git commit -m "test(web): App auth flow and routing integration tests"
 ```
 
@@ -1042,7 +1042,7 @@ git commit -m "test(web): App auth flow and routing integration tests"
 - [ ] **Step 1: Run full test suite**
 
 ```bash
-cd /mnt/c/Users/wende/Projects/aureus-platform/frontend/aureus-web
+cd /mnt/c/Users/wende/Projects/aurix-platform/frontend/aurix-web
 npx react-scripts test --watchAll=false 2>&1 | grep -E "Tests:|Test Suites:|PASS|FAIL"
 ```
 Expected: All suites passing, 0 failures.
@@ -1050,7 +1050,7 @@ Expected: All suites passing, 0 failures.
 - [ ] **Step 2: Run lint (if linting is set up)**
 
 ```bash
-cd /mnt/c/Users/wende/Projects/aureus-platform/frontend/aureus-web
+cd /mnt/c/Users/wende/Projects/aurix-platform/frontend/aurix-web
 npx eslint src --ext .js,.jsx 2>&1 | tail -10
 ```
 

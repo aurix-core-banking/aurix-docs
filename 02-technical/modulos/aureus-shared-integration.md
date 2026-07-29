@@ -1,6 +1,6 @@
-# AUREUS - Integracao entre Modulos
+# AURIX - Integracao entre Modulos
 
-Integracao entre todos os modulos da plataforma AUREUS: comunicacao sincrona e assincrona, cache compartilhado e APIs unificadas.
+Integracao entre todos os modulos da plataforma AURIX: comunicacao sincrona e assincrona, cache compartilhado e APIs unificadas.
 
 ## Componentes
 
@@ -12,9 +12,9 @@ Integracao entre todos os modulos da plataforma AUREUS: comunicacao sincrona e a
 
 ## Fluxos
 
-- **Criacao de conta**: aureus-core -> EventPublisher -> Kafka -> EventListener -> SharedCacheService; aureus-financial <- IntegrationService
-- **Transacao**: aureus-core -> Kafka/EventListener; aureus-financial, aureus-controller, aureus-tax, aureus-accounting <- IntegrationService
-- **Tarifas**: aureus-pricing <- IntegrationService; SharedCacheService -> Redis
+- **Criacao de conta**: aurix-core -> EventPublisher -> Kafka -> EventListener -> SharedCacheService; aurix-financial <- IntegrationService
+- **Transacao**: aurix-core -> Kafka/EventListener; aurix-financial, aurix-controller, aurix-tax, aurix-accounting <- IntegrationService
+- **Tarifas**: aurix-pricing <- IntegrationService; SharedCacheService -> Redis
 
 ## APIs de Integracao
 
@@ -37,4 +37,4 @@ Integracao entre todos os modulos da plataforma AUREUS: comunicacao sincrona e a
 
 ## Configuracao
 
-URLs dos modulos em `aureus.integration.*` (core, financial, controller, tax, accounting, pricing). Kafka bootstrap e Redis em config padrao.
+URLs dos modulos em `aurix.integration.*` (core, financial, controller, tax, accounting, pricing). Kafka bootstrap e Redis em config padrao.

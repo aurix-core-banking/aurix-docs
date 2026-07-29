@@ -25,12 +25,12 @@ A conexão com SPI/STR em ambiente real exige certificado digital (cliente) emit
 2. Obter certificado digital para o ambiente (homologação e produção).
 3. Exportar o certificado para PKCS12 (.p12) ou manter em formato aceito pela JVM (JKS/PKCS12).
 
-### Configuração no AUREUS
+### Configuração no AURIX
 
-No módulo `aureus-bacen`, em `application.yml` ou em perfis `application-homolog.yml` / `application-prod.yml`:
+No módulo `aurix-bacen`, em `application.yml` ou em perfis `application-homolog.yml` / `application-prod.yml`:
 
 ```yaml
-aureus:
+aurix:
   bacen:
     environment: homologacao   # ou producao
     ispb: "12345678"

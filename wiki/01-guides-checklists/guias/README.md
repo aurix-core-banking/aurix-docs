@@ -14,6 +14,6 @@ Todo o material para go live (checklist, guia PIX, seeds, templates, suporte) es
 | [Primeira conta](../../03-development/portal-desenvolvedor/guias/primeira-conta.md) | Primeira conta via API (desenvolvedor) |
 | [Primeiro PIX](../../03-development/portal-desenvolvedor/guias/primeiro-pix.md) | Primeiro PIX via API (desenvolvedor) |
 | [Connections Airflow e dbt](../../04-data-ai/data-pipelines/AIRFLOW-DBT-CONNECTIONS.md) | Configuração Data Lakehouse (connections, variáveis, buckets) |
-| [Instalação Aureus Admin](instalacao-admin.md) | Pré-requisitos, npm, config e build do painel admin |
+| [Instalação Aurix Admin](instalacao-admin.md) | Pré-requisitos, npm, config e build do painel admin |
 
 [Voltar ao índice da wiki](../../README.md)

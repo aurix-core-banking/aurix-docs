@@ -7,34 +7,34 @@
 
 ## Contexto
 
-A plataforma tem 27+ módulos Spring Boot (`backend/aureus-*`) e hoje a comunicação entre eles é inconsistente, com dois padrões coexistindo de forma parcial e não documentada:
+A plataforma tem 27+ módulos Spring Boot (`backend/aurix-*`) e hoje a comunicação entre eles é inconsistente, com dois padrões coexistindo de forma parcial e não documentada:
 
-- **Síncrono ad-hoc**: cada módulo consumidor escreve seu próprio client REST manualmente — `CoreApiClient` (`aureus-onboarding`), `CoreApiClientImpl` (`aureus-openfinance`) — sem contrato gerado, sem versionamento, com risco de drift entre o que o client espera e o que o serviço expõe.
-- **Assíncrono parcialmente adotado**: existe um `EventHub` em `aureus-shared` (`eventhub/EventHub.java`) com roteamento, retry exponencial, prioridade e Dead Letter Queue — bem desenhado — e um padrão de outbox transacional em `aureus-core` (`OutboxEventPublisher`/`OutboxRelay`). Mas só `aureus-core` e `aureus-pix` de fato publicam eventos hoje. Os módulos `aureus-analytics`, `aureus-audit`, `aureus-compliance`, `aureus-credit`, `aureus-security`, `aureus-treasury` declaram a dependência do Kafka no `pom.xml` mas não publicam nem consomem nada.
-- **Consumidores no lugar errado**: `EventListener` (`@KafkaListener` para `conta-criada`, `transacao-realizada`, `imposto-calculado` etc.) vive dentro de `aureus-shared`, uma biblioteca compartilhada — ou seja, lógica de negócio de um domínio específico roda implicitamente em qualquer serviço que dependa de `aureus-shared`, em vez de pertencer ao serviço que de fato é o dono daquele evento.
-- **Sem contrato formal**: `aureus-api-specs` tem apenas 1 OpenAPI (`aureus-core.yaml`) para toda a plataforma; não há AsyncAPI para os tópicos Kafka, nem convenção de nome/versionamento de tópico (`conta-criada` é um nome plano, sem domínio ou versão).
-- **Gateway só cobre tráfego norte-sul**: `aureus-gateway` faz autenticação por API key e rate limit na borda, mas não há nada padronizado para tráfego leste-oeste (serviço a serviço) — nem mTLS, nem service mesh.
+- **Síncrono ad-hoc**: cada módulo consumidor escreve seu próprio client REST manualmente — `CoreApiClient` (`aurix-onboarding`), `CoreApiClientImpl` (`aurix-openfinance`) — sem contrato gerado, sem versionamento, com risco de drift entre o que o client espera e o que o serviço expõe.
+- **Assíncrono parcialmente adotado**: existe um `EventHub` em `aurix-shared` (`eventhub/EventHub.java`) com roteamento, retry exponencial, prioridade e Dead Letter Queue — bem desenhado — e um padrão de outbox transacional em `aurix-core` (`OutboxEventPublisher`/`OutboxRelay`). Mas só `aurix-core` e `aurix-pix` de fato publicam eventos hoje. Os módulos `aurix-analytics`, `aurix-audit`, `aurix-compliance`, `aurix-credit`, `aurix-security`, `aurix-treasury` declaram a dependência do Kafka no `pom.xml` mas não publicam nem consomem nada.
+- **Consumidores no lugar errado**: `EventListener` (`@KafkaListener` para `conta-criada`, `transacao-realizada`, `imposto-calculado` etc.) vive dentro de `aurix-shared`, uma biblioteca compartilhada — ou seja, lógica de negócio de um domínio específico roda implicitamente em qualquer serviço que dependa de `aurix-shared`, em vez de pertencer ao serviço que de fato é o dono daquele evento.
+- **Sem contrato formal**: `aurix-api-specs` tem apenas 1 OpenAPI (`aurix-core.yaml`) para toda a plataforma; não há AsyncAPI para os tópicos Kafka, nem convenção de nome/versionamento de tópico (`conta-criada` é um nome plano, sem domínio ou versão).
+- **Gateway só cobre tráfego norte-sul**: `aurix-gateway` faz autenticação por API key e rate limit na borda, mas não há nada padronizado para tráfego leste-oeste (serviço a serviço) — nem mTLS, nem service mesh.
 
 Isso aumenta o risco de inconsistência de dados em fluxos financeiros multi-módulo (PIX → liquidação → contabilidade → fiscal) e de regressão silenciosa quando um client REST escrito a mão fica desatualizado.
 
 ## Decisão
 
 ### 1. Síncrono (consulta / validação que precisa de resposta imediata)
-REST interno via **clients gerados a partir de OpenAPI**, não mais classes de client escritas à mão. Padronizar em `WebClient` (já usado em `aureus-bacen`). Cada módulo publica seu próprio OpenAPI (expandir `aureus-api-specs` para cobrir todos os módulos, não só `aureus-core`); os specs que faltam devem ser gerados a partir dos controllers existentes (springdoc-openapi) e versionados no repositório.
+REST interno via **clients gerados a partir de OpenAPI**, não mais classes de client escritas à mão. Padronizar em `WebClient` (já usado em `aurix-bacen`). Cada módulo publica seu próprio OpenAPI (expandir `aurix-api-specs` para cobrir todos os módulos, não só `aurix-core`); os specs que faltam devem ser gerados a partir dos controllers existentes (springdoc-openapi) e versionados no repositório.
 
 ### 2. Assíncrono (mudança de estado / evento de domínio entre módulos)
-Kafka via **outbox transacional**, estendendo o padrão já existente em `aureus-core` para os módulos que hoje mudam estado financeiro crítico sem publicar nada: `aureus-pix` (parcial), `aureus-settlement`, `aureus-billing`, `aureus-bacen`, `aureus-treasury`, `aureus-credit`, `aureus-tax`, `aureus-accounting`. Outbox evita dual-write inconsistente (gravar no banco e falhar ao publicar no Kafka) e dá trilha de auditoria nativa — importante em banking.
+Kafka via **outbox transacional**, estendendo o padrão já existente em `aurix-core` para os módulos que hoje mudam estado financeiro crítico sem publicar nada: `aurix-pix` (parcial), `aurix-settlement`, `aurix-billing`, `aurix-bacen`, `aurix-treasury`, `aurix-credit`, `aurix-tax`, `aurix-accounting`. Outbox evita dual-write inconsistente (gravar no banco e falhar ao publicar no Kafka) e dá trilha de auditoria nativa — importante em banking.
 
 **Convenção de tópico**: `<dominio>.<entidade>.<evento>.<versao>` (ex.: `core.conta.criada.v1`, `pix.transferencia.liquidada.v1`) em vez dos nomes planos atuais (`conta-criada`). Evita colisão de nomes entre módulos e permite evolução de schema sem quebrar consumidores antigos.
 
-**Consumidores pertencem ao serviço dono do caso de uso**, nunca a `aureus-shared`. Mover a lógica hoje em `EventListener` (aureus-shared) para os serviços que realmente consomem aquele evento (ex.: lógica de cache de conta deveria estar em quem precisa do cache, não centralizada numa lib compartilhada por todos).
+**Consumidores pertencem ao serviço dono do caso de uso**, nunca a `aurix-shared`. Mover a lógica hoje em `EventListener` (aurix-shared) para os serviços que realmente consomem aquele evento (ex.: lógica de cache de conta deveria estar em quem precisa do cache, não centralizada numa lib compartilhada por todos).
 
 ### 3. Fluxos multi-módulo com múltiplas etapas
 **Saga coreografada via eventos Kafka**, não transação distribuída (2PC). Cada serviço reage a um evento, executa sua etapa local e publica o evento seguinte (ou um evento de compensação em caso de falha). Ex.: PIX liquidado → evento → lançamento contábil → evento → cálculo de imposto. Falha em qualquer etapa publica evento de compensação para desfazer etapas anteriores.
 
 ### 4. Contrato
-- **OpenAPI** para toda chamada síncrona (`aureus-api-specs/*.yaml`, um arquivo por módulo).
-- **AsyncAPI** para todo tópico Kafka publicado, descrevendo schema do evento, versão e produtor — mesmo diretório `aureus-api-specs`.
+- **OpenAPI** para toda chamada síncrona (`aurix-api-specs/*.yaml`, um arquivo por módulo).
+- **AsyncAPI** para todo tópico Kafka publicado, descrevendo schema do evento, versão e produtor — mesmo diretório `aurix-api-specs`.
 - Geração de client/DTO no build (Maven plugin de codegen), eliminando classes de client escritas à mão.
 
 ### 5. Segurança leste-oeste
@@ -60,7 +60,7 @@ Vale deixar explícito para não ser reinterpretado depois como "adotamos EDA": 
 - Mais disciplina de contrato (manter OpenAPI/AsyncAPI atualizados) do que simplesmente chamar um endpoint.
 - Consistência eventual em vez de imediata nos fluxos assíncronos — exige que cada módulo trate estados intermediários (ex.: "PIX recebido, aguardando lançamento contábil") na sua modelagem.
 - Saga coreografada é mais difícil de depurar que uma chamada síncrona direta — requer correlação de eventos por ID de transação/trace.
-- Esforço de migração: mover `EventListener` de `aureus-shared` para os serviços donos é uma refatoração não trivial.
+- Esforço de migração: mover `EventListener` de `aurix-shared` para os serviços donos é uma refatoração não trivial.
 
 ## Alternativas consideradas
 
@@ -73,23 +73,23 @@ Vale deixar explícito para não ser reinterpretado depois como "adotamos EDA": 
 
 | Módulo | Situação atual | Ação | Status |
 |--------|-----------------|------|--------|
-| `aureus-core` | Outbox + Kafka publicando | Referência — manter, alinhar nome de tópico à nova convenção | ⏳ Nome de tópico ainda não padronizado |
-| `aureus-pix` | Publica eventos via EventHub | Migrar para outbox transacional; alinhar nome de tópico | ⏳ Pendente |
-| `aureus-settlement` | Não publica nada | Adotar outbox; publicar eventos de liquidação | ⏳ Pendente (saldo já corrigido via ADR-0002) |
-| `aureus-billing` | Não publica nada | Adotar outbox; publicar evento de fatura emitida/paga | ⏳ Pendente |
-| `aureus-bacen` | Não publica nada | Adotar outbox; publicar evento de relatório gerado/enviado | ⏳ Pendente |
-| `aureus-treasury` | Dependência Kafka não usada | Adotar outbox ou remover dependência morta | ⏳ Pendente |
-| `aureus-credit` | Dependência Kafka não usada | Adotar outbox; publicar evento de decisão de crédito | ⏳ Pendente |
-| `aureus-tax` | Não publica nada | Adotar outbox; publicar evento de imposto calculado | ⏳ Pendente |
-| `aureus-accounting` | Não publica nada | Consumir eventos de billing/settlement; publicar lançamento contábil | ⏳ Pendente |
-| `aureus-analytics` | Dependência Kafka não usada | Tornar-se consumidor (não produtor) dos eventos de negócio | ⏳ Pendente |
-| `aureus-audit` | Dependência Kafka não usada | Tornar-se consumidor de todos os eventos relevantes para trilha de auditoria | ⏳ Pendente |
-| `aureus-compliance` | Dependência Kafka não usada | Consumir eventos de transação/conta para checagens AML/PLD | ⏳ Pendente |
-| `aureus-security` | Dependência Kafka não usada | Avaliar se precisa de eventing ou se é só dependência morta | ⏳ Pendente |
-| `aureus-gateway` | Dependência Kafka não usada | Remover dependência — gateway de borda não deveria precisar de broker | ✅ Feito — `spring-kafka`/`spring-kafka-test` removidos do pom |
-| `aureus-onboarding` | Client REST escrito à mão (`CoreApiClient`) | Migrar para client gerado a partir do OpenAPI do `aureus-core` | ⏳ Pendente |
-| `aureus-openfinance` | Client REST escrito à mão (`CoreApiClientImpl`) | Migrar para client gerado a partir do OpenAPI do `aureus-core` | ⏳ Pendente |
-| `aureus-shared` | Hospeda `EventListener` com lógica de negócio | Remover listeners de domínio daqui; mover para o serviço dono de cada evento | ✅ Feito — `EventListener.java` removido; os 3 listeners com lógica real (`conta-criada`, `conta-atualizada`, `transacao-realizada`) foram para `aureus-core/.../event/ContaTransacaoEventListener.java` com lookups reais (antes eram dados fabricados); os outros 5 listeners (`conta-bloqueada`, `transacao-liquidada`, `transacao-conciliada`, `imposto-calculado`, `imposto-registrado`) foram removidos — não tinham nenhum publicador e o corpo era um stub vazio, então não havia nada de real para realocar |
+| `aurix-core` | Outbox + Kafka publicando | Referência — manter, alinhar nome de tópico à nova convenção | ⏳ Nome de tópico ainda não padronizado |
+| `aurix-pix` | Publica eventos via EventHub | Migrar para outbox transacional; alinhar nome de tópico | ⏳ Pendente |
+| `aurix-settlement` | Não publica nada | Adotar outbox; publicar eventos de liquidação | ⏳ Pendente (saldo já corrigido via ADR-0002) |
+| `aurix-billing` | Não publica nada | Adotar outbox; publicar evento de fatura emitida/paga | ⏳ Pendente |
+| `aurix-bacen` | Não publica nada | Adotar outbox; publicar evento de relatório gerado/enviado | ⏳ Pendente |
+| `aurix-treasury` | Dependência Kafka não usada | Adotar outbox ou remover dependência morta | ⏳ Pendente |
+| `aurix-credit` | Dependência Kafka não usada | Adotar outbox; publicar evento de decisão de crédito | ⏳ Pendente |
+| `aurix-tax` | Não publica nada | Adotar outbox; publicar evento de imposto calculado | ⏳ Pendente |
+| `aurix-accounting` | Não publica nada | Consumir eventos de billing/settlement; publicar lançamento contábil | ⏳ Pendente |
+| `aurix-analytics` | Dependência Kafka não usada | Tornar-se consumidor (não produtor) dos eventos de negócio | ⏳ Pendente |
+| `aurix-audit` | Dependência Kafka não usada | Tornar-se consumidor de todos os eventos relevantes para trilha de auditoria | ⏳ Pendente |
+| `aurix-compliance` | Dependência Kafka não usada | Consumir eventos de transação/conta para checagens AML/PLD | ⏳ Pendente |
+| `aurix-security` | Dependência Kafka não usada | Avaliar se precisa de eventing ou se é só dependência morta | ⏳ Pendente |
+| `aurix-gateway` | Dependência Kafka não usada | Remover dependência — gateway de borda não deveria precisar de broker | ✅ Feito — `spring-kafka`/`spring-kafka-test` removidos do pom |
+| `aurix-onboarding` | Client REST escrito à mão (`CoreApiClient`) | Migrar para client gerado a partir do OpenAPI do `aurix-core` | ⏳ Pendente |
+| `aurix-openfinance` | Client REST escrito à mão (`CoreApiClientImpl`) | Migrar para client gerado a partir do OpenAPI do `aurix-core` | ⏳ Pendente |
+| `aurix-shared` | Hospeda `EventListener` com lógica de negócio | Remover listeners de domínio daqui; mover para o serviço dono de cada evento | ✅ Feito — `EventListener.java` removido; os 3 listeners com lógica real (`conta-criada`, `conta-atualizada`, `transacao-realizada`) foram para `aurix-core/.../event/ContaTransacaoEventListener.java` com lookups reais (antes eram dados fabricados); os outros 5 listeners (`conta-bloqueada`, `transacao-liquidada`, `transacao-conciliada`, `imposto-calculado`, `imposto-registrado`) foram removidos — não tinham nenhum publicador e o corpo era um stub vazio, então não havia nada de real para realocar |
 
 Também corrigido: `EventHub.publishEventWithDelay` e `publishEventWithRetryInternal` usavam `Thread.sleep` real
 dentro de `CompletableFuture.runAsync`, bloqueando uma thread do pool compartilhado pela duração inteira do

@@ -4,9 +4,9 @@
 
 ## Fix 1: Real File Upload in StepDocumentos
 
-**File:** `frontend/aureus-web/src/components/Onboarding/FormPJ/StepDocumentos.js`
+**File:** `frontend/aurix-web/src/components/Onboarding/FormPJ/StepDocumentos.js`
 
-Current: generates fake URL `https://storage.aureus.com/documents/...`
+Current: generates fake URL `https://storage.aurix.com/documents/...`
 Fix: Replace with `<input type="file">` + FileReader base64 conversion.
 
 Change the upload handler to:
@@ -46,7 +46,7 @@ Replace the button with:
 
 ## Fix 2: Call validarCNPJ in StepEmpresa
 
-**File:** `frontend/aureus-web/src/components/Onboarding/FormPJ/StepEmpresa.js`
+**File:** `frontend/aurix-web/src/components/Onboarding/FormPJ/StepEmpresa.js`
 
 After CNPJ is entered (onBlur or after format), call `validarCNPJPJ` to pre-fill company data.
 
@@ -72,7 +72,7 @@ const handleCnpjBlur = async () => {
 
 ## Fix 3: Document Removal Button
 
-**File:** `frontend/aureus-web/src/components/Onboarding/FormPJ/StepDocumentos.js`
+**File:** `frontend/aurix-web/src/components/Onboarding/FormPJ/StepDocumentos.js`
 
 Add delete button to each row in the document table. The endpoint is `DELETE /onboarding/contas/pj/{id}/documentos/{docId}` but this doesn't exist in the backend yet. 
 

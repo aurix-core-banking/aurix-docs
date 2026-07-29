@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Add PJ onboarding management pages to aureus-admin (back office) with reusable workflow components.
+**Goal:** Add PJ onboarding management pages to aurix-admin (back office) with reusable workflow components.
 
 **Architecture:** New `solicitacoes_pj` react-admin resource mapping to `/api/onboarding/contas/pj` with 4 reusable components (`StatusTimeline`, `DocumentList`, `SocioList`, `WorkflowActions`) and 2 pages (`SolicitacaoPJList`, `SolicitacaoPJShow`). Custom actions call the API directly via `fetchUtils.fetchJson`.
 
@@ -10,7 +10,7 @@
 
 ## Global Constraints
 
-- All paths are relative to `/mnt/c/Users/wende/Projects/aureus-platform/frontend/aureus-admin/src/`
+- All paths are relative to `/mnt/c/Users/wende/Projects/aurix-platform/frontend/aurix-admin/src/`
 - Follow existing patterns: functional components, `export const`, no default exports for page components, `label` prop on resource fields
 - Resource name must be `solicitacoes_pj` to match URL mapping in `resources.js`
 - BASE entry: `onboarding_pj: '/api/onboarding/contas'`
@@ -81,14 +81,14 @@ Insert after line 118 (after `solicitacoes_conta` Resource block):
 
 - [ ] **Step 6: Verify syntax**
 
-Run: `cd /mnt/c/Users/wende/Projects/aureus-platform/frontend && npm run lint -- --filter=aureus-admin 2>&1 | head -20`
+Run: `cd /mnt/c/Users/wende/Projects/aurix-platform/frontend && npm run lint -- --filter=aurix-admin 2>&1 | head -20`
 
 Expected: No errors (or only pre-existing ones unrelated to our changes)
 
 - [ ] **Step 7: Commit**
 
 ```bash
-git add frontend/aureus-admin/src/config/resources.js frontend/aureus-admin/src/App.js
+git add frontend/aurix-admin/src/config/resources.js frontend/aurix-admin/src/App.js
 git commit -m "feat(admin): add solicitacoes_pj resource mapping and registration"
 ```
 
@@ -208,14 +208,14 @@ export const StatusTimeline = ({ historico = [], statusAtual }) => {
 
 - [ ] **Step 2: Verify no syntax errors**
 
-Run: `node -e "require('@babel/core').parse(require('fs').readFileSync('components/StatusTimeline.js','utf8'),{presets:['react']})" 2>&1 || echo "Need babel, checking via lint"` then `cd /mnt/c/Users/wende/Projects/aureus-platform/frontend && npm run lint -- --filter=aureus-admin 2>&1 | head -20`
+Run: `node -e "require('@babel/core').parse(require('fs').readFileSync('components/StatusTimeline.js','utf8'),{presets:['react']})" 2>&1 || echo "Need babel, checking via lint"` then `cd /mnt/c/Users/wende/Projects/aurix-platform/frontend && npm run lint -- --filter=aurix-admin 2>&1 | head -20`
 
 Expected: No errors.
 
 - [ ] **Step 3: Commit**
 
 ```bash
-git add frontend/aureus-admin/src/components/StatusTimeline.js
+git add frontend/aurix-admin/src/components/StatusTimeline.js
 git commit -m "feat(admin): add StatusTimeline component for onboarding workflow"
 ```
 
@@ -350,14 +350,14 @@ export const DocumentList = ({ documentos = [], solicitacaoId, onRefresh }) => {
 
 - [ ] **Step 2: Verify via lint**
 
-Run: `cd /mnt/c/Users/wende/Projects/aureus-platform/frontend && npm run lint -- --filter=aureus-admin 2>&1 | head -20`
+Run: `cd /mnt/c/Users/wende/Projects/aurix-platform/frontend && npm run lint -- --filter=aurix-admin 2>&1 | head -20`
 
 Expected: No errors.
 
 - [ ] **Step 3: Commit**
 
 ```bash
-git add frontend/aureus-admin/src/components/DocumentList.js
+git add frontend/aurix-admin/src/components/DocumentList.js
 git commit -m "feat(admin): add DocumentList component with upload"
 ```
 
@@ -523,14 +523,14 @@ export const SocioList = ({ socios = [], solicitacaoId, onRefresh }) => {
 
 - [ ] **Step 2: Verify via lint**
 
-Run: `cd /mnt/c/Users/wende/Projects/aureus-platform/frontend && npm run lint -- --filter=aureus-admin 2>&1 | head -20`
+Run: `cd /mnt/c/Users/wende/Projects/aurix-platform/frontend && npm run lint -- --filter=aurix-admin 2>&1 | head -20`
 
 Expected: No errors.
 
 - [ ] **Step 3: Commit**
 
 ```bash
-git add frontend/aureus-admin/src/components/SocioList.js
+git add frontend/aurix-admin/src/components/SocioList.js
 git commit -m "feat(admin): add SocioList component with add/remove"
 ```
 
@@ -732,14 +732,14 @@ export const WorkflowActions = ({ solicitacaoId, statusAtual, onRefresh }) => {
 
 - [ ] **Step 2: Verify via lint**
 
-Run: `cd /mnt/c/Users/wende/Projects/aureus-platform/frontend && npm run lint -- --filter=aureus-admin 2>&1 | head -20`
+Run: `cd /mnt/c/Users/wende/Projects/aurix-platform/frontend && npm run lint -- --filter=aurix-admin 2>&1 | head -20`
 
 Expected: No errors.
 
 - [ ] **Step 3: Commit**
 
 ```bash
-git add frontend/aureus-admin/src/components/WorkflowActions.js
+git add frontend/aurix-admin/src/components/WorkflowActions.js
 git commit -m "feat(admin): add WorkflowActions component for onboarding actions"
 ```
 
@@ -813,14 +813,14 @@ export { SolicitacaoPJShow } from './SolicitacaoPJShow';
 
 - [ ] **Step 3: Verify via lint**
 
-Run: `cd /mnt/c/Users/wende/Projects/aureus-platform/frontend && npm run lint -- --filter=aureus-admin 2>&1 | head -20`
+Run: `cd /mnt/c/Users/wende/Projects/aurix-platform/frontend && npm run lint -- --filter=aurix-admin 2>&1 | head -20`
 
 Expected: No errors (warning about `SolicitacaoPJShow` not yet existing is expected — it will be resolved in Task 7).
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add frontend/aureus-admin/src/pages/SolicitacoesPJ/
+git add frontend/aurix-admin/src/pages/SolicitacoesPJ/
 git commit -m "feat(admin): add SolicitacaoPJList page"
 ```
 
@@ -928,19 +928,19 @@ export const SolicitacaoPJShow = (props) => (
 
 - [ ] **Step 2: Verify via lint**
 
-Run: `cd /mnt/c/Users/wende/Projects/aureus-platform/frontend && npm run lint -- --filter=aureus-admin 2>&1 | head -20`
+Run: `cd /mnt/c/Users/wende/Projects/aurix-platform/frontend && npm run lint -- --filter=aurix-admin 2>&1 | head -20`
 
 Expected: No errors.
 
 - [ ] **Step 3: Full build check**
 
-Run: `cd /mnt/c/Users/wende/Projects/aureus-platform/frontend && npm run build -- --filter=aureus-admin 2>&1 | tail -20`
+Run: `cd /mnt/c/Users/wende/Projects/aurix-platform/frontend && npm run build -- --filter=aurix-admin 2>&1 | tail -20`
 
 Expected: Build succeeds.
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add frontend/aureus-admin/src/pages/SolicitacoesPJ/SolicitacaoPJShow.js
+git add frontend/aurix-admin/src/pages/SolicitacoesPJ/SolicitacaoPJShow.js
 git commit -m "feat(admin): add SolicitacaoPJShow page with tabs and workflow actions"
 ```

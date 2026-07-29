@@ -12,14 +12,14 @@
 
 - No Lombok — manual constructors/getters/setters
 - Tests: `@SpringBootTest(webEnvironment = RANDOM_PORT)` + `RestTemplate` + `@LocalServerPort` + H2 + `@TestConfiguration` for security
-- Follow existing patterns in `aureus-financial` and `aureus-shared`
+- Follow existing patterns in `aurix-financial` and `aurix-shared`
 - Uncalled methods (`enviarDadosControladoria`, `calcularImpostos`, `registrarImpostoContabil`) remain unchanged (YAGNI)
 - Read-only methods (lookups, dashboard, pricing) remain unchanged (no side effects = no compensation needed)
 
 ---
 ## File Map
 
-### Create in `aureus-financial`:
+### Create in `aurix-financial`:
 - `src/main/java/.../controller/SyncController.java`
 - `src/main/java/.../service/SyncService.java`
 - `src/main/java/.../entity/ContaSincronizada.java`
@@ -28,33 +28,33 @@
 - `src/main/java/.../repository/TransacaoSincronizadaRepository.java`
 - `src/test/java/.../integration/SyncIntegrationTest.java`
 
-### Modify in `aureus-shared`:
+### Modify in `aurix-shared`:
 - `src/main/java/.../integration/IntegrationService.java` — saga: propagate errors, idempotency, compensation
 
-### Create in `aureus-shared`:
+### Create in `aurix-shared`:
 - `src/test/java/.../integration/IntegrationServiceSagaTest.java`
 
 ---
 
-### Task 1: Create sync entities + repositories in aureus-financial
+### Task 1: Create sync entities + repositories in aurix-financial
 
 **Files:**
-- Create: `backend/aureus-financial/src/main/java/com/aureus/platform/financial/entity/ContaSincronizada.java`
-- Create: `backend/aureus-financial/src/main/java/com/aureus/platform/financial/entity/TransacaoSincronizada.java`
-- Create: `backend/aureus-financial/src/main/java/com/aureus/platform/financial/repository/ContaSincronizadaRepository.java`
-- Create: `backend/aureus-financial/src/main/java/com/aureus/platform/financial/repository/TransacaoSincronizadaRepository.java`
+- Create: `backend/aurix-financial/src/main/java/com/aurix/platform/financial/entity/ContaSincronizada.java`
+- Create: `backend/aurix-financial/src/main/java/com/aurix/platform/financial/entity/TransacaoSincronizada.java`
+- Create: `backend/aurix-financial/src/main/java/com/aurix/platform/financial/repository/ContaSincronizadaRepository.java`
+- Create: `backend/aurix-financial/src/main/java/com/aurix/platform/financial/repository/TransacaoSincronizadaRepository.java`
 
 - [ ] **Step 1: Create ContaSincronizada.java**
 
 ```java
-package com.aureus.platform.financial.entity;
+package com.aurix.platform.financial.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "contas_sincronizadas", schema = "aureus")
+@Table(name = "contas_sincronizadas", schema = "aurix")
 public class ContaSincronizada {
 
     public enum StatusSync {
@@ -104,14 +104,14 @@ public class ContaSincronizada {
 - [ ] **Step 2: Create TransacaoSincronizada.java**
 
 ```java
-package com.aureus.platform.financial.entity;
+package com.aurix.platform.financial.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "transacoes_sincronizadas", schema = "aureus")
+@Table(name = "transacoes_sincronizadas", schema = "aurix")
 public class TransacaoSincronizada {
 
     public enum StatusSync {
@@ -166,9 +166,9 @@ public class TransacaoSincronizada {
 - [ ] **Step 3: Create ContaSincronizadaRepository.java**
 
 ```java
-package com.aureus.platform.financial.repository;
+package com.aurix.platform.financial.repository;
 
-import com.aureus.platform.financial.entity.ContaSincronizada;
+import com.aurix.platform.financial.entity.ContaSincronizada;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
@@ -182,9 +182,9 @@ public interface ContaSincronizadaRepository extends JpaRepository<ContaSincroni
 - [ ] **Step 4: Create TransacaoSincronizadaRepository.java**
 
 ```java
-package com.aureus.platform.financial.repository;
+package com.aurix.platform.financial.repository;
 
-import com.aureus.platform.financial.entity.TransacaoSincronizada;
+import com.aurix.platform.financial.entity.TransacaoSincronizada;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
@@ -198,22 +198,22 @@ public interface TransacaoSincronizadaRepository extends JpaRepository<Transacao
 - [ ] **Step 5: Compile**
 
 ```bash
-mvn compile -pl aureus-financial -am -q
+mvn compile -pl aurix-financial -am -q
 ```
 
 - [ ] **Step 6: Commit**
 
 ```bash
-git add backend/aureus-financial/src/main/java/com/aureus/platform/financial/entity/ContaSincronizada.java \
-       backend/aureus-financial/src/main/java/com/aureus/platform/financial/entity/TransacaoSincronizada.java \
-       backend/aureus-financial/src/main/java/com/aureus/platform/financial/repository/ContaSincronizadaRepository.java \
-       backend/aureus-financial/src/main/java/com/aureus/platform/financial/repository/TransacaoSincronizadaRepository.java
+git add backend/aurix-financial/src/main/java/com/aurix/platform/financial/entity/ContaSincronizada.java \
+       backend/aurix-financial/src/main/java/com/aurix/platform/financial/entity/TransacaoSincronizada.java \
+       backend/aurix-financial/src/main/java/com/aurix/platform/financial/repository/ContaSincronizadaRepository.java \
+       backend/aurix-financial/src/main/java/com/aurix/platform/financial/repository/TransacaoSincronizadaRepository.java
 git commit -m "feat(financial): add sync entities for saga compensation"
 ```
 
 ---
 
-### Task 2: Create SyncService + SyncController in aureus-financial
+### Task 2: Create SyncService + SyncController in aurix-financial
 
 **Files:**
 - Create: `SyncService.java`
@@ -222,12 +222,12 @@ git commit -m "feat(financial): add sync entities for saga compensation"
 - [ ] **Step 1: Create SyncService.java**
 
 ```java
-package com.aureus.platform.financial.service;
+package com.aurix.platform.financial.service;
 
-import com.aureus.platform.financial.entity.ContaSincronizada;
-import com.aureus.platform.financial.entity.TransacaoSincronizada;
-import com.aureus.platform.financial.repository.ContaSincronizadaRepository;
-import com.aureus.platform.financial.repository.TransacaoSincronizadaRepository;
+import com.aurix.platform.financial.entity.ContaSincronizada;
+import com.aurix.platform.financial.entity.TransacaoSincronizada;
+import com.aurix.platform.financial.repository.ContaSincronizadaRepository;
+import com.aurix.platform.financial.repository.TransacaoSincronizadaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
@@ -322,9 +322,9 @@ public class SyncService {
 - [ ] **Step 2: Create SyncController.java**
 
 ```java
-package com.aureus.platform.financial.controller;
+package com.aurix.platform.financial.controller;
 
-import com.aureus.platform.financial.service.SyncService;
+import com.aurix.platform.financial.service.SyncService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -416,30 +416,30 @@ public class SyncController {
 - [ ] **Step 3: Compile**
 
 ```bash
-mvn compile -pl aureus-financial -am -q
+mvn compile -pl aurix-financial -am -q
 ```
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add backend/aureus-financial/src/main/java/com/aureus/platform/financial/service/SyncService.java \
-       backend/aureus-financial/src/main/java/com/aureus/platform/financial/controller/SyncController.java
+git add backend/aurix-financial/src/main/java/com/aurix/platform/financial/service/SyncService.java \
+       backend/aurix-financial/src/main/java/com/aurix/platform/financial/controller/SyncController.java
 git commit -m "feat(financial): sync service + controller with compensation endpoints"
 ```
 
 ---
 
-### Task 3: Integration tests for SyncController in aureus-financial
+### Task 3: Integration tests for SyncController in aurix-financial
 
 **Files:**
-- Create: `backend/aureus-financial/src/test/java/com/aureus/platform/financial/integration/SyncIntegrationTest.java`
+- Create: `backend/aurix-financial/src/test/java/com/aurix/platform/financial/integration/SyncIntegrationTest.java`
 
 - [ ] **Step 1: Write SyncIntegrationTest.java**
 
 ```java
-package com.aureus.platform.financial.integration;
+package com.aurix.platform.financial.integration;
 
-import com.aureus.platform.financial.AureusFinancialApplication;
+import com.aurix.platform.financial.AurixFinancialApplication;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -458,7 +458,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-    classes = {AureusFinancialApplication.class, SyncIntegrationTest.TestSecurityConfig.class})
+    classes = {AurixFinancialApplication.class, SyncIntegrationTest.TestSecurityConfig.class})
 @ActiveProfiles("test")
 class SyncIntegrationTest {
 
@@ -544,30 +544,30 @@ class SyncIntegrationTest {
 - [ ] **Step 2: Run tests**
 
 ```bash
-mvn test -pl aureus-financial -am -Dtest=SyncIntegrationTest
+mvn test -pl aurix-financial -am -Dtest=SyncIntegrationTest
 ```
 Expected: 5/5 PASS
 
 - [ ] **Step 3: Run all financial tests to verify no regressions**
 
 ```bash
-mvn test -pl aureus-financial -am
+mvn test -pl aurix-financial -am
 ```
 Expected: FinancialFlowIntegrationTest (6) + SyncIntegrationTest (5) = 11 PASS
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add backend/aureus-financial/src/test/java/com/aureus/platform/financial/integration/SyncIntegrationTest.java
+git add backend/aurix-financial/src/test/java/com/aurix/platform/financial/integration/SyncIntegrationTest.java
 git commit -m "test(financial): sync + compensation integration tests"
 ```
 
 ---
 
-### Task 4: Refactor IntegrationService in aureus-shared
+### Task 4: Refactor IntegrationService in aurix-shared
 
 **Files:**
-- Modify: `backend/aureus-shared/src/main/java/com/aureus/platform/shared/integration/IntegrationService.java`
+- Modify: `backend/aurix-shared/src/main/java/com/aurix/platform/shared/integration/IntegrationService.java`
 
 Changes to `sincronizarContaComFinanceiro`:
 1. Change URL from `/api/financial/contas/sincronizar` to `/api/financial/sincronizar/contas`
@@ -678,27 +678,27 @@ After the last saga method (before "INTEGRAÇÃO FINANCIAL -> CONTROLLER" commen
 - [ ] **Step 4: Compile**
 
 ```bash
-mvn compile -pl aureus-shared -am -q
+mvn compile -pl aurix-shared -am -q
 ```
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add backend/aureus-shared/src/main/java/com/aureus/platform/shared/integration/IntegrationService.java
+git add backend/aurix-shared/src/main/java/com/aurix/platform/shared/integration/IntegrationService.java
 git commit -m "feat(shared): saga compensation + idempotency in IntegrationService"
 ```
 
 ---
 
-### Task 5: Saga orchestration tests in aureus-shared
+### Task 5: Saga orchestration tests in aurix-shared
 
 **Files:**
-- Create: `backend/aureus-shared/src/test/java/com/aureus/platform/shared/integration/IntegrationServiceSagaTest.java`
+- Create: `backend/aurix-shared/src/test/java/com/aurix/platform/shared/integration/IntegrationServiceSagaTest.java`
 
 - [ ] **Step 1: Write IntegrationServiceSagaTest.java**
 
 ```java
-package com.aureus.platform.shared.integration;
+package com.aurix.platform.shared.integration;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -790,20 +790,20 @@ class IntegrationServiceSagaTest {
 - [ ] **Step 2: Run tests**
 
 ```bash
-mvn test -pl aureus-shared -am -Dtest=IntegrationServiceSagaTest
+mvn test -pl aurix-shared -am -Dtest=IntegrationServiceSagaTest
 ```
 Expected: 4/4 PASS
 
 - [ ] **Step 3: Run ALL shared module tests to verify no regressions**
 
 ```bash
-mvn test -pl aureus-shared -am
+mvn test -pl aurix-shared -am
 ```
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add backend/aureus-shared/src/test/java/com/aureus/platform/shared/integration/IntegrationServiceSagaTest.java
+git add backend/aurix-shared/src/test/java/com/aurix/platform/shared/integration/IntegrationServiceSagaTest.java
 git commit -m "test(shared): saga orchestration tests for compensation + idempotency"
 ```
 
@@ -814,7 +814,7 @@ git commit -m "test(shared): saga orchestration tests for compensation + idempot
 - [ ] **Run full compile** — 37 modules, all modifications must compile
 
 ```bash
-cd /mnt/c/Users/wende/Projects/aureus-platform/backend
+cd /mnt/c/Users/wende/Projects/aurix-platform/backend
 mvn compile -q 2>&1 | tail -20
 ```
 Expected: BUILD SUCCESS
@@ -822,14 +822,14 @@ Expected: BUILD SUCCESS
 - [ ] **Run financial module tests**
 
 ```bash
-mvn test -pl aureus-financial -am
+mvn test -pl aurix-financial -am
 ```
 Expected: 11 PASS (6 original + 5 new)
 
 - [ ] **Run shared module tests**
 
 ```bash
-mvn test -pl aureus-shared -am
+mvn test -pl aurix-shared -am
 ```
 Expected: existing tests + 4 new saga tests = all PASS
 

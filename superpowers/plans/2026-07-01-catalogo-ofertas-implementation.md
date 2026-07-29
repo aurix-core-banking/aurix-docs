@@ -2,9 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Create new `aureus-catalog` module — a multi-audience offer engine with taxonomy navigation, product registration with typed configs, commercial offers, reusable eligibility policies, campaigns, channels, and client segments.
+**Goal:** Create new `aurix-catalog` module — a multi-audience offer engine with taxonomy navigation, product registration with typed configs, commercial offers, reusable eligibility policies, campaigns, channels, and client segments.
 
-**Architecture:** Six-layer separation — Catálogo (taxonomy, pure navigation) → Produto (identity + typed configs per modalidade) → Oferta (commercial conditions) → Elegibilidade (reusable policies + rules) → Campanha/Canal/Segmento (transversal groupings). Module depends only on `aureus-shared`.
+**Architecture:** Six-layer separation — Catálogo (taxonomy, pure navigation) → Produto (identity + typed configs per modalidade) → Oferta (commercial conditions) → Elegibilidade (reusable policies + rules) → Campanha/Canal/Segmento (transversal groupings). Module depends only on `aurix-shared`.
 
 **Tech Stack:** Java 25, Spring Boot 4.1.0, Spring Data JPA, H2 (test), PostgreSQL (prod), Spring Security, Spring Validation.
 
@@ -13,8 +13,8 @@
 - No Lombok — manual getters/setters/equals/hashCode/toString
 - No MapStruct — manual DTO conversion
 - `@java.lang.SuppressWarnings("all")` on every accessor (matching codebase convention)
-- `BaseEntity` from `aureus-shared` provides: `id`, `tenantId`, `dataCriacao`, `dataAtualizacao`, `versao`
-- Schema: `aureus` (PostgreSQL), table prefix: `catalog_`
+- `BaseEntity` from `aurix-shared` provides: `id`, `tenantId`, `dataCriacao`, `dataAtualizacao`, `versao`
+- Schema: `aurix` (PostgreSQL), table prefix: `catalog_`
 - Test pattern: `@SpringBootTest(webEnvironment = RANDOM_PORT)`, `@ActiveProfiles("test")`, `RestTemplate` with `NoOpResponseErrorHandler`, H2
 - PRIME=59 on hashCode (codebase convention)
 - All CRUD endpoints return proper HTTP status (201 POST, 200 GET/PUT, 204 DELETE)
@@ -25,18 +25,18 @@
 ### Task 1: Module Scaffolding
 
 **Files:**
-- Create: `backend/aureus-catalog/pom.xml`
-- Create: `backend/aureus-catalog/src/main/java/com/aureus/platform/catalog/AureusCatalogApplication.java`
-- Create: `backend/aureus-catalog/src/main/resources/application.yml`
-- Create: `backend/aureus-catalog/src/main/resources/application-test.yml`
-- Create: `backend/aureus-catalog/src/test/java/com/aureus/platform/catalog/config/TestSecurityConfig.java`
+- Create: `backend/aurix-catalog/pom.xml`
+- Create: `backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/AurixCatalogApplication.java`
+- Create: `backend/aurix-catalog/src/main/resources/application.yml`
+- Create: `backend/aurix-catalog/src/main/resources/application-test.yml`
+- Create: `backend/aurix-catalog/src/test/java/com/aurix/platform/catalog/config/TestSecurityConfig.java`
 - Modify: `backend/pom.xml` (add module + dependency management entry)
 
 **Interfaces:**
-- Consumes: `aureus-shared` (BaseEntity, shared utilities)
+- Consumes: `aurix-shared` (BaseEntity, shared utilities)
 - Produces: compilable module skeleton
 
-- [ ] **Step 1: Create `backend/aureus-catalog/pom.xml`**
+- [ ] **Step 1: Create `backend/aurix-catalog/pom.xml`**
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -46,13 +46,13 @@
          http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.aureus.platform</groupId>
-        <artifactId>aureus-platform</artifactId>
+        <groupId>com.aurix.platform</groupId>
+        <artifactId>aurix-platform</artifactId>
         <version>1.0.0</version>
     </parent>
-    <artifactId>aureus-catalog</artifactId>
+    <artifactId>aurix-catalog</artifactId>
     <packaging>jar</packaging>
-    <name>AUREUS Catalog</name>
+    <name>AURIX Catalog</name>
     <description>Motor de Ofertas Multi-Público — Catálogo, Produtos, Ofertas, Elegibilidade</description>
     <properties>
         <maven.compiler.source>25</maven.compiler.source>
@@ -90,8 +90,8 @@
             <version>2.0.2</version>
         </dependency>
         <dependency>
-            <groupId>com.aureus.platform</groupId>
-            <artifactId>aureus-shared</artifactId>
+            <groupId>com.aurix.platform</groupId>
+            <artifactId>aurix-shared</artifactId>
             <version>1.0.0</version>
         </dependency>
         <dependency>
@@ -121,10 +121,10 @@
 </project>
 ```
 
-- [ ] **Step 2: Create `AureusCatalogApplication.java`**
+- [ ] **Step 2: Create `AurixCatalogApplication.java`**
 
 ```java
-package com.aureus.platform.catalog;
+package com.aurix.platform.catalog;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
@@ -137,13 +137,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 @OpenAPIDefinition(
     info = @Info(
-        title = "AUREUS Catalog API",
+        title = "AURIX Catalog API",
         version = "1.0.0",
         description = "Motor de Ofertas Multi-Público — Catálogo, Produtos, Ofertas e Elegibilidade",
         contact = @Contact(
-            name = "AUREUS Platform Team",
-            email = "dev@aureus.platform",
-            url = "https://aureus.platform"
+            name = "AURIX Platform Team",
+            email = "dev@aurix.platform",
+            url = "https://aurix.platform"
         ),
         license = @License(
             name = "MIT License",
@@ -152,12 +152,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
     ),
     servers = {
         @Server(url = "http://localhost:8090/api/catalog", description = "Servidor de Desenvolvimento"),
-        @Server(url = "https://api.aureus.platform/catalog", description = "Servidor de Produção")
+        @Server(url = "https://api.aurix.platform/catalog", description = "Servidor de Produção")
     }
 )
-public class AureusCatalogApplication {
+public class AurixCatalogApplication {
     public static void main(String[] args) {
-        SpringApplication.run(AureusCatalogApplication.class, args);
+        SpringApplication.run(AurixCatalogApplication.class, args);
     }
 }
 ```
@@ -172,18 +172,18 @@ server:
 
 spring:
   application:
-    name: aureus-catalog
+    name: aurix-catalog
   datasource:
-    url: jdbc:postgresql://localhost:5432/aureus_catalog
-    username: aureus
-    password: aureus
+    url: jdbc:postgresql://localhost:5432/aurix_catalog
+    username: aurix
+    password: aurix
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: false
     properties:
       hibernate:
-        default_schema: aureus
+        default_schema: aurix
         format_sql: true
   jackson:
     serialization:
@@ -198,7 +198,7 @@ springdoc:
 
 logging:
   level:
-    com.aureus: DEBUG
+    com.aurix: DEBUG
 ```
 
 - [ ] **Step 4: Create `application-test.yml`**
@@ -222,7 +222,7 @@ spring:
 - [ ] **Step 5: Create `TestSecurityConfig.java`**
 
 ```java
-package com.aureus.platform.catalog.config;
+package com.aurix.platform.catalog.config;
 
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -242,27 +242,27 @@ public class TestSecurityConfig {
 
 - [ ] **Step 6: Modify `backend/pom.xml`**
 
-Add `<module>aureus-catalog</module>` to the `<modules>` list (insert alphabetically between `aureus-baas` and `aureus-billing`) and add dependency management entry:
+Add `<module>aurix-catalog</module>` to the `<modules>` list (insert alphabetically between `aurix-baas` and `aurix-billing`) and add dependency management entry:
 
 ```xml
-<!-- AUREUS Catalog -->
+<!-- AURIX Catalog -->
 <dependency>
-    <groupId>com.aureus.platform</groupId>
-    <artifactId>aureus-catalog</artifactId>
+    <groupId>com.aurix.platform</groupId>
+    <artifactId>aurix-catalog</artifactId>
     <version>${project.version}</version>
 </dependency>
 ```
 
 - [ ] **Step 7: Verify compilation**
 
-Run: `mvn compile -pl aureus-catalog -am` from `backend/`
+Run: `mvn compile -pl aurix-catalog -am` from `backend/`
 Expected: BUILD SUCCESS
 
 - [ ] **Step 8: Commit**
 
 ```bash
-git add backend/pom.xml backend/aureus-catalog/
-git commit -m "feat(catalog): add aureus-catalog module scaffolding"
+git add backend/pom.xml backend/aurix-catalog/
+git commit -m "feat(catalog): add aurix-catalog module scaffolding"
 ```
 
 ---
@@ -270,15 +270,15 @@ git commit -m "feat(catalog): add aureus-catalog module scaffolding"
 ### Task 2: Enums + DTO Base + Catalog Layer Entities (Segmento → CategoriaProduto)
 
 **Files:**
-- Create: `backend/aureus-catalog/src/main/java/com/aureus/platform/catalog/enums/StatusCatalogo.java`
-- Create: `backend/aureus-catalog/src/main/java/com/aureus/platform/catalog/enums/StatusProduto.java`
-- Create: `backend/aureus-catalog/src/main/java/com/aureus/platform/catalog/enums/StatusOferta.java`
-- Create: `backend/aureus-catalog/src/main/java/com/aureus/platform/catalog/enums/StatusPolitica.java`
-- Create: `backend/aureus-catalog/src/main/java/com/aureus/platform/catalog/enums/StatusCampanha.java`
-- Create: `backend/aureus-catalog/src/main/java/com/aureus/platform/catalog/enums/TipoProduto.java`
-- Create: `backend/aureus-catalog/src/main/java/com/aureus/platform/catalog/enums/SistemaExterno.java`
-- Create: `backend/aureus-catalog/src/main/java/com/aureus/platform/catalog/enums/TipoVinculoElegibilidade.java`
-- Create: `backend/aureus-catalog/src/main/java/com/aureus/platform/catalog/enums/TipoRenda.java`
+- Create: `backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/enums/StatusCatalogo.java`
+- Create: `backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/enums/StatusProduto.java`
+- Create: `backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/enums/StatusOferta.java`
+- Create: `backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/enums/StatusPolitica.java`
+- Create: `backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/enums/StatusCampanha.java`
+- Create: `backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/enums/TipoProduto.java`
+- Create: `backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/enums/SistemaExterno.java`
+- Create: `backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/enums/TipoVinculoElegibilidade.java`
+- Create: `backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/enums/TipoRenda.java`
 - Create: 5 entity files for catalog layer (Segmento, LinhaNegocio, FamiliaProduto, Categoria, CategoriaProduto)
 - Create: 5 DTO files mirroring entities
 - Create: 5 repository files
@@ -293,7 +293,7 @@ git commit -m "feat(catalog): add aureus-catalog module scaffolding"
 
 `StatusCatalogo.java`:
 ```java
-package com.aureus.platform.catalog.enums;
+package com.aurix.platform.catalog.enums;
 
 public enum StatusCatalogo {
     ATIVO, INATIVO
@@ -302,7 +302,7 @@ public enum StatusCatalogo {
 
 `StatusProduto.java`:
 ```java
-package com.aureus.platform.catalog.enums;
+package com.aurix.platform.catalog.enums;
 
 public enum StatusProduto {
     RASCUNHO, ATIVO, INATIVO, OBSOLETO
@@ -311,7 +311,7 @@ public enum StatusProduto {
 
 `StatusOferta.java`:
 ```java
-package com.aureus.platform.catalog.enums;
+package com.aurix.platform.catalog.enums;
 
 public enum StatusOferta {
     RASCUNHO, ATIVA, PAUSADA, ENCERRADA
@@ -320,7 +320,7 @@ public enum StatusOferta {
 
 `StatusPolitica.java`:
 ```java
-package com.aureus.platform.catalog.enums;
+package com.aurix.platform.catalog.enums;
 
 public enum StatusPolitica {
     ATIVA, INATIVA
@@ -329,7 +329,7 @@ public enum StatusPolitica {
 
 `StatusCampanha.java`:
 ```java
-package com.aureus.platform.catalog.enums;
+package com.aurix.platform.catalog.enums;
 
 public enum StatusCampanha {
     RASCUNHO, ATIVA, ENCERRADA
@@ -338,7 +338,7 @@ public enum StatusCampanha {
 
 `TipoProduto.java`:
 ```java
-package com.aureus.platform.catalog.enums;
+package com.aurix.platform.catalog.enums;
 
 public enum TipoProduto {
     CREDITO, INVESTIMENTO, SEGURO, CARTAO, CONTA, CAMBIO,
@@ -348,7 +348,7 @@ public enum TipoProduto {
 
 `SistemaExterno.java`:
 ```java
-package com.aureus.platform.catalog.enums;
+package com.aurix.platform.catalog.enums;
 
 public enum SistemaExterno {
     CORE_BANKING, CRM, OPEN_FINANCE, ERP, MOTOR_CREDITO,
@@ -358,7 +358,7 @@ public enum SistemaExterno {
 
 `TipoVinculoElegibilidade.java`:
 ```java
-package com.aureus.platform.catalog.enums;
+package com.aurix.platform.catalog.enums;
 
 public enum TipoVinculoElegibilidade {
     OBRIGATORIA, OPCIONAL
@@ -367,7 +367,7 @@ public enum TipoVinculoElegibilidade {
 
 `TipoRenda.java`:
 ```java
-package com.aureus.platform.catalog.enums;
+package com.aurix.platform.catalog.enums;
 
 public enum TipoRenda {
     FIXA, VARIAVEL, HIBRIDA
@@ -377,10 +377,10 @@ public enum TipoRenda {
 - [ ] **Step 2: Create `Segmento.java` entity**
 
 ```java
-package com.aureus.platform.catalog.entity;
+package com.aurix.platform.catalog.entity;
 
-import com.aureus.platform.catalog.enums.StatusCatalogo;
-import com.aureus.platform.shared.entity.BaseEntity;
+import com.aurix.platform.catalog.enums.StatusCatalogo;
+import com.aurix.platform.shared.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -392,7 +392,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "catalog_segmentos", schema = "aureus")
+@Table(name = "catalog_segmentos", schema = "aurix")
 public class Segmento extends BaseEntity {
 
     @NotBlank
@@ -505,7 +505,7 @@ Create `LinhaNegocio.java`, `FamiliaProduto.java`, `Categoria.java` following th
 - [ ] **Step 3: Create `CategoriaProduto.java` (N:N association)**
 
 ```java
-package com.aureus.platform.catalog.entity;
+package com.aurix.platform.catalog.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -517,7 +517,7 @@ import jakarta.persistence.UniqueConstraint;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "catalog_categorias_produtos", schema = "aureus",
+@Table(name = "catalog_categorias_produtos", schema = "aurix",
        uniqueConstraints = @UniqueConstraint(columnNames = {"categoria_id", "produto_id"}))
 public class CategoriaProduto {
 
@@ -598,11 +598,11 @@ public class CategoriaProduto {
 
 - [ ] **Step 4: Create DTOs for all 5 catalog entities**
 
-`SegmentoDTO.java` in `com.aureus.platform.catalog.dto`:
+`SegmentoDTO.java` in `com.aurix.platform.catalog.dto`:
 ```java
-package com.aureus.platform.catalog.dto;
+package com.aurix.platform.catalog.dto;
 
-import com.aureus.platform.catalog.enums.StatusCatalogo;
+import com.aurix.platform.catalog.enums.StatusCatalogo;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -693,10 +693,10 @@ Create `LinhaNegocioDTO`, `FamiliaProdutoDTO`, `CategoriaDTO`, `CategoriaProduto
 
 `SegmentoRepository.java`:
 ```java
-package com.aureus.platform.catalog.repository;
+package com.aurix.platform.catalog.repository;
 
-import com.aureus.platform.catalog.entity.Segmento;
-import com.aureus.platform.catalog.enums.StatusCatalogo;
+import com.aurix.platform.catalog.entity.Segmento;
+import com.aurix.platform.catalog.enums.StatusCatalogo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
@@ -714,7 +714,7 @@ Create `LinhaNegocioRepository`, `FamiliaProdutoRepository`, `CategoriaRepositor
 - [ ] **Step 6: Create `RecursoNaoEncontradoException.java`**
 
 ```java
-package com.aureus.platform.catalog.exception;
+package com.aurix.platform.catalog.exception;
 
 public class RecursoNaoEncontradoException extends RuntimeException {
     public RecursoNaoEncontradoException(String recurso, Long id) {
@@ -729,25 +729,25 @@ public class RecursoNaoEncontradoException extends RuntimeException {
 - [ ] **Step 7: Create `CatalogoService.java`**
 
 ```java
-package com.aureus.platform.catalog.service;
+package com.aurix.platform.catalog.service;
 
-import com.aureus.platform.catalog.dto.CategoriaDTO;
-import com.aureus.platform.catalog.dto.CategoriaProdutoDTO;
-import com.aureus.platform.catalog.dto.FamiliaProdutoDTO;
-import com.aureus.platform.catalog.dto.LinhaNegocioDTO;
-import com.aureus.platform.catalog.dto.SegmentoDTO;
-import com.aureus.platform.catalog.entity.Categoria;
-import com.aureus.platform.catalog.entity.CategoriaProduto;
-import com.aureus.platform.catalog.entity.FamiliaProduto;
-import com.aureus.platform.catalog.entity.LinhaNegocio;
-import com.aureus.platform.catalog.entity.Segmento;
-import com.aureus.platform.catalog.enums.StatusCatalogo;
-import com.aureus.platform.catalog.exception.RecursoNaoEncontradoException;
-import com.aureus.platform.catalog.repository.CategoriaProdutoRepository;
-import com.aureus.platform.catalog.repository.CategoriaRepository;
-import com.aureus.platform.catalog.repository.FamiliaProdutoRepository;
-import com.aureus.platform.catalog.repository.LinhaNegocioRepository;
-import com.aureus.platform.catalog.repository.SegmentoRepository;
+import com.aurix.platform.catalog.dto.CategoriaDTO;
+import com.aurix.platform.catalog.dto.CategoriaProdutoDTO;
+import com.aurix.platform.catalog.dto.FamiliaProdutoDTO;
+import com.aurix.platform.catalog.dto.LinhaNegocioDTO;
+import com.aurix.platform.catalog.dto.SegmentoDTO;
+import com.aurix.platform.catalog.entity.Categoria;
+import com.aurix.platform.catalog.entity.CategoriaProduto;
+import com.aurix.platform.catalog.entity.FamiliaProduto;
+import com.aurix.platform.catalog.entity.LinhaNegocio;
+import com.aurix.platform.catalog.entity.Segmento;
+import com.aurix.platform.catalog.enums.StatusCatalogo;
+import com.aurix.platform.catalog.exception.RecursoNaoEncontradoException;
+import com.aurix.platform.catalog.repository.CategoriaProdutoRepository;
+import com.aurix.platform.catalog.repository.CategoriaRepository;
+import com.aurix.platform.catalog.repository.FamiliaProdutoRepository;
+import com.aurix.platform.catalog.repository.LinhaNegocioRepository;
+import com.aurix.platform.catalog.repository.SegmentoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
@@ -883,19 +883,19 @@ public class CatalogoService {
 - [ ] **Step 8: Create `CatalogoController.java`**
 
 ```java
-package com.aureus.platform.catalog.controller;
+package com.aurix.platform.catalog.controller;
 
-import com.aureus.platform.catalog.dto.CategoriaDTO;
-import com.aureus.platform.catalog.dto.CategoriaProdutoDTO;
-import com.aureus.platform.catalog.dto.FamiliaProdutoDTO;
-import com.aureus.platform.catalog.dto.LinhaNegocioDTO;
-import com.aureus.platform.catalog.dto.SegmentoDTO;
-import com.aureus.platform.catalog.entity.Categoria;
-import com.aureus.platform.catalog.entity.CategoriaProduto;
-import com.aureus.platform.catalog.entity.FamiliaProduto;
-import com.aureus.platform.catalog.entity.LinhaNegocio;
-import com.aureus.platform.catalog.entity.Segmento;
-import com.aureus.platform.catalog.service.CatalogoService;
+import com.aurix.platform.catalog.dto.CategoriaDTO;
+import com.aurix.platform.catalog.dto.CategoriaProdutoDTO;
+import com.aurix.platform.catalog.dto.FamiliaProdutoDTO;
+import com.aurix.platform.catalog.dto.LinhaNegocioDTO;
+import com.aurix.platform.catalog.dto.SegmentoDTO;
+import com.aurix.platform.catalog.entity.Categoria;
+import com.aurix.platform.catalog.entity.CategoriaProduto;
+import com.aurix.platform.catalog.entity.FamiliaProduto;
+import com.aurix.platform.catalog.entity.LinhaNegocio;
+import com.aurix.platform.catalog.entity.Segmento;
+import com.aurix.platform.catalog.service.CatalogoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -970,19 +970,19 @@ public class CatalogoController {
 
 - [ ] **Step 9: Compile verification**
 
-Run: `mvn compile -pl aureus-catalog -am` from `backend/`
+Run: `mvn compile -pl aurix-catalog -am` from `backend/`
 Expected: BUILD SUCCESS
 
 - [ ] **Step 10: Commit**
 
 ```bash
-git add backend/aureus-catalog/src/main/java/com/aureus/platform/catalog/enums/
-git add backend/aureus-catalog/src/main/java/com/aureus/platform/catalog/entity/
-git add backend/aureus-catalog/src/main/java/com/aureus/platform/catalog/dto/
-git add backend/aureus-catalog/src/main/java/com/aureus/platform/catalog/repository/
-git add backend/aureus-catalog/src/main/java/com/aureus/platform/catalog/exception/
-git add backend/aureus-catalog/src/main/java/com/aureus/platform/catalog/service/CatalogoService.java
-git add backend/aureus-catalog/src/main/java/com/aureus/platform/catalog/controller/CatalogoController.java
+git add backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/enums/
+git add backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/entity/
+git add backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/dto/
+git add backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/repository/
+git add backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/exception/
+git add backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/service/CatalogoService.java
+git add backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/controller/CatalogoController.java
 git commit -m "feat(catalog): add enums + taxonomy layer (Segmento→CategoriaProduto)"
 ```
 
@@ -1006,11 +1006,11 @@ git commit -m "feat(catalog): add enums + taxonomy layer (Segmento→CategoriaPr
 - [ ] **Step 1: Create `Produto.java`**
 
 ```java
-package com.aureus.platform.catalog.entity;
+package com.aurix.platform.catalog.entity;
 
-import com.aureus.platform.catalog.enums.StatusProduto;
-import com.aureus.platform.catalog.enums.TipoProduto;
-import com.aureus.platform.shared.entity.BaseEntity;
+import com.aurix.platform.catalog.enums.StatusProduto;
+import com.aurix.platform.catalog.enums.TipoProduto;
+import com.aurix.platform.shared.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -1022,7 +1022,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "catalog_produtos", schema = "aureus")
+@Table(name = "catalog_produtos", schema = "aurix")
 public class Produto extends BaseEntity {
 
     @NotBlank
@@ -1069,9 +1069,9 @@ public class Produto extends BaseEntity {
 - [ ] **Step 2: Create `ProdutoIntegracao.java`**
 
 ```java
-package com.aureus.platform.catalog.entity;
+package com.aurix.platform.catalog.entity;
 
-import com.aureus.platform.catalog.enums.SistemaExterno;
+import com.aurix.platform.catalog.enums.SistemaExterno;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -1083,7 +1083,7 @@ import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "catalog_produtos_integracao", schema = "aureus")
+@Table(name = "catalog_produtos_integracao", schema = "aurix")
 public class ProdutoIntegracao {
 
     @Id
@@ -1121,10 +1121,10 @@ public class ProdutoIntegracao {
 - [ ] **Step 3: Create `Modalidade.java`**
 
 ```java
-package com.aureus.platform.catalog.entity;
+package com.aurix.platform.catalog.entity;
 
-import com.aureus.platform.catalog.enums.StatusProduto;
-import com.aureus.platform.shared.entity.BaseEntity;
+import com.aurix.platform.catalog.enums.StatusProduto;
+import com.aurix.platform.shared.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -1136,7 +1136,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "catalog_modalidades", schema = "aureus")
+@Table(name = "catalog_modalidades", schema = "aurix")
 public class Modalidade extends BaseEntity {
 
     @Column(name = "produto_id", nullable = false)
@@ -1183,7 +1183,7 @@ public class Modalidade extends BaseEntity {
 - [ ] **Step 4: Create `VersaoModalidade.java`**
 
 ```java
-package com.aureus.platform.catalog.entity;
+package com.aurix.platform.catalog.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -1196,7 +1196,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "catalog_versoes_modalidade", schema = "aureus")
+@Table(name = "catalog_versoes_modalidade", schema = "aurix")
 public class VersaoModalidade {
 
     @Id
@@ -1255,14 +1255,14 @@ Endpoints:
 - [ ] **Step 8: Compile and commit**
 
 ```bash
-git add backend/aureus-catalog/src/main/java/com/aureus/platform/catalog/entity/Produto.java
-git add backend/aureus-catalog/src/main/java/com/aureus/platform/catalog/entity/ProdutoIntegracao.java
-git add backend/aureus-catalog/src/main/java/com/aureus/platform/catalog/entity/Modalidade.java
-git add backend/aureus-catalog/src/main/java/com/aureus/platform/catalog/entity/VersaoModalidade.java
-git add backend/aureus-catalog/src/main/java/com/aureus/platform/catalog/dto/
-git add backend/aureus-catalog/src/main/java/com/aureus/platform/catalog/repository/
-git add backend/aureus-catalog/src/main/java/com/aureus/platform/catalog/service/ProdutoService.java
-git add backend/aureus-catalog/src/main/java/com/aureus/platform/catalog/controller/ProdutoController.java
+git add backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/entity/Produto.java
+git add backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/entity/ProdutoIntegracao.java
+git add backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/entity/Modalidade.java
+git add backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/entity/VersaoModalidade.java
+git add backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/dto/
+git add backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/repository/
+git add backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/service/ProdutoService.java
+git add backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/controller/ProdutoController.java
 git commit -m "feat(catalog): add Produto + Modalidade layer"
 ```
 
@@ -1288,7 +1288,7 @@ git commit -m "feat(catalog): add Produto + Modalidade layer"
 - [ ] **Step 1: Create `ConfigCredito.java`**
 
 ```java
-package com.aureus.platform.catalog.entity.config;
+package com.aurix.platform.catalog.entity.config;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -1300,7 +1300,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "catalog_config_credito", schema = "aureus")
+@Table(name = "catalog_config_credito", schema = "aurix")
 public class ConfigCredito {
 
     @Id
@@ -1358,11 +1358,11 @@ Each with `findByModalidadeId` returning `Optional<Config*>`.
 - [ ] **Step 7: Create `ConfigService.java`**
 
 ```java
-package com.aureus.platform.catalog.service;
+package com.aurix.platform.catalog.service;
 
-import com.aureus.platform.catalog.entity.config.*;
-import com.aureus.platform.catalog.enums.TipoProduto;
-import com.aureus.platform.catalog.repository.config.*;
+import com.aurix.platform.catalog.entity.config.*;
+import com.aurix.platform.catalog.enums.TipoProduto;
+import com.aurix.platform.catalog.repository.config.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
@@ -1405,10 +1405,10 @@ public ResponseEntity<Object> buscarConfigModalidade(@PathVariable Long id) {
 - [ ] **Step 9: Compile and commit**
 
 ```bash
-git add backend/aureus-catalog/src/main/java/com/aureus/platform/catalog/entity/config/
-git add backend/aureus-catalog/src/main/java/com/aureus/platform/catalog/dto/
-git add backend/aureus-catalog/src/main/java/com/aureus/platform/catalog/repository/config/
-git add backend/aureus-catalog/src/main/java/com/aureus/platform/catalog/service/ConfigService.java
+git add backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/entity/config/
+git add backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/dto/
+git add backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/repository/config/
+git add backend/aurix-catalog/src/main/java/com/aurix/platform/catalog/service/ConfigService.java
 git commit -m "feat(catalog): add typed config entities (Credito, Cartao, Conta, Investimento, Seguro)"
 ```
 
@@ -1430,10 +1430,10 @@ git commit -m "feat(catalog): add typed config entities (Credito, Cartao, Conta,
 - [ ] **Step 1: Create `Oferta.java`**
 
 ```java
-package com.aureus.platform.catalog.entity;
+package com.aurix.platform.catalog.entity;
 
-import com.aureus.platform.catalog.enums.StatusOferta;
-import com.aureus.platform.shared.entity.BaseEntity;
+import com.aurix.platform.catalog.enums.StatusOferta;
+import com.aurix.platform.shared.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -1445,7 +1445,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "catalog_ofertas", schema = "aureus")
+@Table(name = "catalog_ofertas", schema = "aurix")
 public class Oferta extends BaseEntity {
 
     @Column(name = "modalidade_id", nullable = false)
@@ -1522,9 +1522,9 @@ git add ... && git commit -m "feat(catalog): add Oferta + CondicaoComercial laye
 - [ ] **Step 1: Create `PoliticaElegibilidade.java`**
 
 ```java
-package com.aureus.platform.catalog.entity;
+package com.aurix.platform.catalog.entity;
 
-import com.aureus.platform.catalog.enums.StatusPolitica;
+import com.aurix.platform.catalog.enums.StatusPolitica;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -1538,7 +1538,7 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "catalog_politicas_elegibilidade", schema = "aureus")
+@Table(name = "catalog_politicas_elegibilidade", schema = "aurix")
 public class PoliticaElegibilidade {
 
     @Id
@@ -1580,7 +1580,7 @@ public class PoliticaElegibilidade {
 - [ ] **Step 2: Create `RegraElegibilidade.java`**
 
 ```java
-package com.aureus.platform.catalog.entity;
+package com.aurix.platform.catalog.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -1591,7 +1591,7 @@ import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "catalog_regras_elegibilidade", schema = "aureus")
+@Table(name = "catalog_regras_elegibilidade", schema = "aurix")
 public class RegraElegibilidade {
 
     @Id
@@ -1626,9 +1626,9 @@ public class RegraElegibilidade {
 - [ ] **Step 3: Create `OfertaPoliticaElegibilidade.java`**
 
 ```java
-package com.aureus.platform.catalog.entity;
+package com.aurix.platform.catalog.entity;
 
-import com.aureus.platform.catalog.enums.TipoVinculoElegibilidade;
+import com.aurix.platform.catalog.enums.TipoVinculoElegibilidade;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -1641,7 +1641,7 @@ import jakarta.persistence.UniqueConstraint;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "catalog_ofertas_politicas", schema = "aureus",
+@Table(name = "catalog_ofertas_politicas", schema = "aurix",
        uniqueConstraints = @UniqueConstraint(columnNames = {"oferta_id", "politica_id"}))
 public class OfertaPoliticaElegibilidade {
 
@@ -1669,17 +1669,17 @@ public class OfertaPoliticaElegibilidade {
 - [ ] **Step 4: Create `ElegibilidadeService.java`**
 
 ```java
-package com.aureus.platform.catalog.service;
+package com.aurix.platform.catalog.service;
 
-import com.aureus.platform.catalog.entity.OfertaPoliticaElegibilidade;
-import com.aureus.platform.catalog.entity.PoliticaElegibilidade;
-import com.aureus.platform.catalog.entity.RegraElegibilidade;
-import com.aureus.platform.catalog.enums.TipoVinculoElegibilidade;
-import com.aureus.platform.catalog.repository.OfertaPoliticaRepository;
-import com.aureus.platform.catalog.repository.PoliticaElegibilidadeRepository;
-import com.aureus.platform.catalog.repository.RegraElegibilidadeRepository;
-import com.aureus.platform.shared.entity.Cliente;
-import com.aureus.platform.shared.repository.ClienteRepository;
+import com.aurix.platform.catalog.entity.OfertaPoliticaElegibilidade;
+import com.aurix.platform.catalog.entity.PoliticaElegibilidade;
+import com.aurix.platform.catalog.entity.RegraElegibilidade;
+import com.aurix.platform.catalog.enums.TipoVinculoElegibilidade;
+import com.aurix.platform.catalog.repository.OfertaPoliticaRepository;
+import com.aurix.platform.catalog.repository.PoliticaElegibilidadeRepository;
+import com.aurix.platform.catalog.repository.RegraElegibilidadeRepository;
+import com.aurix.platform.shared.entity.Cliente;
+import com.aurix.platform.shared.repository.ClienteRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
@@ -1854,12 +1854,12 @@ public class ElegibilidadeController {
 - [ ] **Step 1: Create `CatalogoIntegrationTest.java`**
 
 ```java
-package com.aureus.platform.catalog.integration;
+package com.aurix.platform.catalog.integration;
 
-import com.aureus.platform.catalog.AureusCatalogApplication;
-import com.aureus.platform.catalog.config.TestSecurityConfig;
-import com.aureus.platform.catalog.entity.Segmento;
-import com.aureus.platform.catalog.enums.StatusCatalogo;
+import com.aurix.platform.catalog.AurixCatalogApplication;
+import com.aurix.platform.catalog.config.TestSecurityConfig;
+import com.aurix.platform.catalog.entity.Segmento;
+import com.aurix.platform.catalog.enums.StatusCatalogo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1878,7 +1878,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-                classes = {AureusCatalogApplication.class, TestSecurityConfig.class})
+                classes = {AurixCatalogApplication.class, TestSecurityConfig.class})
 @ActiveProfiles("test")
 class CatalogoIntegrationTest {
 
@@ -1956,7 +1956,7 @@ class CatalogoIntegrationTest {
 
 - [ ] **Step 2: Run test**
 
-`mvn test -pl aureus-catalog -am -Dtest=CatalogoIntegrationTest -DfailIfNoTests=false`
+`mvn test -pl aurix-catalog -am -Dtest=CatalogoIntegrationTest -DfailIfNoTests=false`
 Expected: all tests pass
 
 - [ ] **Step 3: Commit**
@@ -1982,7 +1982,7 @@ Tests: criar oferta, vincular condicao comercial, transicionar status (RASCUNHO�
 
 - [ ] **Step 3: Run tests**
 
-`mvn test -pl aureus-catalog -am -Dtest=ProdutoIntegrationTest,OfertaIntegrationTest -DfailIfNoTests=false`
+`mvn test -pl aurix-catalog -am -Dtest=ProdutoIntegrationTest,OfertaIntegrationTest -DfailIfNoTests=false`
 Expected: all pass
 
 - [ ] **Step 4: Commit**
@@ -2007,7 +2007,7 @@ Tests: criar campanha, vincular ofertas a campanha, criar canal, vincular oferta
 
 - [ ] **Step 3: Run full test suite**
 
-`mvn test -pl aureus-catalog -am -DfailIfNoTests=false`
+`mvn test -pl aurix-catalog -am -DfailIfNoTests=false`
 Expected: all pass
 
 - [ ] **Step 4: Commit**
@@ -2020,12 +2020,12 @@ Expected: all pass
 
 - [ ] **Step 1: Run full compilation**
 
-`mvn compile -pl aureus-catalog -am`
+`mvn compile -pl aurix-catalog -am`
 Expected: BUILD SUCCESS
 
 - [ ] **Step 2: Run all catalog tests**
 
-`mvn test -pl aureus-catalog -am -DfailIfNoTests=false`
+`mvn test -pl aurix-catalog -am -DfailIfNoTests=false`
 Expected: BUILD SUCCESS, all tests pass
 
 - [ ] **Step 3: Verify no impact on other modules**

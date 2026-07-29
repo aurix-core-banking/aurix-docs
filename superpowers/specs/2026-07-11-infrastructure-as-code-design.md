@@ -2,7 +2,7 @@
 
 ## Overview
 
-Complete the infrastructure-as-code layer for the Aureus Platform: Terraform multi-cloud provisioning + GitOps (ArgoCD) + Kubernetes Helm deployment for all 37 microservices, with observability, security, and disaster recovery.
+Complete the infrastructure-as-code layer for the Aurix Platform: Terraform multi-cloud provisioning + GitOps (ArgoCD) + Kubernetes Helm deployment for all 37 microservices, with observability, security, and disaster recovery.
 
 ## Architecture
 
@@ -45,43 +45,43 @@ infrastructure/
 │   │   ├── applicationsets/microservices.yaml
 │   │   └── projects/{infra,platform}.yaml
 │   ├── charts/
-│   │   ├── aureus-core/
-│   │   ├── aureus-pix/
-│   │   ├── aureus-bacen/
-│   │   ├── aureus-onboarding/
-│   │   ├── aureus-cartoes/
-│   │   ├── aureus-consignado/
-│   │   ├── aureus-financiamento/
-│   │   ├── aureus-cambio/
-│   │   ├── aureus-seguros/
-│   │   ├── aureus-investimento/
-│   │   ├── aureus-salario/
-│   │   ├── aureus-poupanca/
-│   │   ├── aureus-credit/
-│   │   ├── aureus-catalog/
-│   │   ├── aureus-analytics/
-│   │   ├── aureus-security/
-│   │   ├── aureus-audit/
-│   │   ├── aureus-openfinance/
-│   │   ├── aureus-gateway/
-│   │   ├── aureus-accounting/
-│   │   ├── aureus-billing/
-│   │   ├── aureus-compliance/
-│   │   ├── aureus-webhooks/
-│   │   ├── aureus-organization/
-│   │   ├── aureus-provisioning/
-│   │   ├── aureus-treasury/
-│   │   ├── aureus-tax/
-│   │   ├── aureus-cost/
-│   │   ├── aureus-budget/
-│   │   ├── aureus-settlement/
-│   │   ├── aureus-pricing/
-│   │   ├── aureus-baas/
-│   │   ├── aureus-internet-banking/
-│   │   ├── aureus-mobile-banking/
-│   │   ├── aureus-ai/
-│   │   ├── aureus-controller/
-│   │   └── aureus-shared/
+│   │   ├── aurix-core/
+│   │   ├── aurix-pix/
+│   │   ├── aurix-bacen/
+│   │   ├── aurix-onboarding/
+│   │   ├── aurix-cartoes/
+│   │   ├── aurix-consignado/
+│   │   ├── aurix-financiamento/
+│   │   ├── aurix-cambio/
+│   │   ├── aurix-seguros/
+│   │   ├── aurix-investimento/
+│   │   ├── aurix-salario/
+│   │   ├── aurix-poupanca/
+│   │   ├── aurix-credit/
+│   │   ├── aurix-catalog/
+│   │   ├── aurix-analytics/
+│   │   ├── aurix-security/
+│   │   ├── aurix-audit/
+│   │   ├── aurix-openfinance/
+│   │   ├── aurix-gateway/
+│   │   ├── aurix-accounting/
+│   │   ├── aurix-billing/
+│   │   ├── aurix-compliance/
+│   │   ├── aurix-webhooks/
+│   │   ├── aurix-organization/
+│   │   ├── aurix-provisioning/
+│   │   ├── aurix-treasury/
+│   │   ├── aurix-tax/
+│   │   ├── aurix-cost/
+│   │   ├── aurix-budget/
+│   │   ├── aurix-settlement/
+│   │   ├── aurix-pricing/
+│   │   ├── aurix-baas/
+│   │   ├── aurix-internet-banking/
+│   │   ├── aurix-mobile-banking/
+│   │   ├── aurix-ai/
+│   │   ├── aurix-controller/
+│   │   └── aurix-shared/
 │   │   └── umbrella/              # Umbrella chart por ambiente
 │   ├── base/                       # Cluster bootstrap manifests
 │   └── overlays/                   # Values per environment + cloud
@@ -96,9 +96,9 @@ infrastructure/
 
 ### Backend State
 
-- **AWS**: S3 bucket `aureus-terraform-state-{env}` + DynamoDB table `aureus-terraform-locks`
+- **AWS**: S3 bucket `aurix-terraform-state-{env}` + DynamoDB table `aurix-terraform-locks`
 - **Azure**: Storage Account container `terraform-state` + blob lease locking
-- **GCP**: GCS bucket `aureus-terraform-state-{env}` + object versioning
+- **GCP**: GCS bucket `aurix-terraform-state-{env}` + object versioning
 
 ### Module Audit
 
@@ -136,7 +136,7 @@ metadata:
 spec:
   generators:
   - git:
-      repoURL: https://github.com/anomalyco/aureus-platform
+      repoURL: https://github.com/anomalyco/aurix-platform
       revision: HEAD
       directories:
       - path: infrastructure/kubernetes/charts/*
@@ -146,7 +146,7 @@ spec:
     spec:
       project: platform
       source:
-        repoURL: https://github.com/anomalyco/aureus-platform
+        repoURL: https://github.com/anomalyco/aurix-platform
         path: '{{path}}'
         helm:
           valueFiles:
@@ -154,7 +154,7 @@ spec:
           - values-{{env}}.yaml
       destination:
         server: https://kubernetes.default.svc
-        namespace: aureus-platform
+        namespace: aurix-platform
       syncPolicy:
         automated:
           prune: true
@@ -187,12 +187,12 @@ templates/
 ```yaml
 # Chart.yaml
 dependencies:
-  - name: aureus-core
+  - name: aurix-core
     version: "0.1.0"
-    repository: "file://../aureus-core"
-  - name: aureus-pix
+    repository: "file://../aurix-core"
+  - name: aurix-pix
     version: "0.1.0"
-    repository: "file://../aureus-pix"
+    repository: "file://../aurix-pix"
   # ... 35 more
 ```
 
@@ -207,12 +207,12 @@ Centralizes shared configuration:
 ### Pipeline per Microservice
 
 ```yaml
-name: Build aureus-core
+name: Build aurix-core
 
 on:
   push:
     branches: [main, develop]
-    paths: ["backend/aureus-core/**"]
+    paths: ["backend/aurix-core/**"]
 
 jobs:
   build:
@@ -221,14 +221,14 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         with: { java-version: '25', distribution: 'temurin' }
-      - run: mvn -pl aureus-core -am compile test
+      - run: mvn -pl aurix-core -am compile test
       - uses: docker/setup-buildx-action@v3
       - run: |
           docker buildx build \
-            -t ${{ env.REGISTRY }}/aureus-core:${{ github.sha }} \
+            -t ${{ env.REGISTRY }}/aurix-core:${{ github.sha }} \
             --platform linux/amd64,linux/arm64 \
             --push \
-            -f backend/aureus-core/Dockerfile backend/
+            -f backend/aurix-core/Dockerfile backend/
 ```
 
 ### Image Registry Strategy
@@ -271,7 +271,7 @@ Configured per Application to watch registry and auto-update image tag. No manua
 
 ### Istio Service Mesh
 
-- **mTLS**: `PeerAuthentication` STRICT mode in aureus-platform namespace
+- **mTLS**: `PeerAuthentication` STRICT mode in aurix-platform namespace
 - **Ingress**: Istio Gateway as single entry point, TLS termination via cert-manager
 - **Authorization**: `AuthorizationPolicy` allowlisting service-to-service calls
 - **Canary**: `VirtualService` weighted routing for gradual rollouts

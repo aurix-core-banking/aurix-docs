@@ -1,8 +1,8 @@
-# 🏛️ AUREUS - Evolução da Arquitetura de Dados
+# 🏛️ AURIX - Evolução da Arquitetura de Dados
 
 ## 📋 **Visão Geral da Evolução**
 
-**Objetivo**: Transformar o AUREUS de uma arquitetura tradicional para uma plataforma de dados de próxima geração, mantendo estabilidade operacional e maximizando ROI.
+**Objetivo**: Transformar o AURIX de uma arquitetura tradicional para uma plataforma de dados de próxima geração, mantendo estabilidade operacional e maximizando ROI.
 
 **Duração Total**: 18 meses  
 **Investimento Total**: R$ 7-10 milhões  
@@ -58,23 +58,23 @@ graph TD
 
 ### **Módulos Implementados**
 
-#### **1. Gestão de Contas (Aureus Core)**
+#### **1. Gestão de Contas (Aurix Core)**
 ```java
 @Service
-public class AureusGestaoContaService {
+public class AurixGestaoContaService {
     
     @Autowired
-    private AureusContaRepository postgresRepo;
+    private AurixContaRepository postgresRepo;
     
     @Autowired
-    private AureusAnalyticsService timescaleService;
+    private AurixAnalyticsService timescaleService;
     
     @Autowired
-    private AureusEventProducer kafkaProducer;
+    private AurixEventProducer kafkaProducer;
     
-    public AureusConta criarConta(AureusDadosConta dadosConta) {
+    public AurixConta criarConta(AurixDadosConta dadosConta) {
         // 1. Criar conta no PostgreSQL
-        AureusConta conta = postgresRepo.save(new AureusConta(dadosConta));
+        AurixConta conta = postgresRepo.save(new AurixConta(dadosConta));
         
         // 2. Registrar evento para analytics
         kafkaProducer.send("conta.criada", conta);
@@ -87,15 +87,15 @@ public class AureusGestaoContaService {
 }
 ```
 
-#### **2. Pagamentos PIX (Aureus PIX)**
+#### **2. Pagamentos PIX (Aurix PIX)**
 ```java
 @Service
-public class AureusPIXService {
+public class AurixPIXService {
     
     @Transactional
-    public AureusTransacaoPIX processarPIX(AureusDadosPIX dadosPIX) {
+    public AurixTransacaoPIX processarPIX(AurixDadosPIX dadosPIX) {
         // 1. Validar e processar transação
-        AureusTransacaoPIX transacao = processarTransacao(dadosPIX);
+        AurixTransacaoPIX transacao = processarTransacao(dadosPIX);
         
         // 2. Salvar no PostgreSQL
         transacao = pixRepository.save(transacao);
@@ -129,7 +129,7 @@ ORDER BY hora DESC;
 
 #### **2. Dashboard Executivo**
 ```yaml
-aureus_dashboard_phase1:
+aurix_dashboard_phase1:
   metrics:
     - total_transacoes_dia
     - valor_transacionado_dia
@@ -211,10 +211,10 @@ graph TD
 #### **1. Detecção de Fraude em Tempo Real**
 ```java
 @Streaming
-public class AureusFraudDetection {
+public class AurixFraudDetection {
     
     @StreamProcess
-    public void detectarFraude(Stream<AureusTransacao> transacoes) {
+    public void detectarFraude(Stream<AurixTransacao> transacoes) {
         transacoes
             .keyBy(Transacao::getContaId)
             .window(TumblingProcessingTimeWindows.of(Time.minutes(1)))
@@ -237,12 +237,12 @@ public class AureusFraudDetection {
 #### **2. Análise de Risco em Tempo Real**
 ```java
 @Service
-public class AureusRiskAnalysis {
+public class AurixRiskAnalysis {
     
     @Autowired
     private MLFeatureStore featureStore;
     
-    public RiskScore calcularRisco(AureusTransacao transacao) {
+    public RiskScore calcularRisco(AurixTransacao transacao) {
         // 1. Extrair features em tempo real
         Map<String, Object> features = featureStore.extractFeatures(transacao);
         
@@ -259,7 +259,7 @@ public class AureusRiskAnalysis {
 
 #### **3. Dashboards Executivos Avançados**
 ```yaml
-aureus_dashboard_phase2:
+aurix_dashboard_phase2:
   real_time_metrics:
     - transacoes_por_segundo
     - fraud_detection_rate
@@ -283,9 +283,9 @@ from pyspark.ml import Pipeline
 from pyspark.ml.feature import VectorAssembler
 from pyspark.ml.classification import RandomForestClassifier
 
-class AureusMLPipeline:
+class AurixMLPipeline:
     def __init__(self):
-        self.spark = SparkSession.builder.appName("AureusML").getOrCreate()
+        self.spark = SparkSession.builder.appName("AurixML").getOrCreate()
         self.mlflow_client = mlflow.tracking.MlflowClient()
     
     def train_risk_model(self, training_data):
@@ -343,12 +343,12 @@ class AureusMLPipeline:
 ```mermaid
 graph TD
     subgraph Mesh ["Data Mesh (Federated Governance)"]
-        PIX[Aureus PIX Domain]
-        CRED[Aureus Credit Domain]
-        TREA[Aureus Treasury]
-        COMP[Aureus Compliance]
-        ANAL[Aureus Analytics]
-        RISK[Aureus Risk Management]
+        PIX[Aurix PIX Domain]
+        CRED[Aurix Credit Domain]
+        TREA[Aurix Treasury]
+        COMP[Aurix Compliance]
+        ANAL[Aurix Analytics]
+        RISK[Aurix Risk Management]
     end
 
     subgraph UltraFast ["Ultra-Fast Analytics (Apache Doris)"]
@@ -379,9 +379,9 @@ graph TD
 
 ### **Domínios Data Mesh Implementados**
 
-#### **1. Aureus PIX Domain**
+#### **1. Aurix PIX Domain**
 ```yaml
-aureus_pix_domain:
+aurix_pix_domain:
   data_products:
     - real_time_transactions
     - fraud_detection_alerts
@@ -401,9 +401,9 @@ aureus_pix_domain:
     - lineage_tracking
 ```
 
-#### **2. Aureus Credit Domain**
+#### **2. Aurix Credit Domain**
 ```yaml
-aureus_credit_domain:
+aurix_credit_domain:
   data_products:
     - credit_risk_scores
     - loan_performance_metrics
@@ -417,9 +417,9 @@ aureus_credit_domain:
     - feature_store: "ML features"
 ```
 
-#### **3. Aureus Treasury Domain**
+#### **3. Aurix Treasury Domain**
 ```yaml
-aureus_treasury_domain:
+aurix_treasury_domain:
   data_products:
     - real_time_asset_custody
     - open_market_reference_prices
@@ -472,7 +472,7 @@ PROPERTIES (
 
 #### **1. Query Interface**
 ```python
-class AureusAnalyticsAPI:
+class AurixAnalyticsAPI:
     def __init__(self):
         self.doris_client = DorisClient()
         self.ml_client = MLClient()
@@ -498,13 +498,13 @@ class AureusAnalyticsAPI:
 
 #### **2. Dashboard Builder**
 ```typescript
-interface AureusDashboardBuilder {
+interface AurixDashboardBuilder {
   createDashboard(config: DashboardConfig): Promise<Dashboard>;
   addWidget(widget: WidgetConfig): Promise<Widget>;
   applyMLInsights(dashboardId: string): Promise<void>;
 }
 
-class AureusDashboardService implements AureusDashboardBuilder {
+class AurixDashboardService implements AurixDashboardBuilder {
   async createDashboard(config: DashboardConfig): Promise<Dashboard> {
     // 1. Validar configuração
     await this.validateConfig(config);
@@ -527,9 +527,9 @@ class AureusDashboardService implements AureusDashboardBuilder {
 
 #### **1. Data Product Catalog**
 ```yaml
-aureus_data_catalog:
+aurix_data_catalog:
   domains:
-    - name: "aureus-pix"
+    - name: "aurix-pix"
       owner: "PIX Team"
       data_products:
         - name: "real_time_transactions"
@@ -555,7 +555,7 @@ aureus_data_catalog:
 #### **2. Federated Security**
 ```java
 @Service
-public class AureusFederatedSecurity {
+public class AurixFederatedSecurity {
     
     @Autowired
     private DataProductRegistry registry;
@@ -600,7 +600,7 @@ public class AureusFederatedSecurity {
 
 ```mermaid
 gantt
-    title AUREUS Data Architecture Evolution
+    title AURIX Data Architecture Evolution
     dateFormat  YYYY-MM-DD
     section Fase 1
     Foundation Setup    :2024-01-01, 2024-03-01
@@ -652,7 +652,7 @@ gantt
 
 ## 🎯 **Conclusão**
 
-Esta evolução transformará o AUREUS em uma plataforma de dados de próxima geração, posicionando-o como líder no mercado brasileiro de core banking. A abordagem incremental garante menor risco, validação prática e ROI mais rápido, enquanto prepara a infraestrutura para escalabilidade global.
+Esta evolução transformará o AURIX em uma plataforma de dados de próxima geração, posicionando-o como líder no mercado brasileiro de core banking. A abordagem incremental garante menor risco, validação prática e ROI mais rápido, enquanto prepara a infraestrutura para escalabilidade global.
 
 **Próximos Passos:**
 1. Aprovação do plano de evolução

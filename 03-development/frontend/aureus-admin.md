@@ -1,6 +1,6 @@
-# Aureus Admin - Painel Administrativo
+# Aurix Admin - Painel Administrativo
 
-Painel administrativo do AUREUS Core Banking com React Admin.
+Painel administrativo do AURIX Core Banking com React Admin.
 
 ## Modulos
 
@@ -13,10 +13,10 @@ Painel administrativo do AUREUS Core Banking com React Admin.
 ## Instalacao
 
 ```bash
-cd frontend/aureus-admin
+cd frontend/aurix-admin
 npm install
 ```
 
 Configurar `REACT_APP_API_URL=http://localhost:8080`. Iniciar: `npm start`.
 
-Documentos detalhados: [Desenvolvimento](aureus-admin-desenvolvimento.md), [Funcionalidades](aureus-admin-funcionalidades.md). Instalação: [wiki/guias/instalacao-admin.md](../wiki/guias/instalacao-admin.md).
+Documentos detalhados: [Desenvolvimento](aurix-admin-desenvolvimento.md), [Funcionalidades](aurix-admin-funcionalidades.md). Instalação: [wiki/guias/instalacao-admin.md](../wiki/guias/instalacao-admin.md).

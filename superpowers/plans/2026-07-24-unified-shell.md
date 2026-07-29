@@ -1,26 +1,26 @@
-# AUREUS Unified Shell Implementation Plan
+# AURIX Unified Shell Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Implement a Dynamics 365 style Enterprise Unified Shell for AUREUS Platform (`frontend/aureus-web`), featuring a 9-dot Waffle App Launcher, workspace tabs, dynamic contextual sidebar, Ctrl+K command palette, and MUI 5 Fluent-inspired theme.
+**Goal:** Implement a Dynamics 365 style Enterprise Unified Shell for AURIX Platform (`frontend/aurix-web`), featuring a 9-dot Waffle App Launcher, workspace tabs, dynamic contextual sidebar, Ctrl+K command palette, and MUI 5 Fluent-inspired theme.
 
 **Architecture:** A central `ShellContext` will manage tab history, active app context, and shell state. `UnifiedShell` will wrap the application layout, replacing the legacy static navbar/sidebar setup with a suite topbar (`SuiteHeader`), tab workspace (`WorkspaceTabs`), collapsible dynamic navigation (`ContextSidebar`), and active view viewport (`WorkspaceCanvas`).
 
 **Tech Stack:** React 18, React Router v6, Material UI (MUI 5), `@mui/icons-material`, `framer-motion`, `date-fns`.
 
 ## Global Constraints
-- Target repository directory: `frontend/aureus-web`
+- Target repository directory: `frontend/aurix-web`
 - MUI 5 components and icons must be used for UI widgets
-- Theme must support Dark and Light modes with AUREUS Gold (`#D4AF37`) accent
-- Standard npm test command: `npm test -- --watchAll=false` from `frontend/aureus-web`
+- Theme must support Dark and Light modes with AURIX Gold (`#D4AF37`) accent
+- Standard npm test command: `npm test -- --watchAll=false` from `frontend/aurix-web`
 
 ---
 
 ### Task 1: Shell State Management (`ShellContext`)
 
 **Files:**
-- Create: `frontend/aureus-web/src/context/ShellContext.jsx`
-- Create: `frontend/aureus-web/src/context/ShellContext.test.jsx`
+- Create: `frontend/aurix-web/src/context/ShellContext.jsx`
+- Create: `frontend/aurix-web/src/context/ShellContext.test.jsx`
 
 **Interfaces:**
 - Produces: `ShellProvider`, `useShell` hook exposing `{ activeApp, openTabs, activeTabId, sidebarCollapsed, commandPaletteOpen, notificationDrawerOpen, themeMode, switchApp, openTab, closeTab, setActiveTabId, toggleSidebar, toggleTheme, setCommandPaletteOpen, setNotificationDrawerOpen }`
@@ -28,7 +28,7 @@
 - [ ] **Step 1: Write the failing test**
 
 ```jsx
-// frontend/aureus-web/src/context/ShellContext.test.jsx
+// frontend/aurix-web/src/context/ShellContext.test.jsx
 import React from 'react';
 import { render, screen, act } from '@testing-library/react';
 import { ShellProvider, useShell } from './ShellContext';
@@ -79,13 +79,13 @@ describe('ShellContext', () => {
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `cd frontend/aureus-web && npm test -- --watchAll=false src/context/ShellContext.test.jsx`  
+Run: `cd frontend/aurix-web && npm test -- --watchAll=false src/context/ShellContext.test.jsx`  
 Expected: FAIL with "Cannot find module ./ShellContext"
 
 - [ ] **Step 3: Write minimal implementation**
 
 ```jsx
-// frontend/aureus-web/src/context/ShellContext.jsx
+// frontend/aurix-web/src/context/ShellContext.jsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const ShellContext = createContext(null);
@@ -101,10 +101,10 @@ export const ShellProvider = ({ children }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [notificationDrawerOpen, setNotificationDrawerOpen] = useState(false);
-  const [themeMode, setThemeMode] = useState(() => localStorage.getItem('aureus_theme') || 'dark');
+  const [themeMode, setThemeMode] = useState(() => localStorage.getItem('aurix_theme') || 'dark');
 
   useEffect(() => {
-    localStorage.setItem('aureus_theme', themeMode);
+    localStorage.setItem('aurix_theme', themeMode);
   }, [themeMode]);
 
   const switchApp = (appId) => {
@@ -178,13 +178,13 @@ export const useShell = () => {
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `cd frontend/aureus-web && npm test -- --watchAll=false src/context/ShellContext.test.jsx`  
+Run: `cd frontend/aurix-web && npm test -- --watchAll=false src/context/ShellContext.test.jsx`  
 Expected: PASS
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add frontend/aureus-web/src/context/ShellContext.jsx frontend/aureus-web/src/context/ShellContext.test.jsx
+git add frontend/aurix-web/src/context/ShellContext.jsx frontend/aurix-web/src/context/ShellContext.test.jsx
 git commit -m "feat: add ShellContext for Unified Shell state management"
 ```
 
@@ -193,16 +193,16 @@ git commit -m "feat: add ShellContext for Unified Shell state management"
 ### Task 2: Header Overlay Components (AppLauncher, CommandPalette, NotificationDrawer, UserProfileMenu)
 
 **Files:**
-- Create: `frontend/aureus-web/src/components/shell/Header/AppLauncher.jsx`
-- Create: `frontend/aureus-web/src/components/shell/Header/CommandPalette.jsx`
-- Create: `frontend/aureus-web/src/components/shell/Header/NotificationDrawer.jsx`
-- Create: `frontend/aureus-web/src/components/shell/Header/UserProfileMenu.jsx`
-- Create: `frontend/aureus-web/src/components/shell/Header/HeaderComponents.test.jsx`
+- Create: `frontend/aurix-web/src/components/shell/Header/AppLauncher.jsx`
+- Create: `frontend/aurix-web/src/components/shell/Header/CommandPalette.jsx`
+- Create: `frontend/aurix-web/src/components/shell/Header/NotificationDrawer.jsx`
+- Create: `frontend/aurix-web/src/components/shell/Header/UserProfileMenu.jsx`
+- Create: `frontend/aurix-web/src/components/shell/Header/HeaderComponents.test.jsx`
 
 - [ ] **Step 1: Write failing tests for Header Components**
 
 ```jsx
-// frontend/aureus-web/src/components/shell/Header/HeaderComponents.test.jsx
+// frontend/aurix-web/src/components/shell/Header/HeaderComponents.test.jsx
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
@@ -222,8 +222,8 @@ const renderWithProviders = (ui) => render(
 describe('Header Overlay Components', () => {
   test('AppLauncher renders 9-dot app options', () => {
     renderWithProviders(<AppLauncher open={true} onClose={() => {}} />);
-    expect(screen.getByText('AUREUS Banking')).toBeInTheDocument();
-    expect(screen.getByText('AUREUS Admin')).toBeInTheDocument();
+    expect(screen.getByText('AURIX Banking')).toBeInTheDocument();
+    expect(screen.getByText('AURIX Admin')).toBeInTheDocument();
   });
 
   test('CommandPalette renders search input', () => {
@@ -235,13 +235,13 @@ describe('Header Overlay Components', () => {
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `cd frontend/aureus-web && npm test -- --watchAll=false src/components/shell/Header/HeaderComponents.test.jsx`  
+Run: `cd frontend/aurix-web && npm test -- --watchAll=false src/components/shell/Header/HeaderComponents.test.jsx`  
 Expected: FAIL
 
 - [ ] **Step 3: Write minimal implementations**
 
 ```jsx
-// frontend/aureus-web/src/components/shell/Header/AppLauncher.jsx
+// frontend/aurix-web/src/components/shell/Header/AppLauncher.jsx
 import React from 'react';
 import { Drawer, Box, Typography, Grid, Card, CardActionArea, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
@@ -254,8 +254,8 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import { useShell } from '../../../context/ShellContext';
 
 const APPS = [
-  { id: 'banking', name: 'AUREUS Banking', desc: 'Internet Banking & Contas', icon: <AccountBalanceIcon sx={{ fontSize: 36, color: '#D4AF37' }} />, path: '/dashboard' },
-  { id: 'admin', name: 'AUREUS Admin', desc: 'Gestão Corporativa', icon: <AdminPanelSettingsIcon sx={{ fontSize: 36, color: '#6366F1' }} />, path: '/admin/dashboard' },
+  { id: 'banking', name: 'AURIX Banking', desc: 'Internet Banking & Contas', icon: <AccountBalanceIcon sx={{ fontSize: 36, color: '#D4AF37' }} />, path: '/dashboard' },
+  { id: 'admin', name: 'AURIX Admin', desc: 'Gestão Corporativa', icon: <AdminPanelSettingsIcon sx={{ fontSize: 36, color: '#6366F1' }} />, path: '/admin/dashboard' },
   { id: 'investments', name: 'Investimentos', desc: 'Renda Fixa e Variável', icon: <TrendingUpIcon sx={{ fontSize: 36, color: '#10B981' }} />, path: '/investimentos' },
   { id: 'credit', name: 'Crédito & Empréstimos', desc: 'Simulações e Margem', icon: <CreditScoreIcon sx={{ fontSize: 36, color: '#F59E0B' }} />, path: '/credito' },
   { id: 'compliance', name: 'Fraude & Compliance', desc: 'Monitoramento de Risco', icon: <SecurityIcon sx={{ fontSize: 36, color: '#EF4444' }} />, path: '/compliance/alertas' },
@@ -275,7 +275,7 @@ export default function AppLauncher({ open, onClose }) {
     <Drawer anchor="top" open={open} onClose={onClose} PaperProps={{ sx: { background: '#0F172A', color: '#FFF', p: 3, borderBottom: '1px solid rgba(212,175,55,0.3)' } }}>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <Typography variant="h6" fontWeight="bold" sx={{ color: '#D4AF37' }}>
-          AUREUS Suite — App Launcher
+          AURIX Suite — App Launcher
         </Typography>
         <IconButton onClick={onClose} sx={{ color: '#FFF' }}>
           <CloseIcon />
@@ -302,7 +302,7 @@ export default function AppLauncher({ open, onClose }) {
 ```
 
 ```jsx
-// frontend/aureus-web/src/components/shell/Header/CommandPalette.jsx
+// frontend/aurix-web/src/components/shell/Header/CommandPalette.jsx
 import React, { useState } from 'react';
 import { Dialog, DialogContent, TextField, List, ListItem, ListItemButton, ListItemText, ListItemIcon, Box, Typography } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
@@ -370,7 +370,7 @@ export default function CommandPalette({ open, onClose }) {
 ```
 
 ```jsx
-// frontend/aureus-web/src/components/shell/Header/NotificationDrawer.jsx
+// frontend/aurix-web/src/components/shell/Header/NotificationDrawer.jsx
 import React from 'react';
 import { Drawer, Box, Typography, IconButton, List, ListItem, ListItemText, Divider } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
@@ -405,7 +405,7 @@ export default function NotificationDrawer({ open, onClose }) {
 ```
 
 ```jsx
-// frontend/aureus-web/src/components/shell/Header/UserProfileMenu.jsx
+// frontend/aurix-web/src/components/shell/Header/UserProfileMenu.jsx
 import React, { useState } from 'react';
 import { Menu, MenuItem, ListItemIcon, ListItemText, Divider, Avatar, Box, Typography } from '@mui/material';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
@@ -426,10 +426,10 @@ export default function UserProfileMenu({ anchorEl, open, onClose, user, onLogou
     >
       <Box px={2} py={1.5}>
         <Typography variant="subtitle1" fontWeight="bold" sx={{ color: '#D4AF37' }}>
-          {user?.nome || 'Usuário AUREUS'}
+          {user?.nome || 'Usuário AURIX'}
         </Typography>
         <Typography variant="caption" color="gray">
-          {user?.email || 'usuario@aureus.com.br'}
+          {user?.email || 'usuario@aurix.com.br'}
         </Typography>
       </Box>
       <Divider sx={{ borderColor: 'rgba(255,255,255,0.1)' }} />
@@ -455,13 +455,13 @@ export default function UserProfileMenu({ anchorEl, open, onClose, user, onLogou
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `cd frontend/aureus-web && npm test -- --watchAll=false src/components/shell/Header/HeaderComponents.test.jsx`  
+Run: `cd frontend/aurix-web && npm test -- --watchAll=false src/components/shell/Header/HeaderComponents.test.jsx`  
 Expected: PASS
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add frontend/aureus-web/src/components/shell/Header/
+git add frontend/aurix-web/src/components/shell/Header/
 git commit -m "feat: add Header Overlay components (AppLauncher, CommandPalette, NotificationDrawer, UserProfileMenu)"
 ```
 
@@ -470,14 +470,14 @@ git commit -m "feat: add Header Overlay components (AppLauncher, CommandPalette,
 ### Task 3: Suite Header & Workspace Tabs Bar
 
 **Files:**
-- Create: `frontend/aureus-web/src/components/shell/Header/SuiteHeader.jsx`
-- Create: `frontend/aureus-web/src/components/shell/Navigation/WorkspaceTabs.jsx`
-- Create: `frontend/aureus-web/src/components/shell/Navigation/SuiteHeaderAndTabs.test.jsx`
+- Create: `frontend/aurix-web/src/components/shell/Header/SuiteHeader.jsx`
+- Create: `frontend/aurix-web/src/components/shell/Navigation/WorkspaceTabs.jsx`
+- Create: `frontend/aurix-web/src/components/shell/Navigation/SuiteHeaderAndTabs.test.jsx`
 
 - [ ] **Step 1: Write failing tests for SuiteHeader and WorkspaceTabs**
 
 ```jsx
-// frontend/aureus-web/src/components/shell/Navigation/SuiteHeaderAndTabs.test.jsx
+// frontend/aurix-web/src/components/shell/Navigation/SuiteHeaderAndTabs.test.jsx
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
@@ -495,7 +495,7 @@ describe('SuiteHeader and WorkspaceTabs', () => {
       </BrowserRouter>
     );
 
-    expect(screen.getByText(/AUREUS Suite/i)).toBeInTheDocument();
+    expect(screen.getByText(/AURIX Suite/i)).toBeInTheDocument();
   });
 
   test('WorkspaceTabs renders open tabs', () => {
@@ -514,13 +514,13 @@ describe('SuiteHeader and WorkspaceTabs', () => {
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `cd frontend/aureus-web && npm test -- --watchAll=false src/components/shell/Navigation/SuiteHeaderAndTabs.test.jsx`  
+Run: `cd frontend/aurix-web && npm test -- --watchAll=false src/components/shell/Navigation/SuiteHeaderAndTabs.test.jsx`  
 Expected: FAIL
 
 - [ ] **Step 3: Write minimal implementations**
 
 ```jsx
-// frontend/aureus-web/src/components/shell/Header/SuiteHeader.jsx
+// frontend/aurix-web/src/components/shell/Header/SuiteHeader.jsx
 import React, { useState } from 'react';
 import { AppBar, Toolbar, IconButton, Typography, Box, Button, Avatar, Badge } from '@mui/material';
 import AppsIcon from '@mui/icons-material/Apps';
@@ -542,11 +542,11 @@ export default function SuiteHeader({ user, onLogout }) {
 
   const getAppName = () => {
     switch (activeApp) {
-      case 'admin': return 'AUREUS Admin Portal';
-      case 'investments': return 'AUREUS Investimentos';
-      case 'credit': return 'AUREUS Crédito';
-      case 'compliance': return 'AUREUS Compliance & Risco';
-      default: return 'AUREUS Internet Banking';
+      case 'admin': return 'AURIX Admin Portal';
+      case 'investments': return 'AURIX Investimentos';
+      case 'credit': return 'AURIX Crédito';
+      case 'compliance': return 'AURIX Compliance & Risco';
+      default: return 'AURIX Internet Banking';
     }
   };
 
@@ -562,7 +562,7 @@ export default function SuiteHeader({ user, onLogout }) {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" fontWeight="bold" sx={{ color: '#FFF', display: 'flex', alignItems: 'center', gap: 1 }}>
-              <span style={{ color: '#D4AF37' }}>AUREUS Suite</span>
+              <span style={{ color: '#D4AF37' }}>AURIX Suite</span>
               <Typography variant="caption" sx={{ background: 'rgba(212,175,55,0.15)', color: '#D4AF37', px: 1, py: 0.3, borderRadius: 1, fontWeight: 'bold' }}>
                 {getAppName()}
               </Typography>
@@ -602,7 +602,7 @@ export default function SuiteHeader({ user, onLogout }) {
 ```
 
 ```jsx
-// frontend/aureus-web/src/components/shell/Navigation/WorkspaceTabs.jsx
+// frontend/aurix-web/src/components/shell/Navigation/WorkspaceTabs.jsx
 import React from 'react';
 import { Box, Tabs, Tab, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
@@ -672,13 +672,13 @@ export default function WorkspaceTabs() {
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `cd frontend/aureus-web && npm test -- --watchAll=false src/components/shell/Navigation/SuiteHeaderAndTabs.test.jsx`  
+Run: `cd frontend/aurix-web && npm test -- --watchAll=false src/components/shell/Navigation/SuiteHeaderAndTabs.test.jsx`  
 Expected: PASS
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add frontend/aureus-web/src/components/shell/Header/SuiteHeader.jsx frontend/aureus-web/src/components/shell/Navigation/WorkspaceTabs.jsx frontend/aureus-web/src/components/shell/Navigation/SuiteHeaderAndTabs.test.jsx
+git add frontend/aurix-web/src/components/shell/Header/SuiteHeader.jsx frontend/aurix-web/src/components/shell/Navigation/WorkspaceTabs.jsx frontend/aurix-web/src/components/shell/Navigation/SuiteHeaderAndTabs.test.jsx
 git commit -m "feat: add SuiteHeader topbar and WorkspaceTabs bar"
 ```
 
@@ -687,14 +687,14 @@ git commit -m "feat: add SuiteHeader topbar and WorkspaceTabs bar"
 ### Task 4: Dynamic Contextual Sidebar & Canvas Component
 
 **Files:**
-- Create: `frontend/aureus-web/src/components/shell/Navigation/ContextSidebar.jsx`
-- Create: `frontend/aureus-web/src/components/shell/Canvas/WorkspaceCanvas.jsx`
-- Create: `frontend/aureus-web/src/components/shell/Navigation/ContextSidebar.test.jsx`
+- Create: `frontend/aurix-web/src/components/shell/Navigation/ContextSidebar.jsx`
+- Create: `frontend/aurix-web/src/components/shell/Canvas/WorkspaceCanvas.jsx`
+- Create: `frontend/aurix-web/src/components/shell/Navigation/ContextSidebar.test.jsx`
 
 - [ ] **Step 1: Write failing test for ContextSidebar**
 
 ```jsx
-// frontend/aureus-web/src/components/shell/Navigation/ContextSidebar.test.jsx
+// frontend/aurix-web/src/components/shell/Navigation/ContextSidebar.test.jsx
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
@@ -719,13 +719,13 @@ describe('ContextSidebar', () => {
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `cd frontend/aureus-web && npm test -- --watchAll=false src/components/shell/Navigation/ContextSidebar.test.jsx`  
+Run: `cd frontend/aurix-web && npm test -- --watchAll=false src/components/shell/Navigation/ContextSidebar.test.jsx`  
 Expected: FAIL
 
 - [ ] **Step 3: Write minimal implementations**
 
 ```jsx
-// frontend/aureus-web/src/components/shell/Navigation/ContextSidebar.jsx
+// frontend/aurix-web/src/components/shell/Navigation/ContextSidebar.jsx
 import React from 'react';
 import { Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Box, Tooltip } from '@mui/material';
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -828,7 +828,7 @@ export default function ContextSidebar() {
 ```
 
 ```jsx
-// frontend/aureus-web/src/components/shell/Canvas/WorkspaceCanvas.jsx
+// frontend/aurix-web/src/components/shell/Canvas/WorkspaceCanvas.jsx
 import React from 'react';
 import { Box } from '@mui/material';
 
@@ -843,13 +843,13 @@ export default function WorkspaceCanvas({ children }) {
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `cd frontend/aureus-web && npm test -- --watchAll=false src/components/shell/Navigation/ContextSidebar.test.jsx`  
+Run: `cd frontend/aurix-web && npm test -- --watchAll=false src/components/shell/Navigation/ContextSidebar.test.jsx`  
 Expected: PASS
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add frontend/aureus-web/src/components/shell/Navigation/ContextSidebar.jsx frontend/aureus-web/src/components/shell/Canvas/WorkspaceCanvas.jsx frontend/aureus-web/src/components/shell/Navigation/ContextSidebar.test.jsx
+git add frontend/aurix-web/src/components/shell/Navigation/ContextSidebar.jsx frontend/aurix-web/src/components/shell/Canvas/WorkspaceCanvas.jsx frontend/aurix-web/src/components/shell/Navigation/ContextSidebar.test.jsx
 git commit -m "feat: add ContextSidebar and WorkspaceCanvas layout components"
 ```
 
@@ -858,14 +858,14 @@ git commit -m "feat: add ContextSidebar and WorkspaceCanvas layout components"
 ### Task 5: Assemble `UnifiedShell` and Integrate into `App.js`
 
 **Files:**
-- Create: `frontend/aureus-web/src/components/shell/UnifiedShell.jsx`
-- Create: `frontend/aureus-web/src/components/shell/UnifiedShell.test.jsx`
-- Modify: `frontend/aureus-web/src/App.js`
+- Create: `frontend/aurix-web/src/components/shell/UnifiedShell.jsx`
+- Create: `frontend/aurix-web/src/components/shell/UnifiedShell.test.jsx`
+- Modify: `frontend/aurix-web/src/App.js`
 
 - [ ] **Step 1: Write failing test for UnifiedShell**
 
 ```jsx
-// frontend/aureus-web/src/components/shell/UnifiedShell.test.jsx
+// frontend/aurix-web/src/components/shell/UnifiedShell.test.jsx
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
@@ -882,20 +882,20 @@ describe('UnifiedShell Component', () => {
     );
 
     expect(screen.getByTestId('child-content')).toBeInTheDocument();
-    expect(screen.getByText(/AUREUS Suite/i)).toBeInTheDocument();
+    expect(screen.getByText(/AURIX Suite/i)).toBeInTheDocument();
   });
 });
 ```
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `cd frontend/aureus-web && npm test -- --watchAll=false src/components/shell/UnifiedShell.test.jsx`  
+Run: `cd frontend/aurix-web && npm test -- --watchAll=false src/components/shell/UnifiedShell.test.jsx`  
 Expected: FAIL
 
 - [ ] **Step 3: Write minimal implementation of `UnifiedShell.jsx` and update `App.js`**
 
 ```jsx
-// frontend/aureus-web/src/components/shell/UnifiedShell.jsx
+// frontend/aurix-web/src/components/shell/UnifiedShell.jsx
 import React from 'react';
 import { Box, ThemeProvider, createTheme, CssBaseline } from '@mui/material';
 import { ShellProvider, useShell } from '../../context/ShellContext';
@@ -978,13 +978,13 @@ return (
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `cd frontend/aureus-web && npm test -- --watchAll=false`  
+Run: `cd frontend/aurix-web && npm test -- --watchAll=false`  
 Expected: All tests pass
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add frontend/aureus-web/src/components/shell/UnifiedShell.jsx frontend/aureus-web/src/components/shell/UnifiedShell.test.jsx frontend/aureus-web/src/App.js
+git add frontend/aurix-web/src/components/shell/UnifiedShell.jsx frontend/aurix-web/src/components/shell/UnifiedShell.test.jsx frontend/aurix-web/src/App.js
 git commit -m "feat: assemble UnifiedShell and integrate into App.js main layout"
 ```
 
@@ -994,7 +994,7 @@ git commit -m "feat: assemble UnifiedShell and integrate into App.js main layout
 
 - [ ] **Step 1: Run frontend build**
 
-Run: `cd frontend/aureus-web && npm run build`  
+Run: `cd frontend/aurix-web && npm run build`  
 Expected: Clean production build with no missing dependencies or lint errors.
 
 - [ ] **Step 2: Commit final shell integration**

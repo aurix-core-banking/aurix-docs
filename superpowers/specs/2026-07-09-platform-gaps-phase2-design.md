@@ -48,7 +48,7 @@ Credit cards:
   "data": {
     "creditCards": [{
       "brand": "VISA",
-      "companyName": "Aureus Pagamentos S.A.",
+      "companyName": "Aurix Pagamentos S.A.",
       "name": "Cartão Platinum",
       "productType": "PLATINUM",
       "creditCardNetwork": "VISA"
@@ -64,7 +64,7 @@ Personal identifications:
     "personalIdentifications": [{
       "updateDateTime": "2024-01-15T10:30:00Z",
       "personalId": "12345678901",
-      "brand": "Aureus",
+      "brand": "Aurix",
       "civilName": "João da Silva",
       "socialName": null,
       "birthDate": "1990-05-20",
@@ -89,7 +89,7 @@ Replace both TODO stubs with real calls to `openFinanceDataService`, maintaining
 
 ### New entities
 
-**PasswordResetToken** (table `aureus.password_reset_tokens`):
+**PasswordResetToken** (table `aurix.password_reset_tokens`):
 - `id` (serial PK)
 - `usuario_id` (FK → usuarios)
 - `token` (UUID string, unique)
@@ -97,7 +97,7 @@ Replace both TODO stubs with real calls to `openFinanceDataService`, maintaining
 - `utilizado` (boolean)
 - `criado_em` (timestamp)
 
-**RefreshToken** (table `aureus.refresh_tokens`):
+**RefreshToken** (table `aurix.refresh_tokens`):
 - `id` (serial PK)
 - `usuario_id` (FK → usuarios)
 - `token` (UUID string, unique)
@@ -168,7 +168,7 @@ Insert `schema-registry` and `kafka-connect` services between kafka-3 and kafka-
 - Image: `confluentinc/cp-schema-registry:7.4.0`
 - Port: `${STAGING_SCHEMA_REGISTRY_PORT:-8081}:8081`
 - Connects to all 3 Kafka brokers
-- Network: `aureus-data-network-staging`
+- Network: `aurix-data-network-staging`
 
 **kafka-connect:**
 - Image: `confluentinc/cp-kafka-connect:7.4.0`
@@ -177,7 +177,7 @@ Insert `schema-registry` and `kafka-connect` services between kafka-3 and kafka-
 - Group ID: `connect-cluster-staging`
 - Config/offset/status topics namespaced with `-staging` suffix
 - Uses separate topics to avoid collision with dev cluster
-- Network: `aureus-data-network-staging`
+- Network: `aurix-data-network-staging`
 
 ### .env.example update
 
@@ -203,14 +203,14 @@ No change needed — broker IDs 1/2/3 are already correct for 3-broker staging.
 
 | File | Path |
 |------|------|
-| `Extrato.js` | `frontend/aureus-web/src/pages/Extrato.js` |
-| `Extrato.test.js` | `frontend/aureus-web/src/pages/Extrato.test.js` |
-| `Transferencia.js` | `frontend/aureus-web/src/pages/Transferencia.js` |
-| `Transferencia.test.js` | `frontend/aureus-web/src/pages/Transferencia.test.js` |
-| `Pagamento.js` | `frontend/aureus-web/src/pages/Pagamento.js` |
-| `Pagamento.test.js` | `frontend/aureus-web/src/pages/Pagamento.test.js` |
-| `Recarga.js` | `frontend/aureus-web/src/pages/Recarga.js` |
-| `Recarga.test.js` | `frontend/aureus-web/src/pages/Recarga.test.js` |
+| `Extrato.js` | `frontend/aurix-web/src/pages/Extrato.js` |
+| `Extrato.test.js` | `frontend/aurix-web/src/pages/Extrato.test.js` |
+| `Transferencia.js` | `frontend/aurix-web/src/pages/Transferencia.js` |
+| `Transferencia.test.js` | `frontend/aurix-web/src/pages/Transferencia.test.js` |
+| `Pagamento.js` | `frontend/aurix-web/src/pages/Pagamento.js` |
+| `Pagamento.test.js` | `frontend/aurix-web/src/pages/Pagamento.test.js` |
+| `Recarga.js` | `frontend/aurix-web/src/pages/Recarga.js` |
+| `Recarga.test.js` | `frontend/aurix-web/src/pages/Recarga.test.js` |
 
 ### Extrato.js
 
@@ -289,7 +289,7 @@ Each test file co-located (`Extrato.test.js`, etc.):
 
 ### Service interfaces (new)
 
-Create in `backend/aureus-analytics/src/main/java/com/aureus/platform/analytics/service/`:
+Create in `backend/aurix-analytics/src/main/java/com/aurix/platform/analytics/service/`:
 
 | Interface | Methods | Endpoints served |
 |-----------|---------|-------------------|

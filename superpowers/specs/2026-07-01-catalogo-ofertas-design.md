@@ -2,7 +2,7 @@
 
 ## Goal
 
-Create a new `aureus-catalog` module implementing an **offer engine** (motor de ofertas) that supports product catalog navigation, product registration, modalidades, commercial offers, eligibility policies, campaigns, channels, and client segments — serving PF, PJ, institutions, and other audiences with a single unified architecture.
+Create a new `aurix-catalog` module implementing an **offer engine** (motor de ofertas) that supports product catalog navigation, product registration, modalidades, commercial offers, eligibility policies, campaigns, channels, and client segments — serving PF, PJ, institutions, and other audiences with a single unified architecture.
 
 ## Architecture Overview
 
@@ -418,10 +418,10 @@ createdAt
 ## 6. Module Structure
 
 ```
-aureus-catalog/
+aurix-catalog/
 ├── pom.xml
-└── src/main/java/com/aureus/platform/catalog/
-    ├── AureusCatalogApplication.java
+└── src/main/java/com/aurix/platform/catalog/
+    ├── AurixCatalogApplication.java
     ├── entity/
     │   ├── Segmento.java
     │   ├── LinhaNegocio.java
@@ -479,7 +479,7 @@ aureus-catalog/
 
 ### Dependencies
 
-`aureus-catalog` depends only on `aureus-shared` (for `BaseEntity`, shared enums, utilities). No dependency on `aureus-core`, `aureus-credit`, or any domain-specific module.
+`aurix-catalog` depends only on `aurix-shared` (for `BaseEntity`, shared enums, utilities). No dependency on `aurix-core`, `aurix-credit`, or any domain-specific module.
 
 ---
 
@@ -596,7 +596,7 @@ catalog_ofertas_segmentos
 - **A/B testing of offers** — deferred
 - **Offer recommendation/ranking** (ML-based) — deferred
 - **Real-time eligibility evaluation via rules engine (Drools)** — MVP uses service-layer evaluation; Drools can replace later
-- **Integration with existing domain products** (`ProdutoCredito`, `ProdutoCartao`, etc.) — deferred to when legacy products migrate to `aureus-catalog` as source of truth
+- **Integration with existing domain products** (`ProdutoCredito`, `ProdutoCartao`, etc.) — deferred to when legacy products migrate to `aurix-catalog` as source of truth
 - **Data migration** from existing product entities — out of scope
 - **Frontend** — API-only; admin UI comes later
 
@@ -604,7 +604,7 @@ catalog_ofertas_segmentos
 
 ## 10. Implementation Plan (next: writing-plans)
 
-1. Create `aureus-catalog` module (pom.xml, empty structure)
+1. Create `aurix-catalog` module (pom.xml, empty structure)
 2. BaseEntity + enums
 3. Catálogo entities (Segmento → CategoriaProduto) + repositories + services + controllers
 4. Produto + Integracao + Modalidade + VersaoModalidade entities + repos + services + controllers

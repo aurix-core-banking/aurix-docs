@@ -1,4 +1,4 @@
-# Instalação – Aureus Admin
+# Instalação – Aurix Admin
 
 Guia para instalar e rodar o painel administrativo (frontend) em ambiente local.
 
@@ -12,7 +12,7 @@ Guia para instalar e rodar o painel administrativo (frontend) em ambiente local.
 
 ## Instalação
 
-1. Clone o repositório e acesse `frontend/aureus-admin`
+1. Clone o repositório e acesse `frontend/aurix-admin`
 2. `npm install`
 3. Copie `config.example.js` para `config.js` e ajuste a URL da API
 4. `npm start` (ou `start-dev.bat` / `./start-dev.sh`)
@@ -34,7 +34,7 @@ Guia para instalar e rodar o painel administrativo (frontend) em ambiente local.
 
 ## Referências
 
-- [aureus-admin-desenvolvimento.md](../../03-development/frontend/aureus-admin-desenvolvimento.md) – fluxo de desenvolvimento do admin
+- [aurix-admin-desenvolvimento.md](../../03-development/frontend/aurix-admin-desenvolvimento.md) – fluxo de desenvolvimento do admin
 - [Setup da plataforma](../../02-lifecycle/ciclo-de-vida/setup.md)
 
 [Voltar a Guias](README.md) | [Índice da wiki](../../README.md)

@@ -1,4 +1,4 @@
-# Guia de Desenvolvimento – Aureus Admin
+# Guia de Desenvolvimento – Aurix Admin
 
 ## Estrutura do Projeto
 
@@ -12,4 +12,4 @@
 
 Seguir convenções do React Admin e Material-UI. Novos módulos: criar pasta em `src/pages/`, implementar List/Create/Edit/Show, registrar em `App.js` e na API.
 
-[Voltar ao frontend](aureus-admin.md) | [Instalação (wiki)](../wiki/guias/instalacao-admin.md)
+[Voltar ao frontend](aurix-admin.md) | [Instalação (wiki)](../wiki/guias/instalacao-admin.md)

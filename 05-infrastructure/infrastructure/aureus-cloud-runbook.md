@@ -1,13 +1,13 @@
-# AUREUS Cloud – Runbook e alertas
+# AURIX Cloud – Runbook e alertas
 
-Documento de operacao para deploy e monitoramento centralizados do AUREUS em modo SaaS (AUREUS Cloud). Complementa a fase 8.4 do roadmap.
+Documento de operacao para deploy e monitoramento centralizados do AURIX em modo SaaS (AURIX Cloud). Complementa a fase 8.4 do roadmap.
 
 ---
 
 ## Escopo
 
 - Deploy centralizado dos servicos (gateway, core, pix, credit, bacen, provisioning, etc.) e do plano de controle (provisioning DB).
-- Deploy dos frontends: aureus-admin e aureus-web (build estatico servido por Nginx, S3/CloudFront ou container); aureus-mobile via build nativo e lojas.
+- Deploy dos frontends: aurix-admin e aurix-web (build estatico servido por Nginx, S3/CloudFront ou container); aurix-mobile via build nativo e lojas.
 - Monitoramento e alertas para garantir disponibilidade e detectar falhas.
 - Runbook com procedimentos comuns para a equipe de operacao.
 
@@ -95,7 +95,7 @@ Cada alerta deve referenciar um item do runbook (link ou nome do procedimento).
 1. Cadastrar instituicao e config no modulo provisioning (API ou painel admin).
 2. Executar provisioning (POST /api/provisioning/instituicoes/{id}/provisionar). Se provider real estiver configurado, banco e namespace serao criados.
 3. Validar acesso do tenant (login, health com tenant_id).
-4. Registrar no billing e enviar documentacao de acesso ao cliente (ver doc AUREUS Cloud para cliente).
+4. Registrar no billing e enviar documentacao de acesso ao cliente (ver doc AURIX Cloud para cliente).
 
 ### R6 – Backup e restore
 
@@ -113,6 +113,6 @@ Cada alerta deve referenciar um item do runbook (link ou nome do procedimento).
 
 ## Referencia
 
-- Roadmap fase 8.4: Operacao AUREUS Cloud.
+- Roadmap fase 8.4: Operacao AURIX Cloud.
 - [deployment-profile.md](../arquitetura/deployment-profile.md): tenancy, cloud, topologia.
 - [multi-tenant.md](../arquitetura/multi-tenant.md): politica de banco por tenant.

@@ -1,6 +1,6 @@
 # Perfil de implantacao (Deployment Profile)
 
-Um unico ponto de decisao deve definir **como** e **onde** o AUREUS sera implantado. Esse perfil alimenta o provisioning, os scripts de deploy e a configuracao de infraestrutura. A ordem logica das escolhas e a seguinte.
+Um unico ponto de decisao deve definir **como** e **onde** o AURIX sera implantado. Esse perfil alimenta o provisioning, os scripts de deploy e a configuracao de infraestrutura. A ordem logica das escolhas e a seguinte.
 
 ---
 
@@ -8,7 +8,7 @@ Um unico ponto de decisao deve definir **como** e **onde** o AUREUS sera implant
 
 Recomendacao: o **provisioning** (roadmap fase 8) ou um componente de **configuracao de plataforma** centraliza essas opcoes. Pode ser:
 
-- Um modulo/servico (ex.: aureus-provisioning ou parte do controller/admin) que persiste o "perfil de implantacao" e o usa no deploy.
+- Um modulo/servico (ex.: aurix-provisioning ou parte do controller/admin) que persiste o "perfil de implantacao" e o usa no deploy.
 - Ou um artefato de config (ex.: `deployment-profile.yml` ou parametros no pipeline) versionado e aplicado no momento do deploy.
 
 Em ambos os casos, as decisoes abaixo sao feitas **uma vez por implantacao** (ou por tenant, no caso multi-tenant) e nao espalhadas em varios arquivos ou servicos.
@@ -88,4 +88,4 @@ O componente que "cuidar dessas nuancias" (provisioning ou config de plataforma)
 
 ## 5. Referencia no roadmap
 
-A fase **8. Provisioning e AUREUS Cloud** e o lugar natural para implementar a leitura e aplicacao do perfil de implantacao. Os itens 8.1 a 8.5 podem assumir que o perfil (tenancy, cloud, topologia) ja foi definido antes ou no cadastro da instituicao (8.1), e o 8.3 usa esse perfil para decidir criacao de banco(s) e forma de deploy (monolito vs microservicos com banco compartilhado).
+A fase **8. Provisioning e AURIX Cloud** e o lugar natural para implementar a leitura e aplicacao do perfil de implantacao. Os itens 8.1 a 8.5 podem assumir que o perfil (tenancy, cloud, topologia) ja foi definido antes ou no cadastro da instituicao (8.1), e o 8.3 usa esse perfil para decidir criacao de banco(s) e forma de deploy (monolito vs microservicos com banco compartilhado).

@@ -12,7 +12,7 @@
 
 - All Terraform: `required_version = ">= 1.0"`, use `hashicorp/aws ~> 5.0`, `hashicorp/azurerm ~> 3.0`, `hashicorp/google ~> 4.0`
 - All Helm charts: `apiVersion: v2`, AppVersion matches service version
-- All K8s manifests: namespaced under `aureus-platform` unless cluster-scoped
+- All K8s manifests: namespaced under `aurix-platform` unless cluster-scoped
 - All deployments: `securityContext.runAsNonRoot: true`, `allowPrivilegeEscalation: false`
 - All GitHub Actions: OIDC-based auth to cloud providers (no long-lived secrets)
 - All paths relative to repo root unless specified
@@ -82,11 +82,11 @@
 - Create: `infrastructure/kubernetes/charts/infra/elk/values.yaml`
 
 ### CI/CD
-- Create: `.github/workflows/ci-aureus-core.yml`
-- Create: `.github/workflows/ci-aureus-gateway.yml`
-- Create: `.github/workflows/ci-aureus-onboarding.yml`
-- Create: `.github/workflows/ci-aureus-pix.yml`
-- Create: `.github/workflows/ci-aureus-bacen.yml`
+- Create: `.github/workflows/ci-aurix-core.yml`
+- Create: `.github/workflows/ci-aurix-gateway.yml`
+- Create: `.github/workflows/ci-aurix-onboarding.yml`
+- Create: `.github/workflows/ci-aurix-pix.yml`
+- Create: `.github/workflows/ci-aurix-bacen.yml`
 - Create: `.github/workflows/ci-frontend-admin.yml`
 - Create: `.github/workflows/ci-frontend-web.yml`
 - Create: `.github/workflows/ci-frontend-mobile.yml`
@@ -120,11 +120,11 @@
 # backend.tf
 terraform {
   backend "s3" {
-    bucket         = "aureus-terraform-state-${var.environment}"
-    key            = "aureus-platform/terraform.tfstate"
+    bucket         = "aurix-terraform-state-${var.environment}"
+    key            = "aurix-platform/terraform.tfstate"
     region         = var.aws_region
     encrypt        = true
-    dynamodb_table = "aureus-terraform-locks"
+    dynamodb_table = "aurix-terraform-locks"
   }
 }
 
@@ -134,16 +134,16 @@ terraform {
 # For Azure:
 # terraform {
 #   backend "azurerm" {
-#     storage_account_name = "aureustfstate${var.environment}"
+#     storage_account_name = "aurixtfstate${var.environment}"
 #     container_name       = "terraform-state"
-#     key                  = "aureus-platform.tfstate"
+#     key                  = "aurix-platform.tfstate"
 #   }
 # }
 #
 # For GCP:
 # terraform {
 #   backend "gcs" {
-#     bucket = "aureus-terraform-state-${var.environment}"
+#     bucket = "aurix-terraform-state-${var.environment}"
 #     prefix = "terraform/state"
 #   }
 # }
@@ -311,11 +311,11 @@ metadata:
   name: platform
   namespace: argocd
 spec:
-  description: Aureus Platform microservices
+  description: Aurix Platform microservices
   sourceRepos:
-  - 'https://github.com/anomalyco/aureus-platform'
+  - 'https://github.com/anomalyco/aurix-platform'
   destinations:
-  - namespace: 'aureus-platform'
+  - namespace: 'aurix-platform'
     server: 'https://kubernetes.default.svc'
   clusterResourceWhitelist:
   - group: '*'
@@ -339,7 +339,7 @@ metadata:
 spec:
   project: infra
   source:
-    repoURL: https://github.com/anomalyco/aureus-platform
+    repoURL: https://github.com/anomalyco/aurix-platform
     path: infrastructure/kubernetes/charts/infra
     targetRevision: HEAD
     helm:
@@ -374,19 +374,19 @@ metadata:
 spec:
   generators:
   - git:
-      repoURL: https://github.com/anomalyco/aureus-platform
+      repoURL: https://github.com/anomalyco/aurix-platform
       revision: HEAD
       directories:
-      - path: infrastructure/kubernetes/charts/aureus-*
+      - path: infrastructure/kubernetes/charts/aurix-*
   template:
     metadata:
       name: '{{path.basename}}'
       labels:
-        app.kubernetes.io/part-of: aureus-platform
+        app.kubernetes.io/part-of: aurix-platform
     spec:
       project: platform
       source:
-        repoURL: https://github.com/anomalyco/aureus-platform
+        repoURL: https://github.com/anomalyco/aurix-platform
         targetRevision: HEAD
         path: '{{path}}'
         helm:
@@ -394,7 +394,7 @@ spec:
           - values.yaml
       destination:
         server: https://kubernetes.default.svc
-        namespace: aureus-platform
+        namespace: aurix-platform
       syncPolicy:
         automated:
           prune: true
@@ -427,7 +427,7 @@ git commit -m "feat(infra): add ArgoCD bootstrap manifests + ApplicationSet"
 # infrastructure/kubernetes/charts/infra/Chart.yaml
 apiVersion: v2
 name: infra
-description: Aureus Platform infrastructure components
+description: Aurix Platform infrastructure components
 type: application
 version: 0.1.0
 appVersion: "1.0"
@@ -464,10 +464,10 @@ dependencies:
 # infrastructure/kubernetes/charts/infra/values.yaml
 istio:
   global:
-    meshID: aureus-mesh
+    meshID: aurix-mesh
     multiCluster:
-      clusterName: aureus-primary
-    network: aureus-network
+      clusterName: aurix-primary
+    network: aurix-network
 
 cert-manager:
   installCRDs: true
@@ -484,7 +484,7 @@ velero:
   configuration:
     provider: aws
     backupStorageLocation:
-      bucket: aureus-velero-backups
+      bucket: aurix-velero-backups
     volumeSnapshotLocation:
       config:
         region: us-east-1
@@ -502,7 +502,7 @@ prometheus:
     adminPassword: changeme
     ingress:
       enabled: true
-      hosts: ["grafana.aureus-platform.com"]
+      hosts: ["grafana.aurix-platform.com"]
   alertmanager:
     enabled: true
   prometheus:
@@ -534,7 +534,7 @@ vault:
 apiVersion: install.istio.io/v1alpha1
 kind: IstioOperator
 metadata:
-  name: aureus-istio
+  name: aurix-istio
   namespace: istio-system
 spec:
   profile: default
@@ -566,7 +566,7 @@ metadata:
   name: letsencrypt-prod
 spec:
   acme:
-    email: infra@aureusplatform.com
+    email: infra@aurixplatform.com
     server: https://acme-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
       name: letsencrypt-prod-key
@@ -581,7 +581,7 @@ spec:
 apiVersion: elasticsearch.k8s.elastic.co/v1
 kind: Elasticsearch
 metadata:
-  name: aureus
+  name: aurix
   namespace: elastic-system
 spec:
   version: 8.11.0
@@ -610,15 +610,15 @@ spec:
 apiVersion: kibana.k8s.elastic.co/v1
 kind: Kibana
 metadata:
-  name: aureus
+  name: aurix
   namespace: elastic-system
 spec:
   version: 8.11.0
   count: 1
   elasticsearchRef:
-    name: aureus
+    name: aurix
   config:
-    server.publicBaseUrl: https://kibana.aureus-platform.com
+    server.publicBaseUrl: https://kibana.aurix-platform.com
   podTemplate:
     spec:
       containers:
@@ -640,7 +640,7 @@ spec:
   type: filebeat
   version: 8.11.0
   elasticsearchRef:
-    name: aureus
+    name: aurix
   config:
     filebeat.inputs:
     - type: container
@@ -689,26 +689,26 @@ git commit -m "feat(infra): add infra Helm chart with Istio, cert-manager, ESO, 
 
 ### Task 5: Create microservice Helm chart template + first 10 charts
 
-**Pattern** — each chart has the same structure. Use `aureus-core` as the reference template.
+**Pattern** — each chart has the same structure. Use `aurix-core` as the reference template.
 
 **Files:**
-- Create: `infrastructure/kubernetes/charts/aureus-core/Chart.yaml`
-- Create: `infrastructure/kubernetes/charts/aureus-core/values.yaml`
-- Create: `infrastructure/kubernetes/charts/aureus-core/templates/_helpers.tpl`
-- Create: `infrastructure/kubernetes/charts/aureus-core/templates/deployment.yaml`
-- Create: `infrastructure/kubernetes/charts/aureus-core/templates/service.yaml`
-- Create: `infrastructure/kubernetes/charts/aureus-core/templates/hpa.yaml`
-- Create: `infrastructure/kubernetes/charts/aureus-core/templates/serviceaccount.yaml`
-- Create: `infrastructure/kubernetes/charts/aureus-core/templates/pdb.yaml`
-- Repeat for: aureus-gateway, aureus-pix, aureus-bacen, aureus-onboarding, aureus-security, aureus-openfinance, aureus-analytics, aureus-catalog, aureus-credit
+- Create: `infrastructure/kubernetes/charts/aurix-core/Chart.yaml`
+- Create: `infrastructure/kubernetes/charts/aurix-core/values.yaml`
+- Create: `infrastructure/kubernetes/charts/aurix-core/templates/_helpers.tpl`
+- Create: `infrastructure/kubernetes/charts/aurix-core/templates/deployment.yaml`
+- Create: `infrastructure/kubernetes/charts/aurix-core/templates/service.yaml`
+- Create: `infrastructure/kubernetes/charts/aurix-core/templates/hpa.yaml`
+- Create: `infrastructure/kubernetes/charts/aurix-core/templates/serviceaccount.yaml`
+- Create: `infrastructure/kubernetes/charts/aurix-core/templates/pdb.yaml`
+- Repeat for: aurix-gateway, aurix-pix, aurix-bacen, aurix-onboarding, aurix-security, aurix-openfinance, aurix-analytics, aurix-catalog, aurix-credit
 
-- [ ] **Step 1: Create aureus-core Chart.yaml**
+- [ ] **Step 1: Create aurix-core Chart.yaml**
 
 ```yaml
-# infrastructure/kubernetes/charts/aureus-core/Chart.yaml
+# infrastructure/kubernetes/charts/aurix-core/Chart.yaml
 apiVersion: v2
-name: aureus-core
-description: Aureus Core Banking service
+name: aurix-core
+description: Aurix Core Banking service
 type: application
 version: 0.1.0
 appVersion: "1.0.0"
@@ -717,12 +717,12 @@ appVersion: "1.0.0"
 - [ ] **Step 2: Create _helpers.tpl**
 
 ```yaml
-# infrastructure/kubernetes/charts/aureus-core/templates/_helpers.tpl
-{{- define "aureus-core.name" -}}
+# infrastructure/kubernetes/charts/aurix-core/templates/_helpers.tpl
+{{- define "aurix-core.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
-{{- define "aureus-core.fullname" -}}
+{{- define "aurix-core.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -735,23 +735,23 @@ appVersion: "1.0.0"
 {{- end }}
 {{- end }}
 
-{{- define "aureus-core.labels" -}}
-helm.sh/chart: {{ include "aureus-core.name" . }}-{{ .Chart.Version | replace "+" "_" }}
-{{ include "aureus-core.selectorLabels" . }}
+{{- define "aurix-core.labels" -}}
+helm.sh/chart: {{ include "aurix-core.name" . }}-{{ .Chart.Version | replace "+" "_" }}
+{{ include "aurix-core.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
-{{- define "aureus-core.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "aureus-core.name" . }}
+{{- define "aurix-core.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "aurix-core.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
-{{- define "aureus-core.serviceAccountName" -}}
+{{- define "aurix-core.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "aureus-core.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "aurix-core.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
@@ -761,11 +761,11 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 - [ ] **Step 3: Create values.yaml**
 
 ```yaml
-# infrastructure/kubernetes/charts/aureus-core/values.yaml
+# infrastructure/kubernetes/charts/aurix-core/values.yaml
 replicaCount: 3
 
 image:
-  repository: aureus-core
+  repository: aurix-core
   tag: latest
   pullPolicy: Always
 
@@ -842,9 +842,9 @@ env:
   SPRING_DATASOURCE_URL: ""
   SPRING_DATASOURCE_USERNAME: ""
   SPRING_DATASOURCE_PASSWORD: ""
-  SPRING_REDIS_HOST: aureus-redis
+  SPRING_REDIS_HOST: aurix-redis
   SPRING_REDIS_PORT: "6379"
-  SPRING_KAFKA_BOOTSTRAP_SERVERS: aureus-kafka:9092
+  SPRING_KAFKA_BOOTSTRAP_SERVERS: aurix-kafka:9092
 
 envFrom: []
 existingSecret: ""
@@ -861,7 +861,7 @@ affinity:
           - key: app.kubernetes.io/name
             operator: In
             values:
-            - "{{ include "aureus-core.name" . }}"
+            - "{{ include "aurix-core.name" . }}"
         topologyKey: kubernetes.io/hostname
 
 extraVolumes: []
@@ -871,20 +871,20 @@ extraVolumeMounts: []
 - [ ] **Step 4: Create deployment.yaml**
 
 ```yaml
-# infrastructure/kubernetes/charts/aureus-core/templates/deployment.yaml
+# infrastructure/kubernetes/charts/aurix-core/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "aureus-core.fullname" . }}
+  name: {{ include "aurix-core.fullname" . }}
   labels:
-    {{- include "aureus-core.labels" . | nindent 4 }}
+    {{- include "aurix-core.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "aureus-core.selectorLabels" . | nindent 6 }}
+      {{- include "aurix-core.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -892,13 +892,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "aureus-core.selectorLabels" . | nindent 8 }}
+        {{- include "aurix-core.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "aureus-core.serviceAccountName" . }}
+      serviceAccountName: {{ include "aurix-core.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -976,13 +976,13 @@ spec:
 - [ ] **Step 5: Create service.yaml**
 
 ```yaml
-# infrastructure/kubernetes/charts/aureus-core/templates/service.yaml
+# infrastructure/kubernetes/charts/aurix-core/templates/service.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "aureus-core.fullname" . }}
+  name: {{ include "aurix-core.fullname" . }}
   labels:
-    {{- include "aureus-core.labels" . | nindent 4 }}
+    {{- include "aurix-core.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -995,25 +995,25 @@ spec:
     protocol: TCP
     name: management
   selector:
-    {{- include "aureus-core.selectorLabels" . | nindent 4 }}
+    {{- include "aurix-core.selectorLabels" . | nindent 4 }}
 ```
 
 - [ ] **Step 6: Create hpa.yaml**
 
 ```yaml
-# infrastructure/kubernetes/charts/aureus-core/templates/hpa.yaml
+# infrastructure/kubernetes/charts/aurix-core/templates/hpa.yaml
 {{- if .Values.autoscaling.enabled }}
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "aureus-core.fullname" . }}
+  name: {{ include "aurix-core.fullname" . }}
   labels:
-    {{- include "aureus-core.labels" . | nindent 4 }}
+    {{- include "aurix-core.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "aureus-core.fullname" . }}
+    name: {{ include "aurix-core.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:
@@ -1035,14 +1035,14 @@ spec:
 - [ ] **Step 7: Create serviceaccount.yaml**
 
 ```yaml
-# infrastructure/kubernetes/charts/aureus-core/templates/serviceaccount.yaml
+# infrastructure/kubernetes/charts/aurix-core/templates/serviceaccount.yaml
 {{- if .Values.serviceAccount.create }}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: {{ include "aureus-core.serviceAccountName" . }}
+  name: {{ include "aurix-core.serviceAccountName" . }}
   labels:
-    {{- include "aureus-core.labels" . | nindent 4 }}
+    {{- include "aurix-core.labels" . | nindent 4 }}
   {{- with .Values.serviceAccount.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -1053,48 +1053,48 @@ metadata:
 - [ ] **Step 8: Create pdb.yaml**
 
 ```yaml
-# infrastructure/kubernetes/charts/aureus-core/templates/pdb.yaml
+# infrastructure/kubernetes/charts/aurix-core/templates/pdb.yaml
 {{- if .Values.pdb.enabled }}
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ include "aureus-core.fullname" . }}
+  name: {{ include "aurix-core.fullname" . }}
   labels:
-    {{- include "aureus-core.labels" . | nindent 4 }}
+    {{- include "aurix-core.labels" . | nindent 4 }}
 spec:
   {{- if .Values.pdb.minAvailable }}
   minAvailable: {{ .Values.pdb.minAvailable }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "aureus-core.selectorLabels" . | nindent 6 }}
+      {{- include "aurix-core.selectorLabels" . | nindent 6 }}
 {{- end }}
 ```
 
 - [ ] **Step 9: Run Helm lint**
 
 ```bash
-helm lint infrastructure/kubernetes/charts/aureus-core/
+helm lint infrastructure/kubernetes/charts/aurix-core/
 ```
 
 Expected: No errors. Chart with valid template.
 
 - [ ] **Step 10: Copy chart for remaining services**
 
-Copy the entire `aureus-core` chart structure for the first 9 additional services (gateway, pix, bacen, onboarding, security, openfinance, analytics, catalog, credit). Update `Chart.yaml` name and `values.yaml` image.repository for each.
+Copy the entire `aurix-core` chart structure for the first 9 additional services (gateway, pix, bacen, onboarding, security, openfinance, analytics, catalog, credit). Update `Chart.yaml` name and `values.yaml` image.repository for each.
 
 ```bash
 for service in gateway pix bacen onboarding security openfinance analytics catalog credit; do
-  cp -r infrastructure/kubernetes/charts/aureus-core "infrastructure/kubernetes/charts/aureus-${service}"
-  sed -i "s/name: aureus-core/name: aureus-${service}/" "infrastructure/kubernetes/charts/aureus-${service}/Chart.yaml"
-  sed -i "s/repository: aureus-core/repository: aureus-${service}/" "infrastructure/kubernetes/charts/aureus-${service}/values.yaml"
+  cp -r infrastructure/kubernetes/charts/aurix-core "infrastructure/kubernetes/charts/aurix-${service}"
+  sed -i "s/name: aurix-core/name: aurix-${service}/" "infrastructure/kubernetes/charts/aurix-${service}/Chart.yaml"
+  sed -i "s/repository: aurix-core/repository: aurix-${service}/" "infrastructure/kubernetes/charts/aurix-${service}/values.yaml"
 done
 ```
 
 - [ ] **Step 11: Lint all copied charts**
 
 ```bash
-for chart in infrastructure/kubernetes/charts/aureus-*; do
+for chart in infrastructure/kubernetes/charts/aurix-*; do
   helm lint "$chart"
 done
 ```
@@ -1104,7 +1104,7 @@ Expected: All charts pass lint successfully.
 - [ ] **Step 12: Commit**
 
 ```bash
-git add infrastructure/kubernetes/charts/aureus-core/ infrastructure/kubernetes/charts/aureus-gateway/ infrastructure/kubernetes/charts/aureus-pix/ infrastructure/kubernetes/charts/aureus-bacen/ infrastructure/kubernetes/charts/aureus-onboarding/ infrastructure/kubernetes/charts/aureus-security/ infrastructure/kubernetes/charts/aureus-openfinance/ infrastructure/kubernetes/charts/aureus-analytics/ infrastructure/kubernetes/charts/aureus-catalog/ infrastructure/kubernetes/charts/aureus-credit/
+git add infrastructure/kubernetes/charts/aurix-core/ infrastructure/kubernetes/charts/aurix-gateway/ infrastructure/kubernetes/charts/aurix-pix/ infrastructure/kubernetes/charts/aurix-bacen/ infrastructure/kubernetes/charts/aurix-onboarding/ infrastructure/kubernetes/charts/aurix-security/ infrastructure/kubernetes/charts/aurix-openfinance/ infrastructure/kubernetes/charts/aurix-analytics/ infrastructure/kubernetes/charts/aurix-catalog/ infrastructure/kubernetes/charts/aurix-credit/
 git commit -m "feat(infra): add Helm charts for core 10 microservices"
 ```
 
@@ -1120,17 +1120,17 @@ Service list: accounting, ai, audit, baas, billing, budget, cambio, cartoes, com
 
 ```bash
 for service in accounting ai audit baas billing budget cambio cartoes compliance consignado controller cost financial financiamento internet-banking investimento mobile-banking organization poupanca pricing provisioning salario seguros settlement shared tax treasury webhooks; do
-  cp -r infrastructure/kubernetes/charts/aureus-core "infrastructure/kubernetes/charts/aureus-${service}"
-  sed -i "s/name: aureus-core/name: aureus-${service}/" "infrastructure/kubernetes/charts/aureus-${service}/Chart.yaml"
-  sed -i "s/repository: aureus-core/repository: aureus-${service}/" "infrastructure/kubernetes/charts/aureus-${service}/values.yaml"
-  helm lint "infrastructure/kubernetes/charts/aureus-${service}"
+  cp -r infrastructure/kubernetes/charts/aurix-core "infrastructure/kubernetes/charts/aurix-${service}"
+  sed -i "s/name: aurix-core/name: aurix-${service}/" "infrastructure/kubernetes/charts/aurix-${service}/Chart.yaml"
+  sed -i "s/repository: aurix-core/repository: aurix-${service}/" "infrastructure/kubernetes/charts/aurix-${service}/values.yaml"
+  helm lint "infrastructure/kubernetes/charts/aurix-${service}"
 done
 ```
 
 - [ ] **Step 2: Commit**
 
 ```bash
-git add infrastructure/kubernetes/charts/aureus-*/
+git add infrastructure/kubernetes/charts/aurix-*/
 git commit -m "feat(infra): add Helm charts for remaining 27 microservices"
 ```
 
@@ -1154,119 +1154,119 @@ git commit -m "feat(infra): add Helm charts for remaining 27 microservices"
 # infrastructure/kubernetes/charts/umbrella/Chart.yaml
 apiVersion: v2
 name: umbrella
-description: Aureus Platform umbrella chart — deploys all microservices
+description: Aurix Platform umbrella chart — deploys all microservices
 type: application
 version: 0.1.0
 appVersion: "1.0"
 dependencies:
-  - name: aureus-core
+  - name: aurix-core
     version: "0.1.0"
-    repository: "file://../aureus-core"
-  - name: aureus-gateway
+    repository: "file://../aurix-core"
+  - name: aurix-gateway
     version: "0.1.0"
-    repository: "file://../aureus-gateway"
-  - name: aureus-pix
+    repository: "file://../aurix-gateway"
+  - name: aurix-pix
     version: "0.1.0"
-    repository: "file://../aureus-pix"
-  - name: aureus-bacen
+    repository: "file://../aurix-pix"
+  - name: aurix-bacen
     version: "0.1.0"
-    repository: "file://../aureus-bacen"
-  - name: aureus-onboarding
+    repository: "file://../aurix-bacen"
+  - name: aurix-onboarding
     version: "0.1.0"
-    repository: "file://../aureus-onboarding"
-  - name: aureus-security
+    repository: "file://../aurix-onboarding"
+  - name: aurix-security
     version: "0.1.0"
-    repository: "file://../aureus-security"
-  - name: aureus-openfinance
+    repository: "file://../aurix-security"
+  - name: aurix-openfinance
     version: "0.1.0"
-    repository: "file://../aureus-openfinance"
-  - name: aureus-analytics
+    repository: "file://../aurix-openfinance"
+  - name: aurix-analytics
     version: "0.1.0"
-    repository: "file://../aureus-analytics"
-  - name: aureus-catalog
+    repository: "file://../aurix-analytics"
+  - name: aurix-catalog
     version: "0.1.0"
-    repository: "file://../aureus-catalog"
-  - name: aureus-credit
+    repository: "file://../aurix-catalog"
+  - name: aurix-credit
     version: "0.1.0"
-    repository: "file://../aureus-credit"
-  - name: aureus-cartoes
+    repository: "file://../aurix-credit"
+  - name: aurix-cartoes
     version: "0.1.0"
-    repository: "file://../aureus-cartoes"
-  - name: aureus-consignado
+    repository: "file://../aurix-cartoes"
+  - name: aurix-consignado
     version: "0.1.0"
-    repository: "file://../aureus-consignado"
-  - name: aureus-financiamento
+    repository: "file://../aurix-consignado"
+  - name: aurix-financiamento
     version: "0.1.0"
-    repository: "file://../aureus-financiamento"
-  - name: aureus-cambio
+    repository: "file://../aurix-financiamento"
+  - name: aurix-cambio
     version: "0.1.0"
-    repository: "file://../aureus-cambio"
-  - name: aureus-seguros
+    repository: "file://../aurix-cambio"
+  - name: aurix-seguros
     version: "0.1.0"
-    repository: "file://../aureus-seguros"
-  - name: aureus-investimento
+    repository: "file://../aurix-seguros"
+  - name: aurix-investimento
     version: "0.1.0"
-    repository: "file://../aureus-investimento"
-  - name: aureus-salario
+    repository: "file://../aurix-investimento"
+  - name: aurix-salario
     version: "0.1.0"
-    repository: "file://../aureus-salario"
-  - name: aureus-poupanca
+    repository: "file://../aurix-salario"
+  - name: aurix-poupanca
     version: "0.1.0"
-    repository: "file://../aureus-poupanca"
-  - name: aureus-accounting
+    repository: "file://../aurix-poupanca"
+  - name: aurix-accounting
     version: "0.1.0"
-    repository: "file://../aureus-accounting"
-  - name: aureus-billing
+    repository: "file://../aurix-accounting"
+  - name: aurix-billing
     version: "0.1.0"
-    repository: "file://../aureus-billing"
-  - name: aureus-compliance
+    repository: "file://../aurix-billing"
+  - name: aurix-compliance
     version: "0.1.0"
-    repository: "file://../aureus-compliance"
-  - name: aureus-audit
+    repository: "file://../aurix-compliance"
+  - name: aurix-audit
     version: "0.1.0"
-    repository: "file://../aureus-audit"
-  - name: aureus-webhooks
+    repository: "file://../aurix-audit"
+  - name: aurix-webhooks
     version: "0.1.0"
-    repository: "file://../aureus-webhooks"
-  - name: aureus-organization
+    repository: "file://../aurix-webhooks"
+  - name: aurix-organization
     version: "0.1.0"
-    repository: "file://../aureus-organization"
-  - name: aureus-provisioning
+    repository: "file://../aurix-organization"
+  - name: aurix-provisioning
     version: "0.1.0"
-    repository: "file://../aureus-provisioning"
-  - name: aureus-treasury
+    repository: "file://../aurix-provisioning"
+  - name: aurix-treasury
     version: "0.1.0"
-    repository: "file://../aureus-treasury"
-  - name: aureus-tax
+    repository: "file://../aurix-treasury"
+  - name: aurix-tax
     version: "0.1.0"
-    repository: "file://../aureus-tax"
-  - name: aureus-cost
+    repository: "file://../aurix-tax"
+  - name: aurix-cost
     version: "0.1.0"
-    repository: "file://../aureus-cost"
-  - name: aureus-budget
+    repository: "file://../aurix-cost"
+  - name: aurix-budget
     version: "0.1.0"
-    repository: "file://../aureus-budget"
-  - name: aureus-settlement
+    repository: "file://../aurix-budget"
+  - name: aurix-settlement
     version: "0.1.0"
-    repository: "file://../aureus-settlement"
-  - name: aureus-pricing
+    repository: "file://../aurix-settlement"
+  - name: aurix-pricing
     version: "0.1.0"
-    repository: "file://../aureus-pricing"
-  - name: aureus-baas
+    repository: "file://../aurix-pricing"
+  - name: aurix-baas
     version: "0.1.0"
-    repository: "file://../aureus-baas"
-  - name: aureus-internet-banking
+    repository: "file://../aurix-baas"
+  - name: aurix-internet-banking
     version: "0.1.0"
-    repository: "file://../aureus-internet-banking"
-  - name: aureus-mobile-banking
+    repository: "file://../aurix-internet-banking"
+  - name: aurix-mobile-banking
     version: "0.1.0"
-    repository: "file://../aureus-mobile-banking"
-  - name: aureus-ai
+    repository: "file://../aurix-mobile-banking"
+  - name: aurix-ai
     version: "0.1.0"
-    repository: "file://../aureus-ai"
-  - name: aureus-controller
+    repository: "file://../aurix-ai"
+  - name: aurix-controller
     version: "0.1.0"
-    repository: "file://../aureus-controller"
+    repository: "file://../aurix-controller"
 ```
 
 - [ ] **Step 2: Create umbrella values.yaml (dev defaults)**
@@ -1279,7 +1279,7 @@ global:
   imageTag: latest
   imagePullPolicy: Always
 
-aureus-core:
+aurix-core:
   replicaCount: 1
   env:
     SPRING_PROFILES_ACTIVE: dev
@@ -1291,7 +1291,7 @@ aureus-core:
       memory: 512Mi
       cpu: 250m
 
-aureus-gateway:
+aurix-gateway:
   replicaCount: 1
   service:
     type: LoadBalancer
@@ -1319,34 +1319,34 @@ git commit -m "feat(infra): add umbrella Helm chart with all sub-chart dependenc
 ### Task 8: GitHub Actions CI pipelines
 
 **Files:**
-- Create: `.github/workflows/ci-aureus-core.yml`
-- Create: `.github/workflows/ci-aureus-gateway.yml`
-- Create: `.github/workflows/ci-aureus-onboarding.yml`
-- Create: `.github/workflows/ci-aureus-pix.yml`
-- Create: `.github/workflows/ci-aureus-bacen.yml`
+- Create: `.github/workflows/ci-aurix-core.yml`
+- Create: `.github/workflows/ci-aurix-gateway.yml`
+- Create: `.github/workflows/ci-aurix-onboarding.yml`
+- Create: `.github/workflows/ci-aurix-pix.yml`
+- Create: `.github/workflows/ci-aurix-bacen.yml`
 - Create: `.github/workflows/ci-frontend-admin.yml`
 - Create: `.github/workflows/ci-frontend-web.yml`
 - Create: `.github/workflows/ci-frontend-mobile.yml`
 - Create: `.github/workflows/terraform-plan.yml`
 - Create: `.github/workflows/terraform-apply.yml`
 
-- [ ] **Step 1: Create CI for aureus-core**
+- [ ] **Step 1: Create CI for aurix-core**
 
 ```yaml
-# .github/workflows/ci-aureus-core.yml
-name: Build aureus-core
+# .github/workflows/ci-aurix-core.yml
+name: Build aurix-core
 
 on:
   push:
     branches: [main, develop]
-    paths: ["backend/aureus-core/**"]
+    paths: ["backend/aurix-core/**"]
   pull_request:
     branches: [main]
-    paths: ["backend/aureus-core/**"]
+    paths: ["backend/aurix-core/**"]
 
 env:
   REGISTRY: ${{ secrets.REGISTRY_URL }}
-  IMAGE_NAME: aureus-core
+  IMAGE_NAME: aurix-core
 
 jobs:
   build:
@@ -1362,12 +1362,12 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build and test
-      run: mvn -pl aureus-core -am compile test -q
+      run: mvn -pl aurix-core -am compile test -q
     - name: Trivy scan
       uses: aquasecurity/trivy-action@master
       with:
         scan-type: fs
-        scan-ref: backend/aureus-core/
+        scan-ref: backend/aurix-core/
         severity: CRITICAL,HIGH
         exit-code: 1
     - name: Docker buildx
@@ -1382,7 +1382,7 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         context: backend/
-        file: backend/aureus-core/Dockerfile
+        file: backend/aurix-core/Dockerfile
         push: true
         tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
         platforms: linux/amd64,linux/arm64
@@ -1409,10 +1409,10 @@ name: Build Frontend Web
 on:
   push:
     branches: [main, develop]
-    paths: ["frontend/aureus-web/**"]
+    paths: ["frontend/aurix-web/**"]
   pull_request:
     branches: [main]
-    paths: ["frontend/aureus-web/**"]
+    paths: ["frontend/aurix-web/**"]
 
 env:
   REGISTRY: ${{ secrets.REGISTRY_URL }}
@@ -1433,18 +1433,18 @@ jobs:
     - name: Install dependencies
       run: npm ci --legacy-peer-deps
     - name: Lint
-      run: npm run lint --workspace=aureus-web
+      run: npm run lint --workspace=aurix-web
     - name: Test
-      run: npm test --workspace=aureus-web -- --watchAll=false
+      run: npm test --workspace=aurix-web -- --watchAll=false
     - name: Build
-      run: npm run build --workspace=aureus-web
+      run: npm run build --workspace=aurix-web
     - name: Docker build and push
       uses: docker/build-push-action@v5
       with:
         context: frontend/
-        file: frontend/aureus-web/Dockerfile
+        file: frontend/aurix-web/Dockerfile
         push: true
-        tags: ${{ env.REGISTRY }}/aureus-web:${{ github.sha }}
+        tags: ${{ env.REGISTRY }}/aurix-web:${{ github.sha }}
 ```
 
 - [ ] **Step 3: Create Terraform CI/CD workflows**
@@ -1536,7 +1536,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: default-deny-all
-  namespace: aureus-platform
+  namespace: aurix-platform
 spec:
   podSelector: {}
   policyTypes:
@@ -1547,7 +1547,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: allow-dns
-  namespace: aureus-platform
+  namespace: aurix-platform
 spec:
   podSelector: {}
   egress:
@@ -1573,7 +1573,7 @@ apiVersion: security.istio.io/v1beta1
 kind: PeerAuthentication
 metadata:
   name: default
-  namespace: aureus-platform
+  namespace: aurix-platform
 spec:
   mtls:
     mode: STRICT
@@ -1586,7 +1586,7 @@ spec:
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
-  name: aureus-gateway
+  name: aurix-gateway
   namespace: istio-system
 spec:
   selector:
@@ -1597,7 +1597,7 @@ spec:
       name: http
       protocol: HTTP
     hosts:
-    - "*.aureus-platform.com"
+    - "*.aurix-platform.com"
     tls:
       httpsRedirect: true
   - port:
@@ -1605,28 +1605,28 @@ spec:
       name: https
       protocol: HTTPS
     hosts:
-    - "*.aureus-platform.com"
+    - "*.aurix-platform.com"
     tls:
       mode: SIMPLE
-      credentialName: aureus-platform-tls
+      credentialName: aurix-platform-tls
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: aureus-ingress
-  namespace: aureus-platform
+  name: aurix-ingress
+  namespace: aurix-platform
 spec:
   hosts:
-  - "api.aureus-platform.com"
+  - "api.aurix-platform.com"
   gateways:
-  - istio-system/aureus-gateway
+  - istio-system/aurix-gateway
   http:
   - match:
     - uri:
         prefix: /api/
     route:
     - destination:
-        host: aureus-gateway
+        host: aurix-gateway
         port:
           number: 8080
 ```
@@ -1643,12 +1643,12 @@ spec:
   provider:
     vault:
       server: "https://vault.vault.svc.cluster.local:8200"
-      path: "aureus"
+      path: "aurix"
       version: "v2"
       auth:
         kubernetes:
           mountPath: "kubernetes"
-          role: "aureus-platform"
+          role: "aurix-platform"
           serviceAccountRef:
             name: external-secrets-sa
 ```
@@ -1676,7 +1676,7 @@ git commit -m "feat(infra): add security base - NetworkPolicies, Istio mTLS, Vau
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: aureus-microservices
+  name: aurix-microservices
   namespace: monitoring
   labels:
     release: prometheus
@@ -1684,10 +1684,10 @@ spec:
   jobLabel: app.kubernetes.io/name
   selector:
     matchLabels:
-      app.kubernetes.io/part-of: aureus-platform
+      app.kubernetes.io/part-of: aurix-platform
   namespaceSelector:
     matchNames:
-    - aureus-platform
+    - aurix-platform
   endpoints:
   - port: management
     interval: 15s
@@ -1732,7 +1732,7 @@ spec:
   template:
     ttl: 720h
     includedNamespaces:
-    - aureus-platform
+    - aurix-platform
     - istio-system
     - monitoring
     - elastic-system
