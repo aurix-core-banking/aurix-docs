@@ -1,40 +1,15 @@
-# Documentação Técnica AURIX
+# Aurix Docs
 
-Bem-vindo ao centro de documentação da **AURIX Core Banking**. Aqui você encontrará tudo o que precisa para entender, operar e integrar com a nossa plataforma.
+Platform documentation for the Aurix banking ecosystem.
 
----
+## Contents
 
-## 🧭 Navegação Rápida
+- **architecture/** — system architecture, C4 diagrams
+- **guides/** — development setup, deployment runbooks
+- **decisions/** — Architecture Decision Records (ADRs)
 
-*   **[Índice Completo](./index.md)**: Encontre documentos por área (Arquitetura, Infraestrutura, APIs, etc).
-*   **[Wiki de Operações](./wiki/README.md)**: Checklists de setup, guias de go-live e suporte operacional.
-*   **[Visão Geral (Big Picture)](./01-business/big-picture.md)**: Entenda a estrutura macro da plataforma.
-*   **[Roadmap e Visão](./01-business/roadmap.md)**: O que a plataforma oferece hoje e para onde estamos indo.
+## Related
 
----
-
-## 🏢 Organização da Documentação
-
-A nossa documentação é dividida em pilares fundamentais:
-
-*   **Produto e Visão**: Conceitos de alto nível e evolução da plataforma.
-*   **Fundamentos Técnicos**: Arquitetura multi-tenant e estratégia de banco de dados.
-*   **Excelência Operacional**: Runbooks de infraestrutura, alta disponibilidade e segurança.
-*   **Para Desenvolvedores**: Documentação de APIs, frontend e pipelines de dados.
-*   **Compliance**: Materiais focados em regulação e normas do mercado financeiro.
-
-Para guias passo a passo de implantação, consulte a **[Wiki](./wiki/)**.
-
----
-
-## 🛠️ READMEs por Serviço
-
-Para detalhes específicos de baixo nível, cada módulo possui seu próprio guia:
-
-*   **Backend**: Localizados em cada submódulo da pasta `apps/backend/`.
-*   **Frontend**: [Portal Web](../apps/frontend/aurix-web/README.md) e [Painel Administrativo](../apps/frontend/aurix-admin/README.md).
-*   **Dados e ML**: [Pipelines de Dados](./04-data-ai/data-pipelines/README.md) e [Modelos de IA](./04-data-ai/ml/README.md).
-
----
-
-**Última atualização**: Fevereiro 2026
+- [aurix-core-banking](https://github.com/aureus-platform/aurix-core-banking)
+- [aurix-backend](https://github.com/aureus-platform/aurix-backend)
+- [aurix-frontend](https://github.com/aureus-platform/aurix-frontend)
