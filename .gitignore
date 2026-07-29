@@ -1,0 +1,33 @@
+# Build outputs
+site/
+_build/
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Python (if using mkdocs/sphinx)
+__pycache__/
+*.py[cod]
+.venv/
+env/
+
+# Node (if using docusaurus)
+node_modules/
+dist/
+.build/
+
+# Diagrams
+*.png
+diagrams/*.svg
+
+# Logs
+*.log
+
+# Temp
+tmp/
+temp/
