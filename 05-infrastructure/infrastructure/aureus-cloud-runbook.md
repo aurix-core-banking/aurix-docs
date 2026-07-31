@@ -56,6 +56,8 @@ Definir regras de alerta (Prometheus Alertmanager, PagerDuty, Opsgenie ou integr
 
 Cada alerta deve referenciar um item do runbook (link ou nome do procedimento).
 
+> Runbooks dedicados (queda de serviço, lentidão no banco, falha no Kafka, incidente de segurança, rollback de deploy): ver [runbooks/index.md](runbooks/index.md). Os itens R1–R6 abaixo complementam os cenários do AURIX Cloud (SaaS/multi-tenant).
+
 ---
 
 ## Runbook – Procedimentos comuns

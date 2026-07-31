@@ -12,8 +12,9 @@ Variaveis de ambiente (opcional):
 | Variavel | Padrao | Descricao |
 |----------|--------|-----------|
 | POSTGRES_CONTAINER | aurix-postgres | Nome do container PostgreSQL |
-| POSTGRES_USER | aurix | Usuario do banco |
-| POSTGRES_PASSWORD | aurix123 | Senha |
+| POSTGRES_USER | aurix_user | Usuario do banco |
+| POSTGRES_PASSWORD | aurix_dev_password | Senha |
+| POSTGRES_DB | aurix_db | Banco principal |
 | BACKUP_DIR | ./backups | Diretorio onde salvar os dumps |
 | RETENTION_DAYS | 30 | Remover backups mais antigos que N dias (apenas no .sh) |
 
@@ -41,12 +42,12 @@ Retencao: no script `.sh`, backups com mais de `RETENTION_DAYS` dias sao removid
 **Uso:**
 ```bash
 ./restore-postgres.sh <arquivo.sql> [database]
-# database: aurix (padrao) ou keycloak
+# database: aurix_db (padrao) ou keycloak
 ```
 
 **Exemplo:**
 ```bash
-./restore-postgres.sh /var/backups/aurix/aurix_20260203_020001.sql aurix
+./restore-postgres.sh /var/backups/aurix/aurix_20260203_020001.sql aurix_db
 ```
 
 Recomendacao: parar os servicos que usam o banco antes do restore (ou usar banco de staging). Apos o restore, validar dados e reiniciar os servicos.
@@ -63,10 +64,13 @@ Conforme item 14.2 e R6 do runbook, testar restore com periodicidade definida (e
 
 Exemplo de validacao rapida apos restore:
 ```bash
-docker exec aurix-postgres psql -U aurix -d aurix -c "SELECT COUNT(*) FROM aurix.contas; SELECT COUNT(*) FROM aurix.transacoes;"
+docker exec aurix-postgres psql -U aurix_user -d aurix_db -c "SELECT COUNT(*) FROM contas; SELECT COUNT(*) FROM transacoes;"
 ```
+
+> O script de backup gera também o dump do banco `keycloak` (se existir) no mesmo diretório.
 
 ## Referencias
 
 - Roadmap e status: [../roadmap.md](../roadmap.md)
 - Runbook R6: [aurix-cloud-runbook.md](aurix-cloud-runbook.md) (Backup e restore)
+- Runbooks operacionais: [runbooks/index.md](runbooks/index.md)

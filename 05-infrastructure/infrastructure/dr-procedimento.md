@@ -18,7 +18,7 @@ Garantir que, em caso de perda do datacenter ou do ambiente principal, exista pr
 2. **Ativar ambiente secundario**: subir ou apontar infra na regiao/DC secundario (Terraform, K8s, ou script de ativacao). Usar backups e configs replicados.
 3. **Restaurar dados**: restaurar o ultimo backup consistente do PostgreSQL (e demais stores) no ambiente DR. Ver [backup-restore.md](backup-restore.md).
 4. **Atualizar DNS e configs**: apontar DNS (ou CNAME) do produto para o ambiente DR; atualizar variaveis de ambiente e secrets que referenciem o ambiente antigo.
-5. **Validar servicos**: health de todos os servicos criticos; smoke tests (login, uma transacao, health do gateway).
+5. **Validar servicos**: health de todos os servicos criticos (`svc-banking`, `svc-payments`, gateway); smoke tests (login, uma transacao, health do gateway).
 6. **Comunicar**: notificar clientes e times internos sobre ativacao do DR e possivel degradacao temporaria.
 7. **Pos-incidente**: apos recuperacao do ambiente principal, planejar failback (sincronizar dados se houver escrita no DR, apontar DNS de volta, validar).
 
@@ -37,7 +37,7 @@ Recomendacao: **teste de DR pelo menos trimestral** (ou conforme politica intern
 
 ### Metricas do teste
 
-- Tempo desde o "go" ate o health do gateway/core (objetivo: dentro do RTO).
+- Tempo desde o "go" ate o health do gateway e `svc-banking` (objetivo: dentro do RTO).
 - Idade do backup utilizado (objetivo: dentro do RPO).
 - Checklist de validacao (todos os itens OK / falhas listadas).
 
@@ -51,3 +51,4 @@ Recomendacao: **teste de DR pelo menos trimestral** (ou conforme politica intern
 - Roadmap e status: [../roadmap.md](../roadmap.md)
 - Backup e restore: [backup-restore.md](backup-restore.md)
 - Runbook: [aurix-cloud-runbook.md](aurix-cloud-runbook.md)
+- Runbooks operacionais (queda, banco, Kafka, rollback): [runbooks/index.md](runbooks/index.md)
