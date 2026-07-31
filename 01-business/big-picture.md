@@ -44,19 +44,19 @@ flowchart TB
   end
 
   subgraph Backend["Backend - 13 Domínios"]
-    PAY[payments :8081]
-    CRD[credit :8082]
-    CUS[customer :8083]
-    PRD[products :8084]
-    FIN[finance-mgmt :8089]
-    INT[intelligence :8091]
-    PLT[platform :8092]
-    CAM[cambio :8093]
-    CRD2[cards :8094]
-    BNK[banking :8095]
-    FRD[fraud :8204]
-    CMP[compliance :8205]
-    AI[ai :8206]
+    BNK[svc-banking :8200]
+    PAY[svc-payments :8201]
+    CRD[svc-credit :8082]
+    CUS[svc-customer :8083]
+    PRD[svc-products :8084]
+    FIN[svc-finance-mgmt :8089]
+    INT[svc-intelligence :8091]
+    PLT[svc-platform :8092]
+    CAM[svc-cambio :8093]
+    CRD2[svc-cards :8094]
+    CMP[svc-compliance :8205]
+    AI[svc-ai :8206]
+    FRD[svc-fraud :8207]
   end
 
   subgraph DataLayer["Camada de Dados"]
@@ -105,7 +105,7 @@ flowchart TB
 | Guia Geral | [../README.md](../README.md) |
 | Roadmap e Visão | [./roadmap.md](./roadmap.md) |
 | Detalhes da Arquitetura | [../02-technical/arquitetura/visao-geral.md](../02-technical/arquitetura/visao-geral.md) |
-| Operação e Infra | [../05-infra/infra/index.md](../05-infra/infra/index.md) |
+| Operação e Infra | [../05-infrastructure/infrastructure/index.md](../05-infrastructure/infrastructure/index.md) |
 | APIs e Integração | [../03-development/portal-desenvolvedor/README.md](../03-development/portal-desenvolvedor/README.md) |
 
 ---

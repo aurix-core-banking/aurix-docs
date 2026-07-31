@@ -4,23 +4,23 @@
 
 **Objetivo**: Plataforma de core banking para o mercado brasileiro, com 13 domínios consolidados e conformidade regulatória nativa.
 
-**Abordagem**: Maven multi-module monorepo com serviços Spring Boot independentes, communicate via REST síncrono + Kafka event-driven.
+**Abordagem**: Maven multi-module monorepo com serviços Spring Boot independentes, comunicação via REST síncrono + Kafka event-driven (outbox transacional). Todos os serviços compartilham um único PostgreSQL (`aurix_db`).
 
 ## Princípios Arquiteturais
 
 ### 1. Domínios Consolidados
 - **13 serviços** `svc-*` cada um responsável por um domínio de negócio
-- **aurix-shared** — biblioteca compartilhada (DTOs, configs, utils)
-- **aurix-gateway** — roteamento interno (sendo substituído por Traefik)
+- **aurix-shared** — biblioteca compartilhada (entidades JPA, DTOs, eventos, EventHub, cache, crypto, tenant)
+- **aurix-gateway** — gateway fino com segurança por API key
 
 ### 2. API-First
-- APIs RESTful com OpenAPI 3.0
+- APIs RESTful com OpenAPI 3.0 (`aurix-api-specs`)
 - Documentação automática via Swagger UI
 - Gateway roteamento `/api/*` para todos os serviços
 
 ### 3. Comunicação
 - **Síncrona**: REST (client gerado de OpenAPI)
-- **Assíncrona**: Kafka com outbox transacional
+- **Assíncrona**: Kafka com outbox transacional (`OutboxEvent` → `OutboxRelay` no `svc-banking`)
 - **Saga**: Coreografada para fluxos multi-domínio
 - Detalhes em [ADR-0001](adr/0001-comunicacao-entre-servicos.md)
 
@@ -33,61 +33,71 @@
 └──────────────────────┬──────────────────────────────┘
                        │
 ┌──────────────────────▼──────────────────────────────┐
-│              Traefik / Gateway (:8080)              │
+│        Traefik / aurix-gateway (:8080)              │
 │         Rate Limit · CORS · JWT Auth                │
 └──────────────────────┬──────────────────────────────┘
                        │
     ┌──────────────────┼──────────────────┐
     │                  │                  │
-┌───▼────┐  ┌─────────▼───┐  ┌──────────▼──────┐
-│Payments│  │   Credit    │  │   Customer      │
-│ :8081  │  │   :8082     │  │   :8083         │
-│Core/PIX│  │Cred/Consig  │  │Identity/KYC     │
-└───┬────┘  └──────┬──────┘  └────────┬────────┘
-    │              │                   │
-┌───▼────┐  ┌──────▼──────┐  ┌────────▼────────┐
-│Products│  │Finance Mgmt │  │  Intelligence   │
-│ :8084  │  │   :8089     │  │     :8091       │
-│Poup/Inv│  │Contab/Impost│  │  Analytics/BI   │
-└───┬────┘  └──────┬──────┘  └────────┬────────┘
-    │              │                   │
-┌───▼────┐  ┌──────▼──────┐  ┌────────▼────────┐
-│Cambio  │  │   Cards     │  │   Banking       │
-│ :8093  │  │   :8094     │  │   :8095         │
-│BACEN   │  │Cred/Deb     │  │Org/Empresas     │
-└────────┘  └─────────────┘  └─────────────────┘
-
-┌──────────────┐  ┌──────────────┐  ┌──────────────┐
-│   Fraud      │  │  Compliance  │  │     AI       │
-│   :8204      │  │   :8205      │  │    :8206     │
-│  Detection   │  │  AML/KYC     │  │  LLM/RAG     │
-└──────────────┘  └──────────────┘  └──────────────┘
+┌───▼──────┐  ┌────────▼──────┐  ┌────────▼────────┐
+│svc-banking│  │svc-payments  │  │  svc-credit     │
+│  :8200   │  │  :8201       │  │   :8082         │
+│contas/PIX│  │PIX/SPI/STR   │  │Consig/Financ/   │
+│poupança  │  │              │  │Garantias        │
+└───┬──────┘  └──────┬───────┘  └────────┬────────┘
+    │                │                   │
+┌───▼──────┐  ┌──────▼───────┐  ┌────────▼────────┐
+│svc-customer│ │svc-products │  │svc-finance-mgmt │
+│  :8083    │  │  :8084      │  │     :8089       │
+│Onboard/KYC│  │Catálogo     │  │Contabilidade    │
+└───┬──────┘  └──────┬───────┘  └────────┬────────┘
+    │                │                   │
+┌───▼──────┐  ┌──────▼───────┐  ┌────────▼────────┐
+│svc-cambio│  │svc-cards     │  │  svc-platform   │
+│  :8093   │  │  :8094       │  │     :8092       │
+│Câmbio/   │  │Crédito/Débito│  │Plataforma/BaaS  │
+│BACEN     │  │Faturas       │  │Webhooks         │
+└───┬──────┘  └──────┬───────┘  └────────┬────────┘
+    │                │                   │
+┌───▼──────┐  ┌──────▼───────┐  ┌────────▼────────┐
+│svc-compliance│ │ svc-ai    │  │  svc-fraud      │
+│  :8205   │  │  :8206       │  │     :8207       │
+│Regulação │  │LLM/RAG       │  │Fraude (Kafka)   │
+│AML/KYC   │  │Integração ML │  │consumer         │
+└──────────┘  └──────────────┘  └─────────────────┘
 ```
+
+> Diagramas C4 (Context, Container, Component) em Mermaid: [c4-diagramas.md](c4-diagramas.md).
 
 ## Serviços
 
-| Serviço | Porta | Domínio | Responsabilidades |
-|---------|-------|---------|-------------------|
-| `svc-payments` | 8081 | Pagamentos | Core bancário, contas, transações, PIX, boletos, SPI/STR |
-| `svc-credit` | 8082 | Crédito | Análise de crédito, consignado, financiamento, garantias |
-| `svc-customer` | 8083 | Clientes | Identidade, KYC, onboarding, auth |
-| `svc-products` | 8084 | Produtos | Poupança, salário, investimento, seguros, tesouraria |
-| `svc-finance-mgmt` | 8089 | Financeiro | Contabilidade, orçamento, custos, IFRS9, impostos |
-| `svc-intelligence` | 8091 | Inteligência | Analytics, BI, chatbot, ML fraud |
-| `svc-platform` | 8092 | Plataforma | Open Finance, BaaS, webhooks, notificações, audit |
-| `svc-cambio` | 8093 | Câmbio | Câmbio, BACEN, SPI/STR, remessas |
-| `svc-cards` | 8094 | Cartões | Cartões crédito/débito, faturas, adquirentes |
-| `svc-banking` | 8095 | Banking | Organização, empresas, relacionamento |
-| `svc-fraud` | 8204 | Fraude | Detecção de fraude, scoring, bloqueio preventivo |
-| `svc-compliance` | 8205 | Compliance | Regulação, AML/KYC, auditoria |
-| `svc-ai` | 8206 | IA | LLM, RAG, agentes LangChain4j |
+| Serviço | Porta | Domínio | Responsabilidades | Dependências |
+|---------|-------|---------|-------------------|--------------|
+| `aurix-gateway` | 8080 | Gateway | Roteamento, API key, rate limit | Traefik |
+| `svc-banking` | 8200 | Banking | Contas, transações, poupança, salário, pricing, liquidação | PostgreSQL, Kafka, Redis |
+| `svc-payments` | 8201 | Pagamentos | PIX, SPI/STR | PostgreSQL, Kafka, Redis |
+| `svc-credit` | 8082 | Crédito | Empréstimos, consignado, financiamento, garantias | PostgreSQL, Kafka, Redis |
+| `svc-customer` | 8083 | Clientes | Onboarding PF/PJ, KYC, auth, JWT, MFA | PostgreSQL, Keycloak |
+| `svc-products` | 8084 | Produtos | Catálogo de produtos (poupança, salário, investimentos, seguros) | PostgreSQL |
+| `svc-finance-mgmt` | 8089 | Financeiro | Contabilidade, orçamento, custos, IFRS9, impostos | PostgreSQL |
+| `svc-intelligence` | 8091 | Inteligência | Analytics, BI, chatbot, ML fraude | PostgreSQL |
+| `svc-platform` | 8092 | Plataforma | Open Finance, BaaS, webhooks, notificações, audit | PostgreSQL |
+| `svc-cambio` | 8093 | Câmbio | Câmbio, BACEN, remessas | PostgreSQL |
+| `svc-cards` | 8094 | Cartões | Cartões crédito/débito, faturas, adquirentes | PostgreSQL |
+| `svc-compliance` | 8205 | Compliance | Regulação, AML/KYC, auditoria | PostgreSQL |
+| `svc-ai` | 8206 | IA | LLM, RAG, agentes, integração ML (gRPC) | PostgreSQL, Redis, ML (gRPC) |
+| `svc-fraud` | 8207 | Fraude | Detecção de fraude, scoring (consumer Kafka) | Kafka, PostgreSQL |
+
+> Observações:
+> - `svc-contracts` (gestão de contratos) existe no POM do backend, mas ainda está em construção (sem porta definida; não está no docker-compose).
+> - Todos os serviços usam `aurix-shared` e compartilham o mesmo PostgreSQL `aurix_db`.
 
 ## Fluxos Principais
 
 ### Fluxo PIX
 ```
 Cliente → Gateway → svc-payments → Validação → PostgreSQL
-         svc-payments → Kafka (outbox) → Evento PIX
+         svc-banking → Kafka (outbox) → Evento de domínio
          svc-fraud → Scoring → Bloqueio se suspeito
          svc-platform → Notificação → Cliente
 ```
@@ -106,7 +116,7 @@ Cliente → Gateway → svc-credit → Simulação → PostgreSQL
 - **RBAC**: Role-based access control
 - **MFA**: Multi-factor authentication
 - **TLS**: Transport layer security
-- **AES-256**: Criptografia de dados sensíveis
+- **AES-256**: Criptografia de dados sensíveis (`aurix-shared/crypto`)
 - **Rate Limiting**: 100 req/min por IP (Traefik)
 
 ## Observabilidade
@@ -122,8 +132,8 @@ Cliente → Gateway → svc-credit → Simulação → PostgreSQL
 |--------|-----------|
 | Language | Java 25 |
 | Framework | Spring Boot 4.1 |
-| Build | Maven 3.9+ |
-| Database | PostgreSQL 15 |
+| Build | Maven multi-module (`mvnw`) |
+| Database | PostgreSQL 15 (banco único) |
 | Cache | Redis 7 |
 | Events | Kafka (Confluent 7.4) |
 | Gateway | Traefik v3 |

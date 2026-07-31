@@ -95,4 +95,11 @@ Também corrigido: `EventHub.publishEventWithDelay` e `publishEventWithRetryInte
 dentro de `CompletableFuture.runAsync`, bloqueando uma thread do pool compartilhado pela duração inteira do
 delay/backoff. Agora usam um `ScheduledExecutorService` dedicado, sem bloquear nenhuma thread durante a espera.
 
+> **Nota de sincronização (Julho 2026):** com a consolidação dos módulos na arquitetura atual, os nomes
+> `aurix-*` citados no "Plano de adoção" mapeiam para os serviços `svc-*`: `aurix-core` → `svc-banking`,
+> `aurix-pix` → `svc-payments`, `aurix-settlement` → `settlement/` em `svc-banking`, `aurix-accounting` →
+> `svc-finance-mgmt`, `aurix-compliance` → `svc-compliance`, `aurix-security` → `svc-customer`/`aurix-gateway`.
+> O padrão de outbox está implementado no `svc-banking` (`OutboxEvent` → `OutboxRelay`) e o `svc-fraud` é o
+> principal consumidor de eventos via Kafka. As ações pendentes permanecem válidas aplicadas aos novos nomes.
+
 [Voltar ao índice de ADRs](README.md)
