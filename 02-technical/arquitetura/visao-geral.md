@@ -78,7 +78,8 @@
 | `svc-payments` | 8201 | Pagamentos | PIX, SPI/STR | PostgreSQL, Kafka, Redis |
 | `svc-credit` | 8082 | Crédito | Empréstimos, consignado, financiamento, garantias | PostgreSQL, Kafka, Redis |
 | `svc-customer` | 8083 | Clientes | Onboarding PF/PJ, KYC, auth, JWT, MFA | PostgreSQL, Keycloak |
-| `svc-products` | 8084 | Produtos | Catálogo de produtos (poupança, salário, investimentos, seguros) | PostgreSQL |
+| `svc-products` | 8084 | Produtos | Catálogo de produtos, elegibilidade, tarifas (poupança, salário, investimentos, seguros) | PostgreSQL |
+| `svc-contracts` | 8085 | Contratos | Gestão de contratos, assinaturas digitais, templates | PostgreSQL |
 | `svc-finance-mgmt` | 8089 | Financeiro | Contabilidade, orçamento, custos, IFRS9, impostos | PostgreSQL |
 | `svc-intelligence` | 8091 | Inteligência | Analytics, BI, chatbot, ML fraude | PostgreSQL |
 | `svc-platform` | 8092 | Plataforma | Open Finance, BaaS, webhooks, notificações, audit | PostgreSQL |
@@ -89,7 +90,7 @@
 | `svc-fraud` | 8207 | Fraude | Detecção de fraude, scoring (consumer Kafka) | Kafka, PostgreSQL |
 
 > Observações:
-> - `svc-contracts` (gestão de contratos) existe no POM do backend, mas ainda está em construção (sem porta definida; não está no docker-compose).
+> - `svc-contracts` (gestão de contratos com assinaturas e templates) foi implementado na porta 8085, está no docker-compose, é roteado no gateway (`/api/contracts/**`) e tem health check E2E (ver [ADR-0004](adr/0004-produtos-e-contratos.md)).
 > - Todos os serviços usam `aurix-shared` e compartilham o mesmo PostgreSQL `aurix_db`.
 
 ## Fluxos Principais

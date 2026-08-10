@@ -31,3 +31,6 @@ diagrams/*.svg
 # Temp
 tmp/
 temp/
+
+# Obsidian
+.obsidian/
