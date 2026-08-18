@@ -9,7 +9,7 @@ Add `EMPRESARIAL` as a new `TipoConta` value to the existing `Conta` entity, ena
 - New `TipoConta.EMPRESARIAL` enum value
 - Validation: only `TipoPessoa.JURIDICA` clients can open EMPRESARIAL accounts
 - Populate `clienteTipoPessoa` on `ContaDTO` responses
-- API spec update (`aurix-core.yaml`)
+- API spec update via springdoc-openapi
 - Integration tests
 
 ## Out of Scope
@@ -37,9 +37,7 @@ File: `apps/backend/aurix-core/src/main/java/com/aurix/platform/core/service/Con
 
 ### 3. API Spec
 
-File: `specs/aurix-core.yaml`
-
-- Add `EMPRESARIAL` to the `tipoConta` enum definition
+Add `EMPRESARIAL` to the `tipoConta` enum definition via springdoc-openapi.
 
 ### 4. Tests
 

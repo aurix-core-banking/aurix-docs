@@ -567,7 +567,7 @@ Adicionar no `apps/backend/pom.xml`:
 
 ### 8.3 API Spec
 
-Após implementação, adicionar tags, paths e schemas no `specs/aurix-core.yaml` para cada módulo.
+Após implementação, adicionar tags, paths e schemas via springdoc-openapi para cada módulo.
 
 ### 8.4 Frontend
 

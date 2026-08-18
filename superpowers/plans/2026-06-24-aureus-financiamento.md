@@ -683,7 +683,7 @@ Adicionar `<module>aurix-financiamento</module>` na lista de módulos.
 
 ### 12.3 OpenAPI Spec
 
-Após implementação, adicionar em `specs/aurix-core.yaml`:
+Após implementação, adicionar via springdoc-openapi:
 - Tag `Financiamento`
 - Paths `/api/financiamento/simulacoes`, `/api/financiamento/contratos`, `/api/financiamento/contratos/{contratoId}/parcelas`, `/api/financiamento/bens`, `/api/financiamento/garantias`, `/api/financiamento/taxas`
 - Schemas: `SimulacaoRequest`, `SimulacaoResponse`, `CriarContratoRequest`, `ContratoResponse`, `ParcelaResponse`, `BemResponse`, `GarantiaResponse`, `LinhaTabela`, `TaxasResponse`

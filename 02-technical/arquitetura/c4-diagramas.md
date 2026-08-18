@@ -1,6 +1,6 @@
 # Diagramas C4 – AURIX Core Banking Platform
 
-Diagramas C4 (Context, Container, Component) em Mermaid, mantidos em sincronia com a arquitetura real (13 serviços `svc-*` + `aurix-gateway` + `aurix-shared`).
+Diagramas C4 (Context, Container, Component) em Mermaid, mantidos em sincronia com a arquitetura real (14 serviços `svc-*` + `aurix-gateway` + `aurix-shared`).
 
 > Portas de referência (fonte: `aurix-infrastructure/docker-compose.yml` e `application.yml` de cada serviço).
 
@@ -17,7 +17,7 @@ flowchart TB
   MOBILE --> G
 
   subgraph Sistema[AURIX Core Banking Platform]
-    G --> SVC[Serviços svc-* (13 domínios)]
+    G --> SVC[Serviços svc-* (14 domínios)]
     SVC --> PG[(PostgreSQL 15)]
     SVC --> RD[(Redis 7)]
     SVC --> K[Kafka]
@@ -54,6 +54,7 @@ flowchart TB
     CRD[svc-credit :8082<br/>empréstimos, financiamento, garantias]
     CUS[svc-customer :8083<br/>onboarding PF/PJ, KYC, MFA]
     PRD[svc-products :8084<br/>catálogo de produtos]
+    CTR[svc-contracts :8085<br/>contratos, assinaturas, templates]
     FIN[svc-finance-mgmt :8089<br/>contabilidade]
     INT[svc-intelligence :8091]
     PLT[svc-platform :8092]
@@ -84,9 +85,9 @@ flowchart TB
 
   Canais --> G
   G --> GW
-  BNK & PAY & CRD & CUS & PRD & FIN & INT & PLT & CAM & CAR & CMP & AI --> SH
-  GW --> BNK & PAY & CRD & CUS & PRD & FIN & INT & PLT & CAM & CAR & CMP & AI
-  BNK & PAY & CRD & CUS & PRD & FIN & INT & PLT & CAM & CAR & CMP & AI --> PG
+  BNK & PAY & CRD & CUS & PRD & CTR & FIN & INT & PLT & CAM & CAR & CMP & AI --> SH
+  GW --> BNK & PAY & CRD & CUS & PRD & CTR & FIN & INT & PLT & CAM & CAR & CMP & AI
+  BNK & PAY & CRD & CUS & PRD & CTR & FIN & INT & PLT & CAM & CAR & CMP & AI --> PG
   BNK & PAY & CRD --> RD
   BNK & PAY --> KF
   FRD --> KF
@@ -122,5 +123,5 @@ flowchart TB
 
 ---
 
-**Última atualização**: Julho 2026  
+**Última atualização**: Agosto 2026  
 **Fonte**: [visao-geral.md](visao-geral.md), [docker-compose.yml](../../05-infrastructure/infrastructure/index.md)

@@ -2,19 +2,19 @@
 
 ## Visão Geral
 
-**Objetivo**: Plataforma de core banking para o mercado brasileiro, com 13 domínios consolidados e conformidade regulatória nativa.
+**Objetivo**: Plataforma de core banking para o mercado brasileiro, com 14 domínios consolidados e conformidade regulatória nativa.
 
 **Abordagem**: Maven multi-module monorepo com serviços Spring Boot independentes, comunicação via REST síncrono + Kafka event-driven (outbox transacional). Todos os serviços compartilham um único PostgreSQL (`aurix_db`).
 
 ## Princípios Arquiteturais
 
 ### 1. Domínios Consolidados
-- **13 serviços** `svc-*` cada um responsável por um domínio de negócio
+- **14 serviços** `svc-*` cada um responsável por um domínio de negócio
 - **aurix-shared** — biblioteca compartilhada (entidades JPA, DTOs, eventos, EventHub, cache, crypto, tenant)
 - **aurix-gateway** — gateway fino com segurança por API key
 
 ### 2. API-First
-- APIs RESTful com OpenAPI 3.0 (`aurix-api-specs`)
+- APIs RESTful com OpenAPI 3.0 (springdoc-openapi em cada serviço)
 - Documentação automática via Swagger UI
 - Gateway roteamento `/api/*` para todos os serviços
 
@@ -39,32 +39,40 @@
                        │
     ┌──────────────────┼──────────────────┐
     │                  │                  │
-┌───▼──────┐  ┌────────▼──────┐  ┌────────▼────────┐
-│svc-banking│  │svc-payments  │  │  svc-credit     │
-│  :8200   │  │  :8201       │  │   :8082         │
-│contas/PIX│  │PIX/SPI/STR   │  │Consig/Financ/   │
-│poupança  │  │              │  │Garantias        │
-└───┬──────┘  └──────┬───────┘  └────────┬────────┘
-    │                │                   │
-┌───▼──────┐  ┌──────▼───────┐  ┌────────▼────────┐
-│svc-customer│ │svc-products │  │svc-finance-mgmt │
-│  :8083    │  │  :8084      │  │     :8089       │
-│Onboard/KYC│  │Catálogo     │  │Contabilidade    │
-└───┬──────┘  └──────┬───────┘  └────────┬────────┘
-    │                │                   │
-┌───▼──────┐  ┌──────▼───────┐  ┌────────▼────────┐
-│svc-cambio│  │svc-cards     │  │  svc-platform   │
-│  :8093   │  │  :8094       │  │     :8092       │
-│Câmbio/   │  │Crédito/Débito│  │Plataforma/BaaS  │
-│BACEN     │  │Faturas       │  │Webhooks         │
-└───┬──────┘  └──────┬───────┘  └────────┬────────┘
-    │                │                   │
-┌───▼──────┐  ┌──────▼───────┐  ┌────────▼────────┐
-│svc-compliance│ │ svc-ai    │  │  svc-fraud      │
-│  :8205   │  │  :8206       │  │     :8207       │
-│Regulação │  │LLM/RAG       │  │Fraude (Kafka)   │
-│AML/KYC   │  │Integração ML │  │consumer         │
-└──────────┘  └──────────────┘  └─────────────────┘
+┌───────▼───────┐  ┌───────▼───────┐  ┌───────▼───────┐
+│  svc-banking  │  │  svc-payments │  │   svc-credit  │
+│     :8200     │  │     :8201     │  │     :8082     │
+│  contas / PIX │  │  PIX / SPI /  │  │  consignado   │
+│   poupança    │  │      STR      │  │   garantias   │
+└───────┬───────┘  └───────┬───────┘  └───────┬───────┘
+        │                 │                 │
+┌───────▼───────┐  ┌───────▼───────┐  ┌───────▼───────┐
+│  svc-customer │  │  svc-products │  │  svc-contracts│
+│     :8083     │  │     :8084     │  │     :8085     │
+│ onboarding /  │  │  catálogo e   │  │  contratos /  │
+│     KYC       │  │    tarifas    │  │  assinaturas  │
+└───────┬───────┘  └───────┬───────┘  └───────┬───────┘
+        │                 │                 │
+┌───────▼───────┐  ┌───────▼───────┐  ┌───────▼───────┐
+│svc-finance-mgmt│ │svc-intelligence│ │  svc-platform  │
+│     :8089      │ │     :8091      │ │     :8092      │
+│ contabilidade  │ │  analytics /   │ │  openfinance / │
+│    impostos    │ │      BI        │ │   webhooks     │
+└───────┬───────┘  └───────┬───────┘  └───────┬───────┘
+        │                 │                 │
+┌───────▼───────┐  ┌───────▼───────┐  ┌───────▼───────┐
+│  svc-cambio   │  │  svc-cards    │  │   svc-ai      │
+│     :8093     │  │     :8094     │  │     :8206     │
+│  câmbio /     │  │  cartões /    │  │   LLM / RAG   │
+│    BACEN      │  │   faturas     │  │ Integração ML │
+└───────┬───────┘  └───────┬───────┘  └───────┬───────┘
+        │                 │                 │
+┌───────▼───────┐  ┌───────▼───────┐
+│svc-compliance │  │  svc-fraud    │
+│     :8205     │  │     :8207     │
+│  regulação /  │  │  fraude (Kafka)│
+│   AML / KYC   │  │  consumer     │
+└───────────────┘  └───────────────┘
 ```
 
 > Diagramas C4 (Context, Container, Component) em Mermaid: [c4-diagramas.md](c4-diagramas.md).
@@ -145,6 +153,6 @@ Cliente → Gateway → svc-credit → Simulação → PostgreSQL
 
 ---
 
-**Última atualização**: Julho 2026  
+**Última atualização**: Agosto 2026  
 **Versão**: 2.0.0  
-**Status**: 13 domínios consolidados
+**Status**: 14 domínios consolidados

@@ -585,7 +585,7 @@ Insert before the Swagger UI route:
 
 ### Parent POM — already has `aurix-cartoes` module (line 49 in pom.xml). No change needed.
 
-### OpenAPI spec — after implementation, add to `specs/aurix-core.yaml`:
+### OpenAPI spec — after implementation, add via springdoc-openapi:
 - Tag: `Cartoes` with description
 - Paths for all 21 endpoints from Section 4.3
 - Schemas for all entities and DTOs

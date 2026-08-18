@@ -18,7 +18,7 @@ O `svc-products` existia apenas como placeholder no POM e no docker-compose, e o
 - **Eventos de domínio via Kafka**, seguindo a convenção `<dominio>.<entidade>.<evento>.<versao>` do [ADR-0001](0001-comunicacao-entre-servicos.md): tópicos `PRODUTO_*` (`products.produto.criado.v1`, `products.produto.atualizado.v1`, `products.produto.descontinuado.v1`) e `CONTRATO_*` (`contracts.contrato.criado.v1`, `contracts.contrato.assinado.v1`, `contracts.contrato.liquidado.v1`, `contracts.contrato.cancelado.v1`), centralizados em `Topics.java` no `aurix-shared`.
 - **Integração síncrona com tolerância a falha**: o `svc-contracts` consulta o perfil do cliente (`svc-customer`) e o catálogo de produtos (`svc-products`) via HTTP (`RestClient` + `HttpServiceProxyFactory`, clients declarativos `ClienteClient`/`ProdutoClient`); a camada `IntegracaoContratoService` envolve cada chamada em `try/catch` e degrada graciosamente para `Optional.empty()` quando o serviço parceiro está indisponível — o contrato é criado em `RASCUNHO` mesmo sem o enriquecimento dos dados do cliente/produto.
 - **Testes**: o domínio foi entregue com **47 testes automatizados** (unitários de serviço, de integração e contratos entre serviços).
-- A implementação foi consolidada no **PR #25** (https://github.com/aurix-core-banking/aurix-backend/pull/25), que resolve as issues #2 e #19, e o catálogo de endpoints foi publicado na spec `aurix-api-specs` (tags `products` e `contracts`).
+- A implementação foi consolidada nos **PRs #25 e #26** (https://github.com/aurix-core-banking/aurix-backend/pull/25, https://github.com/aurix-core-banking/aurix-backend/pull/26), ambos **merged** — o PR #25 resolve as issues #2 e #19 — e o catálogo de endpoints foi publicado via springdoc-openapi (tags `products` e `contracts`).
 
 ## Decisão
 
@@ -67,6 +67,6 @@ Implementar os dois domínios como serviços Spring Boot no monorepo Maven, segu
 | Testes | Inexistente | 47 testes automatizados nos dois serviços | ✅ Feito |
 | Health checks E2E | Não cobria os novos serviços | Adicionar `svc-products` (8084) e `svc-contracts` (8085) a `SERVICE_HEALTH_ENDPOINTS` | ✅ Feito |
 | docker-compose / gateway | `svc-contracts` ausente | Incluir `svc-contracts` no docker-compose e no roteamento do gateway | ✅ Feito — porta 8085, rota `/api/contracts/**` |
-| OpenAPI | Spec sem products/contracts | Tags, paths e schemas de products/contracts em `aurix-api-specs` | ✅ Feito |
+| OpenAPI | Spec sem products/contracts | Tags, paths e schemas de products/contracts via springdoc-openapi | ✅ Feito |
 
 [Voltar ao índice de ADRs](README.md)

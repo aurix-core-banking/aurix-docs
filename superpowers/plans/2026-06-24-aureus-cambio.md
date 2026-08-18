@@ -252,7 +252,7 @@
 
 ### 1.13 OpenAPI Spec
 
-- [ ] **`specs/aurix-core.yaml`** — adicionar tag `cambio`, paths do câmbio (`/api/cambio/cotacoes`, `/api/cambio/contratos`, `/api/cambio/remessas`, `/api/cambio/operacoes`, `/api/cambio/clientes`) e schemas correspondentes (`Cotacao`, `ContratoCambio`, `Remessa`, `OperacaoCambio`, `ClienteCambio`).
+- [ ] **OpenAPI spec** — adicionar tag `cambio`, paths do câmbio (`/api/cambio/cotacoes`, `/api/cambio/contratos`, `/api/cambio/remessas`, `/api/cambio/operacoes`, `/api/cambio/clientes`) e schemas correspondentes (`Cotacao`, `ContratoCambio`, `Remessa`, `OperacaoCambio`, `ClienteCambio`) via springdoc-openapi.
 
 ### 1.14 Testes
 

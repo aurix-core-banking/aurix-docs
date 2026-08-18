@@ -186,7 +186,7 @@
 
 ### 1.13 OpenAPI Spec
 
-- [ ] **`specs/aurix-core.yaml`** — adicionar tag `consignado`, paths do consignado ($ref para `aurix-consignado.yaml` futuro) e schemas correspondentes.
+- [ ] **OpenAPI spec** — adicionar tag `consignado`, paths do consignado e schemas correspondentes via springdoc-openapi.
 
 ### 1.14 Testes
 

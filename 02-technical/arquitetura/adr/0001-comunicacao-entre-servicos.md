@@ -12,7 +12,7 @@ A plataforma tem 27+ módulos Spring Boot (`apps/backend/aurix-*`) e hoje a comu
 - **Síncrono ad-hoc**: cada módulo consumidor escreve seu próprio client REST manualmente — `CoreApiClient` (`aurix-onboarding`), `CoreApiClientImpl` (`aurix-openfinance`) — sem contrato gerado, sem versionamento, com risco de drift entre o que o client espera e o que o serviço expõe.
 - **Assíncrono parcialmente adotado**: existe um `EventHub` em `aurix-shared` (`eventhub/EventHub.java`) com roteamento, retry exponencial, prioridade e Dead Letter Queue — bem desenhado — e um padrão de outbox transacional em `aurix-core` (`OutboxEventPublisher`/`OutboxRelay`). Mas só `aurix-core` e `aurix-pix` de fato publicam eventos hoje. Os módulos `aurix-analytics`, `aurix-audit`, `aurix-compliance`, `aurix-credit`, `aurix-security`, `aurix-treasury` declaram a dependência do Kafka no `pom.xml` mas não publicam nem consomem nada.
 - **Consumidores no lugar errado**: `EventListener` (`@KafkaListener` para `conta-criada`, `transacao-realizada`, `imposto-calculado` etc.) vive dentro de `aurix-shared`, uma biblioteca compartilhada — ou seja, lógica de negócio de um domínio específico roda implicitamente em qualquer serviço que dependa de `aurix-shared`, em vez de pertencer ao serviço que de fato é o dono daquele evento.
-- **Sem contrato formal**: `aurix-api-specs` tem apenas 1 OpenAPI (`aurix-core.yaml`) para toda a plataforma; não há AsyncAPI para os tópicos Kafka, nem convenção de nome/versionamento de tópico (`conta-criada` é um nome plano, sem domínio ou versão).
+- **Sem contrato formal**: specs OpenAPI são gerados via springdoc-openapi em cada serviço; não há AsyncAPI para os tópicos Kafka, nem convenção de nome/versionamento de tópico (`conta-criada` é um nome plano, sem domínio ou versão).
 - **Gateway só cobre tráfego norte-sul**: `aurix-gateway` faz autenticação por API key e rate limit na borda, mas não há nada padronizado para tráfego leste-oeste (serviço a serviço) — nem mTLS, nem service mesh.
 
 Isso aumenta o risco de inconsistência de dados em fluxos financeiros multi-módulo (PIX → liquidação → contabilidade → fiscal) e de regressão silenciosa quando um client REST escrito a mão fica desatualizado.
@@ -20,7 +20,7 @@ Isso aumenta o risco de inconsistência de dados em fluxos financeiros multi-mó
 ## Decisão
 
 ### 1. Síncrono (consulta / validação que precisa de resposta imediata)
-REST interno via **clients gerados a partir de OpenAPI**, não mais classes de client escritas à mão. Padronizar em `WebClient` (já usado em `aurix-bacen`). Cada módulo publica seu próprio OpenAPI (expandir `aurix-api-specs` para cobrir todos os módulos, não só `aurix-core`); os specs que faltam devem ser gerados a partir dos controllers existentes (springdoc-openapi) e versionados no repositório.
+REST interno via **clients gerados a partir de OpenAPI**, não mais classes de client escritas à mão. Padronizar em `WebClient` (já usado em `aurix-bacen`). Cada módulo publica seu próprio OpenAPI via springdoc-openapi; os specs devem ser gerados a partir dos controllers existentes e versionados no repositório.
 
 ### 2. Assíncrono (mudança de estado / evento de domínio entre módulos)
 Kafka via **outbox transacional**, estendendo o padrão já existente em `aurix-core` para os módulos que hoje mudam estado financeiro crítico sem publicar nada: `aurix-pix` (parcial), `aurix-settlement`, `aurix-billing`, `aurix-bacen`, `aurix-treasury`, `aurix-credit`, `aurix-tax`, `aurix-accounting`. Outbox evita dual-write inconsistente (gravar no banco e falhar ao publicar no Kafka) e dá trilha de auditoria nativa — importante em banking.
@@ -34,7 +34,7 @@ Kafka via **outbox transacional**, estendendo o padrão já existente em `aurix-
 
 ### 4. Contrato
 - **OpenAPI** para toda chamada síncrona (`specs/*.yaml`, um arquivo por módulo).
-- **AsyncAPI** para todo tópico Kafka publicado, descrevendo schema do evento, versão e produtor — mesmo diretório `aurix-api-specs`.
+- **AsyncAPI** para todo tópico Kafka publicado, descrevendo schema do evento, versão e produtor — mesmo diretório de specs.
 - Geração de client/DTO no build (Maven plugin de codegen), eliminando classes de client escritas à mão.
 
 ### 5. Segurança leste-oeste

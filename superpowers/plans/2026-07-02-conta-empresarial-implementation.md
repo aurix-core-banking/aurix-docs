@@ -15,7 +15,7 @@
 - No Lombok annotations anywhere
 - Tests in `aurix-core` use `@SpringBootTest(webEnvironment = RANDOM_PORT)` + RestTemplate + `@MockitoBean`
 - Schema `aurix` for all tables
-- API spec in `specs/aurix-core.yaml`
+- API spec via springdoc-openapi
 
 ---
 
@@ -24,7 +24,7 @@
 **Files:**
 - Modify: `apps/backend/aurix-shared/src/main/java/com/aurix/platform/shared/entity/Conta.java` (add EMPRESARIAL to TipoConta enum)
 - Modify: `apps/backend/aurix-core/src/main/java/com/aurix/platform/core/service/ContaService.java` (validation + DTO population)
-- Modify: `specs/aurix-core.yaml` (add EMPRESARIAL to tipoConta enum)
+- Modify: API spec via springdoc-openapi (add EMPRESARIAL to tipoConta enum)
 - Create/test: `apps/backend/aurix-core/src/test/java/com/aurix/platform/core/integration/ContaEmpresarialIntegrationTest.java`
 
 - [ ] **Step 1: Add EMPRESARIAL to TipoConta enum**
@@ -59,7 +59,7 @@ In `converterParaDTO()` at line 240 (after `setStatus`), add:
 
 - [ ] **Step 4: Update API spec**
 
-In `specs/aurix-core.yaml`, add `EMPRESARIAL` to the `tipoConta` enum. The exact location depends on the file — locate the `tipoConta` enum and add the value. For example:
+Add `EMPRESARIAL` to the `tipoConta` enum via springdoc-openapi. The exact location depends on the file — locate the `tipoConta` enum and add the value. For example:
 
 ```yaml
         tipoConta:
